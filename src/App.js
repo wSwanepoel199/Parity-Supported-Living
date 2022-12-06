@@ -12,9 +12,11 @@ function App() {
       .catch(err => console.error(err));
   }, []);
   return (
-    <Routes>
-      <Route path='/' element={<Landing />} />
-    </Routes>
+    <div className='w-screen h-screen'>
+      <Routes>
+        <Route path='/' element={<Landing />} />
+      </Routes>
+    </div>
   );
 }
 

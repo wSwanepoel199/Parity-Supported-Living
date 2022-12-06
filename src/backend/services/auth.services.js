@@ -19,13 +19,16 @@ class AuthService {
   // logs in existing user
   static async login(data) {
     const { email, password } = data;
+    console.log(data);
     const user = await prisma.user.findUnique({
       where: {
         email
       }
     });
+
+    if (!user) throw createError.Unauthorized("Provided Email or Password is not correct");
     const checkPassword = bcrypt.compareSync(password, user.password);
-    if (!user || !checkPassword) throw createError.Unauthorized("Provided Email or Password is not correct");
+    if (!checkPassword) throw createError.Unauthorized("Provided Email or Password is not correct");
     delete user.password;
     const accessToken = await jwt.signAccessToken(user.userId);
     return { ...user, accessToken };

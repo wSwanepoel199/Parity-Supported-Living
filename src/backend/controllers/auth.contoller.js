@@ -6,7 +6,12 @@ class AuthController {
     try {
       const user = await auth.register(req.body);
       console.log(user);
-      res.cookie('jwt', user.token, { httpOnly: true, sameSite: "None", secure: true, maxAge: (24 * 60 * 60 * 1000 * 200) });
+      res.cookie('jwt', user.token, {
+        httpOnly: true,
+        // secure: true, 
+        // SameSite: "None", 
+        maxAge: (24 * 60 * 60 * 1000 * 200)
+      });
       res.status(201).json({
         status: 201,
         msg: "User Created",
@@ -17,10 +22,16 @@ class AuthController {
       next(createError(err.statusCode, err.message));
     }
   };
-  static login = async (req, res, next) => {
+  static login = async (req, res) => {
     try {
+      console.log(req.body);
       const data = await auth.login(req.body);
-      res.cookie('jwt', data.refreshToken, { httpOnly: true, sameSite: "None", secure: true, maxAge: (24 * 60 * 60 * 1000 * 200) });
+      res.cookie('jwt', data.refreshToken, {
+        httpOnly: true,
+        // SameSite: "None", 
+        // secure: true, 
+        maxAge: (24 * 60 * 60 * 1000 * 200)
+      });
       delete data.refreshToken;
       res.status(200).json({
         status: 200,
@@ -29,7 +40,12 @@ class AuthController {
       });
     }
     catch (err) {
-      next(createError(err.statusCode, err.message));
+      // next(createError(err.statusCode, err.message));
+      console.log(err.statusCode);
+      res.status(err.statusCode).json({
+        status: err.statusCode,
+        msg: err.message
+      });
     }
   };
   static all = async (req, res, next) => {
