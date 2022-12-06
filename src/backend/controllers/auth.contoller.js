@@ -19,12 +19,12 @@ class AuthController {
       });
     }
     catch (err) {
+      res.status(err.statusCode).json({ status: err.statusCode, msg: err.message });
       next(createError(err.statusCode, err.message));
     }
   };
-  static login = async (req, res) => {
+  static login = async (req, res, next) => {
     try {
-      console.log(req.body);
       const data = await auth.login(req.body);
       res.cookie('jwt', data.refreshToken, {
         httpOnly: true,
@@ -40,12 +40,8 @@ class AuthController {
       });
     }
     catch (err) {
-      // next(createError(err.statusCode, err.message));
-      console.log(err.statusCode);
-      res.status(err.statusCode).json({
-        status: err.statusCode,
-        msg: err.message
-      });
+      res.status(err.statusCode).json({ status: err.statusCode, msg: err.message });
+      next(createError(err.statusCode, err.message));
     }
   };
   static all = async (req, res, next) => {
@@ -58,6 +54,7 @@ class AuthController {
       });
     }
     catch (err) {
+      res.status(err.statusCode).json({ status: err.statusCode, msg: err.message });
       next(createError(err.statusCode, err.message));
     }
   };

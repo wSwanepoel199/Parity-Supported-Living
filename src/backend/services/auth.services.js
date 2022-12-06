@@ -20,15 +20,15 @@ class AuthService {
   static async login(data) {
     const { email, password } = data;
     console.log(data);
+    if (!email || !password) throw createError.BadRequest({ message: "Email or Password not provided", data: data });
     const user = await prisma.user.findUnique({
       where: {
         email
       }
     });
-
-    if (!user) throw createError.Unauthorized("Provided Email or Password is not correct");
+    if (!user) throw createError.NotFound({ message: "No user exists with that email", data: data });
     const checkPassword = bcrypt.compareSync(password, user.password);
-    if (!checkPassword) throw createError.Unauthorized("Provided Email or Password is not correct");
+    if (!checkPassword) throw createError.Unauthorized({ message: "Provided Email or Password is not correct", data: data });
     delete user.password;
     const accessToken = await jwt.signAccessToken(user.userId);
     return { ...user, accessToken };

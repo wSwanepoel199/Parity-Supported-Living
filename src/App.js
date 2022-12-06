@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { Route, Routes } from 'react-router-dom';
 // import Template from './pages/Template';
-import Landing from './pages/Landing';
+import SignIn from './pages/SignIn';
 
 function App() {
   // request to back doesn't work
@@ -14,7 +14,7 @@ function App() {
   return (
     <div className='w-screen h-screen'>
       <Routes>
-        <Route path='/' element={<Landing />} />
+        <Route path='/' element={<SignIn />} />
       </Routes>
     </div>
   );
