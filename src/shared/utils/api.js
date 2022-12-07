@@ -4,48 +4,45 @@ import { redirect } from 'react-router-dom';
 const { getStoredAuthToken, removeStoredToken } = require("./authToken");
 
 const defaults = {
-  url: process.env.API_URL || "http://192.168.56.101:3000",
-  headers: () => ({
+  url: process.env.REACT_APP_API_URL || "http://localhost:5000",
+  headers: {
     'Content-Type': 'application/json',
     Authorization: getStoredAuthToken() ? `Bearer ${getStoredAuthToken()}` : undefined
-  }),
+  },
   error: {
-    code: 'INTERNAL_ERROR',
-    message: 'Something went wrong. Please check your internet connection or contact our support.',
     status: 503,
-    data: {},
+    message: { msg: 'Something went wrong. Please check your internet connection or contact our support.', data: {} },
   }
 };
 
-const api = (method, path, variables) => {
+const api = (method, path, variables) =>
   new Promise((resolve, reject) => {
+    console.log(method, path, variables);
     axios({
       url: `${defaults.url}${path}`,
       method,
-      headers: defaults.headers(),
-      credentials: 'include',
-      params: method !== 'get' ? variables : undefined,
-      data: method !== 'get' ? variables : undefined,
+      headers: defaults.headers,
+      withCredentials: true,
+      params: (method !== 'get' && variables.params) ? variables.params : undefined,
+      data: (method !== 'get' && variables.data) ? variables.data : undefined,
     }).then(
       res => {
         resolve(res.data);
       },
       error => {
         if (error.response) {
-          if (error.response.data.error.code === 'INVALID_TOKEN') {
-            removeStoredToken();
-            redirect('/authenticate');
+          if (error.response.status === 401) {
+            // removeStoredToken();
+            // redirect('/authenticate');
+            reject(error.response.data);
           } else {
-            reject(error.response.data.error);
+            reject(error.response.data);
           }
         } else {
           reject(defaults.error);
         }
       });
   });
-};
 
-const get = (...args) => api('get', ...args);
-const post = (...args) => api('post', ...args);
 
-export { get, post };
+export default api;

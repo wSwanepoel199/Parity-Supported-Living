@@ -10,7 +10,10 @@ const auth = async (req, res, next) => {
   await jwt.verifyAccessToken(token).then(user => {
     req.user = user;
     next();
-  }).catch(err => next(createError.Unauthorized(err.message)));
+  }).catch(err => {
+    res.status(err.statusCode).json({ status: err.statusCode, msg: err.message });
+    next(createError.Unauthorized(err.message));
+  });
 };
 
 module.exports = auth;
