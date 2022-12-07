@@ -1,4 +1,4 @@
-export const getStoredAuthToken = () => localStorage.getItem('accessToken');
+export const fetchAuthToken = () => localStorage.getItem('accessToken');
 
 export const storeAuthToken = (token) => localStorage.setItem('accessToken', token);
 

@@ -1,8 +1,10 @@
 import React, { useEffect } from 'react';
 import { Route, Routes } from 'react-router-dom';
-// import Template from './pages/Template';
-import SignIn from './pages/SignIn';
+import Dashboard from './components/Dashboard';
+import Landing from './pages/Landing';
+import SignIn from './components/SignIn';
 import api from './shared/utils/api';
+import { fetchAuthToken } from './shared/utils/authToken';
 
 function App() {
   // request to back doesn't work
@@ -10,15 +12,13 @@ function App() {
     api('get', '/')
       .then(data => console.log(data))
       .catch(err => console.log(err));
-    // fetch(`${process.env.REACT_APP_API_URL}/`)
-    //   .then(res => res.json())
-    //   .then(data => console.log(data))
-    //   .catch(err => console.error(err));
   }, []);
   return (
     <div className='w-screen h-screen'>
       <Routes>
-        <Route path='/' element={<SignIn />} />
+        <Route path="/" element={<Landing />}>
+          <Route index element={fetchAuthToken() ? <Dashboard /> : <SignIn />} />
+        </Route>
       </Routes>
     </div>
   );

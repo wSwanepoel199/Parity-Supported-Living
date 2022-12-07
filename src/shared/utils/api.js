@@ -1,13 +1,13 @@
 import axios from 'axios';
-import { redirect } from 'react-router-dom';
+// import { redirect } from 'react-router-dom';
 
-const { getStoredAuthToken, removeStoredToken } = require("./authToken");
+const { fetchAuthToken, removeStoredToken } = require("./authToken");
 
 const defaults = {
-  url: process.env.REACT_APP_API_URL || "http://localhost:5000",
+  url: process.env.REACT_APP_API_URL || "http://192.168.1.117:5000",
   headers: {
     'Content-Type': 'application/json',
-    Authorization: getStoredAuthToken() ? `Bearer ${getStoredAuthToken()}` : undefined
+    Authorization: fetchAuthToken() ? `Bearer ${fetchAuthToken()}` : undefined
   },
   error: {
     status: 503,
@@ -17,7 +17,6 @@ const defaults = {
 
 const api = (method, path, variables) =>
   new Promise((resolve, reject) => {
-    console.log(method, path, variables);
     axios({
       url: `${defaults.url}${path}`,
       method,
@@ -32,7 +31,7 @@ const api = (method, path, variables) =>
       error => {
         if (error.response) {
           if (error.response.status === 401) {
-            // removeStoredToken();
+            removeStoredToken();
             // redirect('/authenticate');
             reject(error.response.data);
           } else {

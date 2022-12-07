@@ -8,6 +8,7 @@ class RefreshTokenController {
       res.status(200).json(refreshedUser);
     }
     catch (err) {
+      res.status(err.statusCode).json({ status: err.statusCode, msg: err.message });
       next(createError(err.statusCode, err.message));
     }
   };
