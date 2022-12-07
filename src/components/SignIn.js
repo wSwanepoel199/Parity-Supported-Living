@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState, useTransition } from "react";
 import Grid from "@mui/material/Unstable_Grid2";
 import { Box, Button, IconButton, TextField, Typography } from "@mui/material";
 import LoginIcon from '@mui/icons-material/Login';
@@ -7,7 +7,6 @@ import api from "../shared/utils/api";
 import { storeAuthToken } from "../shared/utils/authToken";
 
 const SignIn = () => {
-
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -45,7 +44,7 @@ const SignIn = () => {
   };
 
   return (
-    <Box component="form" className="w-full max-w-screen-md flex justify-center">
+    <Box component="form" className="w-full max-w-screen-md flex justify-center" onSubmit={(e) => handleSubmit(e)}>
       {console.log(formData)}
       <Grid container spacing={2} xs={10} sm={8} className="flex flex-col justify-center content-center items-center bg-slate-200 border-2 border-solid border-black rounded-md">
         {formData.error ?
@@ -70,7 +69,7 @@ const SignIn = () => {
           />
         </Grid>
         <Grid sm={8} xs={12} className="flex justify-center">
-          <Button variant="contained" onClick={(e) => handleSubmit(e)} className="m-3">Sign In</Button>
+          <Button variant="contained" className="m-3" type="Submit">Sign In</Button>
         </Grid>
       </Grid>
     </Box>
