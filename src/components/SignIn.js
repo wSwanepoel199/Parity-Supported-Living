@@ -1,12 +1,15 @@
-import React, { useEffect, useState, useTransition } from "react";
+import React, { useState } from "react";
+import { useDispatch } from "react-redux";
 import Grid from "@mui/material/Unstable_Grid2";
 import { Box, Button, IconButton, TextField, Typography } from "@mui/material";
 import LoginIcon from '@mui/icons-material/Login';
 import CloseIcon from '@mui/icons-material/Close';
 import api from "../shared/utils/api";
 import { storeAuthToken } from "../shared/utils/authToken";
+import { saveUser } from "../shared/redux/user/userSlice";
 
 const SignIn = () => {
+  const dispatch = useDispatch();
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -28,6 +31,7 @@ const SignIn = () => {
       .then((data) => {
         console.log(data);
         storeAuthToken(data.data.accessToken);
+        dispatch(saveUser(data.data));
         setFormData({
           email: '',
           password: '',

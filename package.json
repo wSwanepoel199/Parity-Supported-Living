@@ -16,6 +16,7 @@
     "@mui/base": "^5.0.0-alpha.108",
     "@mui/icons-material": "^5.10.16",
     "@mui/material": "^5.10.16",
+    "@reduxjs/toolkit": "^1.9.1",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
@@ -23,6 +24,7 @@
     "dotenv": "^16.0.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-redux": "^8.0.5",
     "react-router-dom": "^6.4.4",
     "web-vitals": "^2.1.4",
     "workbox-background-sync": "^6.5.4",
@@ -39,6 +41,7 @@
     "workbox-streams": "^6.5.4"
   },
   "devDependencies": {
+    "@redux-devtools/core": "^3.13.1",
     "autoprefixer": "^10.4.13",
     "postcss": "^8.4.19",
     "react-scripts": "5.0.1",
