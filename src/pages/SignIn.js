@@ -25,10 +25,8 @@ const SignIn = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(formData);
     api("post", '/auth/login', { data: formData })
       .then((data) => {
-        console.log(data);
         dispatch(saveToken(data.data.accessToken));
         dispatch(saveUser(data.data));
         setFormData({
@@ -48,7 +46,6 @@ const SignIn = () => {
 
   return (
     <Box component="form" className="w-full max-w-screen-md flex justify-center" onSubmit={(e) => handleSubmit(e)}>
-      {console.log(formData)}
       <Grid container spacing={2} xs={10} sm={8} className="flex flex-col justify-center content-center items-center bg-slate-200 border-2 border-solid border-black rounded-md">
         {formData.error ?
           <Grid sm={8} xs={12} className="w-full bg-red-500 flex justify-between items-center">
