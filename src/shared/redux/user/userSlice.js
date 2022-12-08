@@ -10,15 +10,18 @@ export const userSlice = createSlice({
   name: 'user',
   initialState,
   reducers: {
+    removeUser: (state) => {
+      removeStoredToken();
+      return {
+        ...initialState,
+        authToken: ''
+      };
+    },
     saveUser: (state, action) => {
       return {
         ...state,
         user: action.payload
       };
-    },
-    removeUser: (state) => {
-      removeStoredToken();
-      return initialState;
     },
     saveToken: (state, action) => {
       storeAuthToken(action.payload);

@@ -16,7 +16,6 @@ class AuthService {
   // logs in existing user
   static async login(data) {
     const { email, password } = data;
-    console.log(data);
     if (!email || !password) throw createError.BadRequest({ message: "Email or Password not provided", data: data });
     const user = await prisma.user.findUnique({
       where: {
@@ -29,13 +28,11 @@ class AuthService {
     if (!checkPassword) throw createError.Unauthorized({ message: "Provided Email or Password is not correct", data: data });
     delete user.password;
     const refreshToken = await RefreshTokenService.create(user.id, email);
-    console.log(refreshToken);
     user.accessToken = await jwt.signAccessToken(user.userId);
     return { user: user, token: refreshToken };
   }
   // logs out existing user
   static async logout(data) {
-    console.log(data);
     if (!data?.jwt) return;
     await RefreshTokenService.remove(data.jwt);
     return;

@@ -5,7 +5,6 @@ import { Box, Button, IconButton, TextField, Typography } from "@mui/material";
 import LoginIcon from '@mui/icons-material/Login';
 import CloseIcon from '@mui/icons-material/Close';
 import api from "../shared/utils/api";
-import { storeAuthToken } from "../shared/utils/authToken";
 import { saveToken, saveUser } from "../shared/redux/user/userSlice";
 
 const SignIn = () => {

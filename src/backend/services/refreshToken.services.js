@@ -4,8 +4,6 @@ const jwt = require('../utils/jwt');
 
 class RefreshTokenService {
   static async create(userid, email) {
-    // data: {userid, email}
-    console.log(userid, email);
     const tokenCheck = await prisma.RefreshToken.findUnique({
       where: {
         userId: userid
