@@ -26,7 +26,7 @@ const verifyAccessToken = (token) => {
   return new Promise((resolve, reject) => {
     jwt.verify(token, accessTokenSecret, (err, payload) => {
       if (err) {
-        const message = err.name == 'JsonWebTokenError' ? "Unautherised" : err.message;
+        const message = err.name === 'JsonWebTokenError' ? "Unautherised" : err.message;
         return reject(createError.Unauthorized(message));
       }
       resolve(payload);
@@ -38,7 +38,7 @@ const verifyRefreshToken = (token, user) => {
   return new Promise((resolve, reject) => {
     jwt.verify(token, refreshTokenSecret, (err, payload) => {
       if (err || user.email !== payload.payload) {
-        const message = err.name == 'JsonWebTokenError' ? "Unautherised" : err.message;
+        const message = err.name === 'JsonWebTokenError' ? "Unautherised" : err.message;
         return reject(createError.Unauthorized(message));
       }
       resolve(signAccessToken(user.userId));

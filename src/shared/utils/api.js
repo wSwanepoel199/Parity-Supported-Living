@@ -1,13 +1,13 @@
 import axios from 'axios';
 // import { redirect } from 'react-router-dom';
 
-const { fetchAuthToken, removeStoredToken } = require("./authToken");
+const { fetchStoredToken, removeStoredToken } = require("./authToken");
 
 const defaults = {
   url: process.env.REACT_APP_API_URL || "http://192.168.1.117:5000",
   headers: {
     'Content-Type': 'application/json',
-    Authorization: fetchAuthToken() ? `Bearer ${fetchAuthToken()}` : undefined
+    Authorization: fetchStoredToken() ? `Bearer ${fetchStoredToken()}` : undefined
   },
   error: {
     status: 503,

@@ -6,7 +6,7 @@ import LoginIcon from '@mui/icons-material/Login';
 import CloseIcon from '@mui/icons-material/Close';
 import api from "../shared/utils/api";
 import { storeAuthToken } from "../shared/utils/authToken";
-import { saveUser } from "../shared/redux/user/userSlice";
+import { saveToken, saveUser } from "../shared/redux/user/userSlice";
 
 const SignIn = () => {
   const dispatch = useDispatch();
@@ -30,7 +30,7 @@ const SignIn = () => {
     api("post", '/auth/login', { data: formData })
       .then((data) => {
         console.log(data);
-        storeAuthToken(data.data.accessToken);
+        dispatch(saveToken(data.data.accessToken));
         dispatch(saveUser(data.data));
         setFormData({
           email: '',

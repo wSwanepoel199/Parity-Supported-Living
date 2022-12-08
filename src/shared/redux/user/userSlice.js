@@ -1,6 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { fetchStoredToken, removeStoredToken, storeAuthToken } from "../../utils/authToken";
 
 const initialState = {
+  user: {},
+  authToken: fetchStoredToken() || ''
 };
 
 export const userSlice = createSlice({
@@ -8,15 +11,25 @@ export const userSlice = createSlice({
   initialState,
   reducers: {
     saveUser: (state, action) => {
-      console.log(state.user, action.payload);
-      return action.payload;
+      return {
+        ...state,
+        user: action.payload
+      };
     },
     removeUser: (state) => {
+      removeStoredToken();
       return initialState;
+    },
+    saveToken: (state, action) => {
+      storeAuthToken(action.payload);
+      return {
+        ...state,
+        authToken: action.payload
+      };
     }
   }
 });
 
-export const { saveUser, removeUser } = userSlice.actions;
+export const { saveUser, removeUser, saveToken } = userSlice.actions;
 
 export default userSlice.reducer;

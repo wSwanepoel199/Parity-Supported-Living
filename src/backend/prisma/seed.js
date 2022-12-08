@@ -92,11 +92,10 @@ async function seed() {
   console.log("Seeding....");
   for (const u of users) {
     u.password = bcrypt.hashSync(u.password, 8);
-    u.refreshToken = await jwt.signRefreshToken(u.email);
     const user = await prisma.user.create({
       data: u
     });
-    console.log(`Created user with id: ${user.id} with accessToken: ${u.refreshToken}`);
+    console.log(`Created user with id: ${user.id}`);
   }
   for (const p of posts) {
     const post = await prisma.post.create({

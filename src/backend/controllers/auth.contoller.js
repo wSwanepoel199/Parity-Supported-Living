@@ -4,18 +4,10 @@ const createError = require('http-errors');
 class AuthController {
   static register = async (req, res, next) => {
     try {
-      const user = await auth.register(req.body);
-      console.log(user);
-      res.cookie('jwt', user.token, {
-        httpOnly: true,
-        // secure: true, 
-        // SameSite: "None", 
-        maxAge: (24 * 60 * 60 * 1000 * 200)
-      });
+      await auth.register(req.body);
       res.status(201).json({
         status: 201,
-        msg: "User Created",
-        data: user.data
+        msg: "User Created"
       });
     }
     catch (err) {
@@ -26,18 +18,32 @@ class AuthController {
   static login = async (req, res, next) => {
     try {
       const data = await auth.login(req.body);
-      res.cookie('jwt', data.refreshToken, {
+      res.cookie('jwt', data.token, {
         httpOnly: true,
         // SameSite: "None", 
         // secure: true, 
         maxAge: (24 * 60 * 60 * 1000 * 200)
       });
-      delete data.refreshToken;
       res.status(200).json({
         status: 200,
         msg: "Logged In Successfully",
-        data
+        data: data.user
       });
+    }
+    catch (err) {
+      res.status(err.statusCode).json({ status: err.statusCode, msg: err.message });
+      next(createError(err.statusCode, err.message));
+    }
+  };
+  static logout = async (req, res, next) => {
+    try {
+      await auth.logout(req.cookies);
+      res.clearCookie('jwt', {
+        httpOnly: true,
+        // SameSite: "None", 
+        // secure: true, 
+      });
+      res.sendStatus(204);
     }
     catch (err) {
       res.status(err.statusCode).json({ status: err.statusCode, msg: err.message });
