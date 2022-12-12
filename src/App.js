@@ -27,6 +27,7 @@ function App() {
       <Routes>
         <Route path="/" element={authenticated ? <Landing /> : <SignIn />}>
           <Route index element={<Dashboard />} />
+          <Route path="casenotes" element={<div>Hi there</div>} />
         </Route>
       </Routes>
     </div>

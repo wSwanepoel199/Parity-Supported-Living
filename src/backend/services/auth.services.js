@@ -22,7 +22,6 @@ class AuthService {
         email
       }
     });
-    console.log(user);
     if (!user) throw createError.NotFound({ message: "No user exists with that email", data: data });
     const checkPassword = bcrypt.compareSync(password, user.password);
     if (!checkPassword) throw createError.Unauthorized({ message: "Provided Email or Password is not correct", data: data });

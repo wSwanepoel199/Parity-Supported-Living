@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
 import { removeUser } from "../shared/redux/user/userSlice";
-import { Box, List, ListItem, ListItemButton, ListItemText } from "@mui/material";
+import { Box, Divider, List, ListItem, ListItemButton, ListItemText } from "@mui/material";
 import api from "../shared/utils/api";
 import { Link as RouterLink } from "react-router-dom";
 
@@ -14,7 +14,7 @@ const Navbar = () => {
   };
 
   return (
-    <Box className="bg-neutral-500 h-screen w-1/6 min-w-min flex flex-col">
+    <Box className="bg-neutral-500 h-screen max-h-full w-1/6 min-w-min flex flex-col justify-between">
       <List disablePadding>
         <ListItem>
           <ListItemText primary={user.name} />
@@ -22,6 +22,9 @@ const Navbar = () => {
         <ListItemButton component={RouterLink} to="/signin">
           <ListItemText primary="TestLink" />
         </ListItemButton>
+      </List>
+      <List disablePadding>
+        <Divider />
         <ListItemButton onClick={() => signOut()}>
           <ListItemText primary="Sign Out" />
         </ListItemButton>
@@ -29,10 +32,5 @@ const Navbar = () => {
     </Box>
   );
 };
-
-// <Box className="h-14">
-// <Typography >{user.name}</Typography>
-// </Box>
-// <Button variant="contained" onClick={() => signOut()} className="self-end">SignOut</Button>
 
 export default Navbar;
