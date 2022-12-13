@@ -6,26 +6,20 @@ import Landing from './pages/Landing';
 import SignIn from './pages/SignIn';
 import { fetchStoredToken } from './shared/utils/authToken';
 import api from './shared/utils/api';
-import { saveToken, saveUser } from './shared/redux/user/userSlice';
+import { refreshUser, saveToken, saveUser } from './shared/redux/user/userSlice';
 
 function App() {
-  const authenticated = useSelector(state => state.user.authToken);
+  const userState = useSelector(state => state.user);
   const dispatch = useDispatch();
+
   useEffect(() => {
-    if (fetchStoredToken()) {
-      api('get', '/refresh')
-        .then(data => {
-          console.log(data);
-          dispatch(saveToken(data.accessToken));
-          dispatch(saveUser(data));
-        })
-        .catch(err => console.log(err));
-    }
+    if (fetchStoredToken()) dispatch(refreshUser());
   }, [dispatch]);
+
   return (
     <div className='w-screen h-screen bg-slate-400 flex justify-center content-center items-center'>
       <Routes>
-        <Route path="/" element={authenticated ? <Landing /> : <SignIn />}>
+        <Route path="/" element={userState.authToken ? <Landing /> : <SignIn />}>
           <Route index element={<Dashboard />} />
           <Route path="casenotes" element={<div>Hi there</div>} />
         </Route>
@@ -33,5 +27,6 @@ function App() {
     </div>
   );
 }
+
 
 export default App;

@@ -1,19 +1,28 @@
-import React, { useState } from "react";
-import { useDispatch } from "react-redux";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import Grid from "@mui/material/Unstable_Grid2";
 import { Box, Button, IconButton, TextField, Typography } from "@mui/material";
 import LoginIcon from '@mui/icons-material/Login';
 import CloseIcon from '@mui/icons-material/Close';
-import api from "../shared/utils/api";
-import { saveToken, saveUser } from "../shared/redux/user/userSlice";
+import { getUser } from "../shared/redux/user/userSlice";
 
 const SignIn = () => {
   const dispatch = useDispatch();
+  const userState = useSelector(state => state.user);
   const [formData, setFormData] = useState({
     email: '',
     password: '',
     error: undefined,
   });
+
+  useEffect(() => {
+    setFormData(prev => {
+      return {
+        ...prev,
+        error: userState.error || undefined
+      };
+    });
+  }, [userState]);
 
   const handleFormData = (e) => {
     const { value, name } = e.target;
@@ -25,31 +34,16 @@ const SignIn = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    api("post", '/auth/login', { data: formData })
-      .then((data) => {
-        dispatch(saveToken(data.data.accessToken));
-        dispatch(saveUser(data.data));
-        setFormData({
-          email: '',
-          password: '',
-          error: undefined
-        });
-      })
-      .catch(err => {
-        console.log(err);
-        setFormData({
-          ...formData,
-          error: err.msg
-        });
-      });
+    dispatch(getUser(formData));
   };
 
   return (
     <Box component="form" className="w-full max-w-screen-md flex justify-center" onSubmit={(e) => handleSubmit(e)}>
+      {console.log(userState)}
       <Grid container spacing={2} xs={10} sm={8} className="flex flex-col justify-center content-center items-center bg-slate-200 border-2 border-solid border-black rounded-md">
         {formData.error ?
           <Grid sm={8} xs={12} className="w-full bg-red-500 flex justify-between items-center">
-            <Typography variant="body1">{formData.error.message}</Typography>
+            <Typography variant="body1">{formData.error}</Typography>
             <IconButton onClick={() => setFormData({ ...formData, error: undefined })}>
               <CloseIcon fontSize="small" />
             </IconButton>

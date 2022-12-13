@@ -11,7 +11,7 @@ class AuthController {
       });
     }
     catch (err) {
-      res.status(err.statusCode).json({ status: err.statusCode, msg: err.message });
+      res.status(err.statusCode).json(createError(err.statusCode, err.message));
       next(createError(err.statusCode, err.message));
     }
   };
@@ -25,13 +25,12 @@ class AuthController {
         maxAge: (24 * 60 * 60 * 1000 * 200)
       });
       res.status(200).json({
-        status: 200,
         msg: "Logged In Successfully",
         data: data.user
       });
     }
     catch (err) {
-      res.status(err.statusCode).json({ status: err.statusCode, msg: err.message });
+      res.status(err.statusCode).json(createError(err.statusCode, err.message));
       next(createError(err.statusCode, err.message));
     }
   };
@@ -46,7 +45,7 @@ class AuthController {
       res.sendStatus(204);
     }
     catch (err) {
-      res.status(err.statusCode).json({ status: err.statusCode, msg: err.message });
+      res.status(err.statusCode).json(createError(err.statusCode, err.message));
       next(createError(err.statusCode, err.message));
     }
   };
@@ -60,7 +59,7 @@ class AuthController {
       });
     }
     catch (err) {
-      res.status(err.statusCode).json({ status: err.statusCode, msg: err.message });
+      res.status(err.statusCode).json(createError(err.statusCode, err.message));
       next(createError(err.statusCode, err.message));
     }
   };
