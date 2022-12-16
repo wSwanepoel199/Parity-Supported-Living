@@ -1,15 +1,13 @@
 // const { prisma } = require('@prisma/client');
 const express = require('express');
 const router = express.Router();
-const prisma = require('../lib/prisma');
 
 /* GET home page. */
 router.get('/', async function (req, res) {
-  const posts = await prisma.post.findMany();
-  res.status(200).send({
+  res.status(200).json({
     status: 200,
-    msg: "All Available Posts",
-    data: posts
+    msg: "Example Get",
+    data: ["Hello World", "WWorldHello", "Hi Worldy"]
   });
 });
 

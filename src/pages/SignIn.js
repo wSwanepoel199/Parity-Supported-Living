@@ -4,11 +4,13 @@ import Grid from "@mui/material/Unstable_Grid2";
 import { Box, Button, IconButton, TextField, Typography } from "@mui/material";
 import LoginIcon from '@mui/icons-material/Login';
 import CloseIcon from '@mui/icons-material/Close';
-import { getUser } from "../shared/redux/user/userSlice";
+import { useLoginUserMutation } from "../shared/utils/api";
+// import { getUser, loginUser } from "../shared/redux/user/userSlice";
 
 const SignIn = () => {
   const dispatch = useDispatch();
   const userState = useSelector(state => state.user);
+  const [loginUser, { isLoading, isUpdating }] = useLoginUserMutation();
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -34,12 +36,17 @@ const SignIn = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    dispatch(getUser(formData));
+    // dispatch(getUser(formData));
+    // dispatch(loginUser(formData));
+    loginUser(formData);
   };
+
+  useEffect(() => {
+    console.log(isLoading, isUpdating);
+  }, [isLoading, isUpdating]);
 
   return (
     <Box component="form" className="w-full max-w-screen-md flex justify-center" onSubmit={(e) => handleSubmit(e)}>
-      {console.log(userState)}
       <Grid container spacing={2} xs={10} sm={8} className="flex flex-col justify-center content-center items-center bg-slate-200 border-2 border-solid border-black rounded-md">
         {formData.error ?
           <Grid sm={8} xs={12} className="w-full bg-red-500 flex justify-between items-center">

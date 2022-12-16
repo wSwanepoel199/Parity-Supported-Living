@@ -4,18 +4,19 @@ const createError = require("http-errors");
 const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET;
 const refreshTokenSecret = process.env.REFRESH_TOKEN_SECRET;
 
+// { expiresIn: '24h' }
 const signAccessToken = (payload) => {
   return new Promise((resolve, reject) => {
-    jwt.sign({ payload }, accessTokenSecret, { expiresIn: '24h' }, (err, token) => {
+    jwt.sign({ payload }, accessTokenSecret, { expiresIn: '30m' }, (err, token) => {
       if (err) reject(createError.InternalServerError());
       resolve(token);
     });
   });
 };
-
+// { expiresIn: '1 days' }
 const signRefreshToken = (payload) => {
   return new Promise((resolve, reject) => {
-    jwt.sign({ payload }, refreshTokenSecret, { expiresIn: '200 days' }, (err, token) => {
+    jwt.sign({ payload }, refreshTokenSecret, { expiresIn: '1h' }, (err, token) => {
       if (err) reject(createError.InternalServerError());
       resolve(token);
     });

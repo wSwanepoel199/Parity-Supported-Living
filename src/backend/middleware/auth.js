@@ -11,7 +11,7 @@ const auth = async (req, res, next) => {
     req.user = user;
     next();
   }).catch(err => {
-    res.status(err.statusCode).json({ status: err.statusCode, msg: err.message });
+    res.status(err.statusCode).json(createError.Unauthorized(err.message));
     next(createError.Unauthorized(err.message));
   });
 };
