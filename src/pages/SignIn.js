@@ -1,16 +1,17 @@
 import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import Grid from "@mui/material/Unstable_Grid2";
 import { Box, Button, IconButton, TextField, Typography } from "@mui/material";
 import LoginIcon from '@mui/icons-material/Login';
 import CloseIcon from '@mui/icons-material/Close';
-import { useLoginUserMutation } from "../shared/utils/api";
+
+import { storeAuthToken } from "../shared/utils/authToken";
+import { useLoginUserMutation } from "../shared/redux/user/userSlice";
 // import { getUser, loginUser } from "../shared/redux/user/userSlice";
 
 const SignIn = () => {
-  const dispatch = useDispatch();
   const userState = useSelector(state => state.user);
-  const [loginUser, { isLoading, isUpdating }] = useLoginUserMutation();
+  const [loginUser, { data, isLoading, isUpdating }] = useLoginUserMutation();
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -36,14 +37,17 @@ const SignIn = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // dispatch(getUser(formData));
-    // dispatch(loginUser(formData));
     loginUser(formData);
   };
 
   useEffect(() => {
-    console.log(isLoading, isUpdating);
-  }, [isLoading, isUpdating]);
+    if (isLoading) console.log(isLoading);
+    if (isUpdating) console.log(isUpdating);
+    if (data) {
+      console.log(data);
+      storeAuthToken(data.data.accessToken);
+    }
+  }, [data, isLoading, isUpdating]);
 
   return (
     <Box component="form" className="w-full max-w-screen-md flex justify-center" onSubmit={(e) => handleSubmit(e)}>

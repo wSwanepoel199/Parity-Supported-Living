@@ -1,6 +1,6 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
+import { backendApi } from "../../utils/api";
 import { fetchStoredToken, removeStoredToken, storeAuthToken } from "../../utils/authToken";
-// import api from '../../utils/api';
 
 const initialState = {
   user: {},
@@ -9,36 +9,24 @@ const initialState = {
   error: undefined
 };
 
-// const isPending = (action) => {
-//   return action.type.endsWith('pending');
-// };
-
-// const isFulfilled = (action) => {
-//   return action.type.endsWith('fulfilled');
-// };
-
-// const isRejected = (action) => {
-//   return action.type.endsWith('rejected');
-// };
-
 export const userSlice = createSlice({
   name: 'user',
   initialState,
   reducers: {
-    loginUser: () => {
-
+    saveUser: (state, action) => {
+      storeAuthToken(action.payload.accessToken);
+      return {
+        ...state,
+        user: action.payload,
+        authToken: action.payload.accessToken,
+        status: "loggedIn"
+      };
     },
     removeUser: () => {
       removeStoredToken();
       return {
         ...initialState,
         authToken: undefined
-      };
-    },
-    saveUser: (state, action) => {
-      return {
-        ...state,
-        user: action.payload
       };
     },
     saveToken: (state, action) => {
@@ -49,43 +37,53 @@ export const userSlice = createSlice({
       };
     }
   },
-  // extraReducers(builder) {
-  //   builder
-  //     .addMatcher(isPending, () => {
-  //       return {
-  //         ...initialState,
-  //         status: "loading"
-  //       };
-  //     })
-  //     .addMatcher(isFulfilled, (state, action) => {
-  //       storeAuthToken(action.payload.data.accessToken);
-  //       return {
-  //         ...state,
-  //         status: "loggedIn",
-  //         user: action.payload.data,
-  //         authToken: action.payload.data.accessToken
-  //       };
-  //     })
-  //     .addMatcher(isRejected, (state, action) => {
-  //       return {
-  //         ...state,
-  //         status: "failed",
-  //         error: action.error.message
-  //       };
-  //     });
-  // }
 });
 
-// export const getUser = createAsyncThunk('user/getUser', async (details) => {
-//   const res = await api("post", '/auth/login', { data: details });
-//   return res;
-// });
-
-// export const refreshUser = createAsyncThunk('user/refreshUser', async () => {
-//   const res = await api("get", '/refresh');
-//   return res;
-// });
-
-export const { loginUser, saveUser, removeUser, saveToken } = userSlice.actions;
+export const { saveUser, removeUser, saveToken } = userSlice.actions;
 
 export default userSlice.reducer;
+
+export const userApiSlice = backendApi.injectEndpoints({
+  endpoints: builder => ({
+    loginUser: builder.mutation({
+      query: (loginDetails) => ({ url: '/auth/login', method: 'post', data: loginDetails }),
+      async onQueryStarted(loginDetails, { dispatch, queryFulfilled }) {
+        try {
+          const { data } = await queryFulfilled;
+          console.log(data);
+          dispatch(saveUser(data.data));
+        }
+        catch (err) {
+          console.log(err);
+        }
+      }
+    }),
+    refreshUser: builder.query({
+      query: (refresh) => ({ url: '/refresh', method: 'get' }),
+      async onQueryStarted(refresh, { dispatch, queryFulfilled }) {
+        try {
+          const { data } = await queryFulfilled;
+          console.log(data);
+          dispatch(saveUser(data.data));
+        }
+        catch (err) {
+          console.log(err);
+        }
+      }
+    }),
+    logoutUser: builder.query({
+      query: (signout) => ({ url: '/auth/logout', method: 'get' }),
+      async onQueryStarted(signout, { dispatch, queryFulfilled }) {
+        try {
+          const { data } = await queryFulfilled;
+          dispatch(removeUser(data.data));
+        }
+        catch (err) {
+          console.log(err);
+        }
+      }
+    })
+  })
+});
+
+export const { useLoginUserMutation, useRefreshUserQuery, useLogoutUserQuery } = userApiSlice;

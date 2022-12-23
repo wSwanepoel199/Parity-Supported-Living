@@ -1,8 +1,8 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import { createApi } from '@reduxjs/toolkit/query/react';
 import axios from 'axios';
 // import { redirect } from 'react-router-dom';
 
-const { fetchStoredToken, removeStoredToken } = require("./authToken");
+const { fetchStoredToken } = require("./authToken");
 
 const defaults = {
   url: process.env.REACT_APP_API_URL || "http://192.168.1.117:5000",
@@ -53,20 +53,17 @@ export const backendApi = createApi({
       providesTags: (result) => result
         ?
         [
-          ...result.data.map(({ id }) => ({ type: 'Index', id })),
-          { type: 'Index', id: 'LIST' },
+          ...result.data.map(({ id, index }) => ({ type: 'Index', index })),
+          { type: 'Index', index: 'LIST' },
         ]
         :
-        [{ type: 'Index', id: 'LIST' }],
+        [{ type: 'Index', index: 'LIST' }],
 
-    }),
-    loginUser: builder.mutation({
-      query: (details) => ({ url: '/auth/login', method: 'post', data: details })
     }),
   })
 });
 
-export const { useIndexGetQuery, useLoginUserMutation } = backendApi;
+export const { useIndexGetQuery } = backendApi;
 
 // export default api;
 
