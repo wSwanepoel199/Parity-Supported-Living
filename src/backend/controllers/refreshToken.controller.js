@@ -12,7 +12,6 @@ class RefreshTokenController {
       next(createError(err.statusCode, err.message));
     }
   };
-
 }
 
 module.exports = RefreshTokenController;

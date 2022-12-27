@@ -1,21 +1,23 @@
 import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import Grid from "@mui/material/Unstable_Grid2";
-import { Box, Button, IconButton, TextField, Typography } from "@mui/material";
+import { Box, Button, FormControl, IconButton, Input, InputAdornment, InputLabel, Typography } from "@mui/material";
 import LoginIcon from '@mui/icons-material/Login';
 import CloseIcon from '@mui/icons-material/Close';
-
-import { storeAuthToken } from "../shared/utils/authToken";
+import Visibility from "@mui/icons-material/Visibility";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
+import { useSelector } from "react-redux";
 import { useLoginUserMutation } from "../shared/redux/user/userSlice";
-// import { getUser, loginUser } from "../shared/redux/user/userSlice";
 
 const SignIn = () => {
   const userState = useSelector(state => state.user);
-  const [loginUser, { data, isLoading, isUpdating }] = useLoginUserMutation();
+  const navigate = useNavigate();
+  const [loginUser, { data, error, isSuccess, isError }] = useLoginUserMutation();
   const [formData, setFormData] = useState({
     email: '',
     password: '',
     error: undefined,
+    showPassword: false
   });
 
   useEffect(() => {
@@ -41,13 +43,19 @@ const SignIn = () => {
   };
 
   useEffect(() => {
-    if (isLoading) console.log(isLoading);
-    if (isUpdating) console.log(isUpdating);
-    if (data) {
-      console.log(data);
-      storeAuthToken(data.data.accessToken);
+    if (isSuccess) {
+      navigate('/');
     }
-  }, [data, isLoading, isUpdating]);
+    if (isError) {
+      setFormData(prev => {
+        return {
+          ...prev,
+          error: error.data.message
+        };
+
+      });
+    }
+  }, [data, error, isSuccess, navigate, isError]);
 
   return (
     <Box component="form" className="w-full max-w-screen-md flex justify-center" onSubmit={(e) => handleSubmit(e)}>
@@ -66,12 +74,35 @@ const SignIn = () => {
           <Typography variant="h5" component="h1">Sign In</Typography>
         </Grid>
         <Grid sm={8} xs={12} className="flex justify-center">
-          <TextField label="Email" type="email" variant="standard" className="w-full" name="email" onChange={(e) => handleFormData(e)} value={formData.email}
-          />
+          <FormControl variant="standard" className="w-full">
+            <InputLabel htmlFor="emailInput">Email</InputLabel>
+            <Input
+              id="emailInput"
+              name="email"
+              type="email"
+              value={formData.email}
+              onChange={(e) => handleFormData(e)}
+            />
+          </FormControl>
         </Grid>
         <Grid sm={8} xs={12} className="flex justify-center">
-          <TextField label="Password" type="password" variant="standard" className="w-full" name="password" onChange={(e) => handleFormData(e)} value={formData.password}
-          />
+          <FormControl variant="standard" className="w-full">
+            <InputLabel htmlFor="passwordInput">Password</InputLabel>
+            <Input
+              id="passwordInput"
+              name="password"
+              type={formData.showPassword ? "text" : 'password'}
+              value={formData.password}
+              onChange={(e) => handleFormData(e)}
+              endAdornment={
+                <InputAdornment position="end">
+                  <IconButton onClick={() => setFormData(prev => { return { ...prev, showPassword: !prev.showPassword }; })} edge="end" aria-label="toggle password visibility">
+                    {formData.showPassword ? <VisibilityOff /> : <Visibility />}
+                  </IconButton>
+                </InputAdornment>
+              }
+            />
+          </FormControl>
         </Grid>
         <Grid sm={8} xs={12} className="flex justify-center">
           <Button variant="contained" className="m-3" type="Submit">Sign In</Button>

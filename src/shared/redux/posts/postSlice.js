@@ -1,4 +1,5 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
+import { backendApi } from "../../utils/api";
 // import api from "../../utils/api";
 
 const initialState = {
@@ -21,7 +22,13 @@ export const postSlice = createSlice({
   name: 'posts',
   initialState,
   reducers: {
-
+    savePosts: (state, action) => {
+      return {
+        ...state,
+        posts: action.payload,
+        status: "successful"
+      };
+    }
   },
   // extraReducers(builder) {
   //   console.log(builder);
@@ -59,6 +66,26 @@ export const postSlice = createSlice({
 //   return res;
 // });
 
-export const { } = postSlice.actions;
+export const { savePosts } = postSlice.actions;
 
 export default postSlice.reducer;
+
+export const postApiSlice = backendApi.injectEndpoints({
+  endpoints: builder => ({
+    getPosts: builder.query({
+      query: (posts) => ({ url: '/posts', method: 'get' }),
+      async onQueryStarted(posts, { dispatch, queryFulfilled }) {
+        try {
+          const { data } = await queryFulfilled;
+          console.log(data);
+          dispatch(savePosts(data.data));
+        }
+        catch (err) {
+          console.error(err);
+        }
+      }
+    })
+  })
+});
+
+export const { useGetPostsQuery } = postApiSlice;

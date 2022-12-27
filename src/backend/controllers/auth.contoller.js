@@ -23,7 +23,7 @@ class AuthController {
         // SameSite: "None", 
         // secure: true, 
         // maxAge: (24 * 60 * 60 * 1000 * 200)
-        maxAge: (60 * 60 * 1000)
+        maxAge: (1000 * 60 * 60 * 24)
       });
       res.status(200).json({
         msg: "Logged In Successfully",

@@ -2,6 +2,7 @@ const jwt = require('../utils/jwt');
 const createError = require('http-errors');
 
 const auth = async (req, res, next) => {
+  if (!req.headers.authorization) return next(createError.Unauthorized('Not Authorised'));
   const token = req.headers.authorization.split(' ')[1];
   console.log(token);
   if (!token) {

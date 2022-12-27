@@ -54,11 +54,11 @@ export const userApiSlice = backendApi.injectEndpoints({
           dispatch(saveUser(data.data));
         }
         catch (err) {
-          console.log(err);
+          console.error(err);
         }
       }
     }),
-    refreshUser: builder.query({
+    refreshUser: builder.mutation({
       query: (refresh) => ({ url: '/refresh', method: 'get' }),
       async onQueryStarted(refresh, { dispatch, queryFulfilled }) {
         try {
@@ -67,11 +67,15 @@ export const userApiSlice = backendApi.injectEndpoints({
           dispatch(saveUser(data.data));
         }
         catch (err) {
-          console.log(err);
+          console.error(err);
+          if (err.error.status === 401) {
+            removeStoredToken();
+            dispatch(removeUser());
+          }
         }
       }
     }),
-    logoutUser: builder.query({
+    logoutUser: builder.mutation({
       query: (signout) => ({ url: '/auth/logout', method: 'get' }),
       async onQueryStarted(signout, { dispatch, queryFulfilled }) {
         try {
@@ -79,11 +83,11 @@ export const userApiSlice = backendApi.injectEndpoints({
           dispatch(removeUser(data.data));
         }
         catch (err) {
-          console.log(err);
+          console.error(err);
         }
       }
     })
   })
 });
 
-export const { useLoginUserMutation, useRefreshUserQuery, useLogoutUserQuery } = userApiSlice;
+export const { useLoginUserMutation, useRefreshUserMutation, useLogoutUserMutation } = userApiSlice;

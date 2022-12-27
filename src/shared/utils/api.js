@@ -60,10 +60,13 @@ export const backendApi = createApi({
         [{ type: 'Index', index: 'LIST' }],
 
     }),
+    checkToken: builder.query({
+      query: () => ({ url: '/auth/checkToken', method: 'get' })
+    })
   })
 });
 
-export const { useIndexGetQuery } = backendApi;
+export const { useIndexGetQuery, useCheckTokenQuery } = backendApi;
 
 // export default api;
 

@@ -1,13 +1,11 @@
 import { useSelector } from "react-redux";
-import { useLogoutUserQuery } from "../shared/redux/user/userSlice";
+import { useLogoutUserMutation } from "../shared/redux/user/userSlice";
 import { Box, Divider, List, ListItem, ListItemButton, ListItemText } from "@mui/material";
 import { Link as RouterLink } from "react-router-dom";
-import { useState } from "react";
 
 const Navbar = () => {
-  const [skip, setSkip] = useState(true);
   const user = useSelector(state => state.user.user);
-  useLogoutUserQuery(undefined, { skip });
+  const [logoutUser] = useLogoutUserMutation();
 
   return (
     <Box className="bg-neutral-500 h-screen max-h-full w-1/6 min-w-min flex flex-col justify-between">
@@ -24,7 +22,7 @@ const Navbar = () => {
       </List>
       <List disablePadding>
         <Divider />
-        <ListItemButton onClick={() => setSkip((prev) => !prev)}>
+        <ListItemButton onClick={() => logoutUser()}>
           <ListItemText primary="Sign Out" />
         </ListItemButton>
       </List>
