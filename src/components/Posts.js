@@ -1,30 +1,22 @@
 import { Box } from "@mui/material";
-import { DataGrid } from "@mui/x-data-grid";
+import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import { format, parseISO } from "date-fns";
 import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { useGetPostsQuery } from "../shared/redux/posts/postSlice";
-// import { getPosts } from "../shared/redux/posts/postSlice";
-
-const RenderDate = (props) => {
-  return (
-    <>
-      {/* {console.log(props)} */}
-      {format(parseISO(props.value), 'dd/MM/yyyy')}
-    </>
-  );
-};
 
 const Posts = () => {
   const postState = useSelector(state => state.posts);
-  useGetPostsQuery();
+  const { isSuccess } = useGetPostsQuery();
 
   const [table, setTable] = useState({
     columns: [
       {
         field: 'date',
         headerName: 'Date',
-        renderCell: RenderDate,
+        valueFormatter: (props) => {
+          return format(parseISO(props.value), 'dd/MM/yyyy');
+        },
         flex: 1,
         minWidth: 100,
       },
@@ -35,6 +27,15 @@ const Posts = () => {
         minWidth: 100,
       },
       {
+        field: 'carer',
+        headerName: 'Carer',
+        flex: 1,
+        minWidth: 100,
+        valueGetter: (props) => {
+          return props.value.name;
+        }
+      },
+      {
         field: 'hours',
         headerName: 'Hours',
         flex: 1,
@@ -42,7 +43,7 @@ const Posts = () => {
       },
       {
         field: 'kilos',
-        headerName: 'Distance',
+        headerName: 'Distance(KM)',
         flex: 1,
         minWidth: 100,
       },
@@ -54,28 +55,48 @@ const Posts = () => {
       }
     ],
     rows: [],
+    pageSize: 10,
   });
 
   useEffect(() => {
-    setTable(prev => {
-      return {
-        ...prev,
-        rows: postState.posts
-      };
-    });
-  }, [postState]);
+    if (isSuccess) {
+      setTable(prev => {
+        return {
+          ...prev,
+          rows: postState.posts
+        };
+      });
+    }
+  }, [postState.posts, isSuccess]);
 
   return (
-    <div className="w-full h-full">
-      {console.log(postState, table)}
+    <div className="w-full h-full px-10">
+      {/* {console.log(postState, table)} */}
       <h1>Posts</h1>
       <Box className="flex">
         <div className="grow">
-          <DataGrid
-            rows={table.rows}
-            columns={table.columns}
-            autoHeight
-          />
+          {isSuccess
+            ? <DataGrid
+              rows={table.rows}
+              columns={table.columns}
+              pageSize={table.pageSize}
+              onPageSizeChange={(newPageSize) => setTable(prev => {
+                return {
+                  ...prev,
+                  pageSize: newPageSize,
+                };
+              })}
+              rowsPerPageOptions={[10, 20, 30]}
+              pagination
+              autoHeight
+              getRowId={(row) => row.postId}
+              onRowClick={(row) => console.log("clicked", row)}
+              components={{
+                Toolbar: GridToolbar,
+              }}
+              className="bg-slate-300"
+            />
+            : null}
         </div>
       </Box>
     </div>
