@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { backendApi } from "../../utils/api";
 import { fetchStoredToken, removeStoredToken, storeAuthToken } from "../../utils/authToken";
+import { backendApi } from "../api/backendApi";
 
 const initialState = {
   user: {},

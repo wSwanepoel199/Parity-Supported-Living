@@ -1,5 +1,5 @@
 import { configureStore } from "@reduxjs/toolkit";
-import { backendApi } from '../utils/api';
+import { backendApi } from "./api/backendApi";
 import rootReducer from './root/rootSlice';
 import userReducer from './user/userSlice';
 import postReducer from './posts/postSlice';

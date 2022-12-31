@@ -1,14 +1,13 @@
-import { createApi } from '@reduxjs/toolkit/query/react';
 import axios from 'axios';
+import store from '../redux/store';
 // import { redirect } from 'react-router-dom';
 
-const { fetchStoredToken } = require("./authToken");
+const DEBUG = process.env.NODE_ENV === "development";
 
 const defaults = {
   url: process.env.REACT_APP_API_URL || "http://192.168.1.117:5000",
   headers: {
     'Content-Type': 'application/json',
-    Authorization: fetchStoredToken() ? `Bearer ${fetchStoredToken()}` : undefined
   },
   error: {
     status: 503,
@@ -16,7 +15,7 @@ const defaults = {
   }
 };
 
-const axiosBaseQuery =
+export const axiosBaseQuery =
   ({ baseUrl } = { baseUrl: '' }) =>
     async ({ url, method, data, params }) => {
       try {
@@ -40,33 +39,14 @@ const axiosBaseQuery =
       }
     };
 
-// TODO: keep looking into https://redux-toolkit.js.org/rtk-query/overview
-export const backendApi = createApi({
-  reducerPath: 'backendApi',
-  baseQuery: axiosBaseQuery({
-    baseUrl: 'http://192.168.56.101:5000',
-  }),
-  tagTypes: ['Post', 'User', 'Index'],
-  endpoints: (builder) => ({
-    indexGet: builder.query({
-      query: () => ({ url: '/', method: "get" }),
-      providesTags: (result) => result
-        ?
-        [
-          ...result.data.map(({ id, index }) => ({ type: 'Index', index })),
-          { type: 'Index', index: 'LIST' },
-        ]
-        :
-        [{ type: 'Index', index: 'LIST' }],
-
-    }),
-    checkToken: builder.query({
-      query: () => ({ url: '/auth/checkToken', method: 'get' })
-    })
-  })
+axios.interceptors.request.use((config) => {
+  if (DEBUG) console.log("✉️ ", config);
+  console.log(store.getState());
+  config.headers.Authorization = `Bearer ${store.getState().user.authToken}`;
+  return config;
+}, (err) => {
+  return Promise.reject(err);
 });
-
-export const { useIndexGetQuery, useCheckTokenQuery } = backendApi;
 
 // export default api;
 

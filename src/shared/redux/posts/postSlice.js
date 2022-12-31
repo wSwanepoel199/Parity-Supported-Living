@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { backendApi } from "../../utils/api";
+import { backendApi } from "../api/backendApi";
 // import api from "../../utils/api";
 
 const initialState = {

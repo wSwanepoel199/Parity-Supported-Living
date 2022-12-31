@@ -1,5 +1,5 @@
-export const fetchStoredToken = () => localStorage.getItem('accessToken');
+export const fetchStoredToken = () => sessionStorage.getItem('accessToken');
 
-export const storeAuthToken = (token) => localStorage.setItem('accessToken', token);
+export const storeAuthToken = (token) => sessionStorage.setItem('accessToken', token);
 
-export const removeStoredToken = () => localStorage.removeItem('accessToken');
+export const removeStoredToken = () => sessionStorage.removeItem('accessToken');
