@@ -1,5 +1,6 @@
-import { Box, LinearProgress } from "@mui/material";
+import { Box, Button, LinearProgress } from "@mui/material";
 import { DataGrid, GridToolbar, GridToolbarColumnsButton, GridToolbarContainer, GridToolbarDensitySelector, GridToolbarExport, GridToolbarFilterButton } from "@mui/x-data-grid";
+import AddIcon from '@mui/icons-material/Add';
 import { format, parseISO } from "date-fns";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
@@ -7,11 +8,18 @@ import { useGetPostsQuery } from "../shared/redux/posts/postSlice";
 
 const Toolbar = () => {
   return (
-    <GridToolbarContainer>
-      <GridToolbarColumnsButton />
-      <GridToolbarFilterButton />
-      <GridToolbarDensitySelector />
-      <GridToolbarExport />
+    <GridToolbarContainer className="justify-between">
+      <Box>
+        <GridToolbarColumnsButton />
+        <GridToolbarFilterButton />
+        <GridToolbarDensitySelector />
+        <GridToolbarExport />
+      </Box>
+      <Box>
+        <Button startIcon={<AddIcon />}>
+          New
+        </Button>
+      </Box>
     </GridToolbarContainer>
   );
 };
@@ -70,7 +78,7 @@ const Posts = () => {
   });
 
   useEffect(() => {
-    if (isSuccess) {
+    if (isSuccess && postState.posts) {
       setTable(prev => {
         return {
           ...prev,
@@ -81,7 +89,7 @@ const Posts = () => {
   }, [postState.posts, isSuccess]);
 
   return (
-    <div className="w-full h-full px-10">
+    <div className="w-full h-full px-5">
       <h1>Posts</h1>
       <Box className="flex">
         <div className="grow">
@@ -102,7 +110,7 @@ const Posts = () => {
               Toolbar: Toolbar,
               LoadingOverlay: LinearProgress,
             }}
-            loading={isFetching}
+            loading={isFetching || isLoading}
             className="bg-slate-300"
           />
         </div>

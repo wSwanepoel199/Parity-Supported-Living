@@ -1,11 +1,12 @@
 const prisma = require("../lib/prisma");
 
 class PostService {
-  static async create(data) {
-    const post = await prisma.post.create({
-      data
+  static async create({ post, userId }) {
+    const newPost = await prisma.post.create({
+      post,
+      carerId: userId
     });
-    return post;
+    return newPost;
   }
   static async remove(data) {
     const post = await prisma.post.findUnique({

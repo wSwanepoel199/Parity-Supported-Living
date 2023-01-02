@@ -4,7 +4,14 @@ const createError = require('http-errors');
 
 class PostController {
   static create = async (req, res, next) => {
+    try {
+      const newPost = await post.create(req.body);
 
+      console.log(newPost);
+    }
+    catch (err) {
+      res.status(err.statusCode).json(createError(err.statusCode, err.message));
+    }
   };
   static all = async (req, res, next) => {
     try {
