@@ -94,8 +94,12 @@ export const postApiSlice = backendApi.injectEndpoints({
     addPost: builder.mutation({
       query: (post) => ({ url: '/posts/create', method: 'post', data: post }),
       invalidatesTags: [{ type: 'Post', id: 'LIST' }],
+    }),
+    updatePost: builder.mutation({
+      query: (post) => ({ url: '/posts/update', method: 'put', data: post }),
+      invalidatesTags: [{ type: 'Post', id: 'LIST' }],
     })
   })
 });
 
-export const { useGetPostsQuery, useAddPostMutation } = postApiSlice;
+export const { useGetPostsQuery, useAddPostMutation, useUpdatePostMutation } = postApiSlice;

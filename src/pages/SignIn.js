@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Grid from "@mui/material/Unstable_Grid2";
-import { Box, Button, FormControl, IconButton, Input, InputAdornment, InputLabel, Typography } from "@mui/material";
+import { Box, Button, Checkbox, FormControl, FormControlLabel, FormGroup, IconButton, Input, InputAdornment, InputLabel, Typography } from "@mui/material";
 import LoginIcon from '@mui/icons-material/Login';
 import CloseIcon from '@mui/icons-material/Close';
 import Visibility from "@mui/icons-material/Visibility";
@@ -17,7 +17,8 @@ const SignIn = () => {
     email: '',
     password: '',
     error: undefined,
-    showPassword: false
+    showPassword: false,
+    rememberMe: false
   });
 
   useEffect(() => {
@@ -106,6 +107,11 @@ const SignIn = () => {
         </Grid>
         <Grid sm={8} xs={12} className="flex justify-center">
           <Button variant="contained" className="m-3" type="Submit">Sign In</Button>
+        </Grid>
+        <Grid sm={8} xs={12} className="flex justify-center">
+          <FormGroup>
+            <FormControlLabel control={<Checkbox checked={formData.rememberMe} onChange={() => setFormData(prev => { return { ...prev, rememberMe: !prev.rememberMe }; })} />} label="Remember Me?" />
+          </FormGroup>
         </Grid>
       </Grid>
     </Box>

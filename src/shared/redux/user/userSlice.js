@@ -1,10 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { fetchStoredToken, removeStoredToken, storeAuthToken } from "../../utils/authToken";
+import { fetchStoredTokenSession, removeStoredTokenLocal, removeStoredTokenSession, storeAuthTokenLocal, storeAuthTokenSession } from "../../utils/authToken";
 import { backendApi } from "../api/backendApi";
 
 const initialState = {
   user: {},
-  authToken: fetchStoredToken() || undefined,
+  authToken: fetchStoredTokenSession() || undefined,
   status: 'loggedOut',
   error: undefined
 };
@@ -14,7 +14,7 @@ export const userSlice = createSlice({
   initialState,
   reducers: {
     saveUser: (state, action) => {
-      storeAuthToken(action.payload.accessToken);
+      storeAuthTokenSession(action.payload.accessToken);
       return {
         ...state,
         user: action.payload,
@@ -23,14 +23,15 @@ export const userSlice = createSlice({
       };
     },
     removeUser: () => {
-      removeStoredToken();
+      removeStoredTokenLocal();
+      removeStoredTokenSession();
       return {
         ...initialState,
         authToken: undefined
       };
     },
     saveToken: (state, action) => {
-      storeAuthToken(action.payload);
+      storeAuthTokenLocal(action.payload);
       return {
         ...state,
         authToken: action.payload
@@ -49,8 +50,10 @@ export const userApiSlice = backendApi.injectEndpoints({
       query: (loginDetails) => ({ url: '/auth/login', method: 'post', data: loginDetails }),
       async onQueryStarted(loginDetails, { dispatch, queryFulfilled }) {
         try {
+          console.log(loginDetails);
           const { data } = await queryFulfilled;
           console.log(data);
+          if (loginDetails.rememberMe) dispatch(saveToken(data.data.accessToken));
           dispatch(saveUser(data.data));
         }
         catch (err) {
@@ -69,7 +72,6 @@ export const userApiSlice = backendApi.injectEndpoints({
         catch (err) {
           console.error(err);
           if (err.error.status === 401) {
-            removeStoredToken();
             dispatch(removeUser());
           }
         }

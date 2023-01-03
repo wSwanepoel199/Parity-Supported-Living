@@ -5,8 +5,7 @@ const createError = require('http-errors');
 class PostController {
   static create = async (req, res, next) => {
     try {
-      const newPost = await post.create(req.body);
-      console.log(newPost);
+      await post.create(req.body);
       res.status(201).json({
         status: 201,
         msg: 'created successfully'
@@ -14,6 +13,20 @@ class PostController {
     }
     catch (err) {
       res.status(err.statusCode).json(createError(err.statusCode, err.message));
+      next(createError(err.statusCode, err.message));
+    }
+  };
+  static update = async (req, res, next) => {
+    try {
+      await post.update(req.body);
+      res.status(200).json({
+        status: 200,
+        msg: 'Successfully Updated Post'
+      });
+    }
+    catch (err) {
+      res.status(err.statusCode).json(createError(err.statusCode, err.message));
+      next(createError(err.statusCode, err.message));
     }
   };
   static all = async (req, res, next) => {

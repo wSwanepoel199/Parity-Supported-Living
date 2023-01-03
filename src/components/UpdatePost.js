@@ -1,21 +1,14 @@
-import { Box, Button, DialogActions, DialogContent, DialogContentText, DialogTitle, FormControl, Input, InputAdornment, InputLabel, OutlinedInput } from "@mui/material";
+import { Box, Button, DialogActions, DialogContent, FormControl, Input, InputLabel, OutlinedInput } from "@mui/material";
 import Grid from "@mui/material/Unstable_Grid2/";
 import { format, formatISO, parseISO } from "date-fns";
 import { useState } from "react";
 import { useSelector } from "react-redux";
-import { useAddPostMutation } from "../shared/redux/posts/postSlice";
+import { useUpdatePostMutation } from "../shared/redux/posts/postSlice";
 
-const CreatePost = ({ setOpenDialog }) => {
+const UpdatePost = ({ setOpenDialog, post }) => {
   const userState = useSelector(state => state.user);
-  const [addPost, { isLoading, isError }] = useAddPostMutation();
-  const [formData, setFormData] = useState({
-    date: formatISO(new Date()),
-    hours: 0,
-    kilos: 0,
-    client: "",
-    notes: "",
-    carerId: userState.user.id
-  });
+  const [updatePost, { data }] = useUpdatePostMutation();
+  const [formData, setFormData] = useState(post);
 
   const handleInput = ({ value, name }) => {
 
@@ -52,8 +45,8 @@ const CreatePost = ({ setOpenDialog }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    addPost(formData);
-    setOpenDialog(prev => { return { ...prev, open: !prev.open, type: '' }; });
+    updatePost(formData);
+    setOpenDialog(prev => { return { ...prev, open: !prev.open, type: '', data: {} }; });
   };
 
 
@@ -127,11 +120,11 @@ const CreatePost = ({ setOpenDialog }) => {
         </Grid>
       </DialogContent>
       <DialogActions>
-        <Button onClick={(e) => handleSubmit(e)}>Create</Button>
-        <Button onClick={() => setOpenDialog(prev => { return { ...prev, open: !prev.open, type: '' }; })}>Cancel</Button>
+        <Button onClick={(e) => handleSubmit(e)}>Edit</Button>
+        <Button onClick={() => setOpenDialog(prev => { return { ...prev, open: !prev.open, type: '', data: {} }; })}>Cancel</Button>
       </DialogActions>
     </Box>
   );
 };
 
-export default CreatePost;
+export default UpdatePost;

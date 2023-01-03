@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 import Dashboard from './components/Dashboard';
 import Landing from './pages/Landing';
 import SignIn from './pages/SignIn';
-import { fetchStoredToken } from './shared/utils/authToken';
+import { fetchStoredTokenLocal, fetchStoredTokenSession } from './shared/utils/authToken';
 import { useRefreshUserMutation, } from './shared/redux/user/userSlice';
 import Posts from './components/Posts';
 
@@ -14,7 +14,7 @@ function App() {
 
   useEffect(() => {
     console.log(userState.status === "loggedOut");
-    if (userState.status === "loggedOut" && fetchStoredToken()) refreshUser();
+    if (userState.status === "loggedOut" && (fetchStoredTokenLocal() || fetchStoredTokenSession())) refreshUser();
   }, [userState.status, refreshUser]);
 
   return (
