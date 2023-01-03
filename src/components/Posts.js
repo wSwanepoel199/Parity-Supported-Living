@@ -1,12 +1,13 @@
-import { Box, Button, LinearProgress } from "@mui/material";
-import { DataGrid, GridToolbar, GridToolbarColumnsButton, GridToolbarContainer, GridToolbarDensitySelector, GridToolbarExport, GridToolbarFilterButton } from "@mui/x-data-grid";
+import { Box, Button, Dialog, LinearProgress, useMediaQuery, useTheme } from "@mui/material";
+import { DataGrid, GridToolbarColumnsButton, GridToolbarContainer, GridToolbarDensitySelector, GridToolbarExport, GridToolbarFilterButton } from "@mui/x-data-grid";
 import AddIcon from '@mui/icons-material/Add';
 import { format, parseISO } from "date-fns";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useGetPostsQuery } from "../shared/redux/posts/postSlice";
+import CreatePost from "./CreatePost";
 
-const Toolbar = () => {
+const Toolbar = ({ setOpenDialog }) => {
   return (
     <GridToolbarContainer className="justify-between">
       <Box>
@@ -16,7 +17,7 @@ const Toolbar = () => {
         <GridToolbarExport />
       </Box>
       <Box>
-        <Button startIcon={<AddIcon />}>
+        <Button startIcon={<AddIcon />} onClick={() => setOpenDialog(prev => !prev)}>
           New
         </Button>
       </Box>
@@ -26,7 +27,10 @@ const Toolbar = () => {
 
 const Posts = () => {
   const postState = useSelector(state => state.posts);
-  const { isUninitialized, isLoading, isFetching, isSuccess } = useGetPostsQuery();
+  const { isLoading, isFetching, isSuccess } = useGetPostsQuery();
+  const theme = useTheme();
+  const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
+  const [openDialog, setOpenDialog] = useState(false);
 
   const [table, setTable] = useState({
     columns: [
@@ -91,6 +95,13 @@ const Posts = () => {
   return (
     <div className="w-full h-full px-5">
       <h1>Posts</h1>
+      <Dialog
+        fullScreen={fullScreen}
+        open={openDialog}
+        onClose={() => setOpenDialog(prev => !prev)}
+      >
+        <CreatePost setOpenDialog={setOpenDialog} />
+      </Dialog>
       <Box className="flex">
         <div className="grow">
           <DataGrid
@@ -109,6 +120,9 @@ const Posts = () => {
             components={{
               Toolbar: Toolbar,
               LoadingOverlay: LinearProgress,
+            }}
+            componentsProps={{
+              toolbar: { setOpenDialog: setOpenDialog }
             }}
             loading={isFetching || isLoading}
             className="bg-slate-300"

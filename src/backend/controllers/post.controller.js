@@ -6,8 +6,11 @@ class PostController {
   static create = async (req, res, next) => {
     try {
       const newPost = await post.create(req.body);
-
       console.log(newPost);
+      res.status(201).json({
+        status: 201,
+        msg: 'created successfully'
+      });
     }
     catch (err) {
       res.status(err.statusCode).json(createError(err.statusCode, err.message));

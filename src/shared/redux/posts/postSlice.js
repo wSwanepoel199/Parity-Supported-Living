@@ -73,8 +73,14 @@ export default postSlice.reducer;
 export const postApiSlice = backendApi.injectEndpoints({
   endpoints: builder => ({
     getPosts: builder.query({
-      query: (posts) => ({ url: '/posts', method: 'get' }),
-      async onQueryStarted(posts, { dispatch, queryFulfilled }) {
+      query: () => ({ url: '/posts', method: 'get' }),
+      providesTags: (result, error, args) =>
+        result
+          ? [...result.data.map(({ id }) => ({ type: 'Post', id })),
+          { type: 'Post', id: "LIST" },
+          ]
+          : [{ type: 'Post', id: "LIST" }],
+      async onQueryStarted(undefiend, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
           console.log(data);
@@ -84,8 +90,12 @@ export const postApiSlice = backendApi.injectEndpoints({
           console.error(err);
         }
       }
+    }),
+    addPost: builder.mutation({
+      query: (post) => ({ url: '/posts/create', method: 'post', data: post }),
+      invalidatesTags: [{ type: 'Post', id: 'LIST' }],
     })
   })
 });
 
-export const { useGetPostsQuery } = postApiSlice;
+export const { useGetPostsQuery, useAddPostMutation } = postApiSlice;
