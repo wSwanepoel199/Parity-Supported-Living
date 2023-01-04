@@ -20,7 +20,7 @@ function App() {
   return (
     <div className='w-screen h-screen bg-slate-400 flex justify-center content-center items-center'>
       <Routes>
-        {console.log(data, isLoading, isUninitialized)}
+        {console.log(data, isLoading, isUninitialized, process.env.NODE_ENV)}
         <Route path="/" element={userState.authToken ? <Landing /> : <SignIn />}>
           <Route index element={<Dashboard />} />
           <Route path="notes" element={<Posts />} />
