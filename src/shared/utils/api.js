@@ -5,7 +5,7 @@ import store from '../redux/store';
 const DEBUG = process.env.NODE_ENV === "development";
 
 const defaults = {
-  url: process.env.NODE_ENV === "production" ? process.env.REACT_APP_API_URL : "http://192.168.1.117:5000",
+  url: process.env.NODE_ENV === "production" ? process.env.REACT_APP_API_URL : "http://192.168.56.101:5000",
   headers: {
     'Content-Type': 'application/json',
   },
