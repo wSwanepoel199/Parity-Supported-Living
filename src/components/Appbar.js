@@ -1,4 +1,4 @@
-import { AppBar, Avatar, Box, Container, IconButton, Menu, MenuItem, Toolbar, Typography } from "@mui/material";
+import { AppBar, Avatar, Box, Container, IconButton, Menu, MenuItem, Toolbar, Typography, useMediaQuery, useTheme } from "@mui/material";
 import MenuIcon from '@mui/icons-material/Menu';
 import { useSelector } from "react-redux";
 import { useState } from "react";
@@ -9,6 +9,9 @@ const Appbar = () => {
   const userState = useSelector(state => state.user);
   const navigate = useNavigate();
   const [logoutUser] = useLogoutUserMutation();
+
+  const theme = useTheme();
+  const smallScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
   const [anchorEl, setAnchorEl] = useState({
     nav: null,
@@ -34,17 +37,17 @@ const Appbar = () => {
   };
 
   return (
-    <AppBar position="static" elevation={0}>
-      <Container maxWidth="xl" className={`bg-slate-500`}>
-        <Toolbar disableGutters className={`bg-inherit flex justify-between`}>
+    <AppBar position="sticky" elevation={0} className={`bg-slate-500`}>
+      <Container maxWidth="xl" disableGutters={smallScreen ? true : false}>
+        <Toolbar disableGutters className={`flex justify-between`}>
           <Box className={`grow-1 flex`}>
             <IconButton
-              size="large"
+              size={smallScreen ? "small" : "large"}
               name="nav"
               aria-label="appbar-menu"
               aria-controls="menu-appbar"
               aria-haspopup="true"
-              // onClick={handleOpenMenu}
+              onClick={handleOpenMenu}
               color="inherit"
             >
               <MenuIcon />
@@ -65,25 +68,31 @@ const Appbar = () => {
               open={Boolean(anchorEl.nav)}
               onClose={() => handleCloseMenu("nav")}
             >
-              {/* <MenuItem onClick={() => navigate(`/notes`)}>
+              <MenuItem onClick={() => navigate(`/`)}>
                 <Typography textAlign="center">Notes</Typography>
-              </MenuItem> */}
+              </MenuItem>
+              {userState.user.role === "Admin" ? <MenuItem onClick={() => navigate(`/users`)}>
+                <Typography textAlign="center">Users</Typography>
+              </MenuItem> : null}
             </Menu>
           </Box>
           <Box className={`grow-1`}>
             <Typography
-              variant="h5"
+              variant={smallScreen ? "h6" : "h5"}
               noWrap
               component="a"
-              className={`flex grow-1 text-inherit mr-2`}
+              className={`flex grow-1 text-inherit ${smallScreen ? 'text-[5vw]' : null}`}
             >
               PARITY SUPPORTED LIVING
             </Typography>
           </Box>
-          <Box className={`grow-0`}>
-            <IconButton name="user" onClick={handleOpenMenu}>
-              {userState.status === "loggedIn" ? <Avatar alt="avatar icon" src={`https://avatars.dicebear.com/api/identicon/${userState.user.userId}.svg`} /> : null}
-            </IconButton>
+          <Box className={`grow-1`}>
+            <Box className={`flex justify-center content-center text-center `}>
+              <Typography variant="body1" component="a" sx={{ display: { xs: 'none', md: 'flex' }, alignItems: 'center', mr: 1 }}>{userState.user.name}</Typography>
+              <IconButton size={smallScreen ? "small" : "large"} name="user" onClick={handleOpenMenu}>
+                {userState.status === "loggedIn" ? <Avatar alt="avatar icon" src={`https://avatars.dicebear.com/api/identicon/${userState.user.userId}.svg`} /> : null}
+              </IconButton>
+            </Box>
             <Menu
               id="menu-appbar"
               name="user"
@@ -107,7 +116,7 @@ const Appbar = () => {
           </Box>
         </Toolbar>
       </Container>
-    </AppBar>
+    </AppBar >
   );
 };
 

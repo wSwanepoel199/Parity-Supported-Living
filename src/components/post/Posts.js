@@ -1,36 +1,17 @@
-import { Box, Button, Dialog, Input, LinearProgress, useMediaQuery, useTheme } from "@mui/material";
-import { DataGrid, GridToolbarColumnsButton, GridToolbarContainer, GridToolbarDensitySelector, GridToolbarExport, GridToolbarFilterButton, useGridApiContext, useGridApiRef } from "@mui/x-data-grid";
+import { Box, Button, Dialog, Input, LinearProgress, Typography, useMediaQuery, useTheme } from "@mui/material";
+import { DataGrid } from "@mui/x-data-grid";
 import AddIcon from '@mui/icons-material/Add';
 import { format, parseISO } from "date-fns";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { useGetPostsQuery } from "../shared/redux/posts/postSlice";
+import { useGetPostsQuery } from "../../shared/redux/posts/postSlice";
 import CreatePost from "./CreatePost";
 import UpdatePost from "./UpdatePost";
-
-const Toolbar = ({ setOpenDialog }) => {
-  return (
-    <GridToolbarContainer className="justify-between">
-      <Box>
-        <GridToolbarColumnsButton />
-        <GridToolbarFilterButton />
-        <GridToolbarDensitySelector />
-        <GridToolbarExport />
-      </Box>
-      <Box>
-        <Button startIcon={<AddIcon />} onClick={() => setOpenDialog(prev => { return { ...prev, open: !prev.open, type: 'new' }; })}>
-          New Post
-        </Button>
-      </Box>
-    </GridToolbarContainer>
-  );
-};
+import Toolbar from "../Toolbar";
 
 const Posts = () => {
   const postState = useSelector(state => state.posts);
   const { isLoading, isFetching, isSuccess } = useGetPostsQuery();
-
-  const apiRef = useGridApiRef();
 
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
@@ -117,8 +98,8 @@ const Posts = () => {
   }, [postState.posts, isSuccess]);
 
   return (
-    <div className="w-full h-full px-5">
-      <h1>Posts</h1>
+    <div className="w-full h-full max-w-screen-lg mx-auto flex flex-col ">
+      <Typography variant="h3" component="div" className={`py-5`}>Posts</Typography>
       <Dialog
         fullScreen={fullScreen}
         open={openDialog.open}
@@ -130,45 +111,50 @@ const Posts = () => {
             : null
         }
       </Dialog>
-      <Box className="flex">
-        <div className="grow">
-          <DataGrid
-            {...table}
-            onPageSizeChange={(newPageSize) => setTable(prev => {
-              return {
-                ...prev,
-                pageSize: newPageSize,
-              };
-            })}
-            rowsPerPageOptions={[10, 20, 30]}
-            pagination
-            autoHeight
-            disableSelectionOnClick
-            getRowId={(row) => row.postId}
-            onRowClick={(row) => setOpenDialog(prev => { console.log(row); return { ...prev, open: !prev.open, type: 'edit', data: row.row }; })}
-            components={{
-              Toolbar: Toolbar,
-              LoadingOverlay: LinearProgress,
-            }}
-            componentsProps={{
-              toolbar: { setOpenDialog: setOpenDialog }
-            }}
-            loading={isFetching || isLoading}
-            className="bg-slate-300"
-            initialState={{
-              sorting: {
-                sortModel: [
-                  {
-                    field: 'date',
-                    sort: 'desc',
-                  },
-                ],
-              },
-            }}
-          />
-        </div>
-      </Box>
-    </div>
+      <Box className={`flex `}>
+        <DataGrid
+          {...table}
+          onPageSizeChange={(newPageSize) => setTable(prev => {
+            return {
+              ...prev,
+              pageSize: newPageSize,
+            };
+          })}
+          rowsPerPageOptions={[10, 20, 30]}
+          pagination
+          autoHeight
+          disableSelectionOnClick
+          getRowId={(row) => row.postId}
+          onRowClick={(row) => setOpenDialog(prev => { console.log(row); return { ...prev, open: !prev.open, type: 'edit', data: row.row }; })}
+          components={{
+            Toolbar: Toolbar,
+            LoadingOverlay: LinearProgress,
+          }}
+          componentsProps={{
+            toolbar: {
+              children: (
+                <Box>
+                  <Button startIcon={<AddIcon />} onClick={() => setOpenDialog(prev => { return { ...prev, open: !prev.open, type: 'new' }; })}>
+                    New Post
+                  </Button>
+                </Box>)
+            }
+          }}
+          loading={isFetching || isLoading}
+          className="bg-slate-300"
+          initialState={{
+            sorting: {
+              sortModel: [
+                {
+                  field: 'date',
+                  sort: 'desc',
+                },
+              ],
+            },
+          }}
+        />
+      </Box >
+    </div >
   );
 };
 

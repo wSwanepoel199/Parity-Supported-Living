@@ -83,7 +83,6 @@ export const postApiSlice = backendApi.injectEndpoints({
       async onQueryStarted(undefiend, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
-          console.log(data);
           dispatch(savePosts(data.data));
         }
         catch (err) {

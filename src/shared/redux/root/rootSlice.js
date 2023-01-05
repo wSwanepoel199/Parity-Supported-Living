@@ -1,6 +1,4 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { fetchStoredToken, removeStoredToken, storeAuthToken } from "../../utils/authToken";
-import api from '../../utils/api';
+import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   status: 'asleep',

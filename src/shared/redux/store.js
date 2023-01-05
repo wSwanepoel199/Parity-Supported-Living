@@ -3,6 +3,7 @@ import { backendApi } from "./api/backendApi";
 import rootReducer from './root/rootSlice';
 import userReducer from './user/userSlice';
 import postReducer from './posts/postSlice';
+import adminReducer from './admin/adminSlice';
 // import { userMiddleware } from "../utils/middleware";
 
 // const middleware = [userMiddleware];
@@ -13,6 +14,7 @@ export default configureStore({
     root: rootReducer,
     user: userReducer,
     posts: postReducer,
+    admin: adminReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(backendApi.middleware),

@@ -22,6 +22,12 @@ export const userSlice = createSlice({
         status: "loggedIn"
       };
     },
+    signOutUser: (state) => {
+      return {
+        ...state,
+        status: 'loggedOut'
+      };
+    },
     removeUser: () => {
       removeStoredTokenLocal();
       removeStoredTokenSession();
@@ -40,7 +46,7 @@ export const userSlice = createSlice({
   },
 });
 
-export const { saveUser, removeUser, saveToken } = userSlice.actions;
+export const { saveUser, removeUser, saveToken, signOutUser } = userSlice.actions;
 
 export default userSlice.reducer;
 
@@ -50,9 +56,7 @@ export const userApiSlice = backendApi.injectEndpoints({
       query: (loginDetails) => ({ url: '/auth/login', method: 'post', data: loginDetails }),
       async onQueryStarted(loginDetails, { dispatch, queryFulfilled }) {
         try {
-          console.log(loginDetails);
           const { data } = await queryFulfilled;
-          console.log(data);
           if (loginDetails.rememberMe) dispatch(saveToken(data.data.accessToken));
           dispatch(saveUser(data.data));
         }
@@ -66,7 +70,6 @@ export const userApiSlice = backendApi.injectEndpoints({
       async onQueryStarted(refresh, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
-          console.log(data);
           dispatch(saveUser(data.data));
         }
         catch (err) {
@@ -81,6 +84,7 @@ export const userApiSlice = backendApi.injectEndpoints({
       query: (signout) => ({ url: '/auth/logout', method: 'get' }),
       async onQueryStarted(signout, { dispatch, queryFulfilled }) {
         try {
+          dispatch(signOutUser);
           const { data } = await queryFulfilled;
           dispatch(removeUser(data.data));
         }
@@ -88,8 +92,12 @@ export const userApiSlice = backendApi.injectEndpoints({
           console.error(err);
         }
       }
+    }),
+    createUser: builder.mutation({
+      query: (newUser) => ({ url: '/auth/register', method: 'post', data: newUser }),
+      invalidatesTags: [{ type: 'User', id: "LIST" }]
     })
   })
 });
 
-export const { useLoginUserMutation, useRefreshUserMutation, useLogoutUserMutation } = userApiSlice;
+export const { useLoginUserMutation, useRefreshUserMutation, useLogoutUserMutation, useCreateUserMutation } = userApiSlice;

@@ -4,9 +4,11 @@ import Appbar from "../components/Appbar";
 
 const Landing = () => {
   return (
-    <div className="w-full h-full flex flex-col">
+    <div className="w-full min-h-screen flex flex-col">
       <Appbar />
-      <Outlet />
+      <div className={`p-5`}>
+        <Outlet />
+      </div>
     </div>
   );
 };
