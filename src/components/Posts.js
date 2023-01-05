@@ -155,6 +155,16 @@ const Posts = () => {
             }}
             loading={isFetching || isLoading}
             className="bg-slate-300"
+            initialState={{
+              sorting: {
+                sortModel: [
+                  {
+                    field: 'date',
+                    sort: 'desc',
+                  },
+                ],
+              },
+            }}
           />
         </div>
       </Box>

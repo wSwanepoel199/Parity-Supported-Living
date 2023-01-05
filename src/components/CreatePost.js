@@ -59,10 +59,13 @@ const CreatePost = ({ setOpenDialog }) => {
 
   return (
     <Box>
+      <DialogTitle>
+        New Note
+      </DialogTitle>
       <DialogContent>
         <Grid container spacing={2} className="flex justify-center">
           <Grid xs={6} className="flex justify-center">
-            <FormControl size="small" fullWidth>
+            <FormControl size="small" fullWidth margin="dense">
               <InputLabel shrink htmlFor="dateInput">Support Date</InputLabel>
               <Input
                 id="dateInput"
@@ -73,8 +76,8 @@ const CreatePost = ({ setOpenDialog }) => {
               />
             </FormControl>
           </Grid>
-          <Grid xs={6} size="small" className="flex justify-center">
-            <FormControl fullWidth>
+          <Grid xs={6} className="flex justify-center">
+            <FormControl size="small" fullWidth margin="dense">
               <InputLabel htmlFor="timeInput">Support Duration</InputLabel>
               <Input
                 id="timeInput"
@@ -86,7 +89,7 @@ const CreatePost = ({ setOpenDialog }) => {
             </FormControl>
           </Grid>
           <Grid xs={6} className="flex justify-center">
-            <FormControl size="small" fullWidth>
+            <FormControl size="small" fullWidth margin="dense">
               <InputLabel htmlFor="clientInput">Client's Name</InputLabel>
               <Input
                 id="clientInput"
@@ -98,7 +101,7 @@ const CreatePost = ({ setOpenDialog }) => {
             </FormControl>
           </Grid>
           <Grid xs={6} className="flex justify-center">
-            <FormControl size="small" fullWidth>
+            <FormControl size="small" fullWidth margin="dense">
               <InputLabel htmlFor="distanceInput">Distance Traveled</InputLabel>
               <Input
                 id="distanceInput"
@@ -110,7 +113,7 @@ const CreatePost = ({ setOpenDialog }) => {
             </FormControl>
           </Grid>
           <Grid xs={12} className="flex justify-center">
-            <FormControl fullWidth>
+            <FormControl size="small" fullWidth margin="dense">
               <InputLabel htmlFor="notesInput">Notes</InputLabel>
               <OutlinedInput
                 id="notesInput"

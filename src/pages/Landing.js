@@ -1,10 +1,11 @@
 import { Outlet } from "react-router-dom";
-import Navbar from "../components/Navbar";
+import Appbar from "../components/Appbar";
+// import Navbar from "../components/Navbar";
 
 const Landing = () => {
   return (
-    <div className="w-full h-full flex">
-      <Navbar />
+    <div className="w-full h-full flex flex-col">
+      <Appbar />
       <Outlet />
     </div>
   );
