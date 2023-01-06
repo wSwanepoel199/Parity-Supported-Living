@@ -24,21 +24,18 @@ export const rootSlice = createSlice({
   extraReducers(builder) {
     builder
       .addMatcher(isPending, (state, action) => {
-        console.log(state, action);
         return {
           ...initialState,
           status: "loading"
         };
       })
       .addMatcher(isFulfilled, (state, action) => {
-        console.log(state, action);
         return {
           ...state,
           status: "success",
         };
       })
       .addMatcher(isRejected, (state, action) => {
-        console.log(state, action);
         return {
           ...state,
           status: "failed",

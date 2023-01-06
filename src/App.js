@@ -15,14 +15,12 @@ function App() {
   const [refreshUser, { data, isLoading, isUninitialized }] = useRefreshUserMutation();
 
   useEffect(() => {
-    console.log(userState.status === "loggedOut");
     if (userState.status === "loggedOut" && (fetchStoredTokenLocal() || fetchStoredTokenSession())) refreshUser();
   }, [userState.status, refreshUser]);
 
   return (
     <div className='w-screen min-h-screen bg-slate-400 flex justify-center content-center items-center'>
       <Routes>
-        {console.log(data, isLoading, isUninitialized, process.env.NODE_ENV)}
         <Route path="/" element={userState.authToken ? <Landing /> : <SignIn />}>
           <Route index element={
             <Posts />

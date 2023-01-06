@@ -41,7 +41,7 @@ export const axiosBaseQuery =
 
 axios.interceptors.request.use((config) => {
   if (DEBUG) console.log("✉️ ", config);
-  console.log(store.getState());
+  // console.log(store.getState());
   config.headers.Authorization = `Bearer ${store.getState().user.authToken}`;
   return config;
 }, (err) => {

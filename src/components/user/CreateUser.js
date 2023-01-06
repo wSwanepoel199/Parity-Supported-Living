@@ -88,7 +88,7 @@ const CreateUser = ({ setOpenDialog }) => {
                 id="passwordInput"
                 name="password"
                 type={formData.showPassword ? "text" : 'password'}
-                value={formData.kilos}
+                value={formData.password}
                 onChange={handleInput}
                 endAdornment={
                   <InputAdornment position="end">

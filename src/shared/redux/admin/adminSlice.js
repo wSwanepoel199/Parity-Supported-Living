@@ -36,7 +36,6 @@ export const adminApiSlice = backendApi.injectEndpoints({
       async onQueryStarted(users, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
-          console.log(data);
           dispatch(saveUsers(data.data));
         }
         catch (err) {

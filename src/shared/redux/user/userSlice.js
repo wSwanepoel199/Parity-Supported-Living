@@ -96,8 +96,12 @@ export const userApiSlice = backendApi.injectEndpoints({
     createUser: builder.mutation({
       query: (newUser) => ({ url: '/auth/register', method: 'post', data: newUser }),
       invalidatesTags: [{ type: 'User', id: "LIST" }]
+    }),
+    updateUser: builder.mutation({
+      query: (updatedUser) => ({ url: '/auth/update', method: 'put', data: updatedUser }),
+      invalidatesTags: [{ type: 'User', id: 'LIST' }]
     })
   })
 });
 
-export const { useLoginUserMutation, useRefreshUserMutation, useLogoutUserMutation, useCreateUserMutation } = userApiSlice;
+export const { useLoginUserMutation, useRefreshUserMutation, useLogoutUserMutation, useCreateUserMutation, useUpdateUserMutation } = userApiSlice;

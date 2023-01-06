@@ -6,6 +6,7 @@ import { useSelector } from "react-redux";
 import { useGetAllUsersQuery } from "../../shared/redux/admin/adminSlice";
 import Toolbar from "../Toolbar";
 import CreateUser from "./CreateUser";
+import UpdateUser from "./UpdateUser";
 
 const Users = () => {
   const adminState = useSelector(state => state.admin);
@@ -66,7 +67,7 @@ const Users = () => {
       >
         {
           openDialog.open
-            ? openDialog.type === "new" && <CreateUser setOpenDialog={setOpenDialog} />
+            ? (openDialog.type === "new" && <CreateUser setOpenDialog={setOpenDialog} />) || (openDialog.type === "edit" && <UpdateUser setOpenDialog={setOpenDialog} user={openDialog.data} />)
             : null
         }
       </Dialog>
@@ -84,7 +85,7 @@ const Users = () => {
           autoHeight
           disableSelectionOnClick
           getRowId={(row) => row.userId}
-          onRowClick={(row) => setOpenDialog(prev => { console.log(row); return { ...prev, open: !prev.open, type: 'edit', data: row.row }; })}
+          onRowClick={(row) => setOpenDialog(prev => { return { ...prev, open: !prev.open, type: 'edit', data: row.row }; })}
           components={{
             Toolbar: Toolbar,
             LoadingOverlay: LinearProgress,

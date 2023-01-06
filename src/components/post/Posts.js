@@ -125,7 +125,7 @@ const Posts = () => {
           autoHeight
           disableSelectionOnClick
           getRowId={(row) => row.postId}
-          onRowClick={(row) => setOpenDialog(prev => { console.log(row); return { ...prev, open: !prev.open, type: 'edit', data: row.row }; })}
+          onRowClick={(row) => setOpenDialog(prev => { return { ...prev, open: !prev.open, type: 'edit', data: row.row }; })}
           components={{
             Toolbar: Toolbar,
             LoadingOverlay: LinearProgress,
