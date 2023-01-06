@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   status: 'asleep',
+  error: undefined
 };
 
 const isPending = (action) => {
@@ -20,6 +21,19 @@ export const rootSlice = createSlice({
   name: 'root',
   initialState,
   reducers: {
+    storeError: (state, action) => {
+      return {
+        ...state,
+        error: action.payload
+      };
+    },
+    clearError: (state) => {
+      return {
+        ...state,
+        status: 'cleared',
+        error: undefined
+      };
+    }
   },
   extraReducers(builder) {
     builder
@@ -30,6 +44,7 @@ export const rootSlice = createSlice({
         };
       })
       .addMatcher(isFulfilled, (state, action) => {
+        console.log(action);
         return {
           ...state,
           status: "success",
@@ -38,10 +53,13 @@ export const rootSlice = createSlice({
       .addMatcher(isRejected, (state, action) => {
         return {
           ...state,
-          status: "failed",
+          status: "error",
+          error: action.payload
         };
       });
   }
 });
+
+export const { storeError, clearError } = rootSlice.actions;
 
 export default rootSlice.reducer;

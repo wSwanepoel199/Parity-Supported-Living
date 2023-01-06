@@ -10,7 +10,7 @@ import UpdateUser from "./UpdateUser";
 
 const Users = () => {
   const adminState = useSelector(state => state.admin);
-  const { data, isFetching, isLoading, isSuccess } = useGetAllUsersQuery();
+  const { isFetching, isLoading, isSuccess } = useGetAllUsersQuery();
 
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));

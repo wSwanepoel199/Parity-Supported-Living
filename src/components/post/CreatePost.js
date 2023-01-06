@@ -1,13 +1,13 @@
-import { Box, Button, DialogActions, DialogContent, DialogTitle, FormControl, Input, InputLabel, OutlinedInput } from "@mui/material";
+import { Backdrop, Box, Button, CircularProgress, DialogActions, DialogContent, DialogTitle, FormControl, Input, InputLabel, OutlinedInput } from "@mui/material";
 import Grid from "@mui/material/Unstable_Grid2/";
 import { format, formatISO, parseISO } from "date-fns";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useAddPostMutation } from "../../shared/redux/posts/postSlice";
 
 const CreatePost = ({ setOpenDialog }) => {
   const userState = useSelector(state => state.user);
-  const [addPost] = useAddPostMutation();
+  const [addPost, { isLoading, isSuccess, isError }] = useAddPostMutation();
   const [formData, setFormData] = useState({
     date: formatISO(new Date()),
     hours: 0,
@@ -17,8 +17,12 @@ const CreatePost = ({ setOpenDialog }) => {
     carerId: userState.user.id
   });
 
-  const handleInput = ({ value, name }) => {
+  useEffect(() => {
+    if (isSuccess || isError) setOpenDialog(prev => { return { ...prev, open: !prev.open, type: '' }; });
 
+  }, [isSuccess, setOpenDialog, isError]);
+
+  const handleInput = ({ value, name }) => {
     switch (name) {
       case "date": {
         setFormData(prev => {
@@ -53,12 +57,16 @@ const CreatePost = ({ setOpenDialog }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     addPost(formData);
-    setOpenDialog(prev => { return { ...prev, open: !prev.open, type: '' }; });
   };
 
 
   return (
     <Box>
+      <Backdrop
+        open={isLoading}
+      >
+        <CircularProgress />
+      </Backdrop>
       <DialogTitle>
         New Note
       </DialogTitle>

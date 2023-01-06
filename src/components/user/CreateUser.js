@@ -1,15 +1,15 @@
-import { Box, Button, DialogActions, DialogContent, DialogTitle, FormControl, IconButton, Input, InputAdornment, InputLabel, MenuItem, OutlinedInput, Select } from "@mui/material";
+import { Backdrop, Box, Button, CircularProgress, DialogActions, DialogContent, DialogTitle, FormControl, IconButton, Input, InputAdornment, InputLabel, MenuItem, Select } from "@mui/material";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import Grid from "@mui/material/Unstable_Grid2/";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useCreateUserMutation } from "../../shared/redux/user/userSlice";
 
 
 const CreateUser = ({ setOpenDialog }) => {
   const userState = useSelector(state => state.user);
-  const [createUser] = useCreateUserMutation();
+  const [createUser, { isSuccess, isError, isLoading }] = useCreateUserMutation();
 
   const [formData, setFormData] = useState({
     name: '',
@@ -18,6 +18,10 @@ const CreateUser = ({ setOpenDialog }) => {
     password: '',
     showPassword: false,
   });
+
+  useEffect(() => {
+    if (isSuccess || isError) setOpenDialog(prev => { return { ...prev, open: !prev.open, type: '' }; });
+  }, [isSuccess, isError, setOpenDialog]);
 
   const handleInput = (e) => {
     const { value, name } = e.target;
@@ -38,6 +42,11 @@ const CreateUser = ({ setOpenDialog }) => {
 
   return (
     <Box>
+      <Backdrop
+        open={isLoading}
+      >
+        <CircularProgress />
+      </Backdrop>
       <DialogTitle>
         New User
       </DialogTitle>

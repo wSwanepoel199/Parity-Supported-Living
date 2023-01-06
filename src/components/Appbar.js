@@ -37,7 +37,7 @@ const Appbar = () => {
   };
 
   return (
-    <AppBar position="sticky" elevation={0} className={`bg-slate-500`}>
+    <AppBar position="sticky" elevation={0} className={`bg-slate-500 z-10`}>
       <Container maxWidth="xl" disableGutters={smallScreen ? true : false}>
         <Toolbar disableGutters className={`flex justify-between`}>
           <Box className={`grow-1 flex`}>

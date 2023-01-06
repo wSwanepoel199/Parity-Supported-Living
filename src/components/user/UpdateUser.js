@@ -1,4 +1,4 @@
-import { Box, Button, DialogActions, DialogContent, DialogTitle, FormControl, FormControlLabel, IconButton, Input, InputAdornment, InputLabel, MenuItem, Select, Switch } from "@mui/material";
+import { Backdrop, Box, Button, CircularProgress, DialogActions, DialogContent, DialogTitle, FormControl, FormControlLabel, IconButton, Input, InputAdornment, InputLabel, MenuItem, Select, Switch } from "@mui/material";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import Grid from "@mui/material/Unstable_Grid2/";
@@ -8,7 +8,7 @@ import { useUpdateUserMutation } from "../../shared/redux/user/userSlice";
 
 const UpdateUser = ({ setOpenDialog, user }) => {
   // const userState = useSelector(state => state.user);
-  const [updateUser] = useUpdateUserMutation();
+  const [updateUser, { isSuccess, isError, isLoading }] = useUpdateUserMutation();
   const mounted = useRef();
   const [editForm, setEditForm] = useState(true);
   const [formData, setFormData] = useState({
@@ -17,7 +17,7 @@ const UpdateUser = ({ setOpenDialog, user }) => {
 
   useEffect(() => {
     if (!mounted.current) {
-      const parsedUser = JSON.parse(JSON.stringify(user).replace(/\:null/gi, "\:\"\""));
+      const parsedUser = JSON.parse(JSON.stringify(user).replace(/:null/gi, ":\"\""));
       setFormData(prev => {
         return {
           ...prev,
@@ -26,10 +26,11 @@ const UpdateUser = ({ setOpenDialog, user }) => {
       });
       mounted.current = true;
     }
+    if (isSuccess || isError) setOpenDialog(prev => { return { ...prev, open: !prev.open, type: '' }; });
     return () => {
       mounted.current = false;
     };
-  }, [mounted, user]);
+  }, [mounted, user, isSuccess, isError, setOpenDialog]);
 
   const handleInput = (e) => {
     const { value, name } = e.target;
@@ -51,6 +52,11 @@ const UpdateUser = ({ setOpenDialog, user }) => {
 
   return (
     <Box>
+      <Backdrop
+        open={isLoading}
+      >
+        <CircularProgress />
+      </Backdrop>
       <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
         <DialogTitle>
           Edit Note

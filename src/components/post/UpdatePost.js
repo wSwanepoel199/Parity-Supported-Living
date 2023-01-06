@@ -1,15 +1,19 @@
-import { Box, Button, DialogActions, DialogContent, DialogTitle, FormControl, FormControlLabel, Input, InputLabel, OutlinedInput, Switch } from "@mui/material";
+import { Backdrop, Box, Button, CircularProgress, DialogActions, DialogContent, DialogTitle, FormControl, FormControlLabel, Input, InputLabel, OutlinedInput, Switch } from "@mui/material";
 import Grid from "@mui/material/Unstable_Grid2/";
 import { format, formatISO, parseISO } from "date-fns";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 // import { useSelector } from "react-redux";
 import { useUpdatePostMutation } from "../../shared/redux/posts/postSlice";
 
 const UpdatePost = ({ setOpenDialog, post }) => {
   // const userState = useSelector(state => state.user);
-  const [updatePost] = useUpdatePostMutation();
+  const [updatePost, { isLoading, isSuccess, isError }] = useUpdatePostMutation();
   const [editForm, setEditForm] = useState(true);
   const [formData, setFormData] = useState(post);
+
+  useEffect(() => {
+    if (isSuccess || isError) setOpenDialog(prev => { return { ...prev, open: !prev.open, type: '' }; });
+  }, [isSuccess, isError, setOpenDialog]);
 
   const handleInput = ({ value, name }) => {
 
@@ -47,12 +51,16 @@ const UpdatePost = ({ setOpenDialog, post }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     updatePost(formData);
-    setOpenDialog(prev => { return { ...prev, open: !prev.open, type: '', data: {} }; });
   };
 
 
   return (
     <Box>
+      <Backdrop
+        open={isLoading}
+      >
+        <CircularProgress />
+      </Backdrop>
       <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
         <DialogTitle>
           Edit Note

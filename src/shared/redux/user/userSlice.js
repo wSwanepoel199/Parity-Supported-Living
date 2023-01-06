@@ -1,10 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { fetchStoredTokenSession, removeStoredTokenLocal, removeStoredTokenSession, storeAuthTokenLocal, storeAuthTokenSession } from "../../utils/authToken";
+import { removeStoredTokenLocal, removeStoredTokenSession, storeAuthTokenLocal, storeAuthTokenSession } from "../../utils/authToken";
 import { backendApi } from "../api/backendApi";
 
 const initialState = {
   user: {},
-  authToken: fetchStoredTokenSession() || undefined,
+  authToken: undefined,
   status: 'loggedOut',
   error: undefined
 };
@@ -25,7 +25,7 @@ export const userSlice = createSlice({
     signOutUser: (state) => {
       return {
         ...state,
-        status: 'loggedOut'
+        status: 'signingOut'
       };
     },
     removeUser: () => {
@@ -84,7 +84,7 @@ export const userApiSlice = backendApi.injectEndpoints({
       query: (signout) => ({ url: '/auth/logout', method: 'get' }),
       async onQueryStarted(signout, { dispatch, queryFulfilled }) {
         try {
-          dispatch(signOutUser);
+          dispatch(signOutUser());
           const { data } = await queryFulfilled;
           dispatch(removeUser(data.data));
         }

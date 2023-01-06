@@ -91,12 +91,22 @@ export const postApiSlice = backendApi.injectEndpoints({
       }
     }),
     addPost: builder.mutation({
-      query: (post) => ({ url: '/posts/create', method: 'post', data: post }),
-      invalidatesTags: [{ type: 'Post', id: 'LIST' }],
+      query: (newPost) => ({ url: '/posts/create', method: 'post', data: newPost }),
+      async onQueryStarted(newPost, { queryFulfilled }) {
+        try {
+          await queryFulfilled;
+        }
+        catch (err) {
+          console.error(err);
+        }
+      },
+      invalidatesTags: (result, error, args) =>
+        result ? [{ type: "Post", id: "LIST" }] : error ? console.error(error) : null
     }),
     updatePost: builder.mutation({
       query: (post) => ({ url: '/posts/update', method: 'put', data: post }),
-      invalidatesTags: [{ type: 'Post', id: 'LIST' }],
+      invalidatesTags: (result, error, args) =>
+        result ? [{ type: "Post", id: "LIST" }] : error ? console.error(error) : null
     })
   })
 });

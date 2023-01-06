@@ -1,34 +1,21 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Grid from "@mui/material/Unstable_Grid2";
-import { Box, Button, Checkbox, FormControl, FormControlLabel, FormGroup, IconButton, Input, InputAdornment, InputLabel, Typography } from "@mui/material";
+import { Box, Button, Checkbox, CircularProgress, FormControl, FormControlLabel, FormGroup, IconButton, Input, InputAdornment, InputLabel, Typography } from "@mui/material";
 import LoginIcon from '@mui/icons-material/Login';
-import CloseIcon from '@mui/icons-material/Close';
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
-import { useSelector } from "react-redux";
 import { useLoginUserMutation } from "../shared/redux/user/userSlice";
 
-const SignIn = () => {
-  const userState = useSelector(state => state.user);
+const SignIn = ({ isRefreshing }) => {
   const navigate = useNavigate();
-  const [loginUser, { data, error, isSuccess, isError }] = useLoginUserMutation();
+  const [loginUser, { data, isSuccess, isLoading }] = useLoginUserMutation();
   const [formData, setFormData] = useState({
     email: '',
     password: '',
-    error: undefined,
     showPassword: false,
     rememberMe: false
   });
-
-  useEffect(() => {
-    setFormData(prev => {
-      return {
-        ...prev,
-        error: userState.error || undefined
-      };
-    });
-  }, [userState]);
 
   const handleFormData = (e) => {
     const { value, name } = e.target;
@@ -47,29 +34,11 @@ const SignIn = () => {
     if (isSuccess) {
       navigate('/');
     }
-    if (isError) {
-      setFormData(prev => {
-        return {
-          ...prev,
-          error: error.data.message
-        };
-
-      });
-    }
-  }, [data, error, isSuccess, navigate, isError]);
+  }, [data, isSuccess, navigate]);
 
   return (
     <Box component="form" className="w-full max-w-screen-md flex justify-center" onSubmit={(e) => handleSubmit(e)}>
       <Grid container spacing={2} xs={10} sm={8} className="flex flex-col justify-center content-center items-center bg-slate-200 border-2 border-solid border-black rounded-md">
-        {formData.error ?
-          <Grid sm={8} xs={12} className="w-full bg-red-500 flex justify-between items-center">
-            <Typography variant="body1">{formData.error}</Typography>
-            <IconButton onClick={() => setFormData({ ...formData, error: undefined })}>
-              <CloseIcon fontSize="small" />
-            </IconButton>
-          </Grid>
-          :
-          null}
         <Grid sm={8} xs={12} className="flex flex-col justify-center content-center items-center">
           <LoginIcon fontSize="large" className="m-5" />
           <Typography variant="h5" component="h1">Sign In</Typography>
@@ -106,7 +75,7 @@ const SignIn = () => {
           </FormControl>
         </Grid>
         <Grid sm={8} xs={12} className="flex justify-center">
-          <Button variant="contained" className="m-3" type="Submit">Sign In</Button>
+          {isLoading || isRefreshing ? <CircularProgress /> : <Button variant="contained" className="m-3" type="Submit">Sign In</Button>}
         </Grid>
         <Grid sm={8} xs={12} className="flex justify-center">
           <FormGroup>
