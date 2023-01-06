@@ -44,7 +44,6 @@ export const rootSlice = createSlice({
         };
       })
       .addMatcher(isFulfilled, (state, action) => {
-        console.log(action);
         return {
           ...state,
           status: "success",

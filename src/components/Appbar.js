@@ -1,7 +1,7 @@
 import { AppBar, Avatar, Box, Container, IconButton, Menu, MenuItem, Toolbar, Typography, useMediaQuery, useTheme } from "@mui/material";
 import MenuIcon from '@mui/icons-material/Menu';
 import { useSelector } from "react-redux";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useLogoutUserMutation } from "../shared/redux/user/userSlice";
 
@@ -18,6 +18,17 @@ const Appbar = () => {
     user: null
   });
 
+  useEffect(() => {
+    if (navigate) {
+      setAnchorEl(prev => {
+        return {
+          ...prev,
+          nav: null,
+          user: null
+        };
+      });
+    }
+  }, [navigate]);
 
   const handleOpenMenu = (event) => {
     setAnchorEl(prev => {
@@ -27,6 +38,7 @@ const Appbar = () => {
       };
     });
   };
+
   const handleCloseMenu = (name) => {
     setAnchorEl(prev => {
       return {

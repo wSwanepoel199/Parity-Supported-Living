@@ -1,15 +1,15 @@
-import { Backdrop, Box, Button, CircularProgress, DialogActions, DialogContent, DialogTitle, FormControl, IconButton, Input, InputAdornment, InputLabel, MenuItem, Select } from "@mui/material";
+import { Box, Button, DialogActions, DialogContent, DialogTitle, FormControl, IconButton, Input, InputAdornment, InputLabel, MenuItem, Select } from "@mui/material";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import Grid from "@mui/material/Unstable_Grid2/";
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+// import { useSelector } from "react-redux";
 import { useCreateUserMutation } from "../../shared/redux/user/userSlice";
 
 
 const CreateUser = ({ setOpenDialog }) => {
-  const userState = useSelector(state => state.user);
-  const [createUser, { isSuccess, isError, isLoading }] = useCreateUserMutation();
+  // const userState = useSelector(state => state.user);
+  const [createUser, { isSuccess, isError }] = useCreateUserMutation();
 
   const [formData, setFormData] = useState({
     name: '',
@@ -42,11 +42,6 @@ const CreateUser = ({ setOpenDialog }) => {
 
   return (
     <Box>
-      <Backdrop
-        open={isLoading}
-      >
-        <CircularProgress />
-      </Backdrop>
       <DialogTitle>
         New User
       </DialogTitle>

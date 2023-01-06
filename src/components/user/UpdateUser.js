@@ -1,4 +1,4 @@
-import { Backdrop, Box, Button, CircularProgress, DialogActions, DialogContent, DialogTitle, FormControl, FormControlLabel, IconButton, Input, InputAdornment, InputLabel, MenuItem, Select, Switch } from "@mui/material";
+import { Box, Button, DialogActions, DialogContent, DialogTitle, FormControl, FormControlLabel, IconButton, Input, InputAdornment, InputLabel, MenuItem, Select, Switch } from "@mui/material";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import Grid from "@mui/material/Unstable_Grid2/";
@@ -8,7 +8,7 @@ import { useUpdateUserMutation } from "../../shared/redux/user/userSlice";
 
 const UpdateUser = ({ setOpenDialog, user }) => {
   // const userState = useSelector(state => state.user);
-  const [updateUser, { isSuccess, isError, isLoading }] = useUpdateUserMutation();
+  const [updateUser, { isSuccess, isError }] = useUpdateUserMutation();
   const mounted = useRef();
   const [editForm, setEditForm] = useState(true);
   const [formData, setFormData] = useState({
@@ -52,11 +52,6 @@ const UpdateUser = ({ setOpenDialog, user }) => {
 
   return (
     <Box>
-      <Backdrop
-        open={isLoading}
-      >
-        <CircularProgress />
-      </Backdrop>
       <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
         <DialogTitle>
           Edit Note
@@ -73,6 +68,7 @@ const UpdateUser = ({ setOpenDialog, user }) => {
                   id="nameInput"
                   name="name"
                   type="text"
+                  readOnly={editForm}
                   value={formData.name}
                   onChange={handleInput}
                 />
@@ -84,6 +80,7 @@ const UpdateUser = ({ setOpenDialog, user }) => {
                 <Select
                   id="roleInput"
                   name='role'
+                  readOnly={editForm}
                   value={formData.role}
                   onChange={handleInput}
                 >
@@ -99,6 +96,7 @@ const UpdateUser = ({ setOpenDialog, user }) => {
                   id="emailInput"
                   name="email"
                   type="email"
+                  readOnly={editForm}
                   value={formData.email}
                   onChange={handleInput}
                 />
@@ -106,11 +104,12 @@ const UpdateUser = ({ setOpenDialog, user }) => {
             </Grid>
             <Grid xs={6} className="flex justify-center">
               <FormControl size="small" fullWidth margin="dense">
-                <InputLabel htmlFor="passwordInput">Password</InputLabel>
+                <InputLabel htmlFor="passwordInput">New Password</InputLabel>
                 <Input
                   id="passwordInput"
                   name="password"
                   type={formData.showPassword ? "text" : 'password'}
+                  readOnly={editForm}
                   value={formData.password}
                   onChange={handleInput}
                   endAdornment={
@@ -127,7 +126,7 @@ const UpdateUser = ({ setOpenDialog, user }) => {
         </DialogContent>
         : null}
       <DialogActions>
-        <Button onClick={(e) => handleSubmit(e)}>Create</Button>
+        {!editForm ? <Button onClick={(e) => handleSubmit(e)}>Edit</Button> : null}
         <Button onClick={() => setOpenDialog(prev => { return { ...prev, open: !prev.open, type: '' }; })}>Cancel</Button>
       </DialogActions>
     </Box>

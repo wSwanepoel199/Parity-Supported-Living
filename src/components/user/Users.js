@@ -1,5 +1,7 @@
-import { Box, Button, Dialog, LinearProgress, Typography, useMediaQuery, useTheme } from "@mui/material";
+import { Box, Button, Dialog, IconButton, LinearProgress, Typography, useMediaQuery, useTheme } from "@mui/material";
 import AddIcon from '@mui/icons-material/Add';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
 import { DataGrid } from "@mui/x-data-grid";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
@@ -7,6 +9,7 @@ import { useGetAllUsersQuery } from "../../shared/redux/admin/adminSlice";
 import Toolbar from "../Toolbar";
 import CreateUser from "./CreateUser";
 import UpdateUser from "./UpdateUser";
+import ConfirmDialog from "./ConfirmDialog";
 
 const Users = () => {
   const adminState = useSelector(state => state.admin);
@@ -20,6 +23,7 @@ const Users = () => {
     type: '',
     data: {}
   });
+
   const [table, setTable] = useState({
     columns: [
       {
@@ -40,6 +44,25 @@ const Users = () => {
         flex: 1,
         minWidth: 100,
       },
+      {
+        field: 'options',
+        headerName: "Options",
+        flex: 0,
+        minWidth: 50,
+        disableColumnMenu: true,
+        disableColumnFilter: true,
+        sortable: false,
+        renderCell: (params) => (
+          <Box>
+            <IconButton onClick={() => setOpenDialog(prev => { return { ...prev, open: !prev.open, type: 'edit', data: params.row }; })}>
+              <EditIcon />
+            </IconButton>
+            <IconButton onClick={() => setOpenDialog(prev => { return { ...prev, open: !prev.open, type: 'delete', data: params.row }; })}>
+              <DeleteIcon />
+            </IconButton>
+          </Box>
+        )
+      }
     ],
     rows: [],
     pageSize: 10
@@ -47,10 +70,11 @@ const Users = () => {
 
   useEffect(() => {
     if (isSuccess && adminState.users) {
+      const parsedUsers = JSON.parse(JSON.stringify(adminState.users).replace(/:null/gi, ":\"\""));
       setTable(prev => {
         return {
           ...prev,
-          rows: adminState.users
+          rows: parsedUsers
         };
       });
     }
@@ -67,7 +91,7 @@ const Users = () => {
       >
         {
           openDialog.open
-            ? (openDialog.type === "new" && <CreateUser setOpenDialog={setOpenDialog} />) || (openDialog.type === "edit" && <UpdateUser setOpenDialog={setOpenDialog} user={openDialog.data} />)
+            ? (openDialog.type === "new" && <CreateUser setOpenDialog={setOpenDialog} />) || (openDialog.type === "edit" && <UpdateUser setOpenDialog={setOpenDialog} user={openDialog.data} />) || (openDialog.type === "delete" && <ConfirmDialog setOpenDialog={setOpenDialog} user={openDialog.data} />)
             : null
         }
       </Dialog>
@@ -85,7 +109,6 @@ const Users = () => {
           autoHeight
           disableSelectionOnClick
           getRowId={(row) => row.userId}
-          onRowClick={(row) => setOpenDialog(prev => { return { ...prev, open: !prev.open, type: 'edit', data: row.row }; })}
           components={{
             Toolbar: Toolbar,
             LoadingOverlay: LinearProgress,

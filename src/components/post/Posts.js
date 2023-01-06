@@ -86,12 +86,14 @@ const Posts = () => {
     pageSize: 10,
   });
 
+
   useEffect(() => {
     if (isSuccess && postState.posts) {
+      const parsedPost = JSON.parse(JSON.stringify(postState.posts).replace(/:null/gi, ":\"\""));
       setTable(prev => {
         return {
           ...prev,
-          rows: postState.posts
+          rows: parsedPost
         };
       });
     }

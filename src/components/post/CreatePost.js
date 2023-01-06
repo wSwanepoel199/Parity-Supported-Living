@@ -1,4 +1,4 @@
-import { Backdrop, Box, Button, CircularProgress, DialogActions, DialogContent, DialogTitle, FormControl, Input, InputLabel, OutlinedInput } from "@mui/material";
+import { Box, Button, DialogActions, DialogContent, DialogTitle, FormControl, Input, InputLabel, OutlinedInput } from "@mui/material";
 import Grid from "@mui/material/Unstable_Grid2/";
 import { format, formatISO, parseISO } from "date-fns";
 import { useEffect, useState } from "react";
@@ -7,7 +7,7 @@ import { useAddPostMutation } from "../../shared/redux/posts/postSlice";
 
 const CreatePost = ({ setOpenDialog }) => {
   const userState = useSelector(state => state.user);
-  const [addPost, { isLoading, isSuccess, isError }] = useAddPostMutation();
+  const [addPost, { isSuccess, isError }] = useAddPostMutation();
   const [formData, setFormData] = useState({
     date: formatISO(new Date()),
     hours: 0,
@@ -62,11 +62,6 @@ const CreatePost = ({ setOpenDialog }) => {
 
   return (
     <Box>
-      <Backdrop
-        open={isLoading}
-      >
-        <CircularProgress />
-      </Backdrop>
       <DialogTitle>
         New Note
       </DialogTitle>

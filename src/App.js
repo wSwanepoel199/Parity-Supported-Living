@@ -9,7 +9,7 @@ import { useRefreshUserMutation, } from './shared/redux/user/userSlice';
 import Posts from './components/post/Posts';
 import Users from './components/user/Users';
 import ProtectedRoute from './shared/utils/ProtectedRoute';
-import { Alert, AlertTitle, Collapse, IconButton } from '@mui/material';
+import { Alert, AlertTitle, Backdrop, CircularProgress, Collapse, IconButton } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { clearError } from './shared/redux/root/rootSlice';
 
@@ -36,6 +36,12 @@ function App() {
     <div className='w-full min-h-screen bg-slate-400 flex flex-col justify-center content-center items-center'>
       {(mounted.current || isUninitialized) ?
         <>
+          <Backdrop
+            open={rootState.status === "loading"}
+            className={`z-40`}
+          >
+            <CircularProgress />
+          </Backdrop>
           <Collapse
             in={rootState.status === "error"}
             unmountOnExit
