@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
-import { CssBaseline, StyledEngineProvider } from '@mui/material';
+import { StyledEngineProvider } from '@mui/material';
 import * as serviceWorkerRegistration from './serviceWorkerRegistration';
 import { Provider } from 'react-redux';
 import store from './shared/redux/store';
@@ -15,11 +15,9 @@ root.render(
   <React.StrictMode>
     <Provider store={store}>
       <StyledEngineProvider injectFirst>
-        <CssBaseline>
-          <BrowserRouter>
-            <App />
-          </BrowserRouter>
-        </CssBaseline>
+        <BrowserRouter>
+          <App />
+        </BrowserRouter>
       </StyledEngineProvider>
     </Provider>
   </React.StrictMode>

@@ -13,6 +13,8 @@
   "dependencies": {
     "@dicebear/avatars": "^4.10.8",
     "@dicebear/avatars-identicon-sprites": "^4.10.8",
+    "@dicebear/collection": "^5.0.2",
+    "@dicebear/core": "^5.0.2",
     "@emotion/react": "^11.10.5",
     "@emotion/styled": "^11.10.5",
     "@mui/base": "^5.0.0-alpha.108",

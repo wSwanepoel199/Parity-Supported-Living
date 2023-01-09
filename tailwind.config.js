@@ -6,7 +6,7 @@ module.exports = {
   ],
   mode: 'jit',
   darkMode: 'class',
-  important: '#root',
+  // important: '#root',
   theme: {
     extend: {},
   },

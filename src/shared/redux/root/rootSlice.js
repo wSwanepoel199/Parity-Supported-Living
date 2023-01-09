@@ -30,8 +30,7 @@ export const rootSlice = createSlice({
     clearError: (state) => {
       return {
         ...state,
-        status: 'cleared',
-        error: undefined
+        status: 'cleared'
       };
     }
   },

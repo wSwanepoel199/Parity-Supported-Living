@@ -1,11 +1,14 @@
 import { AppBar, Avatar, Box, Container, IconButton, Menu, MenuItem, Toolbar, Typography, useMediaQuery, useTheme } from "@mui/material";
 import MenuIcon from '@mui/icons-material/Menu';
 import { useSelector } from "react-redux";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { createAvatar } from '@dicebear/core';
+import { identicon } from '@dicebear/collection';
 import { useNavigate } from "react-router-dom";
 import { useLogoutUserMutation } from "../shared/redux/user/userSlice";
 
 const Appbar = () => {
+  const mounted = useRef();
   const userState = useSelector(state => state.user);
   const navigate = useNavigate();
   const [logoutUser] = useLogoutUserMutation();
@@ -15,10 +18,28 @@ const Appbar = () => {
 
   const [anchorEl, setAnchorEl] = useState({
     nav: null,
-    user: null
+    user: null,
+    svg: ''
   });
 
   useEffect(() => {
+    if (!mounted.current) {
+      mounted.current = true;
+    }
+    if (userState.status === "loggedIn" && mounted.current) {
+      (async () => {
+        const avatar = await createAvatar(identicon, {
+          seed: userState.user.userId,
+        }).toDataUri();
+
+        setAnchorEl(prev => {
+          return {
+            ...prev,
+            svg: avatar
+          };
+        });
+      })();
+    }
     if (navigate) {
       setAnchorEl(prev => {
         return {
@@ -28,7 +49,10 @@ const Appbar = () => {
         };
       });
     }
-  }, [navigate]);
+    return () => {
+      mounted.current = false;
+    };
+  }, [mounted, userState, navigate]);
 
   const handleOpenMenu = (event) => {
     setAnchorEl(prev => {
@@ -50,84 +74,85 @@ const Appbar = () => {
 
   return (
     <AppBar position="sticky" elevation={0} className={`bg-slate-500 z-10`}>
-      <Container maxWidth="xl" disableGutters={smallScreen ? true : false}>
-        <Toolbar disableGutters className={`flex justify-between`}>
-          <Box className={`grow-1 flex`}>
-            <IconButton
-              size={smallScreen ? "small" : "large"}
-              name="nav"
-              aria-label="appbar-menu"
-              aria-controls="menu-appbar"
-              aria-haspopup="true"
-              onClick={handleOpenMenu}
-              color="inherit"
-            >
-              <MenuIcon />
-            </IconButton>
-            <Menu
-              id="menu-appbar"
-              name="nav"
-              anchorEl={anchorEl.nav}
-              anchorOrigin={{
-                vertical: 'bottom',
-                horizontal: 'left',
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'left',
-              }}
-              open={Boolean(anchorEl.nav)}
-              onClose={() => handleCloseMenu("nav")}
-            >
-              <MenuItem onClick={() => navigate(`/`)}>
-                <Typography textAlign="center">Notes</Typography>
-              </MenuItem>
-              {userState.user.role === "Admin" ? <MenuItem onClick={() => navigate(`/users`)}>
-                <Typography textAlign="center">Users</Typography>
-              </MenuItem> : null}
-            </Menu>
-          </Box>
-          <Box className={`grow-1`}>
-            <Typography
-              variant={smallScreen ? "h6" : "h5"}
-              noWrap
-              component="a"
-              className={`flex grow-1 text-inherit ${smallScreen ? 'text-[5vw]' : null}`}
-            >
-              PARITY SUPPORTED LIVING
-            </Typography>
-          </Box>
-          <Box className={`grow-1`}>
-            <Box className={`flex justify-center content-center text-center `}>
-              <Typography variant="body1" component="a" sx={{ display: { xs: 'none', md: 'flex' }, alignItems: 'center', mr: 1 }}>{userState.user.name}</Typography>
-              <IconButton size={smallScreen ? "small" : "large"} name="user" onClick={handleOpenMenu}>
-                {userState.status === "loggedIn" ? <Avatar alt="avatar icon" src={`https://avatars.dicebear.com/api/identicon/${userState.user.userId}.svg`} /> : null}
+      {mounted.current ?
+        <Container maxWidth="xl" disableGutters={smallScreen ? true : false}>
+          <Toolbar disableGutters className={`flex justify-between`}>
+            <Box className={`grow-1 flex`}>
+              <IconButton
+                size={smallScreen ? "small" : "large"}
+                name="nav"
+                aria-label="appbar-menu"
+                aria-controls="menu-appbar"
+                aria-haspopup="true"
+                onClick={handleOpenMenu}
+                color="inherit"
+              >
+                <MenuIcon />
               </IconButton>
+              <Menu
+                id="menu-appbar"
+                name="nav"
+                anchorEl={anchorEl.nav}
+                anchorOrigin={{
+                  vertical: 'bottom',
+                  horizontal: 'left',
+                }}
+                keepMounted
+                transformOrigin={{
+                  vertical: 'top',
+                  horizontal: 'left',
+                }}
+                open={Boolean(anchorEl.nav)}
+                onClose={() => handleCloseMenu("nav")}
+              >
+                <MenuItem onClick={() => navigate(`/`)}>
+                  <Typography textAlign="center">Notes</Typography>
+                </MenuItem>
+                {userState.user.role === "Admin" ? <MenuItem onClick={() => navigate(`/users`)}>
+                  <Typography textAlign="center">Users</Typography>
+                </MenuItem> : null}
+              </Menu>
             </Box>
-            <Menu
-              id="menu-appbar"
-              name="user"
-              anchorEl={anchorEl.user}
-              anchorOrigin={{
-                vertical: 'bottom',
-                horizontal: 'right',
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              open={Boolean(anchorEl.user)}
-              onClose={() => handleCloseMenu("user")}
-            >
-              <MenuItem onClick={logoutUser}>
-                <Typography textAlign="center">SignOut</Typography>
-              </MenuItem>
-            </Menu>
-          </Box>
-        </Toolbar>
-      </Container>
+            <Box className={`grow-1`}>
+              <Typography
+                variant={smallScreen ? "h6" : "h5"}
+                noWrap
+                component="a"
+                className={`flex grow-1 text-inherit ${smallScreen ? 'text-[5vw]' : null}`}
+              >
+                PARITY SUPPORTED LIVING
+              </Typography>
+            </Box>
+            <Box className={`grow-1`}>
+              <Box className={`flex justify-center content-center text-center `}>
+                <Typography variant="body1" component="a" sx={{ display: { xs: 'none', md: 'flex' }, alignItems: 'center', mr: 1 }}>{userState.user.name}</Typography>
+                <IconButton size={smallScreen ? "small" : "large"} name="user" onClick={handleOpenMenu}>
+                  {userState.status === "loggedIn" ? <Avatar alt="avatar icon" src={anchorEl.svg} fontSize="inherit" /> : null}
+                </IconButton>
+              </Box>
+              <Menu
+                id="menu-appbar"
+                name="user"
+                anchorEl={anchorEl.user}
+                anchorOrigin={{
+                  vertical: 'bottom',
+                  horizontal: 'right',
+                }}
+                keepMounted
+                transformOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+                }}
+                open={Boolean(anchorEl.user)}
+                onClose={() => handleCloseMenu("user")}
+              >
+                <MenuItem onClick={logoutUser}>
+                  <Typography textAlign="center">SignOut</Typography>
+                </MenuItem>
+              </Menu>
+            </Box>
+          </Toolbar>
+        </Container> : null}
     </AppBar >
   );
 };

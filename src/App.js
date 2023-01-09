@@ -30,45 +30,46 @@ function App() {
     };
   }, [mounted, userState.status, refreshUser]);
 
-  // TODO: Add loading indicator for logging in, signing out, creating posts and users, updating posts and users, add ability to delete existing posts and users, add indicator to deleting posts and users
+  // TODO: improve error handler by allowing it to collapse in and out, considering adding thirdparty to control
 
   return (
-    <div className='w-full min-h-screen bg-slate-400 flex flex-col justify-center content-center items-center'>
+    <div className='w-full min-h-screen bg-slate-400 flex flex-col justify-center items-center'>
       {(mounted.current || isUninitialized) ?
         <>
           <Backdrop
             open={rootState.status === "loading"}
-            className={`z-40`}
+            className={`z-30`}
           >
             <CircularProgress />
           </Backdrop>
           <Collapse
             in={rootState.status === "error"}
             unmountOnExit
+            className={`absolute z-50 left-0 top-0 w-full`}
           >
-            {rootState.status === "error" ?
-              <Alert
-                className={`absolute z-50 left-0 top-0 w-full flex items-center`}
-                severity={rootState.status}
-                action={
-                  <IconButton
-                    aria-label="close"
-                    color='inherit'
-                    size="small"
-                    className={`pt-0`}
-                    onClick={() => {
-                      dispatch(clearError());
-                    }}
-                  >
-                    <CloseIcon fontSize="inherit" />
-                  </IconButton>}>
+            <Alert
+              className={`flex items-center`}
+              severity={rootState.status}
+              action={
+                <IconButton
+                  aria-label="close"
+                  color='inherit'
+                  onClick={() => {
+                    dispatch(clearError());
+                  }}
+                >
+                  <CloseIcon fontSize="inherit" />
+                </IconButton>}
+
+            >
+              {rootState.error ? <>
                 <AlertTitle>{rootState.error.status}</AlertTitle>
                 {rootState.error.data.message}
-              </Alert>
-              : null}
+              </> : null}
+            </Alert>
           </Collapse>
           <Routes>
-            <Route path="/" element={userState.status === "loggedIn" ? <Landing /> : <SignIn isRefreshing={rootState.status === "loading"} />}>
+            <Route path="/" element={userState.status === "loggedIn" ? <Landing /> : <SignIn />}>
               <Route index element={
                 <Posts />
                 // <Dashboard />
