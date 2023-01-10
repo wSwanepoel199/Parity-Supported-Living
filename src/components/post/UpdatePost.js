@@ -77,7 +77,7 @@ const UpdatePost = ({ setOpenDialog, post }) => {
         <DialogTitle>
           Edit Note
         </DialogTitle>
-        <FormControlLabel control={<Switch checked={editForm} onChange={() => setEditForm(prev => !prev)} />} label="Toggle Edit" />
+        {userState.user.role === "Admin" ? <FormControlLabel control={<Switch checked={editForm} onChange={() => setEditForm(prev => !prev)} />} label="Toggle Edit" /> : null}
       </Box>
       {mounted.current ?
         <DialogContent>
