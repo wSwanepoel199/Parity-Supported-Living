@@ -58,7 +58,7 @@ export const userApiSlice = backendApi.injectEndpoints({
         try {
           const { data } = await queryFulfilled;
           if (loginDetails.rememberMe) dispatch(saveToken(data.data.accessToken));
-          dispatch(saveUser(data.data));
+          dispatch(saveUser(data.data.data));
         }
         catch (err) {
           console.error(err);
@@ -70,7 +70,7 @@ export const userApiSlice = backendApi.injectEndpoints({
       async onQueryStarted(refresh, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
-          dispatch(saveUser(data.data));
+          dispatch(saveUser(data.data.data));
         }
         catch (err) {
           console.error(err);
@@ -85,8 +85,8 @@ export const userApiSlice = backendApi.injectEndpoints({
       async onQueryStarted(signout, { dispatch, queryFulfilled }) {
         try {
           dispatch(signOutUser());
-          const { data } = await queryFulfilled;
-          dispatch(removeUser(data.data));
+          await queryFulfilled;
+          dispatch(removeUser());
         }
         catch (err) {
           console.error(err);

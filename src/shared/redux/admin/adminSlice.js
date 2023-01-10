@@ -29,14 +29,14 @@ export const adminApiSlice = backendApi.injectEndpoints({
       query: (users) => ({ url: '/auth/', method: 'get' }),
       providesTags: (result, error, args) =>
         result
-          ? [...result.data.map(({ id }) => ({ type: 'User', id })),
+          ? [...result.data.data.map(({ id }) => ({ type: 'User', id })),
           { type: 'User', id: "LIST" },
           ]
           : [{ type: 'User', id: "LIST" }],
       async onQueryStarted(users, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
-          dispatch(saveUsers(data.data));
+          dispatch(saveUsers(data.data.data));
         }
         catch (err) {
           console.error(err);
