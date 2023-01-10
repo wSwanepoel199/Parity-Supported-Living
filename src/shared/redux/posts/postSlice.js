@@ -76,14 +76,14 @@ export const postApiSlice = backendApi.injectEndpoints({
       query: () => ({ url: '/posts', method: 'get' }),
       providesTags: (result, error, args) =>
         result
-          ? [...result.data.map(({ id }) => ({ type: 'Post', id })),
+          ? [...result.data.data.map(({ id }) => ({ type: 'Post', id })),
           { type: 'Post', id: "LIST" },
           ]
           : [{ type: 'Post', id: "LIST" }],
       async onQueryStarted(undefiend, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
-          dispatch(savePosts(data.data));
+          dispatch(savePosts(data.data.data));
         }
         catch (err) {
           console.error(err);

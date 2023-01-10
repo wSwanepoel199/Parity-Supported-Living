@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Grid from "@mui/material/Unstable_Grid2";
-import { Box, Button, Checkbox, CircularProgress, FormControl, FormControlLabel, FormGroup, IconButton, Input, InputAdornment, InputLabel, Typography } from "@mui/material";
+import { Box, Button, Checkbox, FormControl, FormControlLabel, FormGroup, IconButton, Input, InputAdornment, InputLabel, Typography } from "@mui/material";
 import LoginIcon from '@mui/icons-material/Login';
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import { useLoginUserMutation } from "../shared/redux/user/userSlice";
 
-const SignIn = ({ isRefreshing }) => {
+const SignIn = () => {
   const navigate = useNavigate();
-  const [loginUser, { data, isSuccess, isLoading }] = useLoginUserMutation();
+  const [loginUser, { data, isSuccess }] = useLoginUserMutation();
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -75,7 +75,7 @@ const SignIn = ({ isRefreshing }) => {
           </FormControl>
         </Grid>
         <Grid sm={8} xs={12} className="flex justify-center">
-          {isLoading || isRefreshing ? <CircularProgress /> : <Button variant="contained" className="m-3" type="Submit">Sign In</Button>}
+          <Button variant="contained" className="m-3" type="Submit">Sign In</Button>
         </Grid>
         <Grid sm={8} xs={12} className="flex justify-center">
           <FormGroup>

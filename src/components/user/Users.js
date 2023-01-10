@@ -108,7 +108,6 @@ const Users = () => {
           pagination
           autoHeight
           disableSelectionOnClick
-          getRowId={(row) => row.userId}
           components={{
             Toolbar: Toolbar,
             LoadingOverlay: LinearProgress,
