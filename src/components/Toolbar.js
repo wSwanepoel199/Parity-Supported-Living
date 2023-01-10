@@ -1,5 +1,5 @@
 import { Box } from "@mui/material";
-import { GridToolbarContainer, GridToolbarDensitySelector, GridToolbarExport, GridToolbarFilterButton } from "@mui/x-data-grid";
+import { GridToolbarContainer, GridToolbarDensitySelector, GridToolbarExport } from "@mui/x-data-grid";
 import { useSelector } from "react-redux";
 
 const Toolbar = ({ children }) => {
