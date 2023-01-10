@@ -9,7 +9,7 @@ const Toolbar = ({ children }) => {
     <GridToolbarContainer className="justify-between">
       <Box>
         {/* <GridToolbarColumnsButton/> */}
-        <GridToolbarFilterButton />
+        {/* <GridToolbarFilterButton /> */}
         <GridToolbarDensitySelector />
         {userState.role === "Admin" ? <GridToolbarExport /> : null}
       </Box>

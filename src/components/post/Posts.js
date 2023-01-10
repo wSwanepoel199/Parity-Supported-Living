@@ -101,7 +101,7 @@ const Posts = () => {
 
   return (
     <div className="w-full h-full max-w-screen-lg mx-auto flex flex-col ">
-      <Typography variant="h3" component="div" className={`py-5`}>Posts</Typography>
+      <Typography variant="h3" component="div" className={`py-5`}>Notes</Typography>
       <Dialog
         fullScreen={fullScreen}
         open={openDialog.open}
