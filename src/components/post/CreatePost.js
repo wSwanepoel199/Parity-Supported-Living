@@ -7,7 +7,7 @@ import { useAddPostMutation } from "../../shared/redux/posts/postSlice";
 
 const CreatePost = ({ setOpenDialog }) => {
   const userState = useSelector(state => state.user);
-  const [addPost, { isSuccess, isError }] = useAddPostMutation();
+  const [addPost, { isLoading }] = useAddPostMutation();
   const [formData, setFormData] = useState({
     date: formatISO(new Date()),
     hours: 0,
@@ -18,9 +18,9 @@ const CreatePost = ({ setOpenDialog }) => {
   });
 
   useEffect(() => {
-    if (isSuccess || isError) setOpenDialog(prev => { return { ...prev, open: !prev.open, type: '' }; });
+    if (isLoading) setOpenDialog(prev => { return { ...prev, open: !prev.open, type: '' }; });
 
-  }, [isSuccess, setOpenDialog, isError]);
+  }, [isLoading, setOpenDialog]);
 
   const handleInput = ({ value, name }) => {
     switch (name) {

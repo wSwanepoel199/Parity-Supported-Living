@@ -12,7 +12,7 @@ const UpdatePost = ({ setOpenDialog, post }) => {
   const mounted = useRef();
   const [updatePost, { isLoading }] = useUpdatePostMutation();
   const [deleteTargetPost, { isLoading: deleteLoading }] = useDeleteTargetPostMutation();
-  const [editForm, setEditForm] = useState(true);
+  const [editForm, setEditForm] = useState(false);
   const [formData, setFormData] = useState(post);
 
   useEffect(() => {
@@ -77,7 +77,7 @@ const UpdatePost = ({ setOpenDialog, post }) => {
         <DialogTitle>
           Edit Note
         </DialogTitle>
-        <FormControlLabel control={<Switch checked={!editForm} onChange={() => setEditForm(prev => !prev)} />} label="Toggle Edit" />
+        <FormControlLabel control={<Switch checked={editForm} onChange={() => setEditForm(prev => !prev)} />} label="Toggle Edit" />
       </Box>
       {mounted.current ?
         <DialogContent>
@@ -159,7 +159,7 @@ const UpdatePost = ({ setOpenDialog, post }) => {
             <DeleteIcon fontSize="inherit" />
           </IconButton> : null}
         <Box >
-          {!editForm ? <Button onClick={(e) => handleSubmit(e)}>Edit</Button> : null}
+          {(!editForm && userState.user.role === "Admin") ? <Button onClick={(e) => handleSubmit(e)}>Edit</Button> : null}
           <Button onClick={() => setOpenDialog(prev => { return { ...prev, open: !prev.open, type: '', data: {} }; })}>Cancel</Button>
         </Box>
       </DialogActions>
