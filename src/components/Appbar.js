@@ -77,7 +77,7 @@ const Appbar = () => {
       {mounted.current ?
         <Container maxWidth="xl" disableGutters={smallScreen ? true : false}>
           <Toolbar disableGutters className={`flex justify-between`}>
-            <Box className={`grow-1 flex`}>
+            <Box className={`flex w-full justify-start`}>
               <IconButton
                 size={smallScreen ? "small" : "large"}
                 name="nav"
@@ -87,7 +87,7 @@ const Appbar = () => {
                 onClick={handleOpenMenu}
                 color="inherit"
               >
-                <MenuIcon />
+                <MenuIcon fontSize={smallScreen ? undefined : "inherit"} />
               </IconButton>
               <Menu
                 id="menu-appbar"
@@ -113,21 +113,28 @@ const Appbar = () => {
                 </MenuItem> : null}
               </Menu>
             </Box>
-            <Box className={`grow-1`}>
-              <Typography
-                variant={smallScreen ? "h6" : "h5"}
-                noWrap
-                component="a"
-                className={`flex grow-1 text-inherit ${smallScreen ? 'text-[5vw]' : null}`}
-              >
-                PARITY SUPPORTED LIVING
-              </Typography>
+            <Box className={`flex w-full  justify-center items-center`}>
+              <Box
+                component={`img`}
+                className={`object-contain  ${smallScreen ? 'max-h-[52px]' : 'max-h-[60px]'} rounded-[4px]`}
+                alt="Parity Supported Living"
+                src={`${process.env.PUBLIC_URL}/PSLPineapple512.png`}
+              />
+              {!smallScreen ?
+                <Typography
+                  variant={smallScreen ? "h6" : "h5"}
+                  noWrap
+                  component="a"
+                  className={`flex text-inherit ${smallScreen ? 'text-[5vw]' : null}`}
+                >
+                  PARITY SUPPORTED LIVING
+                </Typography> : null}
             </Box>
-            <Box className={`grow-1`}>
+            <Box className={`flex w-full justify-end`}>
               <Box className={`flex justify-center content-center text-center `}>
                 <Typography variant="body1" component="a" sx={{ display: { xs: 'none', md: 'flex' }, alignItems: 'center', mr: 1 }}>{userState.user.name}</Typography>
                 <IconButton size={smallScreen ? "small" : "large"} name="user" onClick={handleOpenMenu}>
-                  {userState.status === "loggedIn" ? <Avatar alt="avatar icon" src={anchorEl.svg} fontSize="inherit" /> : null}
+                  {userState.status === "loggedIn" ? <Avatar alt="avatar icon" src={anchorEl.svg} className={`w-[${window.innerWidth / 10}px] h-[${window.innerWidth / 10}px]`} /> : null}
                 </IconButton>
               </Box>
               <Menu

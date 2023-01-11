@@ -3,19 +3,25 @@
   "name": "Parity Supported Living Notes",
   "icons": [
     {
-      "src": "favicon.ico",
-      "sizes": "64x64 32x32 24x24 16x16",
-      "type": "image/x-icon"
+      "src": "PSLPineapple.ico",
+      "sizes": "16x16 32x32 48x48 64x64 128x128 256x256",
+      "type": "image/x-icon",
+      "purpose": "any maskable"
     },
     {
-      "src": "logo192.png",
+      "src": "PSLPineapple192.png",
       "type": "image/png",
       "sizes": "192x192"
     },
     {
-      "src": "logo512.png",
+      "src": "PSLPineapple512.png",
       "type": "image/png",
       "sizes": "512x512"
+    },
+    {
+      "src": "Parity supported living.png",
+      "type": "image/png",
+      "sizes": "2258x1224"
     }
   ],
   "start_url": ".",
