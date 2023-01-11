@@ -57,7 +57,7 @@ export const userApiSlice = backendApi.injectEndpoints({
       async onQueryStarted(loginDetails, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
-          if (loginDetails.rememberMe) dispatch(saveToken(data.data.accessToken));
+          if (loginDetails.rememberMe) dispatch(saveToken(data.data.data.accessToken));
           dispatch(saveUser(data.data.data));
         }
         catch (err) {

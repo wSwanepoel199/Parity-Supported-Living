@@ -159,7 +159,7 @@ const UpdatePost = ({ setOpenDialog, post }) => {
             <DeleteIcon fontSize="inherit" />
           </IconButton> : null}
         <Box >
-          {(!editForm && userState.user.role === "Admin") ? <Button onClick={(e) => handleSubmit(e)}>Edit</Button> : null}
+          {(editForm && userState.user.role === "Admin") ? <Button onClick={(e) => handleSubmit(e)}>Edit</Button> : null}
           <Button onClick={() => setOpenDialog(prev => { return { ...prev, open: !prev.open, type: '', data: {} }; })}>Cancel</Button>
         </Box>
       </DialogActions>
