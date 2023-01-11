@@ -2,8 +2,6 @@ import { AppBar, Avatar, Box, Container, IconButton, Menu, MenuItem, Toolbar, Ty
 import MenuIcon from '@mui/icons-material/Menu';
 import { useSelector } from "react-redux";
 import { useEffect, useRef, useState } from "react";
-import { createAvatar } from '@dicebear/core';
-import { identicon } from '@dicebear/collection';
 import { useNavigate } from "react-router-dom";
 import { useLogoutUserMutation } from "../shared/redux/user/userSlice";
 
@@ -19,26 +17,11 @@ const Appbar = () => {
   const [anchorEl, setAnchorEl] = useState({
     nav: null,
     user: null,
-    svg: ''
   });
 
   useEffect(() => {
     if (!mounted.current) {
       mounted.current = true;
-    }
-    if (userState.status === "loggedIn" && mounted.current) {
-      (async () => {
-        const avatar = await createAvatar(identicon, {
-          seed: userState.user.userId,
-        }).toDataUri();
-
-        setAnchorEl(prev => {
-          return {
-            ...prev,
-            svg: avatar
-          };
-        });
-      })();
     }
     if (navigate) {
       setAnchorEl(prev => {
@@ -75,11 +58,11 @@ const Appbar = () => {
   return (
     <AppBar position="sticky" elevation={0} className={`bg-slate-500 z-10`}>
       {mounted.current ?
-        <Container maxWidth="xl" disableGutters={smallScreen ? true : false}>
+        <Container maxWidth="xl" >
           <Toolbar disableGutters className={`flex justify-between`}>
             <Box className={`flex w-full justify-start`}>
               <IconButton
-                size={smallScreen ? "small" : "large"}
+                size="large"
                 name="nav"
                 aria-label="appbar-menu"
                 aria-controls="menu-appbar"
@@ -87,7 +70,7 @@ const Appbar = () => {
                 onClick={handleOpenMenu}
                 color="inherit"
               >
-                <MenuIcon fontSize={smallScreen ? undefined : "inherit"} />
+                <MenuIcon fontSize={"inherit"} />
               </IconButton>
               <Menu
                 id="menu-appbar"
@@ -114,27 +97,27 @@ const Appbar = () => {
               </Menu>
             </Box>
             <Box className={`flex w-full  justify-center items-center`}>
-              <Box
-                component={`img`}
-                className={`object-contain  ${smallScreen ? 'max-h-[52px]' : 'max-h-[60px]'} rounded-[4px]`}
-                alt="Parity Supported Living"
-                src={`${process.env.PUBLIC_URL}/PSLPineapple512.png`}
-              />
               {!smallScreen ?
                 <Typography
-                  variant={smallScreen ? "h6" : "h5"}
+                  variant="h5"
                   noWrap
                   component="a"
-                  className={`flex text-inherit ${smallScreen ? 'text-[5vw]' : null}`}
+                  className={`flex text-inherit `}
                 >
                   PARITY SUPPORTED LIVING
-                </Typography> : null}
+                </Typography> :
+                <Box
+                  component={`img`}
+                  className={`object-contain  ${smallScreen ? 'max-h-[52px]' : 'max-h-[60px]'} rounded-[4px]`}
+                  alt="Parity Supported Living"
+                  src={`${process.env.PUBLIC_URL}/PSLPineapple512.png`}
+                />}
             </Box>
             <Box className={`flex w-full justify-end`}>
               <Box className={`flex justify-center content-center text-center `}>
                 <Typography variant="body1" component="a" sx={{ display: { xs: 'none', md: 'flex' }, alignItems: 'center', mr: 1 }}>{userState.user.name}</Typography>
-                <IconButton size={smallScreen ? "small" : "large"} name="user" onClick={handleOpenMenu}>
-                  {userState.status === "loggedIn" ? <Avatar alt="avatar icon" src={anchorEl.svg} className={`w-[${window.innerWidth / 10}px] h-[${window.innerWidth / 10}px]`} /> : null}
+                <IconButton size={smallScreen ? "small" : "large"} name="user" onClick={handleOpenMenu} className={``}>
+                  {userState.status === "loggedIn" ? <Avatar alt="avatar icon" src={userState.user.icon} className={`w-[${window.innerWidth / 10}px] h-[${window.innerWidth / 10}px] bg-white ring-1 ring-white`} /> : null}
                 </IconButton>
               </Box>
               <Menu
@@ -160,7 +143,7 @@ const Appbar = () => {
             </Box>
           </Toolbar>
         </Container> : null}
-    </AppBar >
+    </AppBar>
   );
 };
 
