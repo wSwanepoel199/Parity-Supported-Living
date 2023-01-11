@@ -48,19 +48,19 @@ const Users = () => {
         field: 'options',
         headerName: "Options",
         flex: 0,
-        minWidth: 50,
+        minWidth: 100,
         disableColumnMenu: true,
         disableColumnFilter: true,
         sortable: false,
         renderCell: (params) => (
-          <Box>
+          <>
             <IconButton onClick={() => setOpenDialog(prev => { return { ...prev, open: !prev.open, type: 'edit', data: params.row }; })}>
               <EditIcon />
             </IconButton>
             <IconButton onClick={() => setOpenDialog(prev => { return { ...prev, open: !prev.open, type: 'delete', data: params.row }; })}>
               <DeleteIcon />
             </IconButton>
-          </Box>
+          </>
         )
       }
     ],
