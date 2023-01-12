@@ -47,6 +47,7 @@ function App() {
 
   return (
     <div className='w-full min-h-screen bg-slate-400 flex flex-col justify-center items-center'>
+      {console.log(process.env.REACT_APP_API_URL)}
       {(mounted.current || isUninitialized) ?
         <>
           <Backdrop
