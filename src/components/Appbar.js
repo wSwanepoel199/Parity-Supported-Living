@@ -2,7 +2,7 @@ import { AppBar, Avatar, Box, Container, IconButton, Menu, MenuItem, Toolbar, Ty
 import MenuIcon from '@mui/icons-material/Menu';
 import { useSelector } from "react-redux";
 import { useEffect, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useLogoutUserMutation } from "../shared/redux/user/userSlice";
 
 const Appbar = () => {
@@ -88,10 +88,10 @@ const Appbar = () => {
                 open={Boolean(anchorEl.nav)}
                 onClose={() => handleCloseMenu("nav")}
               >
-                <MenuItem onClick={() => navigate(`/`)}>
+                <MenuItem component={Link} to="/">
                   <Typography textAlign="center">Notes</Typography>
                 </MenuItem>
-                {userState.user.role === "Admin" ? <MenuItem onClick={() => navigate(`/users`)}>
+                {userState.user.role === "Admin" ? <MenuItem component={Link} to="/users">
                   <Typography textAlign="center">Users</Typography>
                 </MenuItem> : null}
               </Menu>
@@ -117,7 +117,7 @@ const Appbar = () => {
               <Box className={`flex justify-center content-center text-center `}>
                 <Typography variant="body1" component="a" sx={{ display: { xs: 'none', md: 'flex' }, alignItems: 'center', mr: 1 }}>{userState.user.name}</Typography>
                 <IconButton size={smallScreen ? "small" : "large"} name="user" onClick={handleOpenMenu} className={``}>
-                  {userState.status === "loggedIn" ? <Avatar alt="avatar icon" src={userState.user.icon ? userState.user.icon.icon : ''} className={`w-[${window.innerWidth / 10}px] h-[${window.innerWidth / 10}px] bg-white ring-1 ring-white`} /> : null}
+                  {userState.status === "loggedIn" ? <Avatar alt="avatar icon" src={userState.user.icon ? userState.user.icon : ''} className={`w-[${window.innerWidth / 10}px] h-[${window.innerWidth / 10}px] bg-white ring-1 ring-white`} /> : null}
                 </IconButton>
               </Box>
               <Menu

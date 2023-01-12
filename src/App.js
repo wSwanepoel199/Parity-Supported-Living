@@ -46,8 +46,7 @@ function App() {
   // TODO: 
 
   return (
-    <div className='w-full min-h-screen bg-slate-400 flex flex-col justify-center items-center'>
-      {console.log(process.env.REACT_APP_API_URL)}
+    <div className={`w-full min-h-screen bg-slate-400 flex flex-col justify-center items-center`}>
       {(mounted.current || isUninitialized) ?
         <>
           <Backdrop
@@ -89,7 +88,7 @@ function App() {
                 // <Dashboard />
               } />
               {/* <Route path="notes" element={<Posts />} /> */}
-              <Route path="/users" element={
+              <Route path="users" element={
                 <ProtectedRoute>
                   <Users />
                 </ProtectedRoute>
@@ -98,7 +97,7 @@ function App() {
           </Routes>
         </>
         : null}
-    </div >
+    </div>
   );
 }
 

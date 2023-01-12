@@ -37,7 +37,7 @@ const SignIn = () => {
   }, [data, isSuccess, navigate]);
 
   return (
-    <Box component="form" className="w-full max-w-screen-md flex justify-center" onSubmit={(e) => handleSubmit(e)}>
+    <Box component="form" className="w-full max-w-screen-md my-auto flex justify-center" onSubmit={(e) => handleSubmit(e)}>
       <Grid container spacing={2} xs={10} sm={8} className="flex flex-col justify-center content-center items-center bg-slate-200 border-2 border-solid border-black rounded-md">
         <Grid sm={8} xs={12} className="flex flex-col justify-center content-center items-center">
           <LoginIcon fontSize="large" className="m-5" />
