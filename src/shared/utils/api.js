@@ -5,13 +5,14 @@ import store from '../redux/store';
 const DEBUG = process.env.NODE_ENV === "development";
 
 const defaults = {
-  url: process.env.NODE_ENV === "production" ? process.env.REACT_APP_API_URL : "http://192.168.56.101:5000",
+  url: process.env.REACT_APP_API_URL,
   headers: {
     'Content-Type': 'application/json',
   },
   error: {
-    status: 503,
-    message: { msg: 'Something went wrong. Please check your internet connection or contact our support.', data: {} },
+    status: 500,
+    statusText: '	InternalServerError',
+    data: { message: 'Something went wrong. Please check your internet connection or contact support.', data: {} },
   }
 };
 
@@ -19,6 +20,7 @@ export const axiosBaseQuery =
   ({ baseUrl } = { baseUrl: '' }) =>
     async ({ url, method, data, params }) => {
       try {
+        console.log(baseUrl + url);
         const res = await axios({
           url: baseUrl + url,
           method,
@@ -28,12 +30,15 @@ export const axiosBaseQuery =
           params,
         });
         return { data: res.data };
-      } catch (axiosError) {
+      }
+      catch (axiosError) {
         let err = axiosError;
+        console.log(err);
         return {
           error: {
-            status: err.response?.status,
-            data: err.response?.data || err.message,
+            status: err.response?.status || defaults.error.status,
+            statusText: err.response?.statusText || defaults.error.statusText,
+            data: err.response?.data || defaults.error.data,
           },
         };
       }

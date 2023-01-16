@@ -6,7 +6,7 @@ const ProtectedRoute = ({ children }) => {
 
   return (
     <>
-      {userState.status === "loggedIn" ? (userState.user.role === "Admin") ? children : <Navigate to='/' replace /> : null}
+      {userState.status === "loggedIn" ? (["Admin", "Coordinator"].includes(userState.user.role)) ? children : <Navigate to='/' replace /> : null}
     </>
   );
 };

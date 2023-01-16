@@ -36,12 +36,12 @@ const CreateUser = ({ setOpenDialog }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     createUser(formData);
-    setOpenDialog(prev => { return { ...prev, open: !prev.open, type: '' }; });
+    // setOpenDialog(prev => { return { ...prev, open: !prev.open, type: '' }; });
   };
 
 
   return (
-    <Box>
+    <Box component='form' onSubmit={(e) => handleSubmit(e)}>
       <DialogTitle>
         New User
       </DialogTitle>
@@ -65,11 +65,13 @@ const CreateUser = ({ setOpenDialog }) => {
               <Select
                 id="roleInput"
                 name='role'
+                required
                 value={formData.role}
                 onChange={handleInput}
               >
                 <MenuItem value={"Admin"}>Admin</MenuItem>
                 <MenuItem value={"Carer"}>Carer</MenuItem>
+                <MenuItem value={"Coordinator"}>Coordinator</MenuItem>
               </Select>
             </FormControl>
           </Grid>
@@ -107,7 +109,7 @@ const CreateUser = ({ setOpenDialog }) => {
         </Grid>
       </DialogContent>
       <DialogActions>
-        <Button onClick={(e) => handleSubmit(e)}>Create</Button>
+        <Button type="submit">Create</Button>
         <Button onClick={() => setOpenDialog(prev => { return { ...prev, open: !prev.open, type: '' }; })}>Cancel</Button>
       </DialogActions>
     </Box>

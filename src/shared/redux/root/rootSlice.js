@@ -54,11 +54,13 @@ export const rootSlice = createSlice({
         };
       })
       .addMatcher(isRejected, (state, action) => {
+        console.log(action.payload);
         return {
           ...state,
           status: "error",
           msg: {
             status: action.payload.status,
+            statusText: action.payload.statusText,
             message: action.payload.data.message
           }
         };

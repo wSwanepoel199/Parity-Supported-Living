@@ -46,7 +46,8 @@ function App() {
   // TODO: 
 
   return (
-    <div className='w-full min-h-screen bg-slate-400 flex flex-col justify-center items-center'>
+    <div className={`w-full min-h-screen bg-slate-400 flex flex-col justify-center items-center`}>
+      {console.log(process.env.NODE_ENV)}
       {(mounted.current || isUninitialized) ?
         <>
           <Backdrop
@@ -76,7 +77,7 @@ function App() {
                   </IconButton>}
 
               >
-                <AlertTitle>{alert.msg.status}</AlertTitle>
+                <AlertTitle>{alert.msg.status} {alert.msg.statusText}</AlertTitle>
                 {(alert.msg.message)}
               </Alert>
               : null}
@@ -88,7 +89,7 @@ function App() {
                 // <Dashboard />
               } />
               {/* <Route path="notes" element={<Posts />} /> */}
-              <Route path="/users" element={
+              <Route path="users" element={
                 <ProtectedRoute>
                   <Users />
                 </ProtectedRoute>
@@ -97,7 +98,7 @@ function App() {
           </Routes>
         </>
         : null}
-    </div >
+    </div>
   );
 }
 

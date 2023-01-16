@@ -77,7 +77,7 @@ const UpdatePost = ({ setOpenDialog, post }) => {
         <DialogTitle>
           Edit Note
         </DialogTitle>
-        {userState.user.role === "Admin" ? <FormControlLabel control={<Switch checked={editForm} onChange={() => setEditForm(prev => !prev)} />} label="Toggle Edit" /> : null}
+        {["Admin", "Coordinator"].includes(userState.user.role) ? <FormControlLabel control={<Switch checked={editForm} onChange={() => setEditForm(prev => !prev)} />} label="Toggle Edit" /> : null}
       </Box>
       {mounted.current ?
         <DialogContent>
@@ -89,7 +89,7 @@ const UpdatePost = ({ setOpenDialog, post }) => {
                   id="dateInput"
                   name="date"
                   type="date"
-                  readOnly={editForm}
+                  readOnly={!editForm}
                   value={format(parseISO(formData.date), 'yyyy-MM-dd')}
                   onChange={(e) => handleInput(e.target)}
                 />
@@ -102,7 +102,7 @@ const UpdatePost = ({ setOpenDialog, post }) => {
                   id="timeInput"
                   name="hours"
                   type="number"
-                  readOnly={editForm}
+                  readOnly={!editForm}
                   value={formData.hours}
                   onChange={(e) => handleInput(e.target)}
                 />
@@ -115,7 +115,7 @@ const UpdatePost = ({ setOpenDialog, post }) => {
                   id="clientInput"
                   name="client"
                   type="text"
-                  readOnly={editForm}
+                  readOnly={!editForm}
                   value={formData.client}
                   onChange={(e) => handleInput(e.target)}
                 />
@@ -128,7 +128,7 @@ const UpdatePost = ({ setOpenDialog, post }) => {
                   id="distanceInput"
                   name="kilos"
                   type="number"
-                  readOnly={editForm}
+                  readOnly={!editForm}
                   value={formData.kilos}
                   onChange={(e) => handleInput(e.target)}
                 />
@@ -142,7 +142,7 @@ const UpdatePost = ({ setOpenDialog, post }) => {
                   name="notes"
                   type="text"
                   label="Notes"
-                  readOnly={editForm}
+                  readOnly={!editForm}
                   multiline
                   rows={4}
                   value={formData.notes}
@@ -153,13 +153,13 @@ const UpdatePost = ({ setOpenDialog, post }) => {
           </Grid>
         </DialogContent>
         : null}
-      <DialogActions sx={{ justifyContent: userState.user.role === "Admin" ? 'space-between' : 'end', alignContent: 'space-between' }}>
-        {userState.user.role === "Admin" ?
+      <DialogActions sx={{ justifyContent: (editForm) ? 'space-between' : 'end', alignContent: 'space-between' }}>
+        {(editForm) ?
           <IconButton size="large" onClick={() => deleteTargetPost(post)}>
             <DeleteIcon fontSize="inherit" />
           </IconButton> : null}
         <Box >
-          {(editForm && userState.user.role === "Admin") ? <Button onClick={(e) => handleSubmit(e)}>Edit</Button> : null}
+          {editForm ? <Button onClick={(e) => handleSubmit(e)}>Edit</Button> : null}
           <Button onClick={() => setOpenDialog(prev => { return { ...prev, open: !prev.open, type: '', data: {} }; })}>Cancel</Button>
         </Box>
       </DialogActions>

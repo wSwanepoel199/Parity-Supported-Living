@@ -13,6 +13,7 @@ import ConfirmDialog from "./ConfirmDialog";
 
 const Users = () => {
   const adminState = useSelector(state => state.admin);
+  const userState = useSelector(state => state.user);
   const { isFetching, isLoading, isSuccess } = useGetAllUsersQuery();
 
   const theme = useTheme();
@@ -54,9 +55,10 @@ const Users = () => {
         sortable: false,
         renderCell: (params) => (
           <>
-            <IconButton onClick={() => setOpenDialog(prev => { return { ...prev, open: !prev.open, type: 'edit', data: params.row }; })}>
-              <EditIcon />
-            </IconButton>
+            {userState.user.role === "Admin" ?
+              <IconButton onClick={() => setOpenDialog(prev => { return { ...prev, open: !prev.open, type: 'edit', data: params.row }; })}>
+                <EditIcon />
+              </IconButton> : null}
             <IconButton onClick={() => setOpenDialog(prev => { return { ...prev, open: !prev.open, type: 'delete', data: params.row }; })}>
               <DeleteIcon />
             </IconButton>
@@ -87,7 +89,7 @@ const Users = () => {
       <Dialog
         fullScreen={fullScreen}
         open={openDialog.open}
-        onClose={() => setOpenDialog(prev => { return { ...prev, open: !prev.open, type: '', data: {} }; })}
+      // onClose={() => setOpenDialog(prev => { return { ...prev, open: !prev.open, type: '', data: {} }; })}
       >
         {
           openDialog.open
@@ -116,9 +118,10 @@ const Users = () => {
             toolbar: {
               children: (
                 <Box>
-                  <Button startIcon={<AddIcon />} onClick={() => setOpenDialog(prev => { return { ...prev, open: !prev.open, type: 'new' }; })}>
-                    New User
-                  </Button>
+                  {userState.user.role === "Admin" ?
+                    <Button startIcon={<AddIcon />} onClick={() => setOpenDialog(prev => { return { ...prev, open: !prev.open, type: 'new' }; })}>
+                      New User
+                    </Button> : null}
                 </Box>
               )
             }

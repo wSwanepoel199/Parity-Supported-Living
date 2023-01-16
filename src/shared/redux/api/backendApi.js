@@ -2,6 +2,7 @@ import { createApi } from "@reduxjs/toolkit/dist/query/react";
 import { axiosBaseQuery } from "../../utils/api";
 
 // TODO: keep looking into https://redux-toolkit.js.org/rtk-query/overview
+
 export const backendApi = createApi({
   reducerPath: 'backendApi',
   baseQuery: axiosBaseQuery({
