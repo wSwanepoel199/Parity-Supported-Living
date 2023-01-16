@@ -11,7 +11,7 @@ const defaults = {
   },
   error: {
     status: 503,
-    message: { msg: 'Something went wrong. Please check your internet connection or contact our support.', data: {} },
+    data: { message: 'Something went wrong. Please check your internet connection or contact support.', data: {} },
   }
 };
 
@@ -19,6 +19,7 @@ export const axiosBaseQuery =
   ({ baseUrl } = { baseUrl: '' }) =>
     async ({ url, method, data, params }) => {
       try {
+        console.log(baseUrl + url);
         const res = await axios({
           url: baseUrl + url,
           method,
@@ -28,12 +29,14 @@ export const axiosBaseQuery =
           params,
         });
         return { data: res.data };
-      } catch (axiosError) {
+      }
+      catch (axiosError) {
         let err = axiosError;
+        console.log(err);
         return {
           error: {
-            status: err.response?.status,
-            data: err.response?.data || err.message,
+            status: err.response?.status || defaults.error.status,
+            data: err.response?.data || defaults.error.data,
           },
         };
       }

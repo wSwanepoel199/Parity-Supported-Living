@@ -54,6 +54,7 @@ export const rootSlice = createSlice({
         };
       })
       .addMatcher(isRejected, (state, action) => {
+        console.log(action.payload);
         return {
           ...state,
           status: "error",
