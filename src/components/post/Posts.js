@@ -105,7 +105,7 @@ const Posts = () => {
       <Dialog
         fullScreen={fullScreen}
         open={openDialog.open}
-        onClose={() => setOpenDialog(prev => { return { ...prev, open: !prev.open, type: '', data: {} }; })}
+      // onClose={() => setOpenDialog(prev => { return { ...prev, open: !prev.open, type: '', data: {} }; })}
       >
         {
           openDialog.open

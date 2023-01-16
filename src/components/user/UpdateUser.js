@@ -46,12 +46,12 @@ const UpdateUser = ({ setOpenDialog, user }) => {
     e.preventDefault();
     delete formData.showPassword;
     updateUser(formData);
-    setOpenDialog(prev => { return { ...prev, open: !prev.open, type: '', data: {} }; });
+    // setOpenDialog(prev => { return { ...prev, open: !prev.open, type: '', data: {} }; });
   };
 
 
   return (
-    <Box>
+    <Box component='form' onSubmit={(e) => handleSubmit(e)}>
       <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
         <DialogTitle>
           Edit Note
@@ -68,7 +68,6 @@ const UpdateUser = ({ setOpenDialog, user }) => {
                   id="nameInput"
                   name="name"
                   type="text"
-                  readOnly={editForm}
                   value={formData.name}
                   onChange={handleInput}
                 />
@@ -80,12 +79,12 @@ const UpdateUser = ({ setOpenDialog, user }) => {
                 <Select
                   id="roleInput"
                   name='role'
-                  readOnly={editForm}
                   value={formData.role}
                   onChange={handleInput}
                 >
                   <MenuItem value={"Admin"}>Admin</MenuItem>
                   <MenuItem value={"Carer"}>Carer</MenuItem>
+                  <MenuItem value={"Coordinator"}>Coordinator</MenuItem>
                 </Select>
               </FormControl>
             </Grid>
@@ -96,7 +95,6 @@ const UpdateUser = ({ setOpenDialog, user }) => {
                   id="emailInput"
                   name="email"
                   type="email"
-                  readOnly={editForm}
                   value={formData.email}
                   onChange={handleInput}
                 />
@@ -109,7 +107,6 @@ const UpdateUser = ({ setOpenDialog, user }) => {
                   id="passwordInput"
                   name="password"
                   type={formData.showPassword ? "text" : 'password'}
-                  readOnly={editForm}
                   value={formData.password}
                   onChange={handleInput}
                   endAdornment={
@@ -126,7 +123,7 @@ const UpdateUser = ({ setOpenDialog, user }) => {
         </DialogContent>
         : null}
       <DialogActions>
-        {!editForm ? <Button onClick={(e) => handleSubmit(e)}>Edit</Button> : null}
+        <Button type="submit">Edit</Button>
         <Button onClick={() => setOpenDialog(prev => { return { ...prev, open: !prev.open, type: '' }; })}>Cancel</Button>
       </DialogActions>
     </Box>

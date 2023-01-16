@@ -10,7 +10,8 @@ const defaults = {
     'Content-Type': 'application/json',
   },
   error: {
-    status: 503,
+    status: 500,
+    statusText: '	InternalServerError',
     data: { message: 'Something went wrong. Please check your internet connection or contact support.', data: {} },
   }
 };
@@ -36,6 +37,7 @@ export const axiosBaseQuery =
         return {
           error: {
             status: err.response?.status || defaults.error.status,
+            statusText: err.response?.statusText || defaults.error.statusText,
             data: err.response?.data || defaults.error.data,
           },
         };

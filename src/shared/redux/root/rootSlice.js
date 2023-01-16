@@ -60,6 +60,7 @@ export const rootSlice = createSlice({
           status: "error",
           msg: {
             status: action.payload.status,
+            statusText: action.payload.statusText,
             message: action.payload.data.message
           }
         };

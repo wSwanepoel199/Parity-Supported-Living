@@ -91,7 +91,7 @@ const Appbar = () => {
                 <MenuItem component={Link} to="/">
                   <Typography textAlign="center">Notes</Typography>
                 </MenuItem>
-                {userState.user.role === "Admin" ? <MenuItem component={Link} to="/users">
+                {["Admin", "Coordinator"].includes(userState.user.role) ? <MenuItem component={Link} to="/users">
                   <Typography textAlign="center">Users</Typography>
                 </MenuItem> : null}
               </Menu>

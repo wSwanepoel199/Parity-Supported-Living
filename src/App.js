@@ -77,7 +77,7 @@ function App() {
                   </IconButton>}
 
               >
-                <AlertTitle>{alert.msg.status}</AlertTitle>
+                <AlertTitle>{alert.msg.status} {alert.msg.statusText}</AlertTitle>
                 {(alert.msg.message)}
               </Alert>
               : null}
