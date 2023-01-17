@@ -18,13 +18,13 @@ const defaults = {
 
 export const axiosBaseQuery =
   ({ baseUrl } = { baseUrl: '' }) =>
-    async ({ url, method, data, params }) => {
+    async ({ url, headers, method, data, params }) => {
       try {
         console.log(baseUrl + url);
         const res = await axios({
           url: baseUrl + url,
           method,
-          headers: defaults.headers,
+          headers: headers || defaults.headers,
           withCredentials: true,
           data,
           params,

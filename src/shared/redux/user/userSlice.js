@@ -42,7 +42,7 @@ export const userSlice = createSlice({
         ...state,
         authToken: action.payload
       };
-    }
+    },
   },
 });
 
@@ -57,10 +57,21 @@ export const userApiSlice = backendApi.injectEndpoints({
       async onQueryStarted(loginDetails, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
-          if (loginDetails.rememberMe) dispatch(saveToken(data.data.data.accessToken));
-          dispatch(saveUser(data.data.data));
+          if (loginDetails.rememberMe) dispatch(saveToken(data.data.user.accessToken));
+          dispatch(saveUser(data.data.user));
         }
         catch (err) {
+          console.error(err);
+        }
+      }
+    }),
+    resetPass: builder.mutation({
+      query: (newPassword) => ({ url: '/auth/new', method: 'patch', data: { password: newPassword.password, userId: newPassword.userId } }),
+      async onQueryStarted(newPassword, { dispatch, queryFulfilled }) {
+        try {
+          const { data } = await queryFulfilled;
+          console.log(data);
+        } catch (err) {
           console.error(err);
         }
       }
@@ -70,7 +81,7 @@ export const userApiSlice = backendApi.injectEndpoints({
       async onQueryStarted(refresh, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
-          dispatch(saveUser(data.data.data));
+          dispatch(saveUser(data.data.user));
         }
         catch (err) {
           console.error(err);
@@ -106,4 +117,4 @@ export const userApiSlice = backendApi.injectEndpoints({
   })
 });
 
-export const { useLoginUserMutation, useRefreshUserMutation, useLogoutUserMutation, useCreateUserMutation, useUpdateUserMutation } = userApiSlice;
+export const { useLoginUserMutation, useResetPassMutation, useRefreshUserMutation, useLogoutUserMutation, useCreateUserMutation, useUpdateUserMutation } = userApiSlice;
