@@ -1,4 +1,4 @@
-import { Box, Button, DialogActions, DialogContent, DialogTitle, FormControl, FormControlLabel, IconButton, Input, InputAdornment, InputLabel, MenuItem, Select, Switch } from "@mui/material";
+import { Box, Button, DialogActions, DialogContent, DialogTitle, FormControl, IconButton, Input, InputAdornment, InputLabel, MenuItem, Select, } from "@mui/material";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import Grid from "@mui/material/Unstable_Grid2/";
@@ -10,9 +10,9 @@ const UpdateUser = ({ setOpenDialog, user }) => {
   // const userState = useSelector(state => state.user);
   const [updateUser, { isSuccess, isError }] = useUpdateUserMutation();
   const mounted = useRef();
-  const [editForm, setEditForm] = useState(true);
   const [formData, setFormData] = useState({
-    showPassword: false
+    showPassword: false,
+    password: ''
   });
 
   useEffect(() => {
@@ -56,7 +56,7 @@ const UpdateUser = ({ setOpenDialog, user }) => {
         <DialogTitle>
           Edit Note
         </DialogTitle>
-        <FormControlLabel control={<Switch checked={!editForm} onChange={() => setEditForm(prev => !prev)} />} label="Toggle Edit" />
+        {/* <FormControlLabel control={<Switch checked={!editForm} onChange={() => setEditForm(prev => !prev)} />} label="Toggle Edit" /> */}
       </Box>
       {mounted.current ?
         <DialogContent>
@@ -68,6 +68,7 @@ const UpdateUser = ({ setOpenDialog, user }) => {
                   id="nameInput"
                   name="name"
                   type="text"
+                  required
                   value={formData.name}
                   onChange={handleInput}
                 />
@@ -79,6 +80,7 @@ const UpdateUser = ({ setOpenDialog, user }) => {
                 <Select
                   id="roleInput"
                   name='role'
+                  required
                   value={formData.role}
                   onChange={handleInput}
                 >
@@ -95,6 +97,7 @@ const UpdateUser = ({ setOpenDialog, user }) => {
                   id="emailInput"
                   name="email"
                   type="email"
+                  required
                   value={formData.email}
                   onChange={handleInput}
                 />

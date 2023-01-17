@@ -12,8 +12,28 @@ export const backendApi = createApi({
   endpoints: (builder) => ({
     checkToken: builder.query({
       query: () => ({ url: '/auth/checkToken', method: 'get' })
+    }),
+    uploadUsers: builder.mutation({
+      query: (file) => ({
+        url: '/files/upload',
+        method: 'post',
+        headers: {
+          'Content-Type': file.type,
+          'Content-Length': `${file.size}`,
+        },
+        data: file
+      }),
+      async onQueryStarted(file, { dispatch, queryFulfilled }) {
+        try {
+          await queryFulfilled;
+        } catch (err) {
+          console.error(err);
+        }
+      },
+      invalidatesTags: (result, error, args) =>
+        result ? [{ type: "User", id: "LIST" }] : error ? console.error(error) : null
     })
   })
 });
 
-export const { useCheckTokenQuery } = backendApi;
+export const { useCheckTokenQuery, useUploadUsersMutation } = backendApi;

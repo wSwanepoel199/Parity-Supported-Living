@@ -54,6 +54,7 @@ const CreateUser = ({ setOpenDialog }) => {
                 id="nameInput"
                 name="name"
                 type="text"
+                required
                 value={formData.name}
                 onChange={handleInput}
               />
@@ -82,6 +83,7 @@ const CreateUser = ({ setOpenDialog }) => {
                 id="emailInput"
                 name="email"
                 type="email"
+                required
                 value={formData.email}
                 onChange={handleInput}
               />
