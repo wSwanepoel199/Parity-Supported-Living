@@ -74,7 +74,7 @@ export const userApiSlice = backendApi.injectEndpoints({
         }
         catch (err) {
           console.error(err);
-          if (err.error.status === 401) {
+          if (err.error.status === 403) {
             dispatch(removeUser());
           }
         }
