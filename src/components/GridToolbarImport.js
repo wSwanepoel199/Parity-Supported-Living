@@ -5,7 +5,7 @@ import { useUploadUsersMutation } from "../shared/redux/api/backendApi";
 
 const GridToolbarImport = () => {
   const inputRef = useRef(null);
-  const [uploadUsers, { isLoading, isSuccess, isError }] = useUploadUsersMutation();
+  const [uploadUsers] = useUploadUsersMutation();
 
   const [upload, setUpload] = useState({
     color: 'primary',
@@ -54,8 +54,6 @@ const GridToolbarImport = () => {
 
   return (
     <>
-      {console.log(upload)}
-      {console.log(isLoading, isSuccess, isError)}
       <Button size="small" startIcon={<FileUploadOutlinedIcon />} onClick={handleUpload} color={upload.color}>
         {upload.file ? `${upload.file.name}` : upload.text}
       </Button>
