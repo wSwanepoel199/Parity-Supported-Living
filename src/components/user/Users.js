@@ -32,6 +32,7 @@ const Users = () => {
         headerName: 'Id',
         flex: 0,
         minWidth: 50,
+        disableExport: true
       },
       {
         field: 'name',
@@ -69,7 +70,8 @@ const Users = () => {
               <DeleteIcon />
             </IconButton>
           </>
-        )
+        ),
+        disableExport: true
       }
     ],
     rows: [],

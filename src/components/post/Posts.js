@@ -24,6 +24,9 @@ const Posts = () => {
   const [table, setTable] = useState({
     columns: [
       {
+        field: 'carerId',
+      },
+      {
         field: 'date',
         headerName: 'Date',
         valueFormatter: ({ value }) => `${value}`,
@@ -42,9 +45,10 @@ const Posts = () => {
         headerName: 'Carer',
         flex: 1,
         minWidth: 100,
-        valueGetter: (props) => {
-          return props.value.name;
-        }
+        valueGetter: (params) => {
+          return `${params.value.firstName} ${params.value?.lastName}`;
+        },
+        disableExport: true
       },
       {
         field: 'hours',
@@ -138,12 +142,19 @@ const Posts = () => {
                     New Note
                   </Button>
                 </Box>),
-              type: 'post'
+              type: 'post',
+              csvOptions: { allColumns: true }
             }
           }}
           loading={isFetching || isLoading}
           className="bg-slate-300"
           initialState={{
+            columns: {
+              columnVisibilityModel: {
+                // Hide columns status and traderName, the other columns will remain visible
+                carerId: false,
+              },
+            },
             sorting: {
               sortModel: [
                 {

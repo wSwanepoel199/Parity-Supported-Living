@@ -4,8 +4,11 @@ import { useEffect, useRef, useState } from "react";
 import { useUploadFileMutation } from "../shared/redux/api/backendApi";
 import { sendMessage } from "../shared/utils/api";
 import { read, utils } from "xlsx";
+import { useDispatch } from "react-redux";
+import { storeError } from "../shared/redux/root/rootSlice";
 
 const GridToolbarImport = ({ type }) => {
+  const dispatch = useDispatch();
   const inputRef = useRef(null);
   const [uploadFile] = useUploadFileMutation();
 
@@ -21,9 +24,18 @@ const GridToolbarImport = ({ type }) => {
       if (process.env.NODE_ENV === "production") {
         sendMessage({ type: 'excel', data: upload.file })
           .then(res => uploadFile({ data: res, type: upload.type }))
-          .catch(err => console.error(err));
+          .catch(err => {
+            console.error(err);
+            dispatch(storeError({ status: 422, statusText: 'UnprocessableEntity', message: err.message }));
+          });
       } else {
-        uploadFile({ data: formatFile(upload.file), type: upload.type });
+        formatFile(upload.file)
+          .then(res => uploadFile({ data: res, type: upload.type }))
+          .catch(err => {
+            console.error(err);
+            console.log(err);
+            dispatch(storeError({ status: 422, statusText: 'UnprocessableEntity', message: err.message }));
+          });
       }
       setUpload(prev => {
         return {
@@ -32,7 +44,7 @@ const GridToolbarImport = ({ type }) => {
         };
       });
     }
-  }, [upload, uploadFile, inputRef]);
+  }, [upload, uploadFile, inputRef, dispatch]);
 
   const formatFile = async (file) => {
     const f = await (file).arrayBuffer();
@@ -52,6 +64,7 @@ const GridToolbarImport = ({ type }) => {
     if (e.target.files[0]) {
       setUpload(prev => {
         if (e.target.files[0].type === "application/json") {
+          dispatch(storeError({ status: 422, statusText: 'UnprocessableEntity', message: "Can't process json files" }));
           return {
             ...prev,
             color: 'error',
@@ -61,6 +74,7 @@ const GridToolbarImport = ({ type }) => {
           return {
             ...prev,
             color: 'primary',
+            text: 'UPLOAD',
             file: e.target.files[0]
           };
         }
