@@ -14,14 +14,15 @@ export const backendApi = createApi({
       query: () => ({ url: '/auth/checkToken', method: 'get' })
     }),
     uploadUsers: builder.mutation({
-      query: (file) => ({
+      query: (upload) => ({
         url: '/files/upload',
         method: 'post',
         headers: {
-          'Content-Type': file.type,
-          'Content-Length': `${file.size}`,
+          'Content-Type': upload.file.type,
+          'content-length': `${upload.file.size}`,
         },
-        data: file
+        data: upload.file,
+        params: { type: upload.type }
       }),
       async onQueryStarted(file, { dispatch, queryFulfilled }) {
         try {

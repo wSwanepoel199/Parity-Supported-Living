@@ -123,7 +123,8 @@ const Users = () => {
                       New User
                     </Button> : null}
                 </Box>
-              )
+              ),
+              type: 'user'
             }
           }}
           loading={isFetching || isLoading}

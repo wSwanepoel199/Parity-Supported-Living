@@ -136,9 +136,10 @@ const Posts = () => {
               children: (
                 <Box>
                   <Button startIcon={<AddIcon />} onClick={() => setOpenDialog(prev => { return { ...prev, open: !prev.open, type: 'new' }; })}>
-                    New Post
+                    New Note
                   </Button>
-                </Box>)
+                </Box>),
+              type: 'post'
             }
           }}
           loading={isFetching || isLoading}
