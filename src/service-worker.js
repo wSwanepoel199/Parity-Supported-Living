@@ -12,6 +12,7 @@ import { ExpirationPlugin } from 'workbox-expiration';
 import { precacheAndRoute, createHandlerBoundToURL } from 'workbox-precaching';
 import { registerRoute } from 'workbox-routing';
 import { StaleWhileRevalidate } from 'workbox-strategies';
+import { read, utils } from 'xlsx';
 
 clientsClaim();
 
@@ -64,14 +65,19 @@ registerRoute(
 // This allows the web app to trigger skipWaiting via
 // registration.waiting.postMessage({type: 'SKIP_WAITING'})
 self.addEventListener('message', async (event) => {
-  console.log("message triggered with event:", event);
+  // console.log("message triggered with event:", event);
   if (event.data && event.data.type === 'SKIP_WAITING') {
     self.skipWaiting();
   }
-
+  if (event.data && event.data.type === "excel") {
+    const f = await (event.data?.data).arrayBuffer();
+    const wb = read(f);
+    const data = utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]]);
+    event.ports[0].postMessage(data);
+  }
 });
 
 // Any other custom service worker logic can go here.
-self.addEventListener('fetch', (event) => {
-  console.log("intercepting", event.request.method, 'to', event.request.url);
-});
+// self.addEventListener('fetch', (event) => {
+//   console.log("intercepting", event.request.method, 'to', event.request.url);
+// });

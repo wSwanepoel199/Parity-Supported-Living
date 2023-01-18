@@ -26,15 +26,14 @@ const Posts = () => {
       {
         field: 'date',
         headerName: 'Date',
-        valueFormatter: (props) => {
-          return format(parseISO(props.value), 'dd/MM/yyyy');
-        },
+        valueFormatter: ({ value }) => `${value}`,
+        renderCell: ({ value }) => value ? <p>{format(parseISO(value), 'dd/MM/yyyy')}</p> : null,
         flex: 1,
         minWidth: 100,
       },
       {
         field: 'client',
-        headerName: 'Client Name',
+        headerName: 'Client',
         flex: 1,
         minWidth: 100,
       },

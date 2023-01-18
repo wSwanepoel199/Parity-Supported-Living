@@ -76,10 +76,10 @@ export const postApiSlice = backendApi.injectEndpoints({
       query: () => ({ url: '/posts', method: 'get' }),
       providesTags: (result, error, args) =>
         result
-          ? [...result.data.data.map(({ id }) => ({ type: 'Post', id })),
-          { type: 'Post', id: "LIST" },
+          ? [...result.data.data.map(({ id }) => ({ type: 'post', id })),
+          { type: 'post', id: "LIST" },
           ]
-          : [{ type: 'Post', id: "LIST" }],
+          : [{ type: 'post', id: "LIST" }],
       async onQueryStarted(undefiend, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
@@ -101,12 +101,12 @@ export const postApiSlice = backendApi.injectEndpoints({
         }
       },
       invalidatesTags: (result, error, args) =>
-        result ? [{ type: "Post", id: "LIST" }] : error ? console.error(error) : null
+        result ? [{ type: "post", id: "LIST" }] : error ? console.error(error) : null
     }),
     updatePost: builder.mutation({
       query: (post) => ({ url: '/posts/update', method: 'put', data: post }),
       invalidatesTags: (result, error, args) =>
-        result ? [{ type: "Post", id: "LIST" }] : error ? console.error(error) : null
+        result ? [{ type: "post", id: "LIST" }] : error ? console.error(error) : null
     })
   })
 });

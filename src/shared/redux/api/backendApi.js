@@ -8,20 +8,16 @@ export const backendApi = createApi({
   baseQuery: axiosBaseQuery({
     baseUrl: process.env.NODE_ENV === "production" ? process.env.REACT_APP_API_URL : "http://192.168.56.101:5000",
   }),
-  tagTypes: ['Post', 'User', 'Index'],
+  tagTypes: ['post', 'user', 'Index'],
   endpoints: (builder) => ({
     checkToken: builder.query({
       query: () => ({ url: '/auth/checkToken', method: 'get' })
     }),
-    uploadUsers: builder.mutation({
+    uploadFile: builder.mutation({
       query: (upload) => ({
         url: '/files/upload',
         method: 'post',
-        headers: {
-          'Content-Type': upload.file.type,
-          'content-length': `${upload.file.size}`,
-        },
-        data: upload.file,
+        data: upload.data,
         params: { type: upload.type }
       }),
       async onQueryStarted(file, { dispatch, queryFulfilled }) {
@@ -32,9 +28,9 @@ export const backendApi = createApi({
         }
       },
       invalidatesTags: (result, error, args) =>
-        result ? [{ type: "User", id: "LIST" }] : error ? console.error(error) : null
+        result ? [{ type: result.type, id: "LIST" }] : error ? console.error(error) : null
     })
   })
 });
 
-export const { useCheckTokenQuery, useUploadUsersMutation } = backendApi;
+export const { useCheckTokenQuery, useUploadFileMutation } = backendApi;

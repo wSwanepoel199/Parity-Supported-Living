@@ -28,6 +28,12 @@ const Users = () => {
   const [table, setTable] = useState({
     columns: [
       {
+        field: 'id',
+        headerName: 'Id',
+        flex: 0,
+        minWidth: 50,
+      },
+      {
         field: 'name',
         headerName: 'Name',
         flex: 1,

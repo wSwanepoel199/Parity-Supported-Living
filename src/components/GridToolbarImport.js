@@ -1,11 +1,13 @@
 import { Button } from "@mui/material";
 import FileUploadOutlinedIcon from '@mui/icons-material/FileUploadOutlined';
 import { useEffect, useRef, useState } from "react";
-import { useUploadUsersMutation } from "../shared/redux/api/backendApi";
+import { useUploadFileMutation } from "../shared/redux/api/backendApi";
+import { sendMessage } from "../shared/utils/api";
+import { read, utils } from "xlsx";
 
 const GridToolbarImport = ({ type }) => {
   const inputRef = useRef(null);
-  const [uploadUsers] = useUploadUsersMutation();
+  const [uploadFile] = useUploadFileMutation();
 
   const [upload, setUpload] = useState({
     color: 'primary',
@@ -16,7 +18,13 @@ const GridToolbarImport = ({ type }) => {
 
   useEffect(() => {
     if (upload.file) {
-      uploadUsers(upload);
+      if (process.env.NODE_ENV === "production") {
+        sendMessage({ type: 'excel', data: upload.file })
+          .then(res => uploadFile({ data: res, type: upload.type }))
+          .catch(err => console.error(err));
+      } else {
+        uploadFile({ data: formatFile(upload.file), type: upload.type });
+      }
       setUpload(prev => {
         return {
           ...prev,
@@ -24,7 +32,14 @@ const GridToolbarImport = ({ type }) => {
         };
       });
     }
-  }, [upload, uploadUsers, inputRef]);
+  }, [upload, uploadFile, inputRef]);
+
+  const formatFile = async (file) => {
+    const f = await (file).arrayBuffer();
+    const wb = read(f);
+    const data = utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]]);
+    return data;
+  };
 
   const handleUpload = () => {
     inputRef.current?.click();
@@ -36,20 +51,21 @@ const GridToolbarImport = ({ type }) => {
     }
     if (e.target.files[0]) {
       setUpload(prev => {
-        // if (e.target.files[0].type !== "application/json") {
-        //   return {
-        //     ...prev,
-        //     color: 'error',
-        //     text: 'JSON ONLY'
-        //   };
-        // } else {
-        return {
-          ...prev,
-          color: 'primary',
-          file: e.target.files[0]
-        };
-        // }
+        if (e.target.files[0].type === "application/json") {
+          return {
+            ...prev,
+            color: 'error',
+            text: 'EXCEL FILES ONLY'
+          };
+        } else {
+          return {
+            ...prev,
+            color: 'primary',
+            file: e.target.files[0]
+          };
+        }
       });
+      e.target.value = null;
       return;
     }
   };
