@@ -20,7 +20,6 @@ export const axiosBaseQuery =
   ({ baseUrl } = { baseUrl: '' }) =>
     async ({ url, headers, method, data, params }) => {
       try {
-        console.log(baseUrl + url);
         const res = await axios({
           url: baseUrl + url,
           method,
@@ -52,6 +51,24 @@ axios.interceptors.request.use((config) => {
 }, (err) => {
   return Promise.reject(err);
 });
+
+export async function sendMessage(message) {
+  return await new Promise((resolve, reject) => {
+    const messageChannel = new MessageChannel();
+    messageChannel.port1.onmessage = (e) => {
+      if (e.data.error) {
+        reject(e.data.error);
+      } else {
+        resolve(e.data);
+      }
+    };
+
+    navigator.serviceWorker.ready.then(registration => {
+      registration.active.postMessage(message, [messageChannel.port2]);
+    });
+    // navigator.serviceWorker.active.postMessage(message, [messageChannel.port2]);
+  });
+}
 
 // export default api;
 

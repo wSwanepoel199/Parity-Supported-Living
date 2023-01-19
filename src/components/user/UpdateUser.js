@@ -1,4 +1,4 @@
-import { Box, Button, DialogActions, DialogContent, DialogTitle, FormControl, IconButton, Input, InputAdornment, InputLabel, MenuItem, Select, } from "@mui/material";
+import { Box, Button, DialogActions, DialogContent, DialogTitle, FormControl, FormControlLabel, IconButton, Input, InputAdornment, InputLabel, MenuItem, Select, Switch, } from "@mui/material";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import Grid from "@mui/material/Unstable_Grid2/";
@@ -12,7 +12,7 @@ const UpdateUser = ({ setOpenDialog, user }) => {
   const mounted = useRef();
   const [formData, setFormData] = useState({
     showPassword: false,
-    password: ''
+    resetPassword: true
   });
 
   useEffect(() => {
@@ -45,6 +45,7 @@ const UpdateUser = ({ setOpenDialog, user }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     delete formData.showPassword;
+    delete formData.name;
     updateUser(formData);
     // setOpenDialog(prev => { return { ...prev, open: !prev.open, type: '', data: {} }; });
   };
@@ -63,13 +64,26 @@ const UpdateUser = ({ setOpenDialog, user }) => {
           <Grid container spacing={2} className="flex justify-center">
             <Grid xs={6} className="flex justify-center">
               <FormControl size="small" fullWidth margin="dense">
-                <InputLabel shrink htmlFor="nameInput">Name</InputLabel>
+                <InputLabel shrink htmlFor="firstNameInput">First Name</InputLabel>
                 <Input
-                  id="nameInput"
-                  name="name"
+                  id="firstNameInput"
+                  name="firstName"
                   type="text"
                   required
-                  value={formData.name}
+                  value={formData.firstName}
+                  onChange={handleInput}
+                />
+              </FormControl>
+            </Grid>
+            <Grid xs={6} className="flex justify-center">
+              <FormControl size="small" fullWidth margin="dense">
+                <InputLabel shrink htmlFor="lastNameInput">Last Name</InputLabel>
+                <Input
+                  id="lastNameInput"
+                  name="lastName"
+                  type="text"
+                  required
+                  value={formData.lastName}
                   onChange={handleInput}
                 />
               </FormControl>
@@ -103,7 +117,7 @@ const UpdateUser = ({ setOpenDialog, user }) => {
                 />
               </FormControl>
             </Grid>
-            <Grid xs={6} className="flex justify-center">
+            {/* <Grid xs={6} className="flex justify-center">
               <FormControl size="small" fullWidth margin="dense">
                 <InputLabel htmlFor="passwordInput">New Password</InputLabel>
                 <Input
@@ -121,13 +135,31 @@ const UpdateUser = ({ setOpenDialog, user }) => {
                   }
                 />
               </FormControl>
-            </Grid>
+            </Grid> */}
           </Grid>
         </DialogContent>
         : null}
-      <DialogActions>
-        <Button type="submit">Edit</Button>
-        <Button onClick={() => setOpenDialog(prev => { return { ...prev, open: !prev.open, type: '' }; })}>Cancel</Button>
+      <DialogActions sx={{ justifyContent: 'space-between', alignContent: 'space-between' }}>
+        <FormControlLabel
+          control={
+            <Switch
+              checked={formData.resetPassword}
+              onChange={() => setFormData(prev => {
+                return {
+                  ...prev,
+                  resetPassword: !prev.resetPassword
+                };
+              }
+              )}
+
+            />}
+          label="Toggle Password Reset"
+
+        />
+        <Box >
+          <Button type="submit">Edit</Button>
+          <Button onClick={() => setOpenDialog(prev => { return { ...prev, open: !prev.open, type: '' }; })}>Cancel</Button>
+        </Box>
       </DialogActions>
     </Box>
   );

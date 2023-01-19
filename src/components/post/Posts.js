@@ -24,17 +24,19 @@ const Posts = () => {
   const [table, setTable] = useState({
     columns: [
       {
+        field: 'carerId',
+      },
+      {
         field: 'date',
         headerName: 'Date',
-        valueFormatter: (props) => {
-          return format(parseISO(props.value), 'dd/MM/yyyy');
-        },
+        valueFormatter: ({ value }) => `${value}`,
+        renderCell: ({ value }) => value ? <p>{format(parseISO(value), 'dd/MM/yyyy')}</p> : null,
         flex: 1,
         minWidth: 100,
       },
       {
         field: 'client',
-        headerName: 'Client Name',
+        headerName: 'Client',
         flex: 1,
         minWidth: 100,
       },
@@ -43,9 +45,9 @@ const Posts = () => {
         headerName: 'Carer',
         flex: 1,
         minWidth: 100,
-        valueGetter: (props) => {
-          return props.value.name;
-        }
+        valueGetter: (params) => {
+          return params.value ? `${params.value.firstName} ${params.value?.lastName}` : "No Carer";
+        },
       },
       {
         field: 'hours',
@@ -64,6 +66,9 @@ const Posts = () => {
         headerName: 'Notes',
         flex: 3,
         minWidth: 300,
+        valueGetter: (params) => {
+          return params.value;
+        },
         renderCell: (value) => {
           const splitAtLineBreak = value.row.notes.split(/\r?\n/);
           const string = splitAtLineBreak.length >= 1 ?
@@ -136,14 +141,22 @@ const Posts = () => {
               children: (
                 <Box>
                   <Button startIcon={<AddIcon />} onClick={() => setOpenDialog(prev => { return { ...prev, open: !prev.open, type: 'new' }; })}>
-                    New Post
+                    New Note
                   </Button>
-                </Box>)
+                </Box>),
+              type: 'post',
+              csvOptions: { allColumns: true }
             }
           }}
           loading={isFetching || isLoading}
           className="bg-slate-300"
           initialState={{
+            columns: {
+              columnVisibilityModel: {
+                // Hide columns status and traderName, the other columns will remain visible
+                carerId: false,
+              },
+            },
             sorting: {
               sortModel: [
                 {

@@ -12,11 +12,10 @@ const CreateUser = ({ setOpenDialog }) => {
   const [createUser, { isSuccess, isError }] = useCreateUserMutation();
 
   const [formData, setFormData] = useState({
-    name: '',
+    firstName: '',
+    lastName: '',
     role: '',
     email: '',
-    password: '',
-    showPassword: false,
   });
 
   useEffect(() => {
@@ -49,13 +48,26 @@ const CreateUser = ({ setOpenDialog }) => {
         <Grid container spacing={2} className="flex justify-center">
           <Grid xs={6} className="flex justify-center">
             <FormControl size="small" fullWidth margin="dense">
-              <InputLabel shrink htmlFor="nameInput">Name</InputLabel>
+              <InputLabel shrink htmlFor="firstNameInput">First Name</InputLabel>
               <Input
-                id="nameInput"
-                name="name"
+                id="firstNameInput"
+                name="firstName"
                 type="text"
                 required
-                value={formData.name}
+                value={formData.firstName}
+                onChange={handleInput}
+              />
+            </FormControl>
+          </Grid>
+          <Grid xs={6} className="flex justify-center">
+            <FormControl size="small" fullWidth margin="dense">
+              <InputLabel shrink htmlFor="lastNameInput">Last Name</InputLabel>
+              <Input
+                id="lastNameInput"
+                name="lastName"
+                type="text"
+                required
+                value={formData.lastName}
                 onChange={handleInput}
               />
             </FormControl>
@@ -89,7 +101,7 @@ const CreateUser = ({ setOpenDialog }) => {
               />
             </FormControl>
           </Grid>
-          <Grid xs={6} className="flex justify-center">
+          {/* <Grid xs={6} className="flex justify-center">
             <FormControl size="small" fullWidth margin="dense">
               <InputLabel htmlFor="passwordInput">Password</InputLabel>
               <Input
@@ -107,7 +119,7 @@ const CreateUser = ({ setOpenDialog }) => {
                 }
               />
             </FormControl>
-          </Grid>
+          </Grid> */}
         </Grid>
       </DialogContent>
       <DialogActions>

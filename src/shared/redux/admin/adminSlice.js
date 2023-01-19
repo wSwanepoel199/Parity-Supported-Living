@@ -29,10 +29,10 @@ export const adminApiSlice = backendApi.injectEndpoints({
       query: (users) => ({ url: '/auth/', method: 'get' }),
       providesTags: (result, error, args) =>
         result
-          ? [...result.data.data.map(({ id }) => ({ type: 'User', id })),
-          { type: 'User', id: "LIST" },
+          ? [...result.data.data?.map(({ id }) => ({ type: 'user', id })),
+          { type: 'user', id: "LIST" },
           ]
-          : [{ type: 'User', id: "LIST" }],
+          : [{ type: 'user', id: "LIST" }],
       async onQueryStarted(users, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
@@ -46,12 +46,12 @@ export const adminApiSlice = backendApi.injectEndpoints({
     deleteTargetUser: builder.mutation({
       query: (user) => ({ url: '/auth/delete', method: 'post', data: user }),
       invalidatesTags: (result, error, args) =>
-        result ? [{ type: "User", id: "LIST" }] : error ? console.error(error) : null
+        result ? [{ type: "user", id: "LIST" }] : error ? console.error(error) : null
     }),
     deleteTargetPost: builder.mutation({
       query: (target) => ({ url: '/posts/delete', method: 'post', data: target }),
       invalidatesTags: (result, error, args) =>
-        result ? [{ type: "Post", id: "LIST" }] : error ? console.error(error) : null
+        result ? [{ type: "post", id: "LIST" }] : error ? console.error(error) : null
     })
   })
 });

@@ -24,6 +24,7 @@ export const rootSlice = createSlice({
     storeError: (state, action) => {
       return {
         ...state,
+        status: "error",
         msg: action.payload
       };
     },

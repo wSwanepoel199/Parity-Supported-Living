@@ -74,7 +74,9 @@ export const userApiSlice = backendApi.injectEndpoints({
         } catch (err) {
           console.error(err);
         }
-      }
+      },
+      invalidatesTags: (result, error, args) =>
+        result ? [{ type: "user", id: "LIST" }] : error ? console.error(error) : null
     }),
     refreshUser: builder.mutation({
       query: (refresh) => ({ url: '/refresh', method: 'get' }),
@@ -107,12 +109,12 @@ export const userApiSlice = backendApi.injectEndpoints({
     createUser: builder.mutation({
       query: (newUser) => ({ url: '/auth/register', method: 'post', data: newUser }),
       invalidatesTags: (result, error, args) =>
-        result ? [{ type: "User", id: "LIST" }] : error ? console.error(error) : null
+        result ? [{ type: "user", id: "LIST" }] : error ? console.error(error) : null
     }),
     updateUser: builder.mutation({
       query: (updatedUser) => ({ url: '/auth/update', method: 'put', data: updatedUser }),
       invalidatesTags: (result, error, args) =>
-        result ? [{ type: "User", id: "LIST" }] : error ? console.error(error) : null
+        result ? [{ type: "user", id: "LIST" }] : error ? console.error(error) : null
     })
   })
 });

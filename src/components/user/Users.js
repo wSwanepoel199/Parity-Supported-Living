@@ -28,28 +28,47 @@ const Users = () => {
   const [table, setTable] = useState({
     columns: [
       {
-        field: 'name',
-        headerName: 'Name',
-        flex: 1,
-        minWidth: 100,
-      },
-      {
-        field: 'email',
-        headerName: 'Email',
-        flex: 1,
-        minWidth: 100,
+        field: 'id',
+        disableExport: true
       },
       {
         field: 'role',
         headerName: 'Role',
         flex: 1,
         minWidth: 100,
+        maxWidth: 100
+      },
+      {
+        field: 'firstName',
+      },
+      {
+        field: 'lastName',
+      },
+      {
+        field: 'name',
+        headerName: 'Name',
+        flex: 1,
+        minWidth: 160,
+        valueGetter: ({ row }) => { return `${row.firstName} ${row?.lastName}`; },
+        disableExport: true
+      },
+      {
+        field: 'email',
+        headerName: 'Email',
+        flex: 1,
+        minWidth: 200,
+      },
+      {
+        field: 'userId',
+        flex: 1,
+        minWidth: 100,
       },
       {
         field: 'options',
         headerName: "Options",
-        flex: 0,
+        flex: 1,
         minWidth: 100,
+        maxWidth: 100,
         disableColumnMenu: true,
         disableColumnFilter: true,
         sortable: false,
@@ -63,7 +82,8 @@ const Users = () => {
               <DeleteIcon />
             </IconButton>
           </>
-        )
+        ),
+        disableExport: true
       }
     ],
     rows: [],
@@ -123,12 +143,23 @@ const Users = () => {
                       New User
                     </Button> : null}
                 </Box>
-              )
+              ),
+              type: 'user',
+              csvOptions: { allColumns: true }
             }
           }}
           loading={isFetching || isLoading}
           className="bg-slate-300"
           initialState={{
+            columns: {
+              columnVisibilityModel: {
+                // Hides listed coloumns
+                id: false,
+                userId: false,
+                firstName: false,
+                lastName: false,
+              },
+            },
             sorting: {
               sortModel: [
                 {

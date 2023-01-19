@@ -1,21 +1,42 @@
 import { Button } from "@mui/material";
 import FileUploadOutlinedIcon from '@mui/icons-material/FileUploadOutlined';
 import { useEffect, useRef, useState } from "react";
-import { useUploadUsersMutation } from "../shared/redux/api/backendApi";
+import { useUploadFileMutation } from "../shared/redux/api/backendApi";
+import { sendMessage } from "../shared/utils/api";
+import { read, utils } from "xlsx";
+import { useDispatch } from "react-redux";
+import { storeError } from "../shared/redux/root/rootSlice";
 
-const GridToolbarImport = () => {
+const GridToolbarImport = ({ type }) => {
+  const dispatch = useDispatch();
   const inputRef = useRef(null);
-  const [uploadUsers] = useUploadUsersMutation();
+  const [uploadFile] = useUploadFileMutation();
 
   const [upload, setUpload] = useState({
     color: 'primary',
     text: 'UPLOAD',
+    type: type,
     file: null
   });
 
   useEffect(() => {
     if (upload.file) {
-      uploadUsers(upload.file);
+      if (process.env.NODE_ENV === "production") {
+        sendMessage({ type: 'excel', data: upload.file })
+          .then(res => uploadFile({ data: res, type: upload.type }))
+          .catch(err => {
+            console.error(err);
+            dispatch(storeError({ status: 422, statusText: 'UnprocessableEntity', message: err.message }));
+          });
+      } else {
+        formatFile(upload.file)
+          .then(res => uploadFile({ data: res, type: upload.type }))
+          .catch(err => {
+            console.error(err);
+            console.log(err);
+            dispatch(storeError({ status: 422, statusText: 'UnprocessableEntity', message: err.message }));
+          });
+      }
       setUpload(prev => {
         return {
           ...prev,
@@ -23,7 +44,14 @@ const GridToolbarImport = () => {
         };
       });
     }
-  }, [upload.file, uploadUsers]);
+  }, [upload, uploadFile, inputRef, dispatch]);
+
+  const formatFile = async (file) => {
+    const f = await (file).arrayBuffer();
+    const wb = read(f);
+    const data = utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]]);
+    return data;
+  };
 
   const handleUpload = () => {
     inputRef.current?.click();
@@ -35,20 +63,24 @@ const GridToolbarImport = () => {
     }
     if (e.target.files[0]) {
       setUpload(prev => {
-        if (e.target.files[0].type !== "application/json") {
+        if (e.target.files[0].type === "application/json") {
+          dispatch(storeError({ status: 422, statusText: 'UnprocessableEntity', message: "Can't process json files" }));
           return {
             ...prev,
             color: 'error',
-            text: 'JSON ONLY'
+            text: 'EXCEL FILES ONLY'
           };
         } else {
           return {
             ...prev,
             color: 'primary',
+            text: 'UPLOAD',
             file: e.target.files[0]
           };
         }
       });
+      e.target.value = null;
+      return;
     }
   };
 
