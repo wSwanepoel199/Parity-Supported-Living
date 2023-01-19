@@ -46,9 +46,8 @@ const Posts = () => {
         flex: 1,
         minWidth: 100,
         valueGetter: (params) => {
-          return `${params.value.firstName} ${params.value?.lastName}`;
+          return params.value ? `${params.value.firstName} ${params.value?.lastName}` : "No Carer";
         },
-        disableExport: true
       },
       {
         field: 'hours',
@@ -67,6 +66,9 @@ const Posts = () => {
         headerName: 'Notes',
         flex: 3,
         minWidth: 300,
+        valueGetter: (params) => {
+          return params.value;
+        },
         renderCell: (value) => {
           const splitAtLineBreak = value.row.notes.split(/\r?\n/);
           const string = splitAtLineBreak.length >= 1 ?

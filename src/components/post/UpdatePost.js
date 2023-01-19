@@ -1,19 +1,22 @@
-import { Box, Button, DialogActions, DialogContent, DialogTitle, FormControl, FormControlLabel, IconButton, Input, InputLabel, OutlinedInput, Switch } from "@mui/material";
+import { Box, Button, DialogActions, DialogContent, DialogTitle, FormControl, FormControlLabel, IconButton, Input, InputLabel, MenuItem, OutlinedInput, Select, Switch } from "@mui/material";
 import DeleteIcon from '@mui/icons-material/Delete';
 import Grid from "@mui/material/Unstable_Grid2/";
 import { format, formatISO, parseISO } from "date-fns";
 import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { useUpdatePostMutation } from "../../shared/redux/posts/postSlice";
-import { useDeleteTargetPostMutation } from "../../shared/redux/admin/adminSlice";
+import { useDeleteTargetPostMutation, useGetAllUsersQuery } from "../../shared/redux/admin/adminSlice";
 
 const UpdatePost = ({ setOpenDialog, post }) => {
   const userState = useSelector(state => state.user);
+  const adminState = useSelector(state => state.admin);
+  useGetAllUsersQuery();
   const mounted = useRef();
-  const [updatePost, { isLoading }] = useUpdatePostMutation();
+  const [updatePost, { isLoading: updatePostLoading }] = useUpdatePostMutation();
   const [deleteTargetPost, { isLoading: deleteLoading }] = useDeleteTargetPostMutation();
   const [editForm, setEditForm] = useState(false);
   const [formData, setFormData] = useState(post);
+  const [options, setOptions] = useState([post.carer]);
 
   useEffect(() => {
     if (!mounted.current) {
@@ -24,13 +27,18 @@ const UpdatePost = ({ setOpenDialog, post }) => {
           ...parsedPost
         };
       });
+      setOptions(prev => {
+        if (adminState.users) {
+          return adminState.users;
+        }
+      });
       mounted.current = true;
     }
-    if (isLoading || deleteLoading) setOpenDialog(prev => { return { ...prev, open: !prev.open, type: '' }; });
+    if (deleteLoading || updatePostLoading) setOpenDialog(prev => { return { ...prev, open: !prev.open, type: '' }; });
     return () => {
       mounted.current = false;
     };
-  }, [mounted, post, isLoading, setOpenDialog, deleteLoading]);
+  }, [mounted, post, setOpenDialog, deleteLoading, updatePostLoading, adminState]);
 
   const handleInput = ({ value, name }) => {
 
@@ -67,7 +75,13 @@ const UpdatePost = ({ setOpenDialog, post }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    updatePost(formData);
+    const parsedForm = formData;
+    Object.keys(parsedForm).forEach(key => {
+      if (parsedForm[key] === '') {
+        parsedForm[key] = null;
+      }
+    });
+    updatePost(parsedForm);
   };
 
 
@@ -89,6 +103,7 @@ const UpdatePost = ({ setOpenDialog, post }) => {
                   id="dateInput"
                   name="date"
                   type="date"
+                  disableUnderline={!editForm}
                   readOnly={!editForm}
                   value={format(parseISO(formData.date), 'yyyy-MM-dd')}
                   onChange={(e) => handleInput(e.target)}
@@ -102,6 +117,7 @@ const UpdatePost = ({ setOpenDialog, post }) => {
                   id="timeInput"
                   name="hours"
                   type="number"
+                  disableUnderline={!editForm}
                   readOnly={!editForm}
                   value={formData.hours}
                   onChange={(e) => handleInput(e.target)}
@@ -115,6 +131,7 @@ const UpdatePost = ({ setOpenDialog, post }) => {
                   id="clientInput"
                   name="client"
                   type="text"
+                  disableUnderline={!editForm}
                   readOnly={!editForm}
                   value={formData.client}
                   onChange={(e) => handleInput(e.target)}
@@ -128,11 +145,33 @@ const UpdatePost = ({ setOpenDialog, post }) => {
                   id="distanceInput"
                   name="kilos"
                   type="number"
+                  disableUnderline={!editForm}
                   readOnly={!editForm}
                   value={formData.kilos}
                   onChange={(e) => handleInput(e.target)}
                 />
               </FormControl>
+            </Grid>
+            <Grid xs={6} className="flex justify-center">
+              {options ?
+                <FormControl variant="standard" size="small" fullWidth margin="dense">
+                  <InputLabel htmlFor="CarerInput">Carer</InputLabel>
+                  <Select
+                    id="carerInput"
+                    name='carerId'
+                    required
+                    disableUnderline={!editForm}
+                    readOnly={!editForm}
+                    value={formData.carerId}
+                    onChange={(e) => handleInput(e.target)}
+                  >
+                    {options?.map((user, index) => {
+                      return (
+                        <MenuItem key={index} value={user.userId}>{user.firstName} {user?.lastName}</MenuItem>
+                      );
+                    })}
+                  </Select>
+                </FormControl> : null}
             </Grid>
             <Grid xs={12} className="flex justify-center">
               <FormControl size="small" fullWidth margin="dense">

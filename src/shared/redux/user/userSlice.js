@@ -74,7 +74,9 @@ export const userApiSlice = backendApi.injectEndpoints({
         } catch (err) {
           console.error(err);
         }
-      }
+      },
+      invalidatesTags: (result, error, args) =>
+        result ? [{ type: "user", id: "LIST" }] : error ? console.error(error) : null
     }),
     refreshUser: builder.mutation({
       query: (refresh) => ({ url: '/refresh', method: 'get' }),

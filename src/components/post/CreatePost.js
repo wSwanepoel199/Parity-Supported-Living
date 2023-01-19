@@ -14,7 +14,7 @@ const CreatePost = ({ setOpenDialog }) => {
     kilos: 0,
     client: "",
     notes: "",
-    carerId: userState.user.id
+    carerId: userState.user.userId
   });
 
   useEffect(() => {
