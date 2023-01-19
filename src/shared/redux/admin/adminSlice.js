@@ -29,7 +29,7 @@ export const adminApiSlice = backendApi.injectEndpoints({
       query: (users) => ({ url: '/auth/', method: 'get' }),
       providesTags: (result, error, args) =>
         result
-          ? [...result.data.data.map(({ id }) => ({ type: 'user', id })),
+          ? [...result.data.data?.map(({ id }) => ({ type: 'user', id })),
           { type: 'user', id: "LIST" },
           ]
           : [{ type: 'user', id: "LIST" }],

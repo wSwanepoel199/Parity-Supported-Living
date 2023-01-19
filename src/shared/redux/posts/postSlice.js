@@ -76,7 +76,7 @@ export const postApiSlice = backendApi.injectEndpoints({
       query: () => ({ url: '/posts', method: 'get' }),
       providesTags: (result, error, args) =>
         result
-          ? [...result.data.data.map(({ id }) => ({ type: 'post', id })),
+          ? [...result.data.data?.map(({ id }) => ({ type: 'post', id })),
           { type: 'post', id: "LIST" },
           ]
           : [{ type: 'post', id: "LIST" }],
