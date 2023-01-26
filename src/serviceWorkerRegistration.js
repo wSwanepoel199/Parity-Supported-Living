@@ -63,13 +63,9 @@ function registerValidSW(swUrl, config) {
   navigator.serviceWorker
     .register(swUrl)
     .then((registration) => {
-      console.log(registration);
-      console.log(navigator.serviceWorker);
       registration.onupdatefound = () => {
         const newWorker = registration.installing || registration.waiting;
         if (newWorker == null) {
-          console.log("no new worker");
-
           return;
         }
         newWorker.onstatechange = (e) => {
@@ -90,14 +86,12 @@ function registerValidSW(swUrl, config) {
               // if (config && config.onUpdate) {
               //   config.onUpdate(registration);
               // }
+
               // checking prompt for updates
               promptForUpdate.then(res => {
                 if (res) {
-                  console.log("update accepted");
                   navigator.serviceWorker.ready.then((registration) => {
-                    console.log("triggering .unregister()", registration);
                     registration.unregister();
-                    console.log("reloading window");
                     window.location.reload();
                   });
                 }
@@ -154,35 +148,12 @@ function registerValidSW(swUrl, config) {
         // This fires when the service worker controlling this page
         // changes, eg a new worker has skipped waiting and become
         // the new active worker.
-        console.log("new worker controls");
       });
     })
     .catch((error) => {
       console.error('Error during service worker registration:', error);
     });
 }
-
-// const showSkipWaitingPrompt = async (event) => {
-
-//   self.addEventListener('controlling', () => {
-//     window.location.reload();
-//   });
-//   console.log("before prompt try");
-//   try {
-//     console.log("attempting to update service worker");
-//     console.log("checking on import", await promptForUpdate);
-//     console.log("after promise check");
-//     const updateAccepted = await promptForUpdate;
-//     console.log(updateAccepted);
-//     if (updateAccepted) {
-//       console.log("prompt accepted");
-//       self.messageSkipWaiting();
-//     }
-//   }
-//   catch (err) {
-//     console.log("sw update error", err);
-//   }
-// };
 
 function checkValidServiceWorker(swUrl, config) {
   // Check if the service worker can be found. If it can't reload the page.

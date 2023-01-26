@@ -31,7 +31,7 @@ function App() {
       window.updateAvailable
         .then(isAvailable => {
           if (isAvailable) {
-            console.log("is update available?", isAvailable);
+            // console.log("is update available?", isAvailable);
             setUpdate(prev => { return true; });
           }
         })

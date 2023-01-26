@@ -99,10 +99,8 @@ registerRoute(
 // This allows the web app to trigger skipWaiting via
 // registration.waiting.postMessage({type: 'SKIP_WAITING'})
 self.addEventListener('message', async (event) => {
-  console.log(self, event);
-  // console.log("message triggered with event:", event);
+  // console.log(self, event);
   if (event.data && event.data.type === 'SKIP_WAITING') {
-    console.log("skipping");
     self.skipWaiting();
     self.registration.update();
   }
@@ -112,10 +110,10 @@ self.addEventListener('message', async (event) => {
     const data = utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]]);
     event.ports[0].postMessage(data);
   }
-  if (event.data && event.data.type === "skipWait") {
-    console.log("skip waiting through message");
-    self.messageSkipWaiting();
-  }
+  // if (event.data && event.data.type === "skipWait") {
+  //   console.log("skip waiting through message");
+  //   self.messageSkipWaiting();
+  // }
 });
 
 // Any other custom service worker logic can go here.
