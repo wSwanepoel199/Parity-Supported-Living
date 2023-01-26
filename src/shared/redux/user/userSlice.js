@@ -1,10 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { removeStoredTokenLocal, removeStoredTokenSession, storeAuthTokenLocal, storeAuthTokenSession } from "../../utils/authToken";
+import { fetchStoredTokenLocal, removeStoredTokenLocal, removeStoredTokenSession, storeAuthTokenLocal, storeAuthTokenSession } from "../../utils/authToken";
 import { backendApi } from "../api/backendApi";
 
 const initialState = {
   user: {},
-  authToken: undefined,
   status: 'loggedOut',
   error: undefined
 };
@@ -14,11 +13,10 @@ export const userSlice = createSlice({
   initialState,
   reducers: {
     saveUser: (state, action) => {
-      storeAuthTokenSession(action.payload.accessToken);
+      const { accessToken, ...user } = action.payload;
       return {
         ...state,
-        user: action.payload,
-        authToken: action.payload.accessToken,
+        user: user,
         status: "loggedIn"
       };
     },
@@ -36,17 +34,10 @@ export const userSlice = createSlice({
         authToken: undefined
       };
     },
-    saveToken: (state, action) => {
-      storeAuthTokenLocal(action.payload);
-      return {
-        ...state,
-        authToken: action.payload
-      };
-    },
   },
 });
 
-export const { saveUser, removeUser, saveToken, signOutUser } = userSlice.actions;
+export const { saveUser, removeUser, signOutUser } = userSlice.actions;
 
 export default userSlice.reducer;
 
@@ -57,7 +48,11 @@ export const userApiSlice = backendApi.injectEndpoints({
       async onQueryStarted(loginDetails, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
-          if (loginDetails.rememberMe) dispatch(saveToken(data.data.user.accessToken));
+          if (loginDetails.rememberMe) {
+            storeAuthTokenLocal(data.data.user.accessToken);
+          } else {
+            storeAuthTokenSession(data.data.user.accessToken);
+          }
           dispatch(saveUser(data.data.user));
         }
         catch (err) {
@@ -83,6 +78,11 @@ export const userApiSlice = backendApi.injectEndpoints({
       async onQueryStarted(refresh, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
+          if (fetchStoredTokenLocal()) {
+            storeAuthTokenLocal(data.data.user.accessToken);
+          } else {
+            storeAuthTokenSession(data.data.user.accessToken);
+          }
           dispatch(saveUser(data.data.user));
         }
         catch (err) {

@@ -9,9 +9,10 @@ import { useRefreshUserMutation, } from './shared/redux/user/userSlice';
 import Posts from './components/post/Posts';
 import Users from './components/user/Users';
 import ProtectedRoute from './shared/utils/ProtectedRoute';
-import { Alert, AlertTitle, Backdrop, CircularProgress, Collapse, IconButton } from '@mui/material';
+import { Alert, AlertTitle, Backdrop, Button, CircularProgress, Collapse, IconButton, Snackbar } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { clearMessage } from './shared/redux/root/rootSlice';
+import PromptForUpdate from './shared/utils/PrompUpdateServiceWorker';
 
 function App() {
   const mounted = useRef();
@@ -20,17 +21,31 @@ function App() {
   const dispatch = useDispatch();
   const [refreshUser, { isUninitialized, }] = useRefreshUserMutation();
   const [alert, setAlert] = useState(undefined);
+  const [update, setUpdate] = useState(false);
+
+  // TODO troubleshoot service worker error with window not being defined
 
   useEffect(() => {
     if (!mounted.current) {
       if (userState.status === "loggedOut" && (fetchStoredTokenLocal() || fetchStoredTokenSession())) refreshUser();
+      window.updateAvailable
+        .then(isAvailable => {
+          if (isAvailable) {
+            console.log("is update available?", isAvailable);
+            setUpdate(prev => { return true; });
+          }
+        })
+        .catch((err) => {
+          console.error(err);
+        });
       mounted.current = true;
     }
+
 
     return () => {
       mounted.current = false;
     };
-  }, [mounted, userState.status, refreshUser]);
+  }, [mounted, userState.status, refreshUser, setUpdate]);
 
   useEffect(() => {
     if (['error'].includes(rootState.status) && rootState.status !== "loading") {
@@ -43,7 +58,6 @@ function App() {
     }
   }, [rootState]);
 
-  // TODO: 
 
   return (
     <div className={`w-full min-h-screen bg-slate-400 flex flex-col justify-center items-center`}>
@@ -81,6 +95,7 @@ function App() {
               </Alert>
               : null}
           </Collapse>
+          <PromptForUpdate update={update} setUpdate={setUpdate} />
           <Routes>
             <Route path="/" element={userState.status === "loggedIn" ? <Landing /> : <SignIn />}>
               <Route index element={

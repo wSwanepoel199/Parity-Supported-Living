@@ -1,6 +1,9 @@
 // This optional code is used to register a service worker.
 // register() is not called by default.
 
+import deferredPromise from "./shared/utils/deferredPromise";
+import { promptForUpdate } from "./shared/utils/PrompUpdateServiceWorker";
+
 // This lets the app load faster on subsequent visits in production, and gives
 // it offline capabilities. However, it also means that developers (and users)
 // will only see deployed updates on subsequent visits to a page, after all the
@@ -20,6 +23,7 @@ const isLocalhost = Boolean(
 
 export function register(config) {
   if (process.env.NODE_ENV === 'production' && 'serviceWorker' in navigator) {
+    // if (process.env.NODE_ENV === 'development' && 'serviceWorker' in navigator) {
     // The URL constructor is available in all browsers that support SW.
     const publicUrl = new URL(process.env.PUBLIC_URL, window.location.href);
     console.log(publicUrl);
@@ -39,7 +43,7 @@ export function register(config) {
 
         // Add some additional logging to localhost, pointing developers to the
         // service worker/PWA documentation.
-        navigator.serviceWorker.ready.then(() => {
+        navigator.serviceWorker.ready.then((registration) => {
           console.log(
             'This web app is being served cache-first by a service ' +
             'worker. To learn more, visit https://cra.link/PWA'
@@ -53,17 +57,23 @@ export function register(config) {
   }
 }
 
+window.updateAvailable = new deferredPromise();
+
 function registerValidSW(swUrl, config) {
   navigator.serviceWorker
     .register(swUrl)
     .then((registration) => {
+      console.log(registration);
+      console.log(navigator.serviceWorker);
       registration.onupdatefound = () => {
-        const installingWorker = registration.installing;
-        if (installingWorker == null) {
+        const newWorker = registration.installing || registration.waiting;
+        if (newWorker == null) {
+          console.log("no new worker");
+
           return;
         }
-        installingWorker.onstatechange = () => {
-          if (installingWorker.state === 'installed') {
+        newWorker.onstatechange = (e) => {
+          if (e.target.state === "installed") {
             if (navigator.serviceWorker.controller) {
               // At this point, the updated precached content has been fetched,
               // but the previous service worker will still serve the older
@@ -73,29 +83,106 @@ function registerValidSW(swUrl, config) {
                 'tabs for this page are closed. See https://cra.link/PWA.'
               );
 
+              // update is available
+              window.updateAvailable.resolve(true);
+
               // Execute callback
-              if (config && config.onUpdate) {
-                config.onUpdate(registration);
-              }
+              // if (config && config.onUpdate) {
+              //   config.onUpdate(registration);
+              // }
+              // checking prompt for updates
+              promptForUpdate.then(res => {
+                if (res) {
+                  console.log("update accepted");
+                  navigator.serviceWorker.ready.then((registration) => {
+                    console.log("triggering .unregister()", registration);
+                    registration.unregister();
+                    console.log("reloading window");
+                    window.location.reload();
+                  });
+                }
+              });
+              // navigator.serviceWorker.ready.then((registration) => {
+              //   console.log("triggering .update()", registration);
+              //   registration.update();
+              // });
+
             } else {
               // At this point, everything has been precached.
               // It's the perfect time to display a
               // "Content is cached for offline use." message.
               console.log('Content is cached for offline use.');
 
+              // no update is available
+              window.updateAvailable.resolve(false);
+
               // Execute callback
-              if (config && config.onSuccess) {
-                config.onSuccess(registration);
-              }
+              // if (config && config.onSuccess) {
+              //   config.onSuccess(registration);
+              // }
             }
-          }
+            // newWorker.addEventListener('waiting', (event) => {
+            //   console.log("triggered");
+            //   showSkipWaitingPrompt(event);
+            // });
+          };
+          return;
         };
+        // const showSkipWaitingPrompt = async (event) => {
+
+        //   newWorker.addEventListener('controlling', () => {
+        //     window.location.reload();
+        //   });
+        //   console.log("before prompt try");
+        //   try {
+        //     console.log("attempting to update service worker??");
+        //     console.log("checking on import", await promptForUpdate);
+        //     console.log("after promise check");
+        //     const updateAccepted = await promptForUpdate;
+        //     console.log(updateAccepted);
+        //     if (updateAccepted) {
+        //       console.log("prompt accepted");
+        //       newWorker.messageSkipWaiting();
+        //     }
+        //   }
+        //   catch (err) {
+        //     console.log("sw update error", err);
+        //   }
+        // };
       };
+      navigator.serviceWorker.addEventListener('controllerchange', () => {
+        // This fires when the service worker controlling this page
+        // changes, eg a new worker has skipped waiting and become
+        // the new active worker.
+        console.log("new worker controls");
+      });
     })
     .catch((error) => {
       console.error('Error during service worker registration:', error);
     });
 }
+
+// const showSkipWaitingPrompt = async (event) => {
+
+//   self.addEventListener('controlling', () => {
+//     window.location.reload();
+//   });
+//   console.log("before prompt try");
+//   try {
+//     console.log("attempting to update service worker");
+//     console.log("checking on import", await promptForUpdate);
+//     console.log("after promise check");
+//     const updateAccepted = await promptForUpdate;
+//     console.log(updateAccepted);
+//     if (updateAccepted) {
+//       console.log("prompt accepted");
+//       self.messageSkipWaiting();
+//     }
+//   }
+//   catch (err) {
+//     console.log("sw update error", err);
+//   }
+// };
 
 function checkValidServiceWorker(swUrl, config) {
   // Check if the service worker can be found. If it can't reload the page.
