@@ -21,7 +21,7 @@ const PromptForUpdate = ({ update, setUpdate }) => {
   }, [mounted]);
 
   const handleUpdate = () => {
-    sendMessage({ type: 'SKIP_WAITING' });
+    // sendMessage({ type: 'SKIP_WAITING' });
     promptForUpdate.resolve(true);
     setUpdate(prev => !prev);
   };
