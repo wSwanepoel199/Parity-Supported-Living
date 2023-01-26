@@ -13,6 +13,7 @@ import { precacheAndRoute, createHandlerBoundToURL } from 'workbox-precaching';
 import { registerRoute } from 'workbox-routing';
 import { StaleWhileRevalidate } from 'workbox-strategies';
 import { read, utils } from 'xlsx';
+import { promptForUpdate } from './shared/utils/PrompUpdateServiceWorker';
 
 clientsClaim();
 
@@ -62,12 +63,46 @@ registerRoute(
   })
 );
 
+// const showSkipWaitingPrompt = async (event) => {
+
+//   // self.addEventListener('controlling', () => {
+//   //   window.location.reload();
+//   // });
+//   console.log("before prompt try");
+//   try {
+//     console.log("attempting to update service worker");
+//     console.log("checking on import", await promptForUpdate);
+//     console.log("after promise check");
+//     const updateAccepted = await promptForUpdate;
+//     console.log(updateAccepted);
+//     if (updateAccepted) {
+//       console.log("prompt accepted");
+//       self.messageSkipWaiting();
+//     }
+//   }
+//   catch (err) {
+//     console.log("sw update error", err);
+//   }
+
+
+
+
+//   // window.promptForUpdate
+//   //   .then(res => {
+//   //     if (res) {
+//   //       self.messageSkipWaiting();
+//   //     }
+//   //   })
+//   //   .catch(err => console.log(err));
+// };
+
 // This allows the web app to trigger skipWaiting via
 // registration.waiting.postMessage({type: 'SKIP_WAITING'})
 self.addEventListener('message', async (event) => {
-  // console.log("message triggered with event:", event);
+  // console.log(self, event);
   if (event.data && event.data.type === 'SKIP_WAITING') {
     self.skipWaiting();
+    // self.registration.update();
   }
   if (event.data && event.data.type === "excel") {
     const f = await (event.data?.data).arrayBuffer();
@@ -75,6 +110,10 @@ self.addEventListener('message', async (event) => {
     const data = utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]]);
     event.ports[0].postMessage(data);
   }
+  // if (event.data && event.data.type === "skipWait") {
+  //   console.log("skip waiting through message");
+  //   self.messageSkipWaiting();
+  // }
 });
 
 // Any other custom service worker logic can go here.

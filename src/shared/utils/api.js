@@ -1,5 +1,6 @@
 import axios from 'axios';
-import store from '../redux/store';
+// import store from '../redux/store';
+import { fetchStoredTokenLocal, fetchStoredTokenSession } from './authToken';
 // import { redirect } from 'react-router-dom';
 
 const DEBUG = process.env.NODE_ENV === "development";
@@ -46,7 +47,7 @@ export const axiosBaseQuery =
 axios.interceptors.request.use((config) => {
   if (DEBUG) console.log("✉️ ", config);
   // console.log(store.getState());
-  config.headers.Authorization = `Bearer ${store.getState().user.authToken}`;
+  config.headers.Authorization = `Bearer ${fetchStoredTokenLocal() || fetchStoredTokenSession()}`;
   return config;
 }, (err) => {
   return Promise.reject(err);
