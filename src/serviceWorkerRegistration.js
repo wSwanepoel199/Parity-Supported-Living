@@ -63,6 +63,7 @@ function registerValidSW(swUrl, config) {
   navigator.serviceWorker
     .register(swUrl)
     .then((registration) => {
+      // console.log(registration);
       registration.onupdatefound = () => {
         const newWorker = registration.installing || registration.waiting;
         if (newWorker == null) {
@@ -91,8 +92,9 @@ function registerValidSW(swUrl, config) {
               promptForUpdate.then(res => {
                 if (res) {
                   navigator.serviceWorker.ready.then((registration) => {
-                    registration.unregister();
-                    window.location.reload();
+                    registration.unregister().then(() => {
+                      window.location.reload();
+                    });
                   });
                 }
               });

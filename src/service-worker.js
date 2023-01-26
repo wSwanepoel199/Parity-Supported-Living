@@ -102,7 +102,7 @@ self.addEventListener('message', async (event) => {
   // console.log(self, event);
   if (event.data && event.data.type === 'SKIP_WAITING') {
     self.skipWaiting();
-    self.registration.update();
+    // self.registration.update();
   }
   if (event.data && event.data.type === "excel") {
     const f = await (event.data?.data).arrayBuffer();
