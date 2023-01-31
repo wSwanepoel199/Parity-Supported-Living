@@ -1,4 +1,4 @@
-import { Box, Button, DialogActions, DialogContent, DialogTitle, FormControl, Input, InputLabel, OutlinedInput } from "@mui/material";
+import { Box, Button, DialogActions, DialogContent, DialogTitle, FormControl, FormControlLabel, Input, InputLabel, OutlinedInput, Switch } from "@mui/material";
 import Grid from "@mui/material/Unstable_Grid2/";
 import { format, formatISO, parseISO } from "date-fns";
 import { useEffect, useState } from "react";
@@ -14,7 +14,8 @@ const CreatePost = ({ setOpenDialog }) => {
     kilos: 0,
     client: "",
     notes: "",
-    carerId: userState.user.userId
+    carerId: userState.user.userId,
+    private: false,
   });
 
   useEffect(() => {
@@ -124,7 +125,7 @@ const CreatePost = ({ setOpenDialog }) => {
                 type="text"
                 label="Notes"
                 multiline
-                rows={4}
+                minRows={4}
                 value={formData.notes}
                 onChange={(e) => handleInput(e.target)}
               />
@@ -132,9 +133,27 @@ const CreatePost = ({ setOpenDialog }) => {
           </Grid>
         </Grid>
       </DialogContent>
-      <DialogActions>
-        <Button onClick={(e) => handleSubmit(e)}>Create</Button>
-        <Button onClick={() => setOpenDialog(prev => { return { ...prev, open: !prev.open, type: '' }; })}>Cancel</Button>
+      <DialogActions sx={{ justifyContent: 'space-between', alignContent: 'space-between' }}>
+        <FormControlLabel
+          control={
+            <Switch
+              checked={formData.private}
+              onChange={() => setFormData(prev => {
+                return {
+                  ...prev,
+                  private: !prev.private
+                };
+              }
+              )}
+
+            />}
+          label="Confidential"
+
+        />
+        <Box>
+          <Button onClick={(e) => handleSubmit(e)}>Create</Button>
+          <Button onClick={() => setOpenDialog(prev => { return { ...prev, open: !prev.open, type: '', data: {} }; })}>Cancel</Button>
+        </Box>
       </DialogActions>
     </Box>
   );

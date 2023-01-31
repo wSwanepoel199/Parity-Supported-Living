@@ -3,8 +3,8 @@ import { fetchStoredTokenLocal, removeStoredTokenLocal, removeStoredTokenSession
 import { backendApi } from "../api/backendApi";
 
 const initialState = {
-  user: {},
-  status: 'loggedOut',
+  status: (sessionStorage.getItem("USER_DETAILS") || localStorage.getItem("USER_DETAILS")) ? "loggedIn" : 'loggedOut',
+  user: (JSON.parse(sessionStorage.getItem("USER_DETAILS")) || JSON.parse(localStorage.getItem("USER_DETAILS"))) || {},
   error: undefined
 };
 
@@ -13,11 +13,19 @@ export const userSlice = createSlice({
   initialState,
   reducers: {
     saveUser: (state, action) => {
-      const { accessToken, ...user } = action.payload;
+      const { user, rememberMe } = action.payload;
+      const { accessToken, ...loggedinUser } = user;
+      if (rememberMe) {
+        storeAuthTokenLocal(user.accessToken);
+        localStorage.setItem('USER_DETAILS', JSON.stringify(loggedinUser));
+      } else {
+        storeAuthTokenSession(user.accessToken);
+        sessionStorage.setItem("USER_DETAILS", JSON.stringify(loggedinUser));
+      }
       return {
         ...state,
-        user: user,
-        status: "loggedIn"
+        status: "loggedIn",
+        user: loggedinUser
       };
     },
     signOutUser: (state) => {
@@ -27,11 +35,16 @@ export const userSlice = createSlice({
       };
     },
     removeUser: () => {
-      removeStoredTokenLocal();
-      removeStoredTokenSession();
+      if (fetchStoredTokenLocal()) {
+        localStorage.removeItem("USER_DETAILS");
+        removeStoredTokenLocal();
+      } else {
+        sessionStorage.removeItem("USER_DETAILS");
+        removeStoredTokenSession();
+      }
       return {
-        ...initialState,
-        authToken: undefined
+        status: 'loggedOut',
+        user: {},
       };
     },
   },
@@ -48,12 +61,7 @@ export const userApiSlice = backendApi.injectEndpoints({
       async onQueryStarted(loginDetails, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
-          if (loginDetails.rememberMe) {
-            storeAuthTokenLocal(data.data.user.accessToken);
-          } else {
-            storeAuthTokenSession(data.data.user.accessToken);
-          }
-          dispatch(saveUser(data.data.user));
+          dispatch(saveUser({ user: data.data.user, rememberMe: loginDetails.rememberMe }));
         }
         catch (err) {
           console.error(err);
@@ -79,11 +87,12 @@ export const userApiSlice = backendApi.injectEndpoints({
         try {
           const { data } = await queryFulfilled;
           if (fetchStoredTokenLocal()) {
-            storeAuthTokenLocal(data.data.user.accessToken);
+            dispatch(saveUser({ user: data.data.user, rememberMe: true }));
           } else {
-            storeAuthTokenSession(data.data.user.accessToken);
+            dispatch(saveUser({ user: data.data.user, rememberMe: false }));
           }
-          dispatch(saveUser(data.data.user));
+          window.location.reload();
+          // dispatch(saveUser(data.data.user));
         }
         catch (err) {
           console.error(err);
@@ -99,6 +108,11 @@ export const userApiSlice = backendApi.injectEndpoints({
         try {
           dispatch(signOutUser());
           await queryFulfilled;
+          // if (fetchStoredTokenLocal()) {
+          //   await localStorage.removeItem("USER_DETAILS");
+          // } else {
+          //   await sessionStorage.removeItem("USER_DETAILS");
+          // }
           dispatch(removeUser());
         }
         catch (err) {

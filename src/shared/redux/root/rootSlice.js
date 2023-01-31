@@ -45,6 +45,7 @@ export const rootSlice = createSlice({
         };
       })
       .addMatcher(isFulfilled, (state, action) => {
+
         return {
           ...state,
           status: "success",
@@ -56,13 +57,18 @@ export const rootSlice = createSlice({
       })
       .addMatcher(isRejected, (state, action) => {
         console.log(action.payload);
+        // if (action.payload.data.error.data.trigger === "refresh expired") {
+        //   console.log("expired");
+        // }
+        const message = action.payload.data.message.message || action.payload.data.message;
         return {
           ...state,
           status: "error",
           msg: {
             status: action.payload.status,
             statusText: action.payload.statusText,
-            message: action.payload.data.message
+            message: message,
+            data: action.payload.data.message?.trigger
           }
         };
       });

@@ -1,5 +1,6 @@
 import axios from 'axios';
-// import store from '../redux/store';
+import store from '../redux/store';
+// import { removeUser } from '../redux/user/userSlice';
 import { fetchStoredTokenLocal, fetchStoredTokenSession } from './authToken';
 // import { redirect } from 'react-router-dom';
 
@@ -13,7 +14,7 @@ const defaults = {
   error: {
     status: 500,
     statusText: '	InternalServerError',
-    data: { message: 'Something went wrong. Please check your internet connection or contact support.', data: {} },
+    data: { message: 'Something went wrong. Please check your internet connection or contact support at willem@paritysl.com.', data: {} },
   }
 };
 
@@ -46,7 +47,7 @@ export const axiosBaseQuery =
 
 axios.interceptors.request.use((config) => {
   if (DEBUG) console.log("✉️ ", config);
-  // console.log(store.getState());
+  console.log(store);
   config.headers.Authorization = `Bearer ${fetchStoredTokenLocal() || fetchStoredTokenSession()}`;
   return config;
 }, (err) => {

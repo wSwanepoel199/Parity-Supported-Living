@@ -8,13 +8,11 @@ import { useUpdatePostMutation } from "../../shared/redux/posts/postSlice";
 import { useDeleteTargetPostMutation, useGetAllUsersQuery } from "../../shared/redux/admin/adminSlice";
 
 const UpdatePost = ({ setOpenDialog, post }) => {
-  const userState = useSelector(state => state.user);
   const adminState = useSelector(state => state.admin);
   useGetAllUsersQuery();
   const mounted = useRef();
   const [updatePost, { isLoading: updatePostLoading }] = useUpdatePostMutation();
   const [deleteTargetPost, { isLoading: deleteLoading }] = useDeleteTargetPostMutation();
-  const [editForm, setEditForm] = useState(false);
   const [formData, setFormData] = useState(post);
   const [options, setOptions] = useState([post.carer]);
 
@@ -91,7 +89,7 @@ const UpdatePost = ({ setOpenDialog, post }) => {
         <DialogTitle>
           Edit Note
         </DialogTitle>
-        {["Admin", "Coordinator"].includes(userState.user.role) ? <FormControlLabel control={<Switch checked={editForm} onChange={() => setEditForm(prev => !prev)} />} label="Toggle Edit" /> : null}
+        {/* {["Admin", "Coordinator"].includes(userState.user.role) ? <FormControlLabel control={<Switch checked={editForm} onChange={() => setEditForm(prev => !prev)} />} label="Toggle Edit" /> : null} */}
       </Box>
       {mounted.current ?
         <DialogContent>
@@ -103,8 +101,8 @@ const UpdatePost = ({ setOpenDialog, post }) => {
                   id="dateInput"
                   name="date"
                   type="date"
-                  disableUnderline={!editForm}
-                  readOnly={!editForm}
+                  // disableUnderline={!editForm}
+                  // readOnly={!editForm}
                   value={format(parseISO(formData.date), 'yyyy-MM-dd')}
                   onChange={(e) => handleInput(e.target)}
                 />
@@ -117,8 +115,8 @@ const UpdatePost = ({ setOpenDialog, post }) => {
                   id="timeInput"
                   name="hours"
                   type="number"
-                  disableUnderline={!editForm}
-                  readOnly={!editForm}
+                  // disableUnderline={!editForm}
+                  // readOnly={!editForm}
                   value={formData.hours}
                   onChange={(e) => handleInput(e.target)}
                 />
@@ -131,8 +129,8 @@ const UpdatePost = ({ setOpenDialog, post }) => {
                   id="clientInput"
                   name="client"
                   type="text"
-                  disableUnderline={!editForm}
-                  readOnly={!editForm}
+                  // disableUnderline={!editForm}
+                  // readOnly={!editForm}
                   value={formData.client}
                   onChange={(e) => handleInput(e.target)}
                 />
@@ -145,8 +143,8 @@ const UpdatePost = ({ setOpenDialog, post }) => {
                   id="distanceInput"
                   name="kilos"
                   type="number"
-                  disableUnderline={!editForm}
-                  readOnly={!editForm}
+                  // disableUnderline={!editForm}
+                  // readOnly={!editForm}
                   value={formData.kilos}
                   onChange={(e) => handleInput(e.target)}
                 />
@@ -160,8 +158,8 @@ const UpdatePost = ({ setOpenDialog, post }) => {
                     id="carerInput"
                     name='carerId'
                     required
-                    disableUnderline={!editForm}
-                    readOnly={!editForm}
+                    // disableUnderline={!editForm}
+                    // readOnly={!editForm}
                     value={formData.carerId}
                     onChange={(e) => handleInput(e.target)}
                   >
@@ -181,24 +179,40 @@ const UpdatePost = ({ setOpenDialog, post }) => {
                   name="notes"
                   type="text"
                   label="Notes"
-                  readOnly={!editForm}
+                  // readOnly={!editForm}
                   multiline
-                  rows={4}
+                  minRows={4}
                   value={formData.notes}
                   onChange={(e) => handleInput(e.target)}
                 />
               </FormControl>
             </Grid>
+            <Grid xs={12} className="flex justify-start">
+              <FormControlLabel
+                control={
+                  <Switch
+                    checked={formData.private}
+                    onChange={() => setFormData(prev => {
+                      return {
+                        ...prev,
+                        private: !prev.private
+                      };
+                    }
+                    )}
+
+                  />}
+                label="Confidential"
+              />
+            </Grid>
           </Grid>
         </DialogContent>
         : null}
-      <DialogActions sx={{ justifyContent: (editForm) ? 'space-between' : 'end', alignContent: 'space-between' }}>
-        {(editForm) ?
-          <IconButton size="large" onClick={() => deleteTargetPost(post)}>
-            <DeleteIcon fontSize="inherit" />
-          </IconButton> : null}
+      <DialogActions sx={{ justifyContent: 'space-between', alignContent: 'space-between' }}>
+        <IconButton size="large" onClick={() => deleteTargetPost(post)}>
+          <DeleteIcon fontSize="inherit" />
+        </IconButton>
         <Box >
-          {editForm ? <Button onClick={(e) => handleSubmit(e)}>Edit</Button> : null}
+          <Button onClick={(e) => handleSubmit(e)}>Edit</Button>
           <Button onClick={() => setOpenDialog(prev => { return { ...prev, open: !prev.open, type: '', data: {} }; })}>Cancel</Button>
         </Box>
       </DialogActions>

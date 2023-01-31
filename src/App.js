@@ -4,12 +4,11 @@ import { useDispatch, useSelector } from 'react-redux';
 // import Dashboard from './components/Dashboard';
 import Landing from './pages/Landing';
 import SignIn from './pages/SignIn';
-import { fetchStoredTokenLocal, fetchStoredTokenSession } from './shared/utils/authToken';
 import { useRefreshUserMutation, } from './shared/redux/user/userSlice';
 import Posts from './components/post/Posts';
 import Users from './components/user/Users';
 import ProtectedRoute from './shared/utils/ProtectedRoute';
-import { Alert, AlertTitle, Backdrop, Button, CircularProgress, Collapse, IconButton, Snackbar } from '@mui/material';
+import { Alert, AlertTitle, Backdrop, CircularProgress, Collapse, IconButton } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { clearMessage } from './shared/redux/root/rootSlice';
 import PromptForUpdate from './shared/utils/PrompUpdateServiceWorker';
@@ -23,11 +22,20 @@ function App() {
   const [alert, setAlert] = useState(undefined);
   const [update, setUpdate] = useState(false);
 
-  // TODO troubleshoot service worker error with window not being defined
+  // TODO SW forced to manually unregister and reload page, look into a smoother sw transition between old and new
+  // TODO Look into implimenting mailer into Backend
+  // TODO Look into automated backend backups, consider looking to file storage servivces to contain backups
 
   useEffect(() => {
     if (!mounted.current) {
-      if (userState.status === "loggedOut" && (fetchStoredTokenLocal() || fetchStoredTokenSession())) refreshUser();
+      // if (userState.status === "loggedOut" && (fetchStoredTokenLocal() || fetchStoredTokenSession())) refreshUser();
+      if (rootState.msg?.data === "auth") {
+        console.log("expired");
+        refreshUser();
+      }
+      mounted.current = true;
+    }
+    if (mounted.current) {
       window.updateAvailable
         .then(isAvailable => {
           if (isAvailable) {
@@ -38,14 +46,13 @@ function App() {
         .catch((err) => {
           console.error(err);
         });
-      mounted.current = true;
     }
 
 
     return () => {
       mounted.current = false;
     };
-  }, [mounted, userState.status, refreshUser, setUpdate]);
+  }, [mounted, userState.status, refreshUser, setUpdate, rootState.msg]);
 
   useEffect(() => {
     if (['error'].includes(rootState.status) && rootState.status !== "loading") {
