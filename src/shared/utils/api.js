@@ -1,5 +1,5 @@
 import axios from 'axios';
-import store from '../redux/store';
+// import store from '../redux/store';
 // import { removeUser } from '../redux/user/userSlice';
 import { fetchStoredTokenLocal, fetchStoredTokenSession } from './authToken';
 // import { redirect } from 'react-router-dom';
@@ -34,7 +34,7 @@ export const axiosBaseQuery =
       }
       catch (axiosError) {
         let err = axiosError;
-        console.log(err);
+        console.error(err);
         return {
           error: {
             status: err.response?.status || defaults.error.status,
@@ -47,7 +47,7 @@ export const axiosBaseQuery =
 
 axios.interceptors.request.use((config) => {
   if (DEBUG) console.log("✉️ ", config);
-  console.log(store);
+  // console.log(store);
   config.headers.Authorization = `Bearer ${fetchStoredTokenLocal() || fetchStoredTokenSession()}`;
   return config;
 }, (err) => {

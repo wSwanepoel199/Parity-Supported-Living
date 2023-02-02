@@ -6,6 +6,8 @@ const initialState = {
 };
 
 const isPending = (action) => {
+  // console.log(action);
+  // console.log(action.meta?.arg.endpointName);
   return action.type.endsWith('pending');
 };
 
@@ -39,10 +41,16 @@ export const rootSlice = createSlice({
   extraReducers(builder) {
     builder
       .addMatcher(isPending, (state, action) => {
-        return {
-          ...initialState,
-          status: "loading"
-        };
+        if (action.meta?.arg.endpointName === "refreshUser") {
+          return {
+            ...initialState
+          };
+        } else {
+          return {
+            ...initialState,
+            status: "loading"
+          };
+        }
       })
       .addMatcher(isFulfilled, (state, action) => {
 

@@ -9,7 +9,8 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "serve": "serve -s build",
-    "start": "node scripts/compileExpress.js"
+    "start": "node scripts/compileExpress.js",
+    "devBuild": "npm run build; npm run start"
   },
   "dependencies": {
     "@dicebear/avatars": "^4.10.8",

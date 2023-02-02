@@ -1,16 +1,18 @@
 import { Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, FormControl, IconButton, Input, InputAdornment, InputLabel, useMediaQuery, useTheme } from "@mui/material";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Outlet } from "react-router-dom";
 import Appbar from "../components/Appbar";
 import { useEffect, useRef, useState } from "react";
-import { useRefreshUserMutation, useResetPassMutation } from "../shared/redux/user/userSlice";
+import { saveRefreshInterval, useRefreshUserMutation, useResetPassMutation } from "../shared/redux/user/userSlice";
+import { useEffectOnce } from "../shared/utils/customHooks";
 // import Navbar from "../components/Navbar";
 
 const Landing = () => {
   const mounted = useRef();
   const userState = useSelector(state => state.user);
+  const dispatch = useDispatch();
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
 
@@ -24,14 +26,24 @@ const Landing = () => {
 
   useEffect(() => {
     if (!mounted.current) {
-      if (isSuccess) refreshUser();
       mounted.current = true;
     }
+
 
     return () => {
       mounted.current = false;
     };
-  }, [mounted, isSuccess, refreshUser]);
+  }, [mounted, isSuccess, refreshUser,]);
+
+  useEffectOnce(() => {
+    if (userState.user?.expireTimer && !userState.intervalId) {
+      console.log("ppre timer");
+      const intervalId = setInterval(refreshUser, userState.user.expireTimer);
+      dispatch(saveRefreshInterval(intervalId));
+    }
+
+    return () => console.log('my effect is destroying');
+  });
 
   const handleInput = (e) => {
     const { value } = e.target;
@@ -48,6 +60,7 @@ const Landing = () => {
     delete formData.showPassword;
     resetPass({ password: formData.password, userId: userState.user.userId });
   };
+
 
   return (
     <div className="w-full min-h-screen flex flex-col">

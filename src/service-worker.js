@@ -83,6 +83,20 @@ self.addEventListener('message', async (event) => {
 });
 
 // Any other custom service worker logic can go here.
-self.addEventListener('fetch', (event) => {
-  console.log("intercepting", event.request.method, 'to', event.request.url);
-});
+// self.addEventListener('fetch', (event) => {
+//   console.log(event.request);
+//   console.log("intercepting", event.request.method, 'to', event.request.url);
+//   const token = 'dummy token';
+
+//   const promise = new Promise((resolve, reject) => {
+//     let sourceHeaders = {};
+//     for (var pair of event.request.headers.entries()) {
+//       sourceHeaders[pair[0]] = pair[1];
+//     }
+//     const newHeaders = { ...sourceHeaders, 'Authorization': 'Bearer: ' + token };
+//     const newRequest = new Request(event.request, { headers: newHeaders }, { mode: 'cors' });
+//     resolve(fetch(event.request));
+//   });
+
+//   event.responseWith(promise);
+// });

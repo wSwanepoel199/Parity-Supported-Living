@@ -5,8 +5,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import Landing from './pages/Landing';
 import SignIn from './pages/SignIn';
 import { useRefreshUserMutation, } from './shared/redux/user/userSlice';
-import Posts from './components/post/Posts';
-import Users from './components/user/Users';
+import Posts from './components/post/Posts copy';
+import Users from './components/user/Users copy';
 import ProtectedRoute from './shared/utils/ProtectedRoute';
 import { Alert, AlertTitle, Backdrop, CircularProgress, Collapse, IconButton } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
@@ -30,7 +30,6 @@ function App() {
     if (!mounted.current) {
       // if (userState.status === "loggedOut" && (fetchStoredTokenLocal() || fetchStoredTokenSession())) refreshUser();
       if (rootState.msg?.data === "auth") {
-        console.log("expired");
         refreshUser();
       }
       mounted.current = true;

@@ -5,7 +5,8 @@ import { backendApi } from "../api/backendApi";
 const initialState = {
   status: (sessionStorage.getItem("USER_DETAILS") || localStorage.getItem("USER_DETAILS")) ? "loggedIn" : 'loggedOut',
   user: (JSON.parse(sessionStorage.getItem("USER_DETAILS")) || JSON.parse(localStorage.getItem("USER_DETAILS"))) || {},
-  error: undefined
+  error: undefined,
+  intervalId: null
 };
 
 export const userSlice = createSlice({
@@ -25,7 +26,7 @@ export const userSlice = createSlice({
       return {
         ...state,
         status: "loggedIn",
-        user: loggedinUser
+        user: loggedinUser,
       };
     },
     signOutUser: (state) => {
@@ -34,7 +35,7 @@ export const userSlice = createSlice({
         status: 'signingOut'
       };
     },
-    removeUser: () => {
+    removeUser: (state) => {
       if (fetchStoredTokenLocal()) {
         localStorage.removeItem("USER_DETAILS");
         removeStoredTokenLocal();
@@ -42,15 +43,23 @@ export const userSlice = createSlice({
         sessionStorage.removeItem("USER_DETAILS");
         removeStoredTokenSession();
       }
+      clearInterval(state.intervalId);
       return {
         status: 'loggedOut',
         user: {},
+        intervalId: null
       };
     },
+    saveRefreshInterval: (state, action) => {
+      return {
+        ...state,
+        intervalId: action.payload
+      };
+    }
   },
 });
 
-export const { saveUser, removeUser, signOutUser } = userSlice.actions;
+export const { saveUser, removeUser, signOutUser, saveRefreshInterval } = userSlice.actions;
 
 export default userSlice.reducer;
 
@@ -58,15 +67,18 @@ export const userApiSlice = backendApi.injectEndpoints({
   endpoints: builder => ({
     loginUser: builder.mutation({
       query: (loginDetails) => ({ url: '/auth/login', method: 'post', data: loginDetails }),
-      async onQueryStarted(loginDetails, { dispatch, queryFulfilled }) {
+      async onQueryStarted(loginDetails, { dispatch, getState, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
+          clearInterval(getState().user.intervalId);
           dispatch(saveUser({ user: data.data.user, rememberMe: loginDetails.rememberMe }));
         }
         catch (err) {
           console.error(err);
         }
-      }
+      },
+      invalidatesTags: (result, error, args) =>
+        result ? [{ type: "post", id: "LIST" }] : error ? console.error(error) : null
     }),
     resetPass: builder.mutation({
       query: (newPassword) => ({ url: '/auth/new', method: 'patch', data: { password: newPassword.password, userId: newPassword.userId } }),
@@ -83,16 +95,16 @@ export const userApiSlice = backendApi.injectEndpoints({
     }),
     refreshUser: builder.mutation({
       query: (refresh) => ({ url: '/refresh', method: 'get' }),
-      async onQueryStarted(refresh, { dispatch, queryFulfilled }) {
+      async onQueryStarted(refresh, { dispatch, getState, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
+          // clearInterval(getState().user.intervalId);
           if (fetchStoredTokenLocal()) {
             dispatch(saveUser({ user: data.data.user, rememberMe: true }));
           } else {
             dispatch(saveUser({ user: data.data.user, rememberMe: false }));
           }
-          window.location.reload();
-          // dispatch(saveUser(data.data.user));
+          // window.location.reload();
         }
         catch (err) {
           console.error(err);
@@ -108,11 +120,6 @@ export const userApiSlice = backendApi.injectEndpoints({
         try {
           dispatch(signOutUser());
           await queryFulfilled;
-          // if (fetchStoredTokenLocal()) {
-          //   await localStorage.removeItem("USER_DETAILS");
-          // } else {
-          //   await sessionStorage.removeItem("USER_DETAILS");
-          // }
           dispatch(removeUser());
         }
         catch (err) {

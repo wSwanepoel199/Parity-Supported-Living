@@ -1,18 +1,14 @@
-import { Box, Button, DialogActions, DialogContent, DialogTitle, FormControl, FormControlLabel, Input, InputLabel, MenuItem, OutlinedInput, Select, Switch } from "@mui/material";
+import { Box, Button, DialogActions, DialogContent, FormControl, FormControlLabel, InputLabel, Switch, Typography } from "@mui/material";
 import Grid from "@mui/material/Unstable_Grid2/";
-import { format, formatISO, parseISO } from "date-fns";
+import { format, parseISO } from "date-fns";
 import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
-import { useUpdatePostMutation } from "../../shared/redux/posts/postSlice";
-import { useGetAllUsersQuery } from "../../shared/redux/admin/adminSlice";
 
-const UpdatePost = ({ setOpenDialog, post }) => {
+const ViewPost = ({ setOpenDialog, post }) => {
   const adminState = useSelector(state => state.admin);
-  useGetAllUsersQuery();
+  const userState = useSelector(state => state.user);
   const mounted = useRef();
-  const [updatePost, { isLoading: updatePostLoading }] = useUpdatePostMutation();
   const [formData, setFormData] = useState(post);
-  const [options, setOptions] = useState([post.carer]);
 
   useEffect(() => {
     if (!mounted.current) {
@@ -23,79 +19,24 @@ const UpdatePost = ({ setOpenDialog, post }) => {
           ...parsedPost
         };
       });
-      setOptions(prev => {
-        if (adminState.users) {
-          return adminState.users;
-        }
-      });
       mounted.current = true;
     }
-    if (updatePostLoading) setOpenDialog(prev => { return { ...prev, open: !prev.open, type: '' }; });
+
     return () => {
       mounted.current = false;
     };
-  }, [mounted, post, setOpenDialog, updatePostLoading, adminState]);
-
-  const handleInput = ({ value, name }) => {
-
-    switch (name) {
-      case "date": {
-        setFormData(prev => {
-          return {
-            ...prev,
-            [name]: formatISO(new Date(value))
-          };
-        });
-        return;
-      }
-      case "kilos":
-      case "hours": {
-        setFormData(prev => {
-          return {
-            ...prev,
-            [name]: parseInt(value)
-          };
-        });
-        return;
-      }
-      default: {
-        setFormData(prev => {
-          return {
-            ...prev,
-            [name]: value
-          };
-        });
-      }
-    }
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const parsedForm = formData;
-    Object.keys(parsedForm).forEach(key => {
-      if (parsedForm[key] === '') {
-        parsedForm[key] = null;
-      }
-    });
-    updatePost(parsedForm);
-  };
+  }, [mounted, post, setOpenDialog, adminState]);
 
 
   return (
     <Box>
-      <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-        <DialogTitle>
-          Edit Note
-        </DialogTitle>
-        {/* {["Admin", "Coordinator"].includes(userState.user.role) ? <FormControlLabel control={<Switch checked={editForm} onChange={() => setEditForm(prev => !prev)} />} label="Toggle Edit" /> : null} */}
-      </Box>
       {mounted.current ?
         <DialogContent>
           <Grid container spacing={2} className="flex justify-center">
             <Grid xs={6} className="flex justify-center">
               <FormControl size="small" fullWidth margin="dense">
                 <InputLabel shrink htmlFor="dateInput" >Support Date</InputLabel>
-                <Input
+                {/* <Input
                   id="dateInput"
                   name="date"
                   type="date"
@@ -103,13 +44,14 @@ const UpdatePost = ({ setOpenDialog, post }) => {
                   // readOnly={!editForm}
                   value={format(parseISO(formData.date), 'yyyy-MM-dd')}
                   onChange={(e) => handleInput(e.target)}
-                />
+                /> */}
+                <Typography id="dateInput" className={`p-3`}>{format(parseISO(formData.date), 'yyyy-MM-dd')}</Typography>
               </FormControl>
             </Grid>
             <Grid xs={6} className="flex justify-center">
               <FormControl size="small" fullWidth margin="dense">
-                <InputLabel htmlFor="timeInput">Support Duration</InputLabel>
-                <Input
+                <InputLabel shrink htmlFor="timeInput">Support Duration</InputLabel>
+                {/* <Input
                   id="timeInput"
                   name="hours"
                   type="number"
@@ -117,13 +59,14 @@ const UpdatePost = ({ setOpenDialog, post }) => {
                   // readOnly={!editForm}
                   value={formData.hours}
                   onChange={(e) => handleInput(e.target)}
-                />
+                /> */}
+                <Typography id="timeInput" className={`p-3`}>{formData.hours !== '' ? `${formData.hours}` : 0}</Typography>
               </FormControl>
             </Grid>
             <Grid xs={6} className="flex justify-center">
               <FormControl size="small" fullWidth margin="dense">
-                <InputLabel htmlFor="clientInput">Client's Name</InputLabel>
-                <Input
+                <InputLabel shrink htmlFor="clientInput">Client's Name</InputLabel>
+                {/* <Input
                   id="clientInput"
                   name="client"
                   type="text"
@@ -131,13 +74,14 @@ const UpdatePost = ({ setOpenDialog, post }) => {
                   // readOnly={!editForm}
                   value={formData.client}
                   onChange={(e) => handleInput(e.target)}
-                />
+                /> */}
+                <Typography className={`p-3`}>{formData.client}</Typography>
               </FormControl>
             </Grid>
             <Grid xs={6} className="flex justify-center">
               <FormControl size="small" fullWidth margin="dense">
-                <InputLabel htmlFor="distanceInput">Distance Traveled</InputLabel>
-                <Input
+                <InputLabel shrink htmlFor="distanceInput">Distance Traveled</InputLabel>
+                {/* <Input
                   id="distanceInput"
                   name="kilos"
                   type="number"
@@ -145,14 +89,14 @@ const UpdatePost = ({ setOpenDialog, post }) => {
                   // readOnly={!editForm}
                   value={formData.kilos}
                   onChange={(e) => handleInput(e.target)}
-                />
+                /> */}
+                <Typography id="distanceInput" className={`p-3`}>{formData.kilos !== '' ? `${formData.kilos}` : 0}</Typography>
               </FormControl>
             </Grid>
             <Grid xs={6} className="flex justify-center">
-              {options ?
-                <FormControl variant="standard" size="small" fullWidth margin="dense">
-                  <InputLabel htmlFor="CarerInput">Carer</InputLabel>
-                  <Select
+              <FormControl size="small" fullWidth margin="dense">
+                <InputLabel shrink htmlFor="CarerInput">Carer</InputLabel>
+                {/* <Select
                     id="carerInput"
                     name='carerId'
                     required
@@ -166,13 +110,14 @@ const UpdatePost = ({ setOpenDialog, post }) => {
                         <MenuItem key={index} value={user.userId}>{user.firstName} {user?.lastName}</MenuItem>
                       );
                     })}
-                  </Select>
-                </FormControl> : null}
+                  </Select> */}
+                <Typography id="carerInput" className={`p-3`}>{formData.carer.firstName} {formData.carer?.lastName}</Typography>
+              </FormControl>
             </Grid>
             <Grid xs={12} className="flex justify-center">
               <FormControl size="small" fullWidth margin="dense">
-                <InputLabel htmlFor="notesInput">Notes</InputLabel>
-                <OutlinedInput
+                <InputLabel shrink htmlFor="notesInput">Notes</InputLabel>
+                {/* <OutlinedInput
                   id="notesInput"
                   name="notes"
                   type="text"
@@ -182,30 +127,23 @@ const UpdatePost = ({ setOpenDialog, post }) => {
                   minRows={4}
                   value={formData.notes}
                   onChange={(e) => handleInput(e.target)}
-                />
+                /> */}
+                <Typography id="notesInput" className={`p-3`}>{formData.notes}</Typography>
               </FormControl>
             </Grid>
           </Grid>
         </DialogContent>
         : null}
-      <DialogActions sx={{ justifyContent: 'space-between', alignContent: 'space-between' }}>
-        <FormControlLabel
-          control={
-            <Switch
-              checked={formData.private}
-              onChange={() => setFormData(prev => {
-                return {
-                  ...prev,
-                  private: !prev.private
-                };
-              }
-              )}
-
-            />}
-          label="Confidential"
-        />
-        <Box >
-          <Button onClick={(e) => handleSubmit(e)}>Edit</Button>
+      <DialogActions sx={{ justifyContent: ["Admin", "Coordinator"].includes(userState.user.role) ? 'space-between' : 'end', alignContent: 'space-between' }}>
+        {["Admin", "Coordinator"].includes(userState.user.role) ?
+          <FormControlLabel
+            control={
+              <Switch
+                checked={formData.private}
+              />}
+            label="Confidential"
+          /> : null}
+        <Box>
           <Button onClick={() => setOpenDialog(prev => { return { ...prev, open: !prev.open, type: '', data: {} }; })}>Cancel</Button>
         </Box>
       </DialogActions>
@@ -213,4 +151,4 @@ const UpdatePost = ({ setOpenDialog, post }) => {
   );
 };
 
-export default UpdatePost;
+export default ViewPost;
