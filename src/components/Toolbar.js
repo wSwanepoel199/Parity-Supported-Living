@@ -3,7 +3,7 @@ import { GridToolbarContainer, GridToolbarDensitySelector, GridToolbarExport } f
 import { useSelector } from "react-redux";
 import GridToolbarImport from "./GridToolbarImport";
 
-const Toolbar = ({ children, type, csvOptions }) => {
+const Toolbar = ({ children, type, csvOptions, clearSelect }) => {
   const userState = useSelector(state => state.user.user);
 
   return (
@@ -12,7 +12,7 @@ const Toolbar = ({ children, type, csvOptions }) => {
         {/* <GridToolbarColumnsButton/> */}
         {/* <GridToolbarFilterButton /> */}
         <GridToolbarDensitySelector />
-        {userState.role === "Admin" ? <GridToolbarExport csvOptions={csvOptions} /> : null}
+        {userState.role === "Admin" ? <GridToolbarExport csvOptions={csvOptions} onClick={() => clearSelect([])} /> : null}
         {userState.role === "Admin" ? <GridToolbarImport type={type} /> : null}
       </Box>
       {children}

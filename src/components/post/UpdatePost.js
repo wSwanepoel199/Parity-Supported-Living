@@ -16,25 +16,19 @@ const UpdatePost = ({ setOpenDialog, post }) => {
 
   useEffect(() => {
     if (!mounted.current) {
-      const parsedPost = JSON.parse(JSON.stringify(post).replace(/:null/gi, ":\"\""));
-      setFormData(prev => {
-        return {
-          ...prev,
-          ...parsedPost
-        };
-      });
-      setOptions(prev => {
-        if (adminState.users) {
+      setFormData(post);
+      if (adminState.users) {
+        setOptions(prev => {
           return adminState.users;
-        }
-      });
+        });
+      }
       mounted.current = true;
     }
     if (updatePostLoading) setOpenDialog(prev => { return { ...prev, open: !prev.open, type: '' }; });
     return () => {
       mounted.current = false;
     };
-  }, [mounted, post, setOpenDialog, updatePostLoading, adminState]);
+  }, [mounted, post, setOpenDialog, updatePostLoading, adminState.users]);
 
   const handleInput = ({ value, name }) => {
 

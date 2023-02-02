@@ -37,12 +37,9 @@ const Landing = () => {
 
   useEffectOnce(() => {
     if (userState.user?.expireTimer && !userState.intervalId) {
-      console.log("ppre timer");
       const intervalId = setInterval(refreshUser, userState.user.expireTimer);
       dispatch(saveRefreshInterval(intervalId));
     }
-
-    return () => console.log('my effect is destroying');
   });
 
   const handleInput = (e) => {

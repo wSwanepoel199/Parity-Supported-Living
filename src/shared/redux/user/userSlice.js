@@ -84,8 +84,7 @@ export const userApiSlice = backendApi.injectEndpoints({
       query: (newPassword) => ({ url: '/auth/new', method: 'patch', data: { password: newPassword.password, userId: newPassword.userId } }),
       async onQueryStarted(newPassword, { dispatch, queryFulfilled }) {
         try {
-          const { data } = await queryFulfilled;
-          console.log(data);
+          await queryFulfilled;
         } catch (err) {
           console.error(err);
         }

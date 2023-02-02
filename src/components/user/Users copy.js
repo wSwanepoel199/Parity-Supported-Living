@@ -77,7 +77,6 @@ const Users = () => {
     }
     if (mounted.current) {
       if (isSuccess && stringifiedUsers && stringifiedUsers !== JSON.stringify(table.rows)) {
-        console.log("issue?1");
         const parsedUsers = JSON.parse(stringifiedUsers);
         setTable(prev => {
           return {
@@ -87,7 +86,6 @@ const Users = () => {
         });
       }
       if (fullScreen && table.columns.some(column => column['field'] === "options")) {
-        console.log("issue?2");
         setTable(prev => {
           return {
             ...prev,
@@ -95,7 +93,6 @@ const Users = () => {
           };
         });
       } else if (!fullScreen && !table.columns.some(column => column['field'] === "options") && ["Admin"].includes(userState.user.role)) {
-        console.log("issue?3");
         setTable({
           ...table,
           columns: [
@@ -203,7 +200,7 @@ const Users = () => {
             rowsPerPageOptions={[10, 20, 30]}
             pagination
             autoHeight
-            // disableSelectionOnClick
+            disableSelectionOnClick
             // onRowClick={(row) => { fullScreen && setOpenDialog(prev => { return { ...prev, open: !prev.open, type: 'edit', data: row.row }; }); }}
             selectionModel={selectedRow}
             components={{
@@ -221,7 +218,8 @@ const Users = () => {
                   </Box>
                 ),
                 type: 'user',
-                csvOptions: { allColumns: true }
+                csvOptions: { allColumns: true },
+                clearSelect: setSelectedRow
               },
               row: {
                 onContextMenu: handleContextMenu,

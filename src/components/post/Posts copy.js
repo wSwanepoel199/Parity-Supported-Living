@@ -165,7 +165,6 @@ const Posts = () => {
     }
     if (mounted.current) {
       if (isSuccess && parsedPosts && parsedPosts !== JSON.stringify(table.rows)) {
-        console.log("issue posts");
         const parsedPost = JSON.parse(parsedPosts);
         setTable(prev => {
           return {
@@ -234,7 +233,7 @@ const Posts = () => {
         <Dialog
           fullScreen={fullScreen}
           open={openDialog.open}
-        // onClose={() => setOpenDialog(prev => { return { ...prev, open: !prev.open, type: '', data: {} }; })}
+          onClose={() => console.log("closew")}
         >
           {
             openDialog.open
@@ -257,10 +256,10 @@ const Posts = () => {
             rowsPerPageOptions={[10, 20, 30]}
             pagination
             autoHeight
-            // disableSelectionOnClick
+            disableSelectionOnClick
             // onRowClick={(row) => { fullScreen && setOpenDialog(prev => { return { ...prev, open: !prev.open, type: 'edit', data: row.row }; }); }}
             selectionModel={selectedRow}
-            // onRowClick={(row) => { fullScreen && console.log(row); }}
+            // onRowClick={() => setSelectedRow([])}
             components={{
               Toolbar: Toolbar,
               LoadingOverlay: LinearProgress,
@@ -274,7 +273,8 @@ const Posts = () => {
                     </Button>
                   </Box>),
                 type: 'post',
-                csvOptions: { allColumns: true }
+                csvOptions: { allColumns: true },
+                clearSelect: setSelectedRow
               },
               row: {
                 onContextMenu: handleContextMenu,

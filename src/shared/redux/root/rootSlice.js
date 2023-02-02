@@ -64,10 +64,6 @@ export const rootSlice = createSlice({
         };
       })
       .addMatcher(isRejected, (state, action) => {
-        console.log(action.payload);
-        // if (action.payload.data.error.data.trigger === "refresh expired") {
-        //   console.log("expired");
-        // }
         const message = action.payload.data.message.message || action.payload.data.message;
         return {
           ...state,
