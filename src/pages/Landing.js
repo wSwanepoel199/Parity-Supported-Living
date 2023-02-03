@@ -113,6 +113,7 @@ const Landing = () => {
         <div className={`p-5`}>
           <Outlet />
         </div> : null}
+      <Button onClick={refreshUser}>Refresh</Button>
     </div>
   );
 };

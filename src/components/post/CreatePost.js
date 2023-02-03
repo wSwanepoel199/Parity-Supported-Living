@@ -68,7 +68,7 @@ const CreatePost = ({ setOpenDialog }) => {
       </DialogTitle>
       <DialogContent>
         <Grid container spacing={2} className="flex justify-center">
-          <Grid xs={6} className="flex justify-center">
+          <Grid sm={6} xs={12} className="flex justify-center">
             <FormControl size="small" fullWidth margin="dense">
               <InputLabel shrink htmlFor="dateInput">Support Date</InputLabel>
               <Input
@@ -80,7 +80,7 @@ const CreatePost = ({ setOpenDialog }) => {
               />
             </FormControl>
           </Grid>
-          <Grid xs={6} className="flex justify-center">
+          <Grid sm={6} xs={12} className="flex justify-center">
             <FormControl size="small" fullWidth margin="dense">
               <InputLabel htmlFor="timeInput">Support Duration</InputLabel>
               <Input
@@ -92,7 +92,7 @@ const CreatePost = ({ setOpenDialog }) => {
               />
             </FormControl>
           </Grid>
-          <Grid xs={6} className="flex justify-center">
+          <Grid sm={6} xs={12} className="flex justify-center">
             <FormControl size="small" fullWidth margin="dense">
               <InputLabel htmlFor="clientInput">Client's Name</InputLabel>
               <Input
@@ -104,7 +104,7 @@ const CreatePost = ({ setOpenDialog }) => {
               />
             </FormControl>
           </Grid>
-          <Grid xs={6} className="flex justify-center">
+          <Grid sm={6} xs={12} className="flex justify-center">
             <FormControl size="small" fullWidth margin="dense">
               <InputLabel htmlFor="distanceInput">Distance Traveled</InputLabel>
               <Input

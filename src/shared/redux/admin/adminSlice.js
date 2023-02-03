@@ -15,11 +15,14 @@ export const adminSlice = createSlice({
         ...state,
         users: action.payload
       };
+    },
+    clearUsers: () => {
+      return initialState;
     }
   },
 });
 
-export const { saveUsers } = adminSlice.actions;
+export const { saveUsers, clearUsers } = adminSlice.actions;
 
 export default adminSlice.reducer;
 

@@ -4,11 +4,11 @@ import { useDeleteTargetPostMutation, } from "../../shared/redux/admin/adminSlic
 
 
 const ConfirmDialog = ({ setOpenDialog, post }) => {
-  const [deleteTargetPost, { isSuccess, isError }] = useDeleteTargetPostMutation();
+  const [deleteTargetPost, { isLoading, isError }] = useDeleteTargetPostMutation();
 
   useEffect(() => {
-    if (isSuccess || isError) setOpenDialog(prev => { return { ...prev, open: !prev.open, type: '' }; });
-  }, [isSuccess, isError, setOpenDialog]);
+    if (isLoading || isError) setOpenDialog(prev => { return { ...prev, open: !prev.open, type: '' }; });
+  }, [isLoading, isError, setOpenDialog]);
 
   return (
     <Box>

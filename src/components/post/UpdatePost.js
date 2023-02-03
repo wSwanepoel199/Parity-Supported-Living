@@ -11,19 +11,16 @@ const UpdatePost = ({ setOpenDialog, post }) => {
   useGetAllUsersQuery();
   const mounted = useRef();
   const [updatePost, { isLoading: updatePostLoading }] = useUpdatePostMutation();
-  const [formData, setFormData] = useState(post);
+  const [formData, setFormData] = useState(JSON.parse(JSON.stringify(post).replace(/:null/gi, ":\"\"")));
   const [options, setOptions] = useState([post.carer]);
 
   useEffect(() => {
     if (!mounted.current) {
-      setFormData(post);
       if (adminState.users) {
-        setOptions(prev => {
-          return adminState.users;
-        });
+        setOptions(adminState.users);
       }
       mounted.current = true;
-    }
+    };
     if (updatePostLoading) setOpenDialog(prev => { return { ...prev, open: !prev.open, type: '' }; });
     return () => {
       mounted.current = false;
@@ -31,7 +28,6 @@ const UpdatePost = ({ setOpenDialog, post }) => {
   }, [mounted, post, setOpenDialog, updatePostLoading, adminState.users]);
 
   const handleInput = ({ value, name }) => {
-
     switch (name) {
       case "date": {
         setFormData(prev => {
@@ -81,68 +77,60 @@ const UpdatePost = ({ setOpenDialog, post }) => {
         <DialogTitle>
           Edit Note
         </DialogTitle>
-        {/* {["Admin", "Coordinator"].includes(userState.user.role) ? <FormControlLabel control={<Switch checked={editForm} onChange={() => setEditForm(prev => !prev)} />} label="Toggle Edit" /> : null} */}
       </Box>
       {mounted.current ?
         <DialogContent>
+          {console.log(formData)}
           <Grid container spacing={2} className="flex justify-center">
-            <Grid xs={6} className="flex justify-center">
+            <Grid sm={6} xs={12} className="flex justify-center">
               <FormControl size="small" fullWidth margin="dense">
                 <InputLabel shrink htmlFor="dateInput" >Support Date</InputLabel>
                 <Input
                   id="dateInput"
                   name="date"
                   type="date"
-                  // disableUnderline={!editForm}
-                  // readOnly={!editForm}
                   value={format(parseISO(formData.date), 'yyyy-MM-dd')}
                   onChange={(e) => handleInput(e.target)}
                 />
               </FormControl>
             </Grid>
-            <Grid xs={6} className="flex justify-center">
+            <Grid sm={6} xs={12} className="flex justify-center">
               <FormControl size="small" fullWidth margin="dense">
                 <InputLabel htmlFor="timeInput">Support Duration</InputLabel>
                 <Input
                   id="timeInput"
                   name="hours"
                   type="number"
-                  // disableUnderline={!editForm}
-                  // readOnly={!editForm}
                   value={formData.hours}
                   onChange={(e) => handleInput(e.target)}
                 />
               </FormControl>
             </Grid>
-            <Grid xs={6} className="flex justify-center">
+            <Grid sm={6} xs={12} className="flex justify-center">
               <FormControl size="small" fullWidth margin="dense">
                 <InputLabel htmlFor="clientInput">Client's Name</InputLabel>
                 <Input
                   id="clientInput"
                   name="client"
                   type="text"
-                  // disableUnderline={!editForm}
-                  // readOnly={!editForm}
                   value={formData.client}
                   onChange={(e) => handleInput(e.target)}
                 />
               </FormControl>
             </Grid>
-            <Grid xs={6} className="flex justify-center">
+            <Grid sm={6} xs={12} className="flex justify-center">
               <FormControl size="small" fullWidth margin="dense">
                 <InputLabel htmlFor="distanceInput">Distance Traveled</InputLabel>
                 <Input
                   id="distanceInput"
                   name="kilos"
                   type="number"
-                  // disableUnderline={!editForm}
-                  // readOnly={!editForm}
                   value={formData.kilos}
                   onChange={(e) => handleInput(e.target)}
                 />
               </FormControl>
             </Grid>
-            <Grid xs={6} className="flex justify-center">
+            <Grid sm={6} xs={12} className="flex justify-center">
               {options ?
                 <FormControl variant="standard" size="small" fullWidth margin="dense">
                   <InputLabel htmlFor="CarerInput">Carer</InputLabel>
@@ -150,8 +138,6 @@ const UpdatePost = ({ setOpenDialog, post }) => {
                     id="carerInput"
                     name='carerId'
                     required
-                    // disableUnderline={!editForm}
-                    // readOnly={!editForm}
                     value={formData.carerId}
                     onChange={(e) => handleInput(e.target)}
                   >
@@ -171,7 +157,6 @@ const UpdatePost = ({ setOpenDialog, post }) => {
                   name="notes"
                   type="text"
                   label="Notes"
-                  // readOnly={!editForm}
                   multiline
                   minRows={4}
                   value={formData.notes}

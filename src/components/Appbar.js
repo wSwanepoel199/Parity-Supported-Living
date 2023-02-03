@@ -118,7 +118,7 @@ const Appbar = () => {
               <Box className={`flex justify-center content-center text-center `}>
                 <Typography variant="body1" component="p" sx={{ display: { xs: 'none', md: 'flex' }, alignItems: 'center', mr: 1 }}>{userState.user.name}</Typography>
                 <IconButton size={smallScreen ? "small" : "large"} name="user" onClick={handleOpenMenu} className={``}>
-                  {userState.status === "loggedIn" ? <Avatar alt="avatar icon" src={userState.user.icon ? userState.user.icon.icon : ''} className={`w-[${window.innerWidth / 10}px] h-[${window.innerWidth / 10}px] bg-white ring-1 ring-white`} /> : null}
+                  {userState.status === "loggedIn" ? <Avatar alt="avatar icon" src={userState.icon ? userState.icon.icon : ''} className={`w-[${window.innerWidth / 10}px] h-[${window.innerWidth / 10}px] bg-white ring-1 ring-white`} /> : null}
                 </IconButton>
               </Box>
               <Menu

@@ -28,6 +28,11 @@ export const postSlice = createSlice({
         posts: action.payload,
         status: "successful"
       };
+    },
+    clearPostState: () => {
+      return {
+        ...initialState
+      };
     }
   },
   // extraReducers(builder) {
@@ -66,7 +71,7 @@ export const postSlice = createSlice({
 //   return res;
 // });
 
-export const { savePosts } = postSlice.actions;
+export const { savePosts, clearPostState } = postSlice.actions;
 
 export default postSlice.reducer;
 

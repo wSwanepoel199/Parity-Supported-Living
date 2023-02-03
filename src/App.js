@@ -28,7 +28,6 @@ function App() {
 
   useEffect(() => {
     if (!mounted.current) {
-      // if (userState.status === "loggedOut" && (fetchStoredTokenLocal() || fetchStoredTokenSession())) refreshUser();
       if (rootState.msg?.data === "auth") {
         refreshUser();
       }
@@ -38,7 +37,6 @@ function App() {
       window.updateAvailable
         .then(isAvailable => {
           if (isAvailable) {
-            // console.log("is update available?", isAvailable);
             setUpdate(prev => { return true; });
           }
         })
@@ -106,9 +104,7 @@ function App() {
             <Route path="/" element={userState.status === "loggedIn" ? <Landing /> : <SignIn />}>
               <Route index element={
                 <Posts />
-                // <Dashboard />
               } />
-              {/* <Route path="notes" element={<Posts />} /> */}
               <Route path="users" element={
                 <ProtectedRoute>
                   <Users />

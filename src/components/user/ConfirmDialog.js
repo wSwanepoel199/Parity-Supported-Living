@@ -4,11 +4,11 @@ import { useDeleteTargetUserMutation } from "../../shared/redux/admin/adminSlice
 
 
 const ConfirmDialog = ({ setOpenDialog, user }) => {
-  const [deleteTargetUser, { isSuccess, isError }] = useDeleteTargetUserMutation();
+  const [deleteTargetUser, { isLoading, isError }] = useDeleteTargetUserMutation();
 
   useEffect(() => {
-    if (isSuccess || isError) setOpenDialog(prev => { return { ...prev, open: !prev.open, type: '' }; });
-  }, [isSuccess, isError, setOpenDialog]);
+    if (isLoading || isError) setOpenDialog(prev => { return { ...prev, open: !prev.open, type: '' }; });
+  }, [isLoading, isError, setOpenDialog]);
 
   return (
     <Box>

@@ -1,12 +1,15 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { fetchStoredTokenLocal, removeStoredTokenLocal, removeStoredTokenSession, storeAuthTokenLocal, storeAuthTokenSession } from "../../utils/authToken";
+import { clearUsers } from "../admin/adminSlice";
 import { backendApi } from "../api/backendApi";
+import { clearPostState } from "../posts/postSlice";
 
 const initialState = {
   status: (sessionStorage.getItem("USER_DETAILS") || localStorage.getItem("USER_DETAILS")) ? "loggedIn" : 'loggedOut',
-  user: (JSON.parse(sessionStorage.getItem("USER_DETAILS")) || JSON.parse(localStorage.getItem("USER_DETAILS"))) || {},
+  user: JSON.parse(sessionStorage.getItem("USER_DETAILS") || localStorage.getItem("USER_DETAILS")) || {},
   error: undefined,
-  intervalId: null
+  intervalId: null,
+  icon: JSON.parse(sessionStorage.getItem("USER_DETAILS") || localStorage.getItem("USER_DETAILS"))?.icon
 };
 
 export const userSlice = createSlice({
@@ -27,6 +30,7 @@ export const userSlice = createSlice({
         ...state,
         status: "loggedIn",
         user: loggedinUser,
+        icon: loggedinUser.icon
       };
     },
     signOutUser: (state) => {
@@ -36,18 +40,13 @@ export const userSlice = createSlice({
       };
     },
     removeUser: (state) => {
-      if (fetchStoredTokenLocal()) {
-        localStorage.removeItem("USER_DETAILS");
-        removeStoredTokenLocal();
-      } else {
-        sessionStorage.removeItem("USER_DETAILS");
-        removeStoredTokenSession();
-      }
+      console.log("removing user info");
       clearInterval(state.intervalId);
       return {
         status: 'loggedOut',
         user: {},
-        intervalId: null
+        intervalId: null,
+        icon: undefined
       };
     },
     saveRefreshInterval: (state, action) => {
@@ -55,11 +54,17 @@ export const userSlice = createSlice({
         ...state,
         intervalId: action.payload
       };
+    },
+    updateStatus: (state, action) => {
+      return {
+        ...state,
+        status: action.payload
+      };
     }
   },
 });
 
-export const { saveUser, removeUser, signOutUser, saveRefreshInterval } = userSlice.actions;
+export const { saveUser, removeUser, signOutUser, saveRefreshInterval, updateStatus } = userSlice.actions;
 
 export default userSlice.reducer;
 
@@ -76,15 +81,18 @@ export const userApiSlice = backendApi.injectEndpoints({
         catch (err) {
           console.error(err);
         }
-      },
-      invalidatesTags: (result, error, args) =>
-        result ? [{ type: "post", id: "LIST" }] : error ? console.error(error) : null
+      }
     }),
     resetPass: builder.mutation({
       query: (newPassword) => ({ url: '/auth/new', method: 'patch', data: { password: newPassword.password, userId: newPassword.userId } }),
       async onQueryStarted(newPassword, { dispatch, queryFulfilled }) {
         try {
-          await queryFulfilled;
+          const { data } = await queryFulfilled;
+          if (fetchStoredTokenLocal()) {
+            dispatch(saveUser({ user: data.data.user, rememberMe: true }));
+          } else {
+            dispatch(saveUser({ user: data.data.user, rememberMe: false }));
+          }
         } catch (err) {
           console.error(err);
         }
@@ -115,11 +123,20 @@ export const userApiSlice = backendApi.injectEndpoints({
     }),
     logoutUser: builder.mutation({
       query: (signout) => ({ url: '/auth/logout', method: 'get' }),
-      async onQueryStarted(signout, { dispatch, queryFulfilled }) {
+      async onQueryStarted(signout, { dispatch, getState, queryFulfilled }) {
         try {
           dispatch(signOutUser());
-          await queryFulfilled;
+          if (getState().posts.posts) await dispatch(clearPostState());
+          if (getState().admin.users) await dispatch(clearUsers());
+          if (fetchStoredTokenLocal()) {
+            localStorage.removeItem("USER_DETAILS");
+            removeStoredTokenLocal();
+          } else {
+            sessionStorage.removeItem("USER_DETAILS");
+            removeStoredTokenSession();
+          }
           dispatch(removeUser());
+          await queryFulfilled;
         }
         catch (err) {
           console.error(err);
