@@ -1,1 +1,1 @@
-web: npm run wpProd && npm run start
+web: npm run startProd

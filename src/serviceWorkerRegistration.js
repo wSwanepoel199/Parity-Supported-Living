@@ -59,7 +59,7 @@ export function register(config) {
 window.updateAvailable = new deferredPromise();
 
 function registerValidSW(swUrl, config) {
-  console.log("swUrl", swUrl);
+  // console.log("swUrl", swUrl);
   navigator.serviceWorker
     .register(swUrl)
     .then((registration) => {
