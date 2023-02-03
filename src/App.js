@@ -8,16 +8,14 @@ import { useRefreshUserMutation, } from './shared/redux/user/userSlice';
 import Posts from './components/post/Posts copy';
 import Users from './components/user/Users copy';
 import ProtectedRoute from './shared/utils/ProtectedRoute';
-import { Alert, AlertTitle, Backdrop, CircularProgress, Collapse, IconButton } from '@mui/material';
-import CloseIcon from '@mui/icons-material/Close';
-import { clearMessage } from './shared/redux/root/rootSlice';
+import { Backdrop, CircularProgress, } from '@mui/material';
 import PromptForUpdate from './shared/utils/PrompUpdateServiceWorker';
+import CustomAlert from './CustomAlert';
 
 function App() {
   const mounted = useRef();
   const userState = useSelector(state => state.user);
   const rootState = useSelector(state => state.root);
-  const dispatch = useDispatch();
   const [refreshUser, { isUninitialized, }] = useRefreshUserMutation();
   const [alert, setAlert] = useState(undefined);
   const [update, setUpdate] = useState(false);
@@ -73,32 +71,7 @@ function App() {
           >
             <CircularProgress />
           </Backdrop>
-          <Collapse
-            in={['error'].includes(rootState.status)}
-            unmountOnExit
-            className={`absolute z-50 left-0 top-0 w-full`}
-          >
-            {alert ?
-              <Alert
-                className={`flex items-center`}
-                severity={alert.status}
-                action={
-                  <IconButton
-                    aria-label="close"
-                    color='inherit'
-                    onClick={() => {
-                      dispatch(clearMessage());
-                    }}
-                  >
-                    <CloseIcon fontSize="inherit" />
-                  </IconButton>}
-
-              >
-                <AlertTitle>{alert.msg.status} {alert.msg.statusText}</AlertTitle>
-                {(alert.msg.message)}
-              </Alert>
-              : null}
-          </Collapse>
+          <CustomAlert alert={alert} />
           <PromptForUpdate update={update} setUpdate={setUpdate} />
           <Routes>
             <Route path="/" element={userState.status === "loggedIn" ? <Landing /> : <SignIn />}>

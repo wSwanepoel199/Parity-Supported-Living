@@ -36,11 +36,11 @@ const CreateUser = ({ setOpenDialog }) => {
 
 
   return (
-    <Box>
+    <Box component='form' onSubmit={(e) => handleSubmit(e)}>
       <DialogTitle>
         New User
       </DialogTitle>
-      <DialogContent component='form' onSubmit={(e) => handleSubmit(e)}>
+      <DialogContent >
         <Grid container spacing={2} className="flex justify-center w-full">
           <Grid sm={6} xs={12} className="flex justify-center">
             <FormControl size="small" fullWidth margin="dense">

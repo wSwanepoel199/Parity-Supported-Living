@@ -154,7 +154,6 @@ const Posts = () => {
   useEffect(() => {
     let parsedPosts;
     if (!mounted.current) {
-      console.log(isLoading, isFetching, isSuccess, postState.posts);
       if (postState.posts) {
         parsedPosts = JSON.stringify(postState.posts).replace(/:null/gi, ":\"\"");
       }

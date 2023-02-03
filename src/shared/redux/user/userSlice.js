@@ -41,6 +41,13 @@ export const userSlice = createSlice({
     },
     removeUser: (state) => {
       console.log("removing user info");
+      if (fetchStoredTokenLocal()) {
+        localStorage.removeItem("USER_DETAILS");
+        removeStoredTokenLocal();
+      } else {
+        sessionStorage.removeItem("USER_DETAILS");
+        removeStoredTokenSession();
+      }
       clearInterval(state.intervalId);
       return {
         status: 'loggedOut',
@@ -116,6 +123,8 @@ export const userApiSlice = backendApi.injectEndpoints({
         catch (err) {
           console.error(err);
           if (err.error.status === 403) {
+            if (getState().posts.posts) await dispatch(clearPostState());
+            if (getState().admin.users) await dispatch(clearUsers());
             dispatch(removeUser());
           }
         }
@@ -128,13 +137,6 @@ export const userApiSlice = backendApi.injectEndpoints({
           dispatch(signOutUser());
           if (getState().posts.posts) await dispatch(clearPostState());
           if (getState().admin.users) await dispatch(clearUsers());
-          if (fetchStoredTokenLocal()) {
-            localStorage.removeItem("USER_DETAILS");
-            removeStoredTokenLocal();
-          } else {
-            sessionStorage.removeItem("USER_DETAILS");
-            removeStoredTokenSession();
-          }
           dispatch(removeUser());
           await queryFulfilled;
         }

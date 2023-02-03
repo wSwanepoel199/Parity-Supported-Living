@@ -62,7 +62,7 @@ const CreatePost = ({ setOpenDialog }) => {
 
 
   return (
-    <Box>
+    <Box component='form' onSubmit={(e) => handleSubmit(e)}>
       <DialogTitle>
         New Note
       </DialogTitle>
@@ -151,7 +151,7 @@ const CreatePost = ({ setOpenDialog }) => {
 
         />
         <Box>
-          <Button onClick={(e) => handleSubmit(e)}>Create</Button>
+          <Button type="submit">Create</Button>
           <Button onClick={() => setOpenDialog(prev => { return { ...prev, open: !prev.open, type: '', data: {} }; })}>Cancel</Button>
         </Box>
       </DialogActions>

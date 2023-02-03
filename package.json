@@ -4,12 +4,16 @@
   "private": true,
   "scripts": {
     "dev": "react-scripts start",
-    "backend": "cd src/backend && npm run dev",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "serve": "serve -s build",
     "start": "node scripts/compileExpress.js",
+    "exportStats": "webpack --json > stats.json",
+    "wpProd": "NODE_ENV=production webpack --mode=production",
+    "wpDev": "NODE_ENV=development webpack --mode=development",
+    "startProd": "npm run wpProd && npm run start",
+    "startDev": "npm run wpDev && npm run start",
     "devBuild": "npm run build; npm run start"
   },
   "dependencies": {
@@ -47,11 +51,24 @@
     "xlsx": "^0.18.5"
   },
   "devDependencies": {
+    "@babel/core": "^7.20.12",
+    "@babel/preset-env": "^7.20.2",
+    "@babel/preset-react": "^7.18.6",
     "@redux-devtools/core": "^3.13.1",
     "autoprefixer": "^10.4.13",
+    "babel-loader": "^9.1.2",
+    "compression-webpack-plugin": "^10.0.0",
+    "copy-webpack-plugin": "^11.0.0",
+    "dotenv-webpack": "^8.0.1",
+    "html-webpack-plugin": "^5.5.0",
     "postcss": "^8.4.19",
+    "process": "^0.11.10",
     "react-scripts": "5.0.1",
-    "tailwindcss": "^3.2.4"
+    "tailwindcss": "^3.2.4",
+    "webpack": "^5.75.0",
+    "webpack-cli": "^5.0.1",
+    "webpack-dev-server": "^4.11.1",
+    "workbox-webpack-plugin": "^6.5.4"
   },
   "eslintConfig": {
     "extends": [

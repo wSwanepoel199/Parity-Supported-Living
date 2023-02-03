@@ -113,7 +113,7 @@ const Landing = () => {
         <div className={`p-5`}>
           <Outlet />
         </div> : null}
-      <Button onClick={refreshUser}>Refresh</Button>
+      {process.env.NODE_ENV === 'development' ? <Button onClick={refreshUser}>Refresh</Button> : null}
     </div>
   );
 };
