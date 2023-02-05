@@ -5,6 +5,11 @@ const Dotenv = require('dotenv-webpack');
 const CopyPlugin = require('copy-webpack-plugin');
 const CompressionPlugin = require("compression-webpack-plugin");
 
+const webpack = require('webpack');
+const dotenv = require('dotenv');
+
+dotenv.config();
+
 const webpackPlugins = [
   new HtmlWebpackPlugin({
     template: path.resolve(__dirname, 'public/index.html'),
@@ -14,6 +19,9 @@ const webpackPlugins = [
   //   // path: './.env', // Path to .env file (this is the default)
   //   systemvars: true,
   // }),
+  new webpack.DefinePlugin({
+    'process.env': JSON.stringify(process.env)
+  }),
   new CopyPlugin({
     patterns: [
       { from: './public/PSLPineapple.ico', to: '' },
