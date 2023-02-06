@@ -7,7 +7,7 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import { format, parseISO } from "date-fns";
 import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
-import { useGetPostsQuery } from "../../shared/redux/posts/postSlice";
+import { useGetPostsQuery } from "../../shared/redux/posts/postApiSlice";
 import CreatePost from "./CreatePost";
 import UpdatePost from "./UpdatePost";
 import Toolbar from "../Toolbar";

@@ -3,7 +3,7 @@ import Grid from "@mui/material/Unstable_Grid2/";
 import { format, formatISO, parseISO } from "date-fns";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { useAddPostMutation } from "../../shared/redux/posts/postSlice";
+import { useAddPostMutation } from "../../shared/redux/posts/postApiSlice";
 
 const CreatePost = ({ setOpenDialog }) => {
   const userState = useSelector(state => state.user);

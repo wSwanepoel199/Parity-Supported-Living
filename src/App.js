@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 // import Dashboard from './components/Dashboard';
 import Landing from './pages/Landing';
 import SignIn from './pages/SignIn';
-import { useRefreshUserMutation, } from './shared/redux/user/userSlice';
+import { useRefreshUserMutation, } from './shared/redux/user/userApiSlice';
 import Posts from './components/post/Posts copy';
 import Users from './components/user/Users copy';
 import ProtectedRoute from './shared/utils/ProtectedRoute';

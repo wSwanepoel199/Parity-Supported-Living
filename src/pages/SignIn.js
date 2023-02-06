@@ -5,7 +5,7 @@ import { Box, Button, Checkbox, FormControl, FormControlLabel, FormGroup, IconBu
 import LoginIcon from '@mui/icons-material/Login';
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
-import { useLoginUserMutation } from "../shared/redux/user/userSlice";
+import { useLoginUserMutation } from "../shared/redux/user/userApiSlice";
 
 const SignIn = () => {
   const navigate = useNavigate();

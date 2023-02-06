@@ -3,7 +3,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import { useSelector } from "react-redux";
 import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useLogoutUserMutation } from "../shared/redux/user/userSlice";
+import { useLogoutUserMutation } from "../shared/redux/user/userApiSlice";
 
 const Appbar = () => {
   const mounted = useRef();

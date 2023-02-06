@@ -3,7 +3,7 @@ import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import { useState } from "react";
 import { useSelector } from "react-redux";
-import { useResetPassMutation } from "../shared/redux/user/userSlice";
+import { useResetPassMutation } from "../shared/redux/user/userApiSlice";
 
 const PasswordReset = () => {
   const userState = useSelector(state => state.user);

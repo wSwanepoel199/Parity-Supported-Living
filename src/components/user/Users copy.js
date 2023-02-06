@@ -5,7 +5,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { DataGrid } from "@mui/x-data-grid";
 import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
-import { useGetAllUsersQuery } from "../../shared/redux/admin/adminSlice";
+import { useGetAllUsersQuery } from "../../shared/redux/admin/adminApiSlice";
 import Toolbar from "../Toolbar";
 import CreateUser from "./CreateUser";
 import UpdateUser from "./UpdateUser";

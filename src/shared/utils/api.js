@@ -21,6 +21,7 @@ const defaults = {
 export const axiosBaseQuery =
   ({ baseUrl } = { baseUrl: '' }) =>
     async ({ url, headers, method, data, params }) => {
+      if (DEBUG) console.log(url, headers, method, data, params);
       try {
         const res = await axios({
           url: baseUrl + url,
@@ -46,13 +47,27 @@ export const axiosBaseQuery =
     };
 
 axios.interceptors.request.use((config) => {
-  if (DEBUG) console.log("✉️ ", config);
+  if (DEBUG) console.log("req ✉️ ", config);
   // console.log(store);
   config.headers.Authorization = `Bearer ${fetchStoredTokenLocal() || fetchStoredTokenSession()}`;
   return config;
 }, (err) => {
+  if (DEBUG) console.log("req ✉️ error ", err);
   return Promise.reject(err);
 });
+
+// axios.interceptors.response.use((config) => {
+//   if (DEBUG) console.log("res ✉️ ", config);
+//   return config;
+// }, (err) => {
+//   console.log("res ", err);
+//   const trigger = err.response?.data?.message.trigger;
+
+//   if (trigger === "auth") {
+//     return refreshToken(store);
+//   }
+//   return Promise.reject(err);
+// });
 
 export async function sendMessage(message) {
   return await new Promise((resolve, reject) => {

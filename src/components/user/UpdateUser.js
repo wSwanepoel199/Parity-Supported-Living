@@ -1,7 +1,7 @@
 import { Box, Button, DialogActions, DialogContent, DialogTitle, FormControl, FormControlLabel, Input, InputLabel, MenuItem, Select, Switch, } from "@mui/material";
 import Grid from "@mui/material/Unstable_Grid2/";
 import { useEffect, useRef, useState } from "react";
-import { useUpdateUserMutation } from "../../shared/redux/user/userSlice";
+import { useUpdateUserMutation } from "../../shared/redux/user/userApiSlice";
 
 const UpdateUser = ({ setOpenDialog, user }) => {
   const [updateUser, { isSuccess, isError }] = useUpdateUserMutation();

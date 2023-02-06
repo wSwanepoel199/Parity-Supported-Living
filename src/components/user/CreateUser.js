@@ -1,7 +1,7 @@
 import { Box, Button, DialogActions, DialogContent, DialogTitle, FormControl, Input, InputLabel, MenuItem, Select } from "@mui/material";
 import Grid from "@mui/material/Unstable_Grid2/";
 import { useEffect, useState } from "react";
-import { useCreateUserMutation } from "../../shared/redux/user/userSlice";
+import { useCreateUserMutation } from "../../shared/redux/user/userApiSlice";
 
 
 const CreateUser = ({ setOpenDialog }) => {

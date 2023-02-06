@@ -3,8 +3,8 @@ import Grid from "@mui/material/Unstable_Grid2/";
 import { format, formatISO, parseISO } from "date-fns";
 import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
-import { useUpdatePostMutation } from "../../shared/redux/posts/postSlice";
-import { useGetAllUsersQuery } from "../../shared/redux/admin/adminSlice";
+import { useUpdatePostMutation } from "../../shared/redux/posts/postApiSlice";
+import { useGetAllUsersQuery } from "../../shared/redux/admin/adminApiSlice";
 
 const UpdatePost = ({ setOpenDialog, post }) => {
   const adminState = useSelector(state => state.admin);

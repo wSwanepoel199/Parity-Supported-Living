@@ -1,6 +1,6 @@
 import { Box, Button, DialogActions, DialogContent, DialogContentText, DialogTitle } from "@mui/material";
 import { useEffect } from "react";
-import { useDeleteTargetPostMutation, } from "../../shared/redux/admin/adminSlice";
+import { useDeleteTargetPostMutation, } from "../../shared/redux/admin/adminApiSlice";
 
 
 const ConfirmDialog = ({ setOpenDialog, post }) => {
