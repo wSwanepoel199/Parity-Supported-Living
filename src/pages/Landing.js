@@ -1,18 +1,18 @@
 import { Button, Dialog, useMediaQuery, useTheme } from "@mui/material";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { Outlet } from "react-router-dom";
 import Appbar from "../components/Appbar";
 import { useEffect, useRef } from "react";
 import { useRefreshUserMutation } from "../shared/redux/user/userApiSlice";
-import { saveRefreshInterval } from "../shared/redux/user/userSlice";
-import { useEffectOnce } from "../shared/utils/customHooks";
+// import { saveRefreshInterval } from "../shared/redux/user/userSlice";
+// import { useEffectOnce } from "../shared/utils/customHooks";
 import PasswordReset from "../components/PasswordReset";
 // import Navbar from "../components/Navbar";
 
 const Landing = () => {
   const mounted = useRef();
   const userState = useSelector(state => state.user);
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
   const [refreshUser] = useRefreshUserMutation();
@@ -28,12 +28,12 @@ const Landing = () => {
     };
   }, [mounted, refreshUser]);
 
-  useEffectOnce(() => {
-    if (userState.user?.expireTimer && !userState.intervalId) {
-      const intervalId = setInterval(refreshUser, userState.user.expireTimer);
-      dispatch(saveRefreshInterval(intervalId));
-    }
-  });
+  // useEffectOnce(() => {
+  //   if (userState.user?.expireTimer && !userState.intervalId) {
+  //     const intervalId = setInterval(refreshUser, userState.user.expireTimer);
+  //     dispatch(saveRefreshInterval(intervalId));
+  //   }
+  // });
 
 
   return (
