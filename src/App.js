@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Route, Routes } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 // import Dashboard from './components/Dashboard';
 import Landing from './pages/Landing';
 import SignIn from './pages/SignIn';
@@ -10,7 +10,7 @@ import Users from './components/user/Users copy';
 import ProtectedRoute from './shared/utils/ProtectedRoute';
 import { Backdrop, CircularProgress, } from '@mui/material';
 import PromptForUpdate from './shared/utils/PrompUpdateServiceWorker';
-import CustomAlert from './CustomAlert';
+import CustomAlert from './shared/utils/CustomAlert';
 
 function App() {
   const mounted = useRef();
@@ -67,7 +67,7 @@ function App() {
         <>
           <Backdrop
             open={rootState.status === "loading"}
-            className={`z-30`}
+            className={`z-40`}
           >
             <CircularProgress />
           </Backdrop>

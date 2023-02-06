@@ -20,10 +20,10 @@ export const userSlice = createSlice({
       const { user, rememberMe } = action.payload;
       const { accessToken, ...loggedinUser } = user;
       if (rememberMe) {
-        storeAuthTokenLocal(user.accessToken);
+        accessToken && storeAuthTokenLocal(accessToken);
         localStorage.setItem('USER_DETAILS', JSON.stringify(loggedinUser));
       } else {
-        storeAuthTokenSession(user.accessToken);
+        accessToken && storeAuthTokenSession(accessToken);
         sessionStorage.setItem("USER_DETAILS", JSON.stringify(loggedinUser));
       }
       return {
@@ -40,7 +40,6 @@ export const userSlice = createSlice({
       };
     },
     removeUser: (state) => {
-      console.log("removing user info");
       if (fetchStoredTokenLocal()) {
         localStorage.removeItem("USER_DETAILS");
         removeStoredTokenLocal();

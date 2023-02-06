@@ -16,7 +16,6 @@ root.render(
     <Provider store={store}>
       <StyledEngineProvider injectFirst>
         <BrowserRouter>
-          {console.log(process.env.PUBLIC_URL)}
           <App />
         </BrowserRouter>
       </StyledEngineProvider>

@@ -80,7 +80,6 @@ const UpdatePost = ({ setOpenDialog, post }) => {
       </Box>
       {mounted.current ?
         <DialogContent>
-          {console.log(formData)}
           <Grid container spacing={2} className="flex justify-center">
             <Grid sm={6} xs={12} className="flex justify-center">
               <FormControl size="small" fullWidth margin="dense">

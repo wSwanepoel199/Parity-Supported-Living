@@ -12,8 +12,10 @@ const Toolbar = ({ children, type, csvOptions, clearSelect }) => {
         {/* <GridToolbarColumnsButton/> */}
         {/* <GridToolbarFilterButton /> */}
         <GridToolbarDensitySelector />
-        {userState.role === "Admin" ? <GridToolbarExport csvOptions={csvOptions} onClick={() => clearSelect([])} /> : null}
-        {userState.role === "Admin" ? <GridToolbarImport type={type} /> : null}
+        <Box>
+          {userState.role === "Admin" ? <GridToolbarExport csvOptions={csvOptions} onClick={() => clearSelect([])} /> : null}
+          {userState.role === "Admin" ? <GridToolbarImport type={type} /> : null}
+        </Box>
       </Box>
       {children}
     </GridToolbarContainer>

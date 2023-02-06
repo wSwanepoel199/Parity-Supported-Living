@@ -237,7 +237,7 @@ const Posts = () => {
       <Dialog
         fullScreen={fullScreen}
         open={openDialog.open}
-        onClose={() => console.log("closew")}
+        className={`z-30 max-w-full`}
       >
         {
           openDialog.open

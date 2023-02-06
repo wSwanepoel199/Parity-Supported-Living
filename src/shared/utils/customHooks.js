@@ -1,11 +1,11 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 
 export const useEffectOnce = (effect) => {
 
   const destroyFunc = useRef();
   const effectCalled = useRef(false);
   const renderAfterCalled = useRef(false);
-  const [val, setVal] = useState(0);
+  // const [val, setVal] = useState(0);
 
   if (effectCalled.current) {
     renderAfterCalled.current = true;
@@ -24,5 +24,5 @@ export const useEffectOnce = (effect) => {
       if (!renderAfterCalled.current) { return; }
       if (destroyFunc.current) { destroyFunc.current(); }
     };
-  }, []);
+  }, [effect]);
 };

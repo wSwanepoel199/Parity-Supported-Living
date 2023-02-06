@@ -41,7 +41,7 @@ const CreateUser = ({ setOpenDialog }) => {
         New User
       </DialogTitle>
       <DialogContent >
-        <Grid container spacing={2} className="flex justify-center w-full">
+        <Grid container spacing={2} className="flex justify-center w-screen">
           <Grid sm={6} xs={12} className="flex justify-center">
             <FormControl size="small" fullWidth margin="dense">
               <InputLabel shrink htmlFor="firstNameInput">First Name</InputLabel>

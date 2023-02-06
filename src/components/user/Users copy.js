@@ -174,7 +174,7 @@ const Users = () => {
       <Dialog
         fullScreen={fullScreen}
         open={openDialog.open}
-        sx={{ maxWidth: '100%' }}
+        className={`z-30 max-w-full`}
       >
         {
           openDialog.open
