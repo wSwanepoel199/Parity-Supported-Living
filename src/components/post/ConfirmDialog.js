@@ -1,10 +1,10 @@
 import { Box, Button, DialogActions, DialogContent, DialogContentText, DialogTitle } from "@mui/material";
 import { useEffect } from "react";
-import { useDeleteTargetUserMutation } from "../../shared/redux/admin/adminApiSlice";
+import { useDeleteTargetPostMutation, } from "../../shared/redux/admin/adminApiSlice";
 
 
-const ConfirmDialog = ({ setOpenDialog, user }) => {
-  const [deleteTargetUser, { isLoading, isError }] = useDeleteTargetUserMutation();
+const ConfirmDialog = ({ setOpenDialog, post }) => {
+  const [deleteTargetPost, { isLoading, isError }] = useDeleteTargetPostMutation();
 
   useEffect(() => {
     if (isLoading || isError) setOpenDialog(prev => { return { ...prev, open: !prev.open, type: '' }; });
@@ -12,12 +12,12 @@ const ConfirmDialog = ({ setOpenDialog, user }) => {
 
   return (
     <Box>
-      <DialogTitle>Delete {user.name}?</DialogTitle>
+      <DialogTitle>Delete Note?</DialogTitle>
       <DialogContent>
-        <DialogContentText>Are you sure you want to delete {user.name}?</DialogContentText>
+        <DialogContentText>Are you sure you want to delete this case note?</DialogContentText>
       </DialogContent>
       <DialogActions sx={{ justifyContent: 'space-between' }}>
-        <Button color="error" variant="contained" onClick={() => deleteTargetUser(user)}>DELETE</Button>
+        <Button color="error" variant="contained" onClick={() => deleteTargetPost(post)}>DELETE</Button>
         <Button onClick={() => setOpenDialog(prev => { return { ...prev, open: !prev.open, type: '' }; })}>Cancel</Button>
       </DialogActions>
     </Box>

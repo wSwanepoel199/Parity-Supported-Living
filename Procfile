@@ -1,1 +1,1 @@
-web: node scripts/compileExpress.js
+# web: npm run startProd

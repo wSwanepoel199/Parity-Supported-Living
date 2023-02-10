@@ -6,6 +6,8 @@ const initialState = {
 };
 
 const isPending = (action) => {
+  // console.log(action);
+  // console.log(action.meta?.arg.endpointName);
   return action.type.endsWith('pending');
 };
 
@@ -39,12 +41,19 @@ export const rootSlice = createSlice({
   extraReducers(builder) {
     builder
       .addMatcher(isPending, (state, action) => {
-        return {
-          ...initialState,
-          status: "loading"
-        };
+        if (action.meta?.arg.endpointName === "refreshUser") {
+          return {
+            ...initialState
+          };
+        } else {
+          return {
+            ...initialState,
+            status: "loading"
+          };
+        }
       })
       .addMatcher(isFulfilled, (state, action) => {
+
         return {
           ...state,
           status: "success",
@@ -55,14 +64,16 @@ export const rootSlice = createSlice({
         };
       })
       .addMatcher(isRejected, (state, action) => {
-        console.log(action.payload);
+        console.log('rejected', action?.payload);
+        const message = action.payload.data.message.message || action.payload.data.message;
         return {
           ...state,
           status: "error",
           msg: {
             status: action.payload.status,
             statusText: action.payload.statusText,
-            message: action.payload.data.message
+            message: message,
+            data: action.payload.data.message?.trigger
           }
         };
       });

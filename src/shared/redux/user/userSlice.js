@@ -1,11 +1,12 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { fetchStoredTokenLocal, removeStoredTokenLocal, removeStoredTokenSession, storeAuthTokenLocal, storeAuthTokenSession } from "../../utils/authToken";
-import { backendApi } from "../api/backendApi";
 
 const initialState = {
-  user: {},
-  status: 'loggedOut',
-  error: undefined
+  status: (sessionStorage.getItem("USER_DETAILS") || localStorage.getItem("USER_DETAILS")) ? "loggedIn" : 'loggedOut',
+  user: JSON.parse(sessionStorage.getItem("USER_DETAILS") || localStorage.getItem("USER_DETAILS")) || {},
+  error: undefined,
+  intervalId: null,
+  icon: JSON.parse(sessionStorage.getItem("USER_DETAILS") || localStorage.getItem("USER_DETAILS"))?.icon
 };
 
 export const userSlice = createSlice({
@@ -13,11 +14,21 @@ export const userSlice = createSlice({
   initialState,
   reducers: {
     saveUser: (state, action) => {
-      const { accessToken, ...user } = action.payload;
+      const { user, rememberMe } = action.payload;
+      const name = `${user.firstName} ${user.lastName || ''}`;
+      const { accessToken, ...loggedinUser } = user;
+      if (rememberMe) {
+        accessToken && storeAuthTokenLocal(accessToken);
+        localStorage.setItem('USER_DETAILS', JSON.stringify(loggedinUser));
+      } else {
+        accessToken && storeAuthTokenSession(accessToken);
+        sessionStorage.setItem("USER_DETAILS", JSON.stringify(loggedinUser));
+      }
       return {
         ...state,
-        user: user,
-        status: "loggedIn"
+        status: "loggedIn",
+        user: { ...loggedinUser, name: name },
+        icon: loggedinUser.icon
       };
     },
     signOutUser: (state) => {
@@ -26,97 +37,37 @@ export const userSlice = createSlice({
         status: 'signingOut'
       };
     },
-    removeUser: () => {
-      removeStoredTokenLocal();
-      removeStoredTokenSession();
+    removeUser: (state) => {
+      if (fetchStoredTokenLocal()) {
+        localStorage.removeItem("USER_DETAILS");
+        removeStoredTokenLocal();
+      } else {
+        sessionStorage.removeItem("USER_DETAILS");
+        removeStoredTokenSession();
+      }
+      clearInterval(state.intervalId);
       return {
-        ...initialState,
-        authToken: undefined
+        status: 'loggedOut',
+        user: {},
+        intervalId: null,
+        icon: undefined
       };
     },
+    saveRefreshInterval: (state, action) => {
+      return {
+        ...state,
+        intervalId: action.payload
+      };
+    },
+    updateStatus: (state, action) => {
+      return {
+        ...state,
+        status: action.payload
+      };
+    }
   },
 });
 
-export const { saveUser, removeUser, signOutUser } = userSlice.actions;
+export const { saveUser, removeUser, signOutUser, saveRefreshInterval, updateStatus } = userSlice.actions;
 
 export default userSlice.reducer;
-
-export const userApiSlice = backendApi.injectEndpoints({
-  endpoints: builder => ({
-    loginUser: builder.mutation({
-      query: (loginDetails) => ({ url: '/auth/login', method: 'post', data: loginDetails }),
-      async onQueryStarted(loginDetails, { dispatch, queryFulfilled }) {
-        try {
-          const { data } = await queryFulfilled;
-          if (loginDetails.rememberMe) {
-            storeAuthTokenLocal(data.data.user.accessToken);
-          } else {
-            storeAuthTokenSession(data.data.user.accessToken);
-          }
-          dispatch(saveUser(data.data.user));
-        }
-        catch (err) {
-          console.error(err);
-        }
-      }
-    }),
-    resetPass: builder.mutation({
-      query: (newPassword) => ({ url: '/auth/new', method: 'patch', data: { password: newPassword.password, userId: newPassword.userId } }),
-      async onQueryStarted(newPassword, { dispatch, queryFulfilled }) {
-        try {
-          const { data } = await queryFulfilled;
-          console.log(data);
-        } catch (err) {
-          console.error(err);
-        }
-      },
-      invalidatesTags: (result, error, args) =>
-        result ? [{ type: "user", id: "LIST" }] : error ? console.error(error) : null
-    }),
-    refreshUser: builder.mutation({
-      query: (refresh) => ({ url: '/refresh', method: 'get' }),
-      async onQueryStarted(refresh, { dispatch, queryFulfilled }) {
-        try {
-          const { data } = await queryFulfilled;
-          if (fetchStoredTokenLocal()) {
-            storeAuthTokenLocal(data.data.user.accessToken);
-          } else {
-            storeAuthTokenSession(data.data.user.accessToken);
-          }
-          dispatch(saveUser(data.data.user));
-        }
-        catch (err) {
-          console.error(err);
-          if (err.error.status === 403) {
-            dispatch(removeUser());
-          }
-        }
-      }
-    }),
-    logoutUser: builder.mutation({
-      query: (signout) => ({ url: '/auth/logout', method: 'get' }),
-      async onQueryStarted(signout, { dispatch, queryFulfilled }) {
-        try {
-          dispatch(signOutUser());
-          await queryFulfilled;
-          dispatch(removeUser());
-        }
-        catch (err) {
-          console.error(err);
-        }
-      }
-    }),
-    createUser: builder.mutation({
-      query: (newUser) => ({ url: '/auth/register', method: 'post', data: newUser }),
-      invalidatesTags: (result, error, args) =>
-        result ? [{ type: "user", id: "LIST" }] : error ? console.error(error) : null
-    }),
-    updateUser: builder.mutation({
-      query: (updatedUser) => ({ url: '/auth/update', method: 'put', data: updatedUser }),
-      invalidatesTags: (result, error, args) =>
-        result ? [{ type: "user", id: "LIST" }] : error ? console.error(error) : null
-    })
-  })
-});
-
-export const { useLoginUserMutation, useResetPassMutation, useRefreshUserMutation, useLogoutUserMutation, useCreateUserMutation, useUpdateUserMutation } = userApiSlice;

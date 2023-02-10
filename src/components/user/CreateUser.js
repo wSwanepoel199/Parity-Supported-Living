@@ -1,14 +1,10 @@
-import { Box, Button, DialogActions, DialogContent, DialogTitle, FormControl, IconButton, Input, InputAdornment, InputLabel, MenuItem, Select } from "@mui/material";
-import Visibility from "@mui/icons-material/Visibility";
-import VisibilityOff from "@mui/icons-material/VisibilityOff";
+import { Box, Button, DialogActions, DialogContent, DialogTitle, FormControl, Input, InputLabel, MenuItem, Select } from "@mui/material";
 import Grid from "@mui/material/Unstable_Grid2/";
 import { useEffect, useState } from "react";
-// import { useSelector } from "react-redux";
-import { useCreateUserMutation } from "../../shared/redux/user/userSlice";
+import { useCreateUserMutation } from "../../shared/redux/user/userApiSlice";
 
 
 const CreateUser = ({ setOpenDialog }) => {
-  // const userState = useSelector(state => state.user);
   const [createUser, { isSuccess, isError }] = useCreateUserMutation();
 
   const [formData, setFormData] = useState({
@@ -44,9 +40,9 @@ const CreateUser = ({ setOpenDialog }) => {
       <DialogTitle>
         New User
       </DialogTitle>
-      <DialogContent>
-        <Grid container spacing={2} className="flex justify-center">
-          <Grid xs={6} className="flex justify-center">
+      <DialogContent >
+        <Grid container spacing={2} className="flex justify-center w-full">
+          <Grid sm={6} xs={12} className="flex justify-center">
             <FormControl size="small" fullWidth margin="dense">
               <InputLabel shrink htmlFor="firstNameInput">First Name</InputLabel>
               <Input
@@ -59,7 +55,7 @@ const CreateUser = ({ setOpenDialog }) => {
               />
             </FormControl>
           </Grid>
-          <Grid xs={6} className="flex justify-center">
+          <Grid sm={6} xs={12} className="flex justify-center">
             <FormControl size="small" fullWidth margin="dense">
               <InputLabel shrink htmlFor="lastNameInput">Last Name</InputLabel>
               <Input
@@ -72,9 +68,9 @@ const CreateUser = ({ setOpenDialog }) => {
               />
             </FormControl>
           </Grid>
-          <Grid xs={6} className="flex justify-center">
+          <Grid sm={6} xs={12} className="flex justify-center">
             <FormControl variant="standard" size="small" fullWidth margin="dense">
-              <InputLabel htmlFor="roleInput">Role</InputLabel>
+              <InputLabel shrink htmlFor="roleInput" className={`px-5`}>Role</InputLabel>
               <Select
                 id="roleInput"
                 name='role'
@@ -88,9 +84,9 @@ const CreateUser = ({ setOpenDialog }) => {
               </Select>
             </FormControl>
           </Grid>
-          <Grid xs={6} className="flex justify-center">
+          <Grid sm={6} xs={12} className="flex justify-center">
             <FormControl size="small" fullWidth margin="dense">
-              <InputLabel htmlFor="emailInput">Email</InputLabel>
+              <InputLabel shrink htmlFor="emailInput">Email</InputLabel>
               <Input
                 id="emailInput"
                 name="email"
@@ -101,25 +97,6 @@ const CreateUser = ({ setOpenDialog }) => {
               />
             </FormControl>
           </Grid>
-          {/* <Grid xs={6} className="flex justify-center">
-            <FormControl size="small" fullWidth margin="dense">
-              <InputLabel htmlFor="passwordInput">Password</InputLabel>
-              <Input
-                id="passwordInput"
-                name="password"
-                type={formData.showPassword ? "text" : 'password'}
-                value={formData.password}
-                onChange={handleInput}
-                endAdornment={
-                  <InputAdornment position="end">
-                    <IconButton onClick={() => setFormData(prev => { return { ...prev, showPassword: !prev.showPassword }; })} edge="end" aria-label="toggle password visibility">
-                      {formData.showPassword ? <VisibilityOff /> : <Visibility />}
-                    </IconButton>
-                  </InputAdornment>
-                }
-              />
-            </FormControl>
-          </Grid> */}
         </Grid>
       </DialogContent>
       <DialogActions>

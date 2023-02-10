@@ -1,9 +1,9 @@
-import { Box, Button, DialogActions, DialogContent, DialogTitle, FormControl, Input, InputLabel, OutlinedInput } from "@mui/material";
+import { Box, Button, DialogActions, DialogContent, DialogTitle, FormControl, FormControlLabel, Input, InputLabel, OutlinedInput, Switch } from "@mui/material";
 import Grid from "@mui/material/Unstable_Grid2/";
 import { format, formatISO, parseISO } from "date-fns";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { useAddPostMutation } from "../../shared/redux/posts/postSlice";
+import { useAddPostMutation } from "../../shared/redux/posts/postApiSlice";
 
 const CreatePost = ({ setOpenDialog }) => {
   const userState = useSelector(state => state.user);
@@ -14,7 +14,8 @@ const CreatePost = ({ setOpenDialog }) => {
     kilos: 0,
     client: "",
     notes: "",
-    carerId: userState.user.userId
+    carerId: userState.user.userId,
+    private: false,
   });
 
   useEffect(() => {
@@ -61,13 +62,13 @@ const CreatePost = ({ setOpenDialog }) => {
 
 
   return (
-    <Box>
+    <Box component='form' onSubmit={(e) => handleSubmit(e)}>
       <DialogTitle>
         New Note
       </DialogTitle>
       <DialogContent>
         <Grid container spacing={2} className="flex justify-center">
-          <Grid xs={6} className="flex justify-center">
+          <Grid sm={6} xs={12} className="flex justify-center">
             <FormControl size="small" fullWidth margin="dense">
               <InputLabel shrink htmlFor="dateInput">Support Date</InputLabel>
               <Input
@@ -79,7 +80,7 @@ const CreatePost = ({ setOpenDialog }) => {
               />
             </FormControl>
           </Grid>
-          <Grid xs={6} className="flex justify-center">
+          <Grid sm={6} xs={12} className="flex justify-center">
             <FormControl size="small" fullWidth margin="dense">
               <InputLabel htmlFor="timeInput">Support Duration</InputLabel>
               <Input
@@ -91,7 +92,7 @@ const CreatePost = ({ setOpenDialog }) => {
               />
             </FormControl>
           </Grid>
-          <Grid xs={6} className="flex justify-center">
+          <Grid sm={6} xs={12} className="flex justify-center">
             <FormControl size="small" fullWidth margin="dense">
               <InputLabel htmlFor="clientInput">Client's Name</InputLabel>
               <Input
@@ -103,7 +104,7 @@ const CreatePost = ({ setOpenDialog }) => {
               />
             </FormControl>
           </Grid>
-          <Grid xs={6} className="flex justify-center">
+          <Grid sm={6} xs={12} className="flex justify-center">
             <FormControl size="small" fullWidth margin="dense">
               <InputLabel htmlFor="distanceInput">Distance Traveled</InputLabel>
               <Input
@@ -124,7 +125,7 @@ const CreatePost = ({ setOpenDialog }) => {
                 type="text"
                 label="Notes"
                 multiline
-                rows={4}
+                minRows={4}
                 value={formData.notes}
                 onChange={(e) => handleInput(e.target)}
               />
@@ -132,9 +133,27 @@ const CreatePost = ({ setOpenDialog }) => {
           </Grid>
         </Grid>
       </DialogContent>
-      <DialogActions>
-        <Button onClick={(e) => handleSubmit(e)}>Create</Button>
-        <Button onClick={() => setOpenDialog(prev => { return { ...prev, open: !prev.open, type: '' }; })}>Cancel</Button>
+      <DialogActions sx={{ justifyContent: 'space-between', alignContent: 'space-between' }}>
+        <FormControlLabel
+          control={
+            <Switch
+              checked={formData.private}
+              onChange={() => setFormData(prev => {
+                return {
+                  ...prev,
+                  private: !prev.private
+                };
+              }
+              )}
+
+            />}
+          label="Confidential"
+
+        />
+        <Box>
+          <Button type="submit">Create</Button>
+          <Button onClick={() => setOpenDialog(prev => { return { ...prev, open: !prev.open, type: '', data: {} }; })}>Cancel</Button>
+        </Box>
       </DialogActions>
     </Box>
   );

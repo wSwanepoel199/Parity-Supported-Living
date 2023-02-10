@@ -1,51 +1,54 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Route, Routes } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 // import Dashboard from './components/Dashboard';
 import Landing from './pages/Landing';
 import SignIn from './pages/SignIn';
-import { fetchStoredTokenLocal, fetchStoredTokenSession } from './shared/utils/authToken';
-import { useRefreshUserMutation, } from './shared/redux/user/userSlice';
-import Posts from './components/post/Posts';
-import Users from './components/user/Users';
+import { useRefreshUserMutation, } from './shared/redux/user/userApiSlice';
+import Posts from './components/post/Posts copy';
+import Users from './components/user/Users copy';
 import ProtectedRoute from './shared/utils/ProtectedRoute';
-import { Alert, AlertTitle, Backdrop, Button, CircularProgress, Collapse, IconButton, Snackbar } from '@mui/material';
-import CloseIcon from '@mui/icons-material/Close';
-import { clearMessage } from './shared/redux/root/rootSlice';
+import { Backdrop, CircularProgress, } from '@mui/material';
 import PromptForUpdate from './shared/utils/PrompUpdateServiceWorker';
+import CustomAlert from './shared/utils/CustomAlert';
 
 function App() {
   const mounted = useRef();
   const userState = useSelector(state => state.user);
   const rootState = useSelector(state => state.root);
-  const dispatch = useDispatch();
   const [refreshUser, { isUninitialized, }] = useRefreshUserMutation();
   const [alert, setAlert] = useState(undefined);
   const [update, setUpdate] = useState(false);
 
-  // TODO troubleshoot service worker error with window not being defined
+  // TODO SW forced to manually unregister and reload page, look into a smoother sw transition between old and new
+  // TODO Look into implimenting mailer into Backend
+  // TODO Look into automated backend backups, consider looking to file storage servivces to contain backups
+  // TODO Impliment Client system so carers can selected a client from the drop down
 
   useEffect(() => {
     if (!mounted.current) {
-      if (userState.status === "loggedOut" && (fetchStoredTokenLocal() || fetchStoredTokenSession())) refreshUser();
+      if (rootState.msg?.data === "auth") {
+        refreshUser();
+      }
+      mounted.current = true;
+    }
+    if (mounted.current) {
       window.updateAvailable
         .then(isAvailable => {
           if (isAvailable) {
-            // console.log("is update available?", isAvailable);
             setUpdate(prev => { return true; });
           }
         })
         .catch((err) => {
           console.error(err);
         });
-      mounted.current = true;
     }
 
 
     return () => {
       mounted.current = false;
     };
-  }, [mounted, userState.status, refreshUser, setUpdate]);
+  }, [mounted, userState.status, refreshUser, setUpdate, rootState.msg]);
 
   useEffect(() => {
     if (['error'].includes(rootState.status) && rootState.status !== "loading") {
@@ -65,44 +68,17 @@ function App() {
         <>
           <Backdrop
             open={rootState.status === "loading"}
-            className={`z-30`}
+            className={`z-40`}
           >
             <CircularProgress />
           </Backdrop>
-          <Collapse
-            in={['error'].includes(rootState.status)}
-            unmountOnExit
-            className={`absolute z-50 left-0 top-0 w-full`}
-          >
-            {alert ?
-              <Alert
-                className={`flex items-center`}
-                severity={alert.status}
-                action={
-                  <IconButton
-                    aria-label="close"
-                    color='inherit'
-                    onClick={() => {
-                      dispatch(clearMessage());
-                    }}
-                  >
-                    <CloseIcon fontSize="inherit" />
-                  </IconButton>}
-
-              >
-                <AlertTitle>{alert.msg.status} {alert.msg.statusText}</AlertTitle>
-                {(alert.msg.message)}
-              </Alert>
-              : null}
-          </Collapse>
+          <CustomAlert alert={alert} />
           <PromptForUpdate update={update} setUpdate={setUpdate} />
           <Routes>
             <Route path="/" element={userState.status === "loggedIn" ? <Landing /> : <SignIn />}>
               <Route index element={
                 <Posts />
-                // <Dashboard />
               } />
-              {/* <Route path="notes" element={<Posts />} /> */}
               <Route path="users" element={
                 <ProtectedRoute>
                   <Users />

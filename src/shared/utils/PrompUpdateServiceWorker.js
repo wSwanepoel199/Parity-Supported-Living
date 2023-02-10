@@ -2,7 +2,6 @@ import { Button, IconButton, Snackbar } from "@mui/material";
 import CloseIcon from '@mui/icons-material/Close';
 import deferredPromise from "./deferredPromise";
 import { useEffect, useRef } from "react";
-import { sendMessage } from "./api";
 
 export const promptForUpdate = new deferredPromise();
 

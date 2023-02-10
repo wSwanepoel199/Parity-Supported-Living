@@ -13,7 +13,6 @@ import { precacheAndRoute, createHandlerBoundToURL } from 'workbox-precaching';
 import { registerRoute } from 'workbox-routing';
 import { StaleWhileRevalidate } from 'workbox-strategies';
 import { read, utils } from 'xlsx';
-import { promptForUpdate } from './shared/utils/PrompUpdateServiceWorker';
 
 clientsClaim();
 
@@ -63,39 +62,6 @@ registerRoute(
   })
 );
 
-// const showSkipWaitingPrompt = async (event) => {
-
-//   // self.addEventListener('controlling', () => {
-//   //   window.location.reload();
-//   // });
-//   console.log("before prompt try");
-//   try {
-//     console.log("attempting to update service worker");
-//     console.log("checking on import", await promptForUpdate);
-//     console.log("after promise check");
-//     const updateAccepted = await promptForUpdate;
-//     console.log(updateAccepted);
-//     if (updateAccepted) {
-//       console.log("prompt accepted");
-//       self.messageSkipWaiting();
-//     }
-//   }
-//   catch (err) {
-//     console.log("sw update error", err);
-//   }
-
-
-
-
-//   // window.promptForUpdate
-//   //   .then(res => {
-//   //     if (res) {
-//   //       self.messageSkipWaiting();
-//   //     }
-//   //   })
-//   //   .catch(err => console.log(err));
-// };
-
 // This allows the web app to trigger skipWaiting via
 // registration.waiting.postMessage({type: 'SKIP_WAITING'})
 self.addEventListener('message', async (event) => {
@@ -118,5 +84,19 @@ self.addEventListener('message', async (event) => {
 
 // Any other custom service worker logic can go here.
 // self.addEventListener('fetch', (event) => {
+//   console.log(event.request);
 //   console.log("intercepting", event.request.method, 'to', event.request.url);
+//   const token = 'dummy token';
+
+//   const promise = new Promise((resolve, reject) => {
+//     let sourceHeaders = {};
+//     for (var pair of event.request.headers.entries()) {
+//       sourceHeaders[pair[0]] = pair[1];
+//     }
+//     const newHeaders = { ...sourceHeaders, 'Authorization': 'Bearer: ' + token };
+//     const newRequest = new Request(event.request, { headers: newHeaders }, { mode: 'cors' });
+//     resolve(fetch(event.request));
+//   });
+
+//   event.responseWith(promise);
 // });
