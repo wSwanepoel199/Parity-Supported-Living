@@ -60,7 +60,7 @@ export const userApiSlice = backendApi.injectEndpoints({
       }
     }),
     logoutUser: builder.mutation({
-      query: (signout) => ({ url: '/auth/logout', method: 'get' }),
+      query: (signout) => ({ url: '/auth/logout', method: 'post', data: { userId: signout } }),
       async onQueryStarted(signout, { dispatch, getState, queryFulfilled }) {
         try {
           dispatch(signOutUser());
