@@ -138,7 +138,7 @@ const Appbar = () => {
                 onClose={() => handleCloseMenu("user")}
                 aria-label="user menu button"
               >
-                <MenuItem onClick={logoutUser}>
+                <MenuItem onClick={() => logoutUser(userState.user.userId)}>
                   <Typography textAlign="center">SignOut</Typography>
                 </MenuItem>
               </Menu>
