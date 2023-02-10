@@ -23,6 +23,7 @@ function App() {
   // TODO SW forced to manually unregister and reload page, look into a smoother sw transition between old and new
   // TODO Look into implimenting mailer into Backend
   // TODO Look into automated backend backups, consider looking to file storage servivces to contain backups
+  // TODO Impliment Client system so carers can selected a client from the drop down
 
   useEffect(() => {
     if (!mounted.current) {
