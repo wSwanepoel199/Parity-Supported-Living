@@ -1,16 +1,17 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import { useSelector } from 'react-redux';
+import { Backdrop, CircularProgress, } from '@mui/material';
 // import Dashboard from './components/Dashboard';
 import Landing from './pages/Landing';
 import SignIn from './pages/SignIn';
-import { useRefreshUserMutation, } from './shared/redux/user/userApiSlice';
 import Posts from './components/post/Posts copy';
 import Users from './components/user/Users copy';
+import Clients from './components/client/Client';
 import ProtectedRoute from './shared/utils/ProtectedRoute';
-import { Backdrop, CircularProgress, } from '@mui/material';
 import PromptForUpdate from './shared/utils/PrompUpdateServiceWorker';
 import CustomAlert from './shared/utils/CustomAlert';
+import { useRefreshUserMutation, } from './shared/redux/user/userApiSlice';
 
 function App() {
   const mounted = useRef();
@@ -82,6 +83,11 @@ function App() {
               <Route path="users" element={
                 <ProtectedRoute>
                   <Users />
+                </ProtectedRoute>
+              } />
+              <Route path="clients" element={
+                <ProtectedRoute>
+                  <Clients />
                 </ProtectedRoute>
               } />
             </Route>
