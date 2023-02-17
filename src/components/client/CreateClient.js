@@ -1,4 +1,4 @@
-import { Box, Button, DialogActions, DialogContent, DialogTitle, FormControl, FormHelperText, Input, InputLabel, MenuItem, OutlinedInput, Select, TextField, useFormControl } from "@mui/material";
+import { Box, Button, DialogActions, DialogContent, DialogTitle, FormControl, FormHelperText, Input, InputLabel, MenuItem, OutlinedInput, Select, TextField, Typography, useFormControl } from "@mui/material";
 import Grid from "@mui/material/Unstable_Grid2/";
 import { forwardRef, useEffect, useMemo, useState } from "react";
 import { useCreateUserMutation } from "../../shared/redux/user/userApiSlice";
@@ -36,15 +36,15 @@ const MyCustomHelperText = () => {
 
 const CreateClient = ({ setOpenDialog }) => {
   const [createUser, { isSuccess, isError }] = useCreateUserMutation();
-
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
     address: '',
     phoneNumber: "",
     email: '',
-    details: '',
+    notes: '',
   });
+  const [address, setAddress] = useState(Array(4).fill(''));
 
   useEffect(() => {
     if (isSuccess || isError) setOpenDialog(prev => { return { ...prev, open: !prev.open, type: '' }; });
@@ -52,19 +52,57 @@ const CreateClient = ({ setOpenDialog }) => {
 
   const handleInput = (e) => {
     const { value, name } = e.target;
-
+    const splitString = name.match(/[A-Z]?[a-z]+|[0-9]+|[A-Z]+(?![a-z])/g);
+    if (splitString[0] === 'address') {
+      switch (splitString[1]) {
+        case "Street": {
+          setAddress(prev => {
+            prev[0] = value;
+            return prev;
+          });
+          break;
+        }
+        case "City": {
+          setAddress(prev => {
+            prev[1] = value;
+            return prev;
+          });
+          break;
+        }
+        case "State": {
+          setAddress(prev => {
+            prev[2] = value;
+            return prev;
+          });
+          break;
+        }
+        case "ZIP": {
+          setAddress(prev => {
+            value.length > 4 ? prev[3] = value.slice(0, value.length - 1) : prev[3] = value;
+            return prev;
+          });
+          break;
+        }
+        default: {
+          return;
+        }
+      }
+    }
     setFormData(prev => {
+      const formField = splitString[0] === 'address' ? splitString[0] : name;
+      const formValue = splitString[0] === 'address' ? address.join(', ') : value;
       return {
         ...prev,
-        [name]: value
+        [formField]: formValue
       };
     });
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    console.log(formData);
     // createUser(formData);
-    // setOpenDialog(prev => { return { ...prev, open: !prev.open, type: '' }; });
+    setOpenDialog(prev => { return { ...prev, open: !prev.open, type: '' }; });
   };
 
 
@@ -75,6 +113,9 @@ const CreateClient = ({ setOpenDialog }) => {
       </DialogTitle>
       <DialogContent >
         <Grid container spacing={2} className="flex justify-center w-full">
+          <Grid xs={12} className=" border-b-2 border-b-gray-400 border-solid border-x-transparent border-t-transparent">
+            <Typography>Details</Typography>
+          </Grid>
           <Grid sm={6} xs={12} className="flex justify-center">
             <FormControl size="small" fullWidth margin="dense">
               <InputLabel shrink htmlFor="firstNameInput">First Name</InputLabel>
@@ -103,15 +144,20 @@ const CreateClient = ({ setOpenDialog }) => {
           </Grid>
           <Grid sm={6} xs={12} className="flex justify-center">
             <FormControl size="small" fullWidth margin="dense">
-              <InputLabel shrink htmlFor="addressInput">Address</InputLabel>
+              <InputLabel shrink htmlFor="phoneInput">Phone Number</InputLabel>
               <Input
-                id="addressInput"
-                name="address"
-                type="text"
+                id="phoneInput"
+                name="phoneNumber"
+                type="number"
+                inputComponent={MyCustomInput}
+                inputProps={{
+                  component: PhoneInput,
+                }}
                 required
-                value={formData.address}
-                onChange={handleInput}
+                value={formData.phoneNumber}
+                onChange={(value, country, e, formattedValue) => handleInput(e)}
               />
+              <MyCustomHelperText />
             </FormControl>
           </Grid>
           <Grid sm={6} xs={12} className="flex justify-center">
@@ -127,34 +173,76 @@ const CreateClient = ({ setOpenDialog }) => {
               />
             </FormControl>
           </Grid>
+          <Grid xs={12} className="border-b-2 border-b-gray-400 border-solid border-x-transparent border-t-transparent">
+            <Typography>Address</Typography>
+          </Grid>
           <Grid sm={6} xs={12} className="flex justify-center">
             <FormControl size="small" fullWidth margin="dense">
-              <InputLabel shrink htmlFor="phoneInput">Phone Number</InputLabel>
+              <InputLabel shrink htmlFor="addressInput">Street Address</InputLabel>
               <Input
-                id="phoneInput"
-                name="phoneNumber"
-                inputComponent={MyCustomInput}
-                inputProps={{
-                  component: PhoneInput,
-                }}
+                id="addressInput"
+                name="addressStreet"
+                type="text"
                 required
-                value={formData.phoneNumber}
-                onChange={(value, country, e, formattedValue) => handleInput(e)}
+                value={address[0]}
+                onChange={handleInput}
               />
-              <MyCustomHelperText />
             </FormControl>
+          </Grid>
+          <Grid sm={6} xs={12} className="flex justify-center">
+            <FormControl size="small" fullWidth margin="dense">
+              <InputLabel shrink htmlFor="addressInput">City</InputLabel>
+              <Input
+                id="addressInput"
+                name="addressCity"
+                type="text"
+                required
+                value={address[1]}
+                onChange={handleInput}
+              />
+            </FormControl>
+          </Grid>
+          <Grid sm={6} xs={12} className="flex justify-center">
+            <FormControl size="small" fullWidth margin="dense">
+              <InputLabel shrink htmlFor="addressInput">State</InputLabel>
+              <Input
+                id="addressInput"
+                name="addressState"
+                type="text"
+                required
+                value={address[2]}
+                onChange={handleInput}
+              />
+            </FormControl>
+          </Grid>
+          <Grid sm={6} xs={12} className="flex justify-center">
+            <FormControl size="small" fullWidth margin="dense">
+              <InputLabel shrink htmlFor="addressInput">ZIP/postal codes</InputLabel>
+              <Input
+                id="addressInput"
+                name="addressZIP"
+                type="number"
+                required
+                value={address[3]}
+                onChange={handleInput}
+              />
+            </FormControl>
+          </Grid>
+          <Grid xs={12} className="border-b-2 border-b-gray-400 border-solid border-x-transparent border-t-transparent">
+            <Typography>Notes</Typography>
           </Grid>
           <Grid xs={12} className="flex justify-center">
             <FormControl size="small" fullWidth margin="dense">
-              <InputLabel htmlFor="detailsInput">Details</InputLabel>
+              <InputLabel shrink htmlFor="notesInput">Notes</InputLabel>
               <OutlinedInput
-                id="detailsInput"
-                name="details"
+                id="notesInput"
+                name="notes"
                 type="text"
-                label="Details"
+                label="Notes"
                 multiline
+                notched
                 minRows={4}
-                value={formData.details}
+                value={formData.notes}
                 onChange={handleInput}
               />
             </FormControl>

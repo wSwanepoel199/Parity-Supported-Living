@@ -17,6 +17,8 @@ function App() {
   const mounted = useRef();
   const userState = useSelector(state => state.user);
   const rootState = useSelector(state => state.root);
+  // const location = useNavigation();
+  const [locationKeys, setLocationKeys] = useState([]);
   const [refreshUser, { isUninitialized, }] = useRefreshUserMutation();
   const [alert, setAlert] = useState(undefined);
   const [update, setUpdate] = useState(false);
@@ -62,6 +64,37 @@ function App() {
     }
   }, [rootState]);
 
+  // useEffect(() => {
+  //   console.log(location);
+  //   return location.listen(location => {
+  //     if (location.action === 'PUSH') {
+  //       setLocationKeys([location.key]);
+  //     }
+
+  //     if (location.action === "POP") {
+  //       if (locationKeys[1] === location.key) {
+  //         setLocationKeys(([_, ...keys]) => keys);
+
+  //         // Handle forward event
+
+  //       } else {
+  //         setLocationKeys((keys) => [location.key, ...keys]);
+
+  //         // Handle back event
+
+  //       }
+  //     }
+  //   });
+  // }, [locationKeys, location]);
+
+  // const onBackPress = () => {
+  //   const { nav, dispatch } = this.props;
+  //   if (nav.index === 0) {
+  //     return false;
+  //   }
+  //   // dispatch(NavigationActions.back());
+  //   return true;
+  // };
 
   return (
     <div className={`w-full min-h-screen bg-slate-400 flex flex-col justify-center items-center`}>

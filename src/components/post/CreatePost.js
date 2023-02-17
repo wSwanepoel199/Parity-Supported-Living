@@ -1,4 +1,4 @@
-import { Box, Button, DialogActions, DialogContent, DialogTitle, FormControl, FormControlLabel, Input, InputLabel, OutlinedInput, Switch } from "@mui/material";
+import { Box, Button, DialogActions, DialogContent, DialogTitle, FormControl, FormControlLabel, Input, InputLabel, OutlinedInput, Switch, Typography } from "@mui/material";
 import Grid from "@mui/material/Unstable_Grid2/";
 import { format, formatISO, parseISO } from "date-fns";
 import { useEffect, useState } from "react";
@@ -68,6 +68,9 @@ const CreatePost = ({ setOpenDialog }) => {
       </DialogTitle>
       <DialogContent>
         <Grid container spacing={2} className="flex justify-center">
+          <Grid xs={12} className=" border-b-2 border-b-gray-400 border-solid border-x-transparent border-t-transparent">
+            <Typography>Details</Typography>
+          </Grid>
           <Grid sm={6} xs={12} className="flex justify-center">
             <FormControl size="small" fullWidth margin="dense">
               <InputLabel shrink htmlFor="dateInput">Support Date</InputLabel>
@@ -116,14 +119,15 @@ const CreatePost = ({ setOpenDialog }) => {
               />
             </FormControl>
           </Grid>
+          <Grid xs={12} className=" border-b-2 border-b-gray-400 border-solid border-x-transparent border-t-transparent">
+            <Typography>Notes</Typography>
+          </Grid>
           <Grid xs={12} className="flex justify-center">
             <FormControl size="small" fullWidth margin="dense">
-              <InputLabel htmlFor="notesInput">Notes</InputLabel>
               <OutlinedInput
                 id="notesInput"
                 name="notes"
                 type="text"
-                label="Notes"
                 multiline
                 minRows={4}
                 value={formData.notes}

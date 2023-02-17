@@ -1,4 +1,4 @@
-import { Box, Button, DialogActions, DialogContent, DialogTitle, FormControl, FormControlLabel, Input, InputLabel, MenuItem, Select, Switch, } from "@mui/material";
+import { Box, Button, DialogActions, DialogContent, DialogTitle, FormControl, FormControlLabel, Input, InputLabel, MenuItem, Select, Switch, Typography, } from "@mui/material";
 import Grid from "@mui/material/Unstable_Grid2/";
 import { useEffect, useRef, useState } from "react";
 import { useUpdateUserMutation } from "../../shared/redux/user/userApiSlice";
@@ -48,14 +48,15 @@ const UpdateUser = ({ setOpenDialog, user }) => {
 
   return (
     <Box component='form' onSubmit={(e) => handleSubmit(e)}>
-      <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-        <DialogTitle>
-          Edit Note
-        </DialogTitle>
-      </Box>
+      <DialogTitle>
+        Edit User
+      </DialogTitle>
       {mounted.current ?
         <DialogContent>
           <Grid container spacing={2} className="flex justify-center w-full">
+            <Grid xs={12} className=" border-b-2 border-b-gray-400 border-solid border-x-transparent border-t-transparent">
+              <Typography>Details</Typography>
+            </Grid>
             <Grid sm={6} xs={12} className="flex justify-center">
               <FormControl size="small" fullWidth margin="dense">
                 <InputLabel shrink htmlFor="firstNameInput">First Name</InputLabel>

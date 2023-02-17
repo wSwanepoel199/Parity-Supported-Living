@@ -12,6 +12,9 @@ const ViewPost = ({ setOpenDialog, post }) => {
     <Box>
       <DialogContent>
         <Grid container spacing={2} className="flex justify-center">
+          <Grid xs={12} className=" border-b-2 border-b-gray-400 border-solid border-x-transparent border-t-transparent">
+            <Typography>Details</Typography>
+          </Grid>
           <Grid xs={6} className="flex justify-center">
             <FormControl size="small" fullWidth margin="dense">
               <InputLabel shrink htmlFor="dateInput" >Support Date</InputLabel>
@@ -42,9 +45,11 @@ const ViewPost = ({ setOpenDialog, post }) => {
               <Typography id="carerInput" className={`p-3`}>{formData.carer.firstName} {formData.carer?.lastName}</Typography>
             </FormControl>
           </Grid>
+          <Grid xs={12} className=" border-b-2 border-b-gray-400 border-solid border-x-transparent border-t-transparent">
+            <Typography>Notes</Typography>
+          </Grid>
           <Grid xs={12} className="flex justify-center">
             <FormControl size="small" fullWidth margin="dense">
-              <InputLabel shrink htmlFor="notesInput">Notes</InputLabel>
               <Typography id="notesInput" className={`p-3`}>{formData.notes}</Typography>
             </FormControl>
           </Grid>
