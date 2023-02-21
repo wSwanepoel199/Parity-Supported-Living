@@ -1,8 +1,8 @@
 import { Box, Button, DialogActions, DialogContent, DialogTitle, FormControl, FormHelperText, Input, InputLabel, MenuItem, OutlinedInput, Select, TextField, Typography, useFormControl } from "@mui/material";
 import Grid from "@mui/material/Unstable_Grid2/";
 import { forwardRef, useEffect, useMemo, useState } from "react";
-import { useCreateUserMutation } from "../../shared/redux/user/userApiSlice";
 import PhoneInput from 'react-phone-input-2';
+import { useCreateClientMutation } from "../../shared/redux/client/clientApiSlice";
 // import 'react-phone-input-2/lib/style.css';
 
 const MyCustomInput = forwardRef((props, ref) => {
@@ -35,7 +35,7 @@ const MyCustomHelperText = () => {
 };
 
 const CreateClient = ({ setOpenDialog }) => {
-  const [createUser, { isSuccess, isError }] = useCreateUserMutation();
+  const [createClient, { isSuccess, isError }] = useCreateClientMutation();
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -101,7 +101,7 @@ const CreateClient = ({ setOpenDialog }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log(formData);
-    // createUser(formData);
+    createClient(formData);
     setOpenDialog(prev => { return { ...prev, open: !prev.open, type: '' }; });
   };
 
@@ -233,12 +233,12 @@ const CreateClient = ({ setOpenDialog }) => {
           </Grid>
           <Grid xs={12} className="flex justify-center">
             <FormControl size="small" fullWidth margin="dense">
-              <InputLabel shrink htmlFor="notesInput">Notes</InputLabel>
+              {/* <InputLabel shrink htmlFor="notesInput">Notes</InputLabel> */}
               <OutlinedInput
                 id="notesInput"
                 name="notes"
                 type="text"
-                label="Notes"
+                // label="Notes"
                 multiline
                 notched
                 minRows={4}
