@@ -1,7 +1,10 @@
-import { Box, Button, DialogActions, DialogContent, DialogTitle, FormControl, FormHelperText, Input, InputLabel, MenuItem, OutlinedInput, Select, TextField, Typography, useFormControl } from "@mui/material";
+import { Box, Button, Checkbox, Chip, DialogActions, DialogContent, DialogTitle, Divider, FormControl, FormHelperText, Input, InputAdornment, InputLabel, ListSubheader, MenuItem, OutlinedInput, Select, Stack, TextField, Typography, useFormControl } from "@mui/material";
 import Grid from "@mui/material/Unstable_Grid2/";
+import SearchIcon from "@mui/icons-material/Search";
 import { forwardRef, useEffect, useMemo, useState } from "react";
 import PhoneInput from 'react-phone-input-2';
+import { useSelector } from "react-redux";
+import { useGetAllUsersQuery } from "../../shared/redux/admin/adminApiSlice";
 import { useCreateClientMutation } from "../../shared/redux/client/clientApiSlice";
 // import 'react-phone-input-2/lib/style.css';
 
@@ -34,8 +37,14 @@ const MyCustomHelperText = () => {
   return <FormHelperText>{helperText}</FormHelperText>;
 };
 
+const containsText = (user, searchText) =>
+  user.toLowerCase().indexOf(searchText.toLowerCase()) > -1;
+
 const CreateClient = ({ setOpenDialog }) => {
+  const adminState = useSelector(state => state.admin);
+  useGetAllUsersQuery();
   const [createClient, { isSuccess, isError }] = useCreateClientMutation();
+  const options = adminState.users;
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -43,8 +52,15 @@ const CreateClient = ({ setOpenDialog }) => {
     phoneNumber: "",
     email: '',
     notes: '',
+    carers: []
   });
   const [address, setAddress] = useState(Array(4).fill(''));
+  const [searchText, setSearchText] = useState("");
+
+  const displayedOptions = useMemo(
+    () => options?.filter((option) => containsText(option.name, searchText)),
+    [options, searchText]
+  );
 
   useEffect(() => {
     if (isSuccess || isError) setOpenDialog(prev => { return { ...prev, open: !prev.open, type: '' }; });
@@ -89,7 +105,7 @@ const CreateClient = ({ setOpenDialog }) => {
       }
     }
     setFormData(prev => {
-      const formField = splitString[0] === 'address' ? splitString[0] : name;
+      const formField = (splitString[0] === 'address' || splitString[0] === 'carers') ? splitString[0] : name;
       const formValue = splitString[0] === 'address' ? address.join(', ') : value;
       return {
         ...prev,
@@ -227,6 +243,66 @@ const CreateClient = ({ setOpenDialog }) => {
                 onChange={handleInput}
               />
             </FormControl>
+          </Grid>
+          <Grid xs={12} className="border-b-2 border-b-gray-400 border-solid border-x-transparent border-t-transparent">
+            <Typography>Carers</Typography>
+          </Grid>
+          <Grid xs={12} className="flex justify-center">
+            {options ?
+              <FormControl variant="standard" size="small" fullWidth margin="dense">
+                <Select
+                  id="carerInput"
+                  name='carersId'
+                  multiple
+                  required
+                  input={<OutlinedInput id="carersListInput" />}
+                  renderValue={(selected) => (
+                    <Box
+                      className={`flex flex-wrap gap-2`}
+                    >
+                      {selected.map((value, index) => {
+                        return (
+                          <Box key={index}>
+                            <Chip label={options.find((user) => value === user.userId).name} />
+                          </Box>
+                        );
+                      })}
+                    </Box>
+                  )}
+                  MenuProps={{ autoFocus: false }}
+                  value={formData.carers}
+                  onChange={(e) => handleInput(e)}
+                  onClose={() => setSearchText("")}
+                >
+                  <ListSubheader>
+                    <Input
+                      size="small"
+                      autoFocus
+                      fullWidth
+                      startAdornment={
+                        <InputAdornment position="start">
+                          <SearchIcon />
+                        </InputAdornment>
+                      }
+                      onChange={(e) => setSearchText(e.target.value)}
+                      onKeyDown={(e) => {
+                        console.log(e.key);
+                        if (e.key !== "Escape") {
+                          // Prevents autoselecting item while typing (default Select behaviour)
+                          e.stopPropagation();
+                        }
+                      }}
+                    />
+                  </ListSubheader>
+                  {displayedOptions?.map((user, index) => {
+                    return (
+                      <MenuItem key={index} value={user.userId}>
+                        <Checkbox checked={formData.carers.indexOf(user.userId) > -1} />
+                        {user.firstName} {user?.lastName}</MenuItem>
+                    );
+                  })}
+                </Select>
+              </FormControl> : null}
           </Grid>
           <Grid xs={12} className="border-b-2 border-b-gray-400 border-solid border-x-transparent border-t-transparent">
             <Typography>Notes</Typography>

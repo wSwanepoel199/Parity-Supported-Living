@@ -86,7 +86,7 @@ const Posts = () => {
         headerName: 'Notes',
         disableColumnMenu: true,
         flex: 3,
-        minWidth: 300,
+        maxWidth: 300,
         renderCell: (value) => {
           const splitAtLineBreak = value.row.notes.split(/\r?\n/);
           const string = splitAtLineBreak.length >= 1 ?

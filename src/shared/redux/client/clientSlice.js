@@ -1,19 +1,25 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  status: 'asleep'
+  status: 'asleep',
+  clients: []
 };
 
 export const clientSlice = createSlice({
-  name: 'clients',
+  name: 'client',
   initialState,
   reducers: {
-    saveClient: (state, action) => {
+    saveClients: (state, action) => {
       console.log(action.payload);
+      return {
+        ...state,
+        status: 'fetced',
+        clients: action.payload
+      };
     }
   },
 });
 
-export const { saveClient } = clientSlice.actions;
+export const { saveClients } = clientSlice.actions;
 
 export default clientSlice.reducer;

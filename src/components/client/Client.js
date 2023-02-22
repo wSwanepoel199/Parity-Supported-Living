@@ -5,7 +5,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { DataGrid } from "@mui/x-data-grid";
 import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
-import { useGetAllUsersQuery } from "../../shared/redux/admin/adminApiSlice";
+import { useGetAllClientsQuery } from "../../shared/redux/client/clientApiSlice";
 import Toolbar from "../Toolbar";
 import CreateClient from "./CreateClient";
 import UpdateUser from "./UpdateClient";
@@ -14,10 +14,10 @@ import ConfirmDialog from "./ConfirmDialog";
 
 const Clients = () => {
 
-  const adminState = useSelector(state => state.admin);
+  const clientState = useSelector(state => state.client);
   const userState = useSelector(state => state.user);
   const mounted = useRef();
-  const { isFetching, isLoading, isSuccess } = useGetAllUsersQuery(undefined, { refetchOnMountOrArgChange: true });
+  const { isFetching, isLoading, isSuccess } = useGetAllClientsQuery(undefined, { refetchOnMountOrArgChange: true });
 
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
@@ -33,13 +33,6 @@ const Clients = () => {
       {
         field: 'id',
         disableExport: true
-      },
-      {
-        field: 'role',
-        headerName: 'Role',
-        flex: 1,
-        minWidth: 100,
-        maxWidth: 100
       },
       {
         field: 'firstName',
@@ -62,7 +55,27 @@ const Clients = () => {
         minWidth: 200,
       },
       {
-        field: 'userId',
+        field: 'address',
+        headerName: 'Address',
+        flex: 1,
+        minWidth: 200,
+      },
+      {
+        field: 'carers',
+        header: 'Carers',
+        disableColumnMenu: true,
+        flex: 1,
+        minWidth: 200,
+        maxWidth: 250,
+        valueGetter: (params) => {
+          const carers = params.value.map((carer) => `${carer.firstName} ${carer?.lastName}`);
+          console.log(carers);
+          return carers.join(', ');
+        },
+        disableExport: true
+      },
+      {
+        field: 'clientId',
         flex: 1,
         minWidth: 100,
       }
@@ -76,12 +89,12 @@ const Clients = () => {
       mounted.current = true;
     }
     if (mounted.current) {
-      if (isSuccess && adminState.users && adminState.users?.length !== table.rows.length) {
-        const parsedUsers = JSON.parse(JSON.stringify(adminState.users).replace(/:null/gi, ":\"\""));
+      if (isSuccess && clientState.clients && clientState.clients?.length !== table.rows.length) {
+        const parsedClients = JSON.parse(JSON.stringify(clientState.clients).replace(/:null/gi, ":\"\""));
         setTable(prev => {
           return {
             ...prev,
-            rows: parsedUsers
+            rows: parsedClients
           };
         });
       }
@@ -130,7 +143,7 @@ const Clients = () => {
     return () => {
       mounted.current = false;
     };
-  }, [mounted, adminState.users, fullScreen, isSuccess, table, userState.user.role]);
+  }, [mounted, clientState.clients, fullScreen, isSuccess, table, userState.user.role]);
 
   const [selectedRow, setSelectedRow] = useState();
 
@@ -151,7 +164,7 @@ const Clients = () => {
   };
 
   const openView = () => {
-    adminState.users.map((row) => {
+    clientState.clients.map((row) => {
       if (row.id === selectedRow) {
         setOpenDialog(prev => { return { ...prev, open: !prev.open, type: 'view', data: row }; });
       }
@@ -161,7 +174,7 @@ const Clients = () => {
   };
 
   const openEdit = () => {
-    adminState.users.map((row) => {
+    clientState.clients.map((row) => {
       if (row.id === selectedRow) {
         setOpenDialog(prev => { return { ...prev, open: !prev.open, type: 'edit', data: row }; });
       }
@@ -171,7 +184,7 @@ const Clients = () => {
   };
 
   const openDelete = () => {
-    adminState.users.map((row) => {
+    clientState.clients.map((row) => {
       if (row.id === selectedRow) {
         setOpenDialog(prev => { return { ...prev, open: !prev.open, type: 'delete', data: row }; });
       }
@@ -241,7 +254,7 @@ const Clients = () => {
               columnVisibilityModel: {
                 // Hides listed coloumns
                 id: false,
-                userId: false,
+                clientId: false,
                 firstName: false,
                 lastName: false,
               },

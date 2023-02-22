@@ -1,10 +1,20 @@
 import { backendApi } from "../api/backendApi";
-import { saveClient } from './clientSlice';
+import { saveClients } from './clientSlice';
 
 export const clientApiSlice = backendApi.injectEndpoints({
   endpoints: builder => ({
-    getClients: builder.query({
-      query: () => ({ url: '/clients', method: 'get' })
+    getAllClients: builder.query({
+      query: () => ({ url: '/clients/', method: 'get' }),
+      async onQueryStarted(client, { dispatch, queryFulfilled }) {
+        try {
+          const { data } = await queryFulfilled;
+          console.log(data);
+          dispatch(saveClients(data.data.data));
+        }
+        catch (err) {
+          console.error(err);
+        }
+      }
     }),
     createClient: builder.mutation({
       query: (client) => ({ url: '/clients/create', method: 'post', data: client }),
@@ -22,4 +32,4 @@ export const clientApiSlice = backendApi.injectEndpoints({
   })
 });
 
-export const { useGetClientsQuery, useCreateClientMutation } = clientApiSlice;
+export const { useGetAllClientsQuery, useCreateClientMutation } = clientApiSlice;
