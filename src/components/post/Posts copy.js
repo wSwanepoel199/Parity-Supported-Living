@@ -94,7 +94,7 @@ const Posts = () => {
             ((value.row.notes.toString().length > 34 || splitAtLineBreak.length >= 2) ? "..." : " ")
             : splitAtLineBreak[0];
           return (
-            <Typography>{string}</Typography>
+            <Box>{string}</Box>
           );
         }
       },

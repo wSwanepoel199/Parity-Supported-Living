@@ -35,6 +35,11 @@ const Clients = () => {
         disableExport: true
       },
       {
+        field: 'clientId',
+        flex: 1,
+        minWidth: 100,
+      },
+      {
         field: 'firstName',
       },
       {
@@ -62,22 +67,28 @@ const Clients = () => {
       },
       {
         field: 'carers',
-        header: 'Carers',
         disableColumnMenu: true,
+        valueFormatter: (params) => {
+          return params.value.map(carer => carer.userId);
+        }
+      },
+      {
+        field: 'carersName',
+        headerName: 'Carers',
+        disableExport: true,
         flex: 1,
         minWidth: 200,
         maxWidth: 250,
-        valueGetter: (params) => {
-          const carers = params.value.map((carer) => `${carer.firstName} ${carer?.lastName}`);
-          console.log(carers);
-          return carers.join(', ');
+        renderCell: (params) => {
+          console.log(params);
+          const carers = params.row.carers.map((carer) => `${carer.firstName} ${carer?.lastName}`).join(', ');
+          const string = carers.length >= 25 ?
+            carers.slice(0, 25) + "..."
+            : carers;
+          return <Box>
+            {string}
+          </Box>;
         },
-        disableExport: true
-      },
-      {
-        field: 'clientId',
-        flex: 1,
-        minWidth: 100,
       }
     ],
     rows: [],
@@ -243,8 +254,8 @@ const Clients = () => {
               clearSelect: setSelectedRow
             },
             row: {
-              onContextMenu: handleContextMenu,
-              style: { cursor: 'context-menu' },
+              onContextMenu: fullScreen ? handleContextMenu : null,
+              style: fullScreen && { cursor: 'context-menu' },
             },
           }}
           loading={isFetching || isLoading}
@@ -257,6 +268,7 @@ const Clients = () => {
                 clientId: false,
                 firstName: false,
                 lastName: false,
+                carers: false
               },
             },
             sorting: {
