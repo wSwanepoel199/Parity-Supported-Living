@@ -98,9 +98,7 @@ const Users = () => {
             {
               field: 'options',
               headerName: "Options",
-              flex: 1,
-              minWidth: 100,
-              maxWidth: 100,
+              width: 100,
               disableColumnMenu: true,
               disableColumnFilter: true,
               sortable: false,

@@ -45,7 +45,7 @@ const Posts = () => {
         sortable: false,
         renderCell: ({ value }) => {
           return (
-            <Box>
+            <Box className={`w-full flex justify-center items-center flex-row`}>
               {value ? <DoneIcon /> : <CloseIcon />}
             </Box>
           );
@@ -83,8 +83,7 @@ const Posts = () => {
         field: 'hours',
         headerName: 'Hours',
         disableColumnMenu: true,
-        flex: 1,
-        minWidth: 100,
+        width: 60
       },
       {
         field: 'kilos',
@@ -103,10 +102,8 @@ const Posts = () => {
         renderCell: (value) => {
           console.log(value);
           const splitAtLineBreak = value.row.notes.split(/\r?\n/);
-          const string = splitAtLineBreak[0].length >= value.colDef.computedWidth / 10 ?
-            splitAtLineBreak[0].toString().slice(0, value.colDef.computedWidth / 10) +
-            ((value.row.notes.toString().length > value.colDef.computedWidth / 10) ? "..." : " ")
-            : splitAtLineBreak[0];
+          const string = splitAtLineBreak[0].toString().slice(0, value.colDef.computedWidth / 10) +
+            ((value.row.notes.toString().length > value.colDef.computedWidth / 10 || splitAtLineBreak.length >= 2) ? "..." : " ");
           return (
             <Box>{string}</Box>
           );
@@ -206,9 +203,7 @@ const Posts = () => {
               {
                 field: 'options',
                 headerName: "Options",
-                flex: 2,
-                minWidth: ["Admin", "Coordinator"].includes(userState.user.role) ? 150 : 70,
-                maxWidth: ["Admin", "Coordinator"].includes(userState.user.role) ? 150 : 70,
+                width: ["Admin", "Coordinator"].includes(userState.user.role) ? 150 : 70,
                 disableColumnMenu: true,
                 disableColumnFilter: true,
                 sortable: false,

@@ -76,12 +76,10 @@ const Clients = () => {
         field: 'carersName',
         headerName: 'Carers',
         disableExport: true,
-        flex: 2,
+        flex: 1,
         minWidth: 100,
         renderCell: (params) => {
-          console.log(params);
           const carers = params.row.carers.map((carer) => `${carer.firstName} ${carer?.lastName}`).join(', ');
-          console.log(carers.length);
           const string = carers.length >= params.colDef.computedWidth / 10 ?
             carers.slice(0, params.colDef.computedWidth / 10) + "..."
             : carers;
@@ -94,15 +92,12 @@ const Clients = () => {
         field: 'notes',
         headerName: 'Notes',
         disableColumnMenu: true,
-        flex: 3,
+        flex: 2,
         minWidth: 100,
-        maxWidth: 300,
         renderCell: (value) => {
           const splitAtLineBreak = value.row.notes.split(/\r?\n/);
-          const string = splitAtLineBreak[0].length >= value.colDef.computedWidth / 10 ?
-            splitAtLineBreak[0].toString().slice(0, value.colDef.computedWidth / 10) +
-            ((value.row.notes.toString().length > value.colDef.computedWidth / 10 || splitAtLineBreak.length >= 2) ? "..." : " ")
-            : splitAtLineBreak[0];
+          const string = splitAtLineBreak[0].toString().slice(0, 10 + value.colDef.computedWidth / 10) +
+            ((value.row.notes.toString().length > value.colDef.computedWidth / 10 || splitAtLineBreak.length >= 2) ? "..." : " ");
           return (
             <Box>{string}</Box>
           );
@@ -149,9 +144,7 @@ const Clients = () => {
             {
               field: 'options',
               headerName: "Options",
-              flex: 2,
-              minWidth: ["Admin", "Coordinator"].includes(userState.user.role) ? 150 : 70,
-              maxWidth: ["Admin", "Coordinator"].includes(userState.user.role) ? 150 : 70,
+              width: ["Admin", "Coordinator"].includes(userState.user.role) ? 150 : 70,
               disableColumnMenu: true,
               disableColumnFilter: true,
               sortable: false,
