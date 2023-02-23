@@ -218,8 +218,8 @@ const Users = () => {
               clearSelect: setSelectedRow
             },
             row: {
-              onContextMenu: handleContextMenu,
-              style: { cursor: 'context-menu' },
+              onContextMenu: fullScreen ? handleContextMenu : null,
+              style: fullScreen && { cursor: 'context-menu' },
             },
           }}
           loading={isFetching || isLoading}

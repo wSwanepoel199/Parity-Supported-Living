@@ -17,8 +17,6 @@ function App() {
   const mounted = useRef();
   const userState = useSelector(state => state.user);
   const rootState = useSelector(state => state.root);
-  // const location = useNavigation();
-  const [locationKeys, setLocationKeys] = useState([]);
   const [refreshUser, { isUninitialized, }] = useRefreshUserMutation();
   const [alert, setAlert] = useState(undefined);
   const [update, setUpdate] = useState(false);
@@ -113,14 +111,12 @@ function App() {
               <Route index element={
                 <Posts />
               } />
+              <Route path="clients" element={
+                <Clients />
+              } />
               <Route path="users" element={
                 <ProtectedRoute>
                   <Users />
-                </ProtectedRoute>
-              } />
-              <Route path="clients" element={
-                <ProtectedRoute>
-                  <Clients />
                 </ProtectedRoute>
               } />
             </Route>

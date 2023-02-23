@@ -4,6 +4,8 @@ import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import VisibilityIcon from '@mui/icons-material/Visibility';
+import DoneIcon from '@mui/icons-material/Done';
+import CloseIcon from '@mui/icons-material/Close';
 import { format, parseISO } from "date-fns";
 import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
@@ -37,7 +39,17 @@ const Posts = () => {
       },
       {
         field: 'private',
+        headerName: 'Private',
         disableColumnMenu: true,
+        width: 65,
+        sortable: false,
+        renderCell: ({ value }) => {
+          return (
+            <Box>
+              {value ? <DoneIcon /> : <CloseIcon />}
+            </Box>
+          );
+        }
       },
       {
         field: 'date',
@@ -86,12 +98,14 @@ const Posts = () => {
         headerName: 'Notes',
         disableColumnMenu: true,
         flex: 3,
+        minWidth: 100,
         maxWidth: 300,
         renderCell: (value) => {
+          console.log(value);
           const splitAtLineBreak = value.row.notes.split(/\r?\n/);
-          const string = splitAtLineBreak.length >= 1 ?
-            splitAtLineBreak[0].toString().slice(0, 34) +
-            ((value.row.notes.toString().length > 34 || splitAtLineBreak.length >= 2) ? "..." : " ")
+          const string = splitAtLineBreak[0].length >= value.colDef.computedWidth / 10 ?
+            splitAtLineBreak[0].toString().slice(0, value.colDef.computedWidth / 10) +
+            ((value.row.notes.toString().length > value.colDef.computedWidth / 10) ? "..." : " ")
             : splitAtLineBreak[0];
           return (
             <Box>{string}</Box>
@@ -280,8 +294,8 @@ const Posts = () => {
               clearSelect: setSelectedRow
             },
             row: {
-              onContextMenu: handleContextMenu,
-              style: { cursor: 'context-menu' },
+              onContextMenu: fullScreen ? handleContextMenu : null,
+              style: fullScreen && { cursor: 'context-menu' },
             },
           }}
           loading={isFetching || isLoading}
@@ -292,7 +306,7 @@ const Posts = () => {
                 // Hides listed coloumns
                 carerId: false,
                 options: !fullScreen,
-                private: false
+                private: ["Admin", "Coordinator"].includes(userState.user.role) ? true : false
               },
             },
             sorting: {

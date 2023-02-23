@@ -2,6 +2,7 @@ import { Box, Button, Dialog, IconButton, LinearProgress, Menu, MenuItem, Typogr
 import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
+import VisibilityIcon from '@mui/icons-material/Visibility';
 import { DataGrid } from "@mui/x-data-grid";
 import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
@@ -49,7 +50,7 @@ const Clients = () => {
         field: 'name',
         headerName: 'Name',
         flex: 1,
-        minWidth: 160,
+        minWidth: 100,
         valueGetter: ({ row }) => { return `${row.firstName} ${row?.lastName}`; },
         disableExport: true
       },
@@ -57,13 +58,55 @@ const Clients = () => {
         field: 'email',
         headerName: 'Email',
         flex: 1,
-        minWidth: 200,
+        minWidth: 100,
+      },
+      {
+        field: 'phoneNumber',
+        headerName: 'Number',
+        flex: 1,
+        minWidth: 100,
       },
       {
         field: 'address',
         headerName: 'Address',
         flex: 1,
-        minWidth: 200,
+        minWidth: 100,
+      },
+      {
+        field: 'carersName',
+        headerName: 'Carers',
+        disableExport: true,
+        flex: 2,
+        minWidth: 100,
+        renderCell: (params) => {
+          console.log(params);
+          const carers = params.row.carers.map((carer) => `${carer.firstName} ${carer?.lastName}`).join(', ');
+          console.log(carers.length);
+          const string = carers.length >= params.colDef.computedWidth / 10 ?
+            carers.slice(0, params.colDef.computedWidth / 10) + "..."
+            : carers;
+          return <Box>
+            {string}
+          </Box>;
+        },
+      },
+      {
+        field: 'notes',
+        headerName: 'Notes',
+        disableColumnMenu: true,
+        flex: 3,
+        minWidth: 100,
+        maxWidth: 300,
+        renderCell: (value) => {
+          const splitAtLineBreak = value.row.notes.split(/\r?\n/);
+          const string = splitAtLineBreak[0].length >= value.colDef.computedWidth / 10 ?
+            splitAtLineBreak[0].toString().slice(0, value.colDef.computedWidth / 10) +
+            ((value.row.notes.toString().length > value.colDef.computedWidth / 10 || splitAtLineBreak.length >= 2) ? "..." : " ")
+            : splitAtLineBreak[0];
+          return (
+            <Box>{string}</Box>
+          );
+        }
       },
       {
         field: 'carers',
@@ -72,24 +115,6 @@ const Clients = () => {
           return params.value.map(carer => carer.userId);
         }
       },
-      {
-        field: 'carersName',
-        headerName: 'Carers',
-        disableExport: true,
-        flex: 1,
-        minWidth: 200,
-        maxWidth: 250,
-        renderCell: (params) => {
-          console.log(params);
-          const carers = params.row.carers.map((carer) => `${carer.firstName} ${carer?.lastName}`).join(', ');
-          const string = carers.length >= 25 ?
-            carers.slice(0, 25) + "..."
-            : carers;
-          return <Box>
-            {string}
-          </Box>;
-        },
-      }
     ],
     rows: [],
     pageSize: 10
@@ -116,7 +141,7 @@ const Clients = () => {
             columns: prev.columns.slice(0, -1)
           };
         });
-      } else if (!fullScreen && !table.columns.some(column => column['field'] === "options") && ["Admin"].includes(userState.user.role)) {
+      } else if (!fullScreen && !table.columns.some(column => column['field'] === "options")) {
         setTable({
           ...table,
           columns: [
@@ -124,21 +149,27 @@ const Clients = () => {
             {
               field: 'options',
               headerName: "Options",
-              flex: 1,
-              minWidth: 100,
-              maxWidth: 100,
+              flex: 2,
+              minWidth: ["Admin", "Coordinator"].includes(userState.user.role) ? 150 : 70,
+              maxWidth: ["Admin", "Coordinator"].includes(userState.user.role) ? 150 : 70,
               disableColumnMenu: true,
               disableColumnFilter: true,
               sortable: false,
               renderCell: (params) => (
                 <Box className={`flex justify-center`}>
-                  {userState.user.role === "Admin" ? <IconButton onClick={() => {
+                  <IconButton onClick={() => {
+                    setSelectedRow(params.row.id);
+                    setOpenDialog(prev => { return { ...prev, open: !prev.open, type: 'view', data: params.row }; });
+                  }} >
+                    <VisibilityIcon />
+                  </IconButton>
+                  {["Admin", "Coordinator"].includes(userState.user.role) ? <IconButton onClick={() => {
                     setSelectedRow(params.row.id);
                     setOpenDialog(prev => { return { ...prev, open: !prev.open, type: 'edit', data: params.row }; });
                   }}>
                     <EditIcon />
                   </IconButton> : null}
-                  {userState.user.role === "Admin" ? <IconButton onClick={() => {
+                  {["Admin", "Coordinator"].includes(userState.user.role) ? <IconButton onClick={() => {
                     setSelectedRow(params.row.id);
                     setOpenDialog(prev => { return { ...prev, open: !prev.open, type: 'delete', data: params.row }; });
                   }}>
