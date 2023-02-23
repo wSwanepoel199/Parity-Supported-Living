@@ -250,8 +250,8 @@ const Clients = () => {
         {
           openDialog.open
             ? (openDialog.type === "new" && <CreateClient setOpenDialog={setOpenDialog} />)
-            || (openDialog.type === "edit" && <UpdateUser setOpenDialog={setOpenDialog} user={openDialog.data} />)
-            || (openDialog.type === "delete" && <ConfirmDialog setOpenDialog={setOpenDialog} user={openDialog.data} />)
+            || (openDialog.type === "edit" && <UpdateUser setOpenDialog={setOpenDialog} client={openDialog.data} />)
+            || (openDialog.type === "delete" && <ConfirmDialog setOpenDialog={setOpenDialog} client={openDialog.data} />)
             : null
         }
       </Dialog>

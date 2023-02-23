@@ -187,7 +187,7 @@ const UpdatePost = ({ setOpenDialog, post }) => {
           label="Confidential"
         />
         <Box >
-          <Button onClick={(e) => handleSubmit(e)}>Edit</Button>
+          <Button onClick={(e) => handleSubmit(e)}>Update</Button>
           <Button onClick={() => setOpenDialog(prev => { return { ...prev, open: !prev.open, type: '', data: {} }; })}>Cancel</Button>
         </Box>
       </DialogActions>

@@ -33,8 +33,13 @@ export const clientApiSlice = backendApi.injectEndpoints({
       },
       invalidatesTags: (result, error, args) =>
         result ? [{ type: "client", id: "LIST" }] : error ? console.error(error) : null
+    }),
+    removeClient: builder.mutation({
+      query: (targetClient) => ({ url: '/clients/remove', method: 'post', data: targetClient }),
+      invalidatesTags: (result, error, args) =>
+        result ? [{ type: "client", id: "LIST" }] : error ? console.error(error) : null
     })
   })
 });
 
-export const { useGetAllClientsQuery, useCreateClientMutation } = clientApiSlice;
+export const { useGetAllClientsQuery, useCreateClientMutation, useRemoveClientMutation } = clientApiSlice;
