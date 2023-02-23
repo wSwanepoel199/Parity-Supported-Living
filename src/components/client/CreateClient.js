@@ -116,7 +116,6 @@ const CreateClient = ({ setOpenDialog }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(formData);
     createClient(formData);
     setOpenDialog(prev => { return { ...prev, open: !prev.open, type: '' }; });
   };
@@ -286,7 +285,6 @@ const CreateClient = ({ setOpenDialog }) => {
                       }
                       onChange={(e) => setSearchText(e.target.value)}
                       onKeyDown={(e) => {
-                        console.log(e.key);
                         if (e.key !== "Escape") {
                           // Prevents autoselecting item while typing (default Select behaviour)
                           e.stopPropagation();

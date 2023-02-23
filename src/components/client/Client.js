@@ -15,7 +15,7 @@ import ConfirmDialog from "./ConfirmDialog";
 
 const Clients = () => {
 
-  const clientState = useSelector(state => state.client);
+  const clientState = useSelector(state => state.clients);
   const userState = useSelector(state => state.user);
   const mounted = useRef();
   const { isFetching, isLoading, isSuccess } = useGetAllClientsQuery(undefined, { refetchOnMountOrArgChange: true });
@@ -116,16 +116,27 @@ const Clients = () => {
   });
 
   useEffect(() => {
+    let parsedClients;
     if (!mounted.current) {
+      if (clientState.clients) {
+        parsedClients = JSON.stringify(clientState.clients).replace(/:null/gi, ":\"\"");
+      }
       mounted.current = true;
     }
     if (mounted.current) {
       if (isSuccess && clientState.clients && clientState.clients?.length !== table.rows.length) {
-        const parsedClients = JSON.parse(JSON.stringify(clientState.clients).replace(/:null/gi, ":\"\""));
+        const parsedClient = JSON.parse(parsedClients);
         setTable(prev => {
           return {
             ...prev,
-            rows: parsedClients
+            rows: parsedClient
+          };
+        });
+      } else if (parsedClients && parsedClients !== JSON.stringify(table.rows)) {
+        setTable(prev => {
+          return {
+            ...prev,
+            rows: JSON.parse(parsedClients)
           };
         });
       }

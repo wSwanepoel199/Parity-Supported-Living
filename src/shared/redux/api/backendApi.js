@@ -36,7 +36,7 @@ async function axiosBaseQueryWithReauth(arg, api) {
 export const backendApi = createApi({
   reducerPath: 'backendApi',
   baseQuery: axiosBaseQueryWithReauth,
-  tagTypes: ['post', 'user', 'Index'],
+  tagTypes: ['post', 'user', 'client', 'Index'],
   endpoints: (builder) => ({
     checkToken: builder.query({
       query: () => ({ url: '/auth/checkToken', method: 'get' })

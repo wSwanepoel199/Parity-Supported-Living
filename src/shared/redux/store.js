@@ -16,7 +16,7 @@ export default configureStore({
     user: userReducer,
     posts: postReducer,
     admin: adminReducer,
-    client: clientReducer
+    clients: clientReducer
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(backendApi.middleware),

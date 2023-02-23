@@ -100,7 +100,6 @@ const Posts = () => {
         minWidth: 100,
         maxWidth: 300,
         renderCell: (value) => {
-          console.log(value);
           const splitAtLineBreak = value.row.notes.split(/\r?\n/);
           const string = splitAtLineBreak[0].toString().slice(0, value.colDef.computedWidth / 10) +
             ((value.row.notes.toString().length > value.colDef.computedWidth / 10 || splitAtLineBreak.length >= 2) ? "..." : " ");

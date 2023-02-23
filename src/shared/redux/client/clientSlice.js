@@ -6,11 +6,10 @@ const initialState = {
 };
 
 export const clientSlice = createSlice({
-  name: 'client',
+  name: 'clients',
   initialState,
   reducers: {
     saveClients: (state, action) => {
-      console.log(action.payload);
       return {
         ...state,
         status: 'fetced',

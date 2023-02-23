@@ -5,10 +5,15 @@ export const clientApiSlice = backendApi.injectEndpoints({
   endpoints: builder => ({
     getAllClients: builder.query({
       query: () => ({ url: '/clients/', method: 'get' }),
-      async onQueryStarted(client, { dispatch, queryFulfilled }) {
+      providesTags: (result, error, args) =>
+        result
+          ? [...result.data.data?.map(({ id }) => ({ type: 'client', id })),
+          { type: 'client', id: "LIST" },
+          ]
+          : [{ type: 'client', id: "LIST" }],
+      async onQueryStarted(undefiend, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
-          console.log(data);
           dispatch(saveClients(data.data.data));
         }
         catch (err) {
@@ -17,17 +22,17 @@ export const clientApiSlice = backendApi.injectEndpoints({
       }
     }),
     createClient: builder.mutation({
-      query: (client) => ({ url: '/clients/create', method: 'post', data: client }),
-      async onQueryStarted(client, { dispatch, queryFulfilled }) {
+      query: (newClient) => ({ url: '/clients/create', method: 'post', data: newClient }),
+      async onQueryStarted(newClient, { queryFulfilled }) {
         try {
-          const { data } = await queryFulfilled;
-          console.log(data);
-          // dispatch(saveClient(data.data.data));
+          await queryFulfilled;
         }
         catch (err) {
           console.error(err);
         }
-      }
+      },
+      invalidatesTags: (result, error, args) =>
+        result ? [{ type: "client", id: "LIST" }] : error ? console.error(error) : null
     })
   })
 });
