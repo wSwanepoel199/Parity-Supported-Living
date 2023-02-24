@@ -4,7 +4,7 @@ import { saveClients } from './clientSlice';
 export const clientApiSlice = backendApi.injectEndpoints({
   endpoints: builder => ({
     getAllClients: builder.query({
-      query: () => ({ url: '/clients/', method: 'get' }),
+      query: () => ({ url: '/clients', method: 'get' }),
       providesTags: (result, error, args) =>
         result
           ? [...result.data.data?.map(({ id }) => ({ type: 'client', id })),

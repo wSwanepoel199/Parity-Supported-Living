@@ -133,7 +133,7 @@ const UpdateUser = ({ setOpenDialog, user }) => {
 
         />
         <Box >
-          <Button type="submit">Edit</Button>
+          <Button color="success" variant="contained" type="submit">UPDATE</Button>
           <Button onClick={() => setOpenDialog(prev => { return { ...prev, open: !prev.open, type: '' }; })}>Cancel</Button>
         </Box>
       </DialogActions>

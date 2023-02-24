@@ -79,12 +79,12 @@ const Clients = () => {
         flex: 1,
         minWidth: 100,
         renderCell: (params) => {
-          const carers = params.row.carers.map((carer) => `${carer.firstName} ${carer?.lastName}`).join(', ');
-          const string = carers.length >= params.colDef.computedWidth / 10 ?
-            carers.slice(0, params.colDef.computedWidth / 10) + "..."
-            : carers;
-          return <Box>
-            {string}
+          const carers = params.row.carers.map((carer) => `${carer.firstName}`).join(', ');
+          // const string = carers.length >= params.colDef.computedWidth / 10 ?
+          //   carers.slice(0, params.colDef.computedWidth / 10) + "..."
+          //   : carers;
+          return <Box className={`text-ellipsis overflow-hidden whitespace-nowrap max-w-full`}>
+            {carers}
           </Box>;
         },
       },
@@ -95,11 +95,11 @@ const Clients = () => {
         flex: 2,
         minWidth: 100,
         renderCell: (value) => {
-          const splitAtLineBreak = value.row.notes.split(/\r?\n/);
-          const string = splitAtLineBreak[0].toString().slice(0, 10 + value.colDef.computedWidth / 10) +
-            ((value.row.notes.toString().length > value.colDef.computedWidth / 10 || splitAtLineBreak.length >= 2) ? "..." : " ");
+          // const splitAtLineBreak = value.row.notes.split(/\r?\n/);
+          // const string = splitAtLineBreak[0].toString().slice(0, value.colDef.computedWidth / 10) +
+          //   ((value.row.notes.toString().length > value.colDef.computedWidth / 10 || splitAtLineBreak.length >= 2) ? "..." : " ");
           return (
-            <Box>{string}</Box>
+            <Box className={`text-ellipsis overflow-hidden whitespace-nowrap max-w-full`} >{value.row.notes}</Box>
           );
         }
       },

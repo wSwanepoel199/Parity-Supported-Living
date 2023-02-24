@@ -155,7 +155,7 @@ const CreatePost = ({ setOpenDialog }) => {
 
         />
         <Box>
-          <Button type="submit">Create</Button>
+          <Button color="success" variant="contained" type="submit">Create</Button>
           <Button onClick={() => setOpenDialog(prev => { return { ...prev, open: !prev.open, type: '', data: {} }; })}>Cancel</Button>
         </Box>
       </DialogActions>

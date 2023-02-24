@@ -98,13 +98,13 @@ const Posts = () => {
         disableColumnMenu: true,
         flex: 3,
         minWidth: 100,
-        maxWidth: 300,
         renderCell: (value) => {
-          const splitAtLineBreak = value.row.notes.split(/\r?\n/);
-          const string = splitAtLineBreak[0].toString().slice(0, value.colDef.computedWidth / 10) +
-            ((value.row.notes.toString().length > value.colDef.computedWidth / 10 || splitAtLineBreak.length >= 2) ? "..." : " ");
+          // console.log(value);
+          // const splitAtLineBreak = value.row.notes.split(/\r?\n/);
+          // const string = splitAtLineBreak[0].toString().slice(0, value.colDef.computedWidth / 10) +
+          //   ((value.row.notes.toString().length > value.colDef.computedWidth / 10 || splitAtLineBreak.length >= 2) ? "..." : " ");
           return (
-            <Box>{string}</Box>
+            <Box className={`text-ellipsis overflow-hidden whitespace-nowrap max-w-full`}>{value.row.notes}</Box>
           );
         }
       },

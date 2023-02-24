@@ -65,7 +65,7 @@ const ViewPost = ({ setOpenDialog, post }) => {
             label="Confidential"
           /> : null}
         <Box>
-          <Button onClick={() => setOpenDialog(prev => { return { ...prev, open: !prev.open, type: '', data: {} }; })}>Cancel</Button>
+          <Button onClick={() => setOpenDialog(prev => { return { ...prev, open: !prev.open, type: '', data: {} }; })}>Close</Button>
         </Box>
       </DialogActions>
     </Box>

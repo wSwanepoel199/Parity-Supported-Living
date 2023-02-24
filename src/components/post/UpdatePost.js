@@ -72,7 +72,7 @@ const UpdatePost = ({ setOpenDialog, post }) => {
 
 
   return (
-    <Box>
+    <Box component='form' onSubmit={(e) => handleSubmit(e)}>
       <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
         <DialogTitle>
           Edit Note
@@ -187,7 +187,7 @@ const UpdatePost = ({ setOpenDialog, post }) => {
           label="Confidential"
         />
         <Box >
-          <Button onClick={(e) => handleSubmit(e)}>Update</Button>
+          <Button color="success" variant="contained" type="submit">Update</Button>
           <Button onClick={() => setOpenDialog(prev => { return { ...prev, open: !prev.open, type: '', data: {} }; })}>Cancel</Button>
         </Box>
       </DialogActions>
