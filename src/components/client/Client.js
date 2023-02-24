@@ -9,12 +9,12 @@ import { useSelector } from "react-redux";
 import { useGetAllClientsQuery } from "../../shared/redux/client/clientApiSlice";
 import Toolbar from "../Toolbar";
 import CreateClient from "./CreateClient";
-import UpdateUser from "./UpdateClient";
+import UpdateClient from "./UpdateClient";
 import ConfirmDialog from "./ConfirmDialog";
+import ViewClient from "./ViewClient";
 
 
 const Clients = () => {
-
   const clientState = useSelector(state => state.clients);
   const userState = useSelector(state => state.user);
   const mounted = useRef();
@@ -95,11 +95,10 @@ const Clients = () => {
         flex: 2,
         minWidth: 100,
         renderCell: (value) => {
-          // const splitAtLineBreak = value.row.notes.split(/\r?\n/);
-          // const string = splitAtLineBreak[0].toString().slice(0, value.colDef.computedWidth / 10) +
-          //   ((value.row.notes.toString().length > value.colDef.computedWidth / 10 || splitAtLineBreak.length >= 2) ? "..." : " ");
+          const splitAtLineBreak = value.row.notes.split(/\r?\n/);
+          const string = splitAtLineBreak.length >= 2 ? splitAtLineBreak[0] + "..." : splitAtLineBreak[0];
           return (
-            <Box className={`text-ellipsis overflow-hidden whitespace-nowrap max-w-full`} >{value.row.notes}</Box>
+            <Box className={`text-ellipsis overflow-hidden whitespace-nowrap max-w-full`} >{string}</Box>
           );
         }
       },
@@ -155,7 +154,7 @@ const Clients = () => {
             {
               field: 'options',
               headerName: "Options",
-              width: ["Admin", "Coordinator"].includes(userState.user.role) ? 150 : 70,
+              width: ["Admin", "Coordinator"].includes(userState.user.role) ? 140 : 70,
               disableColumnMenu: true,
               disableColumnFilter: true,
               sortable: false,
@@ -250,7 +249,8 @@ const Clients = () => {
         {
           openDialog.open
             ? (openDialog.type === "new" && <CreateClient setOpenDialog={setOpenDialog} />)
-            || (openDialog.type === "edit" && <UpdateUser setOpenDialog={setOpenDialog} client={openDialog.data} />)
+            || (openDialog.type === "edit" && <UpdateClient setOpenDialog={setOpenDialog} client={openDialog.data} />)
+            || (openDialog.type === "view" && <ViewClient setOpenDialog={setOpenDialog} client={openDialog.data} />)
             || (openDialog.type === "delete" && <ConfirmDialog setOpenDialog={setOpenDialog} client={openDialog.data} />)
             : null
         }

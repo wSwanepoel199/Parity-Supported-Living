@@ -99,12 +99,10 @@ const Posts = () => {
         flex: 3,
         minWidth: 100,
         renderCell: (value) => {
-          // console.log(value);
-          // const splitAtLineBreak = value.row.notes.split(/\r?\n/);
-          // const string = splitAtLineBreak[0].toString().slice(0, value.colDef.computedWidth / 10) +
-          //   ((value.row.notes.toString().length > value.colDef.computedWidth / 10 || splitAtLineBreak.length >= 2) ? "..." : " ");
+          const splitAtLineBreak = value.row.notes.split(/\r?\n/);
+          const string = splitAtLineBreak.length >= 2 ? splitAtLineBreak[0] + "..." : splitAtLineBreak[0];
           return (
-            <Box className={`text-ellipsis overflow-hidden whitespace-nowrap max-w-full`}>{value.row.notes}</Box>
+            <Box className={`text-ellipsis overflow-hidden whitespace-nowrap max-w-full`} >{string}</Box>
           );
         }
       },
@@ -202,7 +200,7 @@ const Posts = () => {
               {
                 field: 'options',
                 headerName: "Options",
-                width: ["Admin", "Coordinator"].includes(userState.user.role) ? 150 : 70,
+                width: ["Admin", "Coordinator"].includes(userState.user.role) ? 140 : 70,
                 disableColumnMenu: true,
                 disableColumnFilter: true,
                 sortable: false,

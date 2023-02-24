@@ -2,6 +2,7 @@ import { Box, Button, Dialog, IconButton, LinearProgress, Menu, MenuItem, Typogr
 import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
+import VisibilityIcon from '@mui/icons-material/Visibility';
 import { DataGrid } from "@mui/x-data-grid";
 import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
@@ -98,19 +99,25 @@ const Users = () => {
             {
               field: 'options',
               headerName: "Options",
-              width: 100,
+              width: ["Admin", "Coordinator"].includes(userState.user.role) ? 140 : 70,
               disableColumnMenu: true,
               disableColumnFilter: true,
               sortable: false,
               renderCell: (params) => (
                 <Box className={`flex justify-center`}>
-                  {userState.user.role === "Admin" ? <IconButton onClick={() => {
+                  <IconButton onClick={() => {
+                    setSelectedRow(params.row.id);
+                    setOpenDialog(prev => { return { ...prev, open: !prev.open, type: 'view', data: params.row }; });
+                  }} >
+                    <VisibilityIcon />
+                  </IconButton>
+                  {["Admin", "Coordinator"].includes(userState.user.role) ? <IconButton onClick={() => {
                     setSelectedRow(params.row.id);
                     setOpenDialog(prev => { return { ...prev, open: !prev.open, type: 'edit', data: params.row }; });
                   }}>
                     <EditIcon />
                   </IconButton> : null}
-                  {userState.user.role === "Admin" ? <IconButton onClick={() => {
+                  {["Admin", "Coordinator"].includes(userState.user.role) ? <IconButton onClick={() => {
                     setSelectedRow(params.row.id);
                     setOpenDialog(prev => { return { ...prev, open: !prev.open, type: 'delete', data: params.row }; });
                   }}>
