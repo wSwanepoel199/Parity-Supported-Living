@@ -9,7 +9,7 @@ const containsText = (user, searchText) =>
   user.toLowerCase().indexOf(searchText.toLowerCase()) > -1;
 
 const CreateUser = ({ setOpenDialog }) => {
-  const { data: options } = useGetAllClientsQuery();
+  const { data } = useGetAllClientsQuery();
   const [createUser, { isSuccess, isError }] = useCreateUserMutation();
 
   const [formData, setFormData] = useState({
@@ -22,14 +22,18 @@ const CreateUser = ({ setOpenDialog }) => {
 
   const [searchText, setSearchText] = useState("");
 
+  const [options, setOptions] = useState([]);
+
   const displayedOptions = useMemo(
-    () => options?.filter((option) => containsText(option.name, searchText)),
+    () => options.filter((option) => containsText(option.name, searchText)),
     [options, searchText]
   );
 
   useEffect(() => {
+    console.log(data);
+    if (data) setOptions(data.data.data);
     if (isSuccess || isError) setOpenDialog(prev => { return { ...prev, open: !prev.open, type: '' }; });
-  }, [isSuccess, isError, setOpenDialog]);
+  }, [isSuccess, isError, setOpenDialog, setOptions, data]);
 
   const handleInput = (e) => {
     const { value, name } = e.target;
@@ -50,6 +54,7 @@ const CreateUser = ({ setOpenDialog }) => {
 
   return (
     <Box component='form' onSubmit={(e) => handleSubmit(e)}>
+      {console.log(formData)}
       <DialogTitle>
         New User
       </DialogTitle>
@@ -113,6 +118,9 @@ const CreateUser = ({ setOpenDialog }) => {
               />
             </FormControl>
           </Grid>
+          <Grid xs={12} className=" border-b-2 border-b-gray-400 border-solid border-x-transparent border-t-transparent">
+            <Typography>Clients</Typography>
+          </Grid>
           <Grid xs={12} className="flex justify-center">
             {options ?
               <FormControl variant="standard" size="small" fullWidth margin="dense">
@@ -129,7 +137,7 @@ const CreateUser = ({ setOpenDialog }) => {
                       {selected.map((value, index) => {
                         return (
                           <Box key={index}>
-                            <Chip label={options.find((user) => value === user.userId).name} />
+                            <Chip label={options.find((user) => value === user.clientId).name} />
                           </Box>
                         );
                       })}
@@ -159,11 +167,11 @@ const CreateUser = ({ setOpenDialog }) => {
                       }}
                     />
                   </ListSubheader>
-                  {displayedOptions?.map((user, index) => {
+                  {displayedOptions?.map((client, index) => {
                     return (
-                      <MenuItem key={index} value={user.userId}>
-                        <Checkbox checked={formData.clients.indexOf(user.userId) > -1} />
-                        {user.firstName} {user?.lastName}</MenuItem>
+                      <MenuItem key={index} value={client.clientId}>
+                        <Checkbox checked={formData.clients.indexOf(client.clientId) > -1} />
+                        {client.firstName} {client?.lastName}</MenuItem>
                     );
                   })}
                 </Select>

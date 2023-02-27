@@ -34,11 +34,12 @@ const Users = () => {
         disableExport: true
       },
       {
+        field: 'userId',
+      },
+      {
         field: 'role',
         headerName: 'Role',
-        flex: 1,
-        minWidth: 100,
-        maxWidth: 100
+        width: 95,
       },
       {
         field: 'firstName',
@@ -50,7 +51,7 @@ const Users = () => {
         field: 'name',
         headerName: 'Name',
         flex: 1,
-        minWidth: 160,
+        minWidth: 100,
         valueGetter: ({ row }) => { return `${row.firstName} ${row?.lastName}`; },
         disableExport: true
       },
@@ -58,29 +59,58 @@ const Users = () => {
         field: 'email',
         headerName: 'Email',
         flex: 1,
-        minWidth: 200,
+        minWidth: 100,
       },
       {
-        field: 'userId',
-        flex: 1,
+        field: 'clientsName',
+        headerName: 'Clients',
+        disableExport: true,
+        flex: 2,
         minWidth: 100,
-      }
+        renderCell: (params) => {
+          const clients = params.row.clients.map((clients) => `${clients.firstName} ${clients?.lastName}`).join(', ');
+          // const string = carers.length >= params.colDef.computedWidth / 10 ?
+          //   carers.slice(0, params.colDef.computedWidth / 10) + "..."
+          //   : carers;
+          return <Box className={`text-ellipsis overflow-hidden whitespace-nowrap max-w-full`}>
+            {clients}
+          </Box>;
+        },
+      },
+      {
+        field: 'clients',
+        disableColumnMenu: true,
+        valueFormatter: (params) => {
+          return params.value.map(client => client.clientId);
+        }
+      },
     ],
     rows: [],
     pageSize: 10
   });
 
   useEffect(() => {
+    let parsedUsers;
     if (!mounted.current) {
+      if (adminState.users) {
+        parsedUsers = JSON.stringify(adminState.users).replace(/:null/gi, ":\"\"");
+      }
       mounted.current = true;
     }
     if (mounted.current) {
       if (isSuccess && adminState.users && adminState.users?.length !== table.rows.length) {
-        const parsedUsers = JSON.parse(JSON.stringify(adminState.users).replace(/:null/gi, ":\"\""));
+        const parsedUser = JSON.parse(parsedUsers);
         setTable(prev => {
           return {
             ...prev,
-            rows: parsedUsers
+            rows: parsedUser
+          };
+        });
+      } else if (parsedUsers && parsedUsers !== JSON.stringify(table.rows)) {
+        setTable(prev => {
+          return {
+            ...prev,
+            rows: JSON.parse(parsedUsers)
           };
         });
       }
@@ -91,7 +121,7 @@ const Users = () => {
             columns: prev.columns.slice(0, -1)
           };
         });
-      } else if (!fullScreen && !table.columns.some(column => column['field'] === "options") && ["Admin"].includes(userState.user.role)) {
+      } else if (!fullScreen && !table.columns.some(column => column['field'] === "options")) {
         setTable({
           ...table,
           columns: [
@@ -111,13 +141,13 @@ const Users = () => {
                   }} >
                     <VisibilityIcon />
                   </IconButton>
-                  {["Admin", "Coordinator"].includes(userState.user.role) ? <IconButton onClick={() => {
+                  {["Admin"].includes(userState.user.role) ? <IconButton onClick={() => {
                     setSelectedRow(params.row.id);
                     setOpenDialog(prev => { return { ...prev, open: !prev.open, type: 'edit', data: params.row }; });
                   }}>
                     <EditIcon />
                   </IconButton> : null}
-                  {["Admin", "Coordinator"].includes(userState.user.role) ? <IconButton onClick={() => {
+                  {["Admin"].includes(userState.user.role) ? <IconButton onClick={() => {
                     setSelectedRow(params.row.id);
                     setOpenDialog(prev => { return { ...prev, open: !prev.open, type: 'delete', data: params.row }; });
                   }}>
@@ -237,6 +267,7 @@ const Users = () => {
                 userId: false,
                 firstName: false,
                 lastName: false,
+                clients: false,
               },
             },
             sorting: {
