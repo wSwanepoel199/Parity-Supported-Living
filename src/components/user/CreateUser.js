@@ -29,11 +29,13 @@ const CreateUser = ({ setOpenDialog }) => {
     [options, searchText]
   );
 
-  useEffect(() => {
-    console.log(data);
+  useMemo(() => {
     if (data) setOptions(data.data.data);
+  }, [data]);
+
+  useEffect(() => {
     if (isSuccess || isError) setOpenDialog(prev => { return { ...prev, open: !prev.open, type: '' }; });
-  }, [isSuccess, isError, setOpenDialog, setOptions, data]);
+  }, [isSuccess, isError, setOpenDialog]);
 
   const handleInput = (e) => {
     const { value, name } = e.target;
@@ -54,7 +56,6 @@ const CreateUser = ({ setOpenDialog }) => {
 
   return (
     <Box component='form' onSubmit={(e) => handleSubmit(e)}>
-      {console.log(formData)}
       <DialogTitle>
         New User
       </DialogTitle>

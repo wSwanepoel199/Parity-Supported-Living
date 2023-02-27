@@ -4,7 +4,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import { DataGrid } from "@mui/x-data-grid";
-import { useEffect, useRef, useState } from "react";
+import { useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 import { useGetAllClientsQuery } from "../../shared/redux/client/clientApiSlice";
 import Toolbar from "../Toolbar";
@@ -17,8 +17,7 @@ import ViewClient from "./ViewClient";
 const Clients = () => {
   const clientState = useSelector(state => state.clients);
   const userState = useSelector(state => state.user);
-  const mounted = useRef();
-  const { isFetching, isLoading, isSuccess } = useGetAllClientsQuery(undefined, { refetchOnMountOrArgChange: true });
+  const { isFetching, isLoading, } = useGetAllClientsQuery(undefined, { refetchOnMountOrArgChange: true });
 
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
@@ -80,9 +79,6 @@ const Clients = () => {
         minWidth: 100,
         renderCell: (params) => {
           const carers = params.row.carers.map((carer) => `${carer.firstName}`).join(', ');
-          // const string = carers.length >= params.colDef.computedWidth / 10 ?
-          //   carers.slice(0, params.colDef.computedWidth / 10) + "..."
-          //   : carers;
           return <Box className={`text-ellipsis overflow-hidden whitespace-nowrap max-w-full`}>
             {carers}
           </Box>;
@@ -114,81 +110,64 @@ const Clients = () => {
     pageSize: 10
   });
 
-  useEffect(() => {
-    let parsedClients;
-    if (!mounted.current) {
-      if (clientState.clients) {
-        parsedClients = JSON.stringify(clientState.clients).replace(/:null/gi, ":\"\"");
-      }
-      mounted.current = true;
+  useMemo(() => {
+    if (clientState.clients) {
+      setTable(prev => {
+        return {
+          ...prev,
+          rows: JSON.parse(JSON.stringify(clientState.clients).replace(/:null/gi, ":\"\""))
+        };
+      });
     }
-    if (mounted.current) {
-      if (isSuccess && clientState.clients && clientState.clients?.length !== table.rows.length) {
-        const parsedClient = JSON.parse(parsedClients);
-        setTable(prev => {
-          return {
-            ...prev,
-            rows: parsedClient
-          };
-        });
-      } else if (parsedClients && parsedClients !== JSON.stringify(table.rows)) {
-        setTable(prev => {
-          return {
-            ...prev,
-            rows: JSON.parse(parsedClients)
-          };
-        });
-      }
-      if (fullScreen && table.columns.some(column => column['field'] === "options")) {
-        setTable(prev => {
-          return {
-            ...prev,
-            columns: prev.columns.slice(0, -1)
-          };
-        });
-      } else if (!fullScreen && !table.columns.some(column => column['field'] === "options")) {
-        setTable({
-          ...table,
-          columns: [
-            ...table.columns,
-            {
-              field: 'options',
-              headerName: "Options",
-              width: ["Admin", "Coordinator"].includes(userState.user.role) ? 140 : 70,
-              disableColumnMenu: true,
-              disableColumnFilter: true,
-              sortable: false,
-              renderCell: (params) => (
-                <Box className={`flex justify-center`}>
-                  <IconButton onClick={() => {
-                    setSelectedRow(params.row.id);
-                    setOpenDialog(prev => { return { ...prev, open: !prev.open, type: 'view', data: params.row }; });
-                  }} >
-                    <VisibilityIcon />
-                  </IconButton>
-                  {["Admin", "Coordinator"].includes(userState.user.role) ? <IconButton onClick={() => {
-                    setSelectedRow(params.row.id);
-                    setOpenDialog(prev => { return { ...prev, open: !prev.open, type: 'edit', data: params.row }; });
-                  }}>
-                    <EditIcon />
-                  </IconButton> : null}
-                  {["Admin", "Coordinator"].includes(userState.user.role) ? <IconButton onClick={() => {
-                    setSelectedRow(params.row.id);
-                    setOpenDialog(prev => { return { ...prev, open: !prev.open, type: 'delete', data: params.row }; });
-                  }}>
-                    <DeleteIcon />
-                  </IconButton> : null}
-                </Box>
-              ),
-              disableExport: true
-            }]
-        });
-      }
+  }, [clientState.clients]);
+
+  useMemo(() => {
+    if (fullScreen && table.columns.some(column => column['field'] === "options")) {
+      setTable(prev => {
+        return {
+          ...prev,
+          columns: prev.columns.slice(0, -1)
+        };
+      });
+    } else if (!fullScreen && !table.columns.some(column => column['field'] === "options")) {
+      setTable({
+        ...table,
+        columns: [
+          ...table.columns,
+          {
+            field: 'options',
+            headerName: "Options",
+            width: ["Admin", "Coordinator"].includes(userState.user.role) ? 140 : 70,
+            disableColumnMenu: true,
+            disableColumnFilter: true,
+            sortable: false,
+            renderCell: (params) => (
+              <Box className={`flex justify-center`}>
+                <IconButton onClick={() => {
+                  setSelectedRow(params.row.id);
+                  setOpenDialog(prev => { return { ...prev, open: !prev.open, type: 'view', data: params.row }; });
+                }} >
+                  <VisibilityIcon />
+                </IconButton>
+                {["Admin"].includes(userState.user.role) ? <IconButton onClick={() => {
+                  setSelectedRow(params.row.id);
+                  setOpenDialog(prev => { return { ...prev, open: !prev.open, type: 'edit', data: params.row }; });
+                }}>
+                  <EditIcon />
+                </IconButton> : null}
+                {["Admin"].includes(userState.user.role) ? <IconButton onClick={() => {
+                  setSelectedRow(params.row.id);
+                  setOpenDialog(prev => { return { ...prev, open: !prev.open, type: 'delete', data: params.row }; });
+                }}>
+                  <DeleteIcon />
+                </IconButton> : null}
+              </Box>
+            ),
+            disableExport: true
+          }]
+      });
     }
-    return () => {
-      mounted.current = false;
-    };
-  }, [mounted, clientState.clients, fullScreen, isSuccess, table, userState.user.role]);
+  }, [fullScreen, table, userState.user.role]);
 
   const [selectedRow, setSelectedRow] = useState();
 

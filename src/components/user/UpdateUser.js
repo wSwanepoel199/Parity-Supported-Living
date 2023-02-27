@@ -32,29 +32,35 @@ const UpdateUser = ({ setOpenDialog, user }) => {
     [options, searchText]
   );
 
-  useEffect(() => {
+  useMemo(() => {
     const { clients, ...selectedUser } = user;
+    setFormData(prev => {
+      const clientIds = clients.map(client => client.clientId);
+      const parsedUser = JSON.parse(JSON.stringify(selectedUser).replace(/:null/gi, ":\"\""));
+      return {
+        ...prev,
+        ...parsedUser,
+        clients: [
+          ...clientIds
+        ]
+      };
+    });
+    setOptions(clients);
+  }, [user]);
+
+  useMemo(() => {
+    if (data) setOptions(data.data.data);
+  }, [data]);
+
+  useEffect(() => {
     if (!mounted.current) {
-      setFormData(prev => {
-        const clientIds = clients.map(client => client.clientId);
-        const parsedUser = JSON.parse(JSON.stringify(selectedUser).replace(/:null/gi, ":\"\""));
-        return {
-          ...prev,
-          ...parsedUser,
-          clients: [
-            ...clientIds
-          ]
-        };
-      });
-      setOptions(clients);
       mounted.current = true;
     }
-    if (data) setOptions(data.data.data);
     if (isSuccess || isError) setOpenDialog(prev => { return { ...prev, open: !prev.open, type: '' }; });
     return () => {
       mounted.current = false;
     };
-  }, [mounted, user, isSuccess, isError, setOpenDialog, data]);
+  }, [mounted, isSuccess, isError, setOpenDialog]);
 
   const handleInput = (e) => {
     const { value, name } = e.target;
@@ -79,7 +85,6 @@ const UpdateUser = ({ setOpenDialog, user }) => {
       <DialogTitle>
         Edit User
       </DialogTitle>
-      {console.log(formData)}
       {mounted.current ?
         <DialogContent>
           <Grid container spacing={2} className="flex justify-center w-full">
