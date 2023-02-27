@@ -1,6 +1,7 @@
 import { fetchStoredTokenLocal } from "../../utils/authToken";
 import { clearUsers } from "../admin/adminSlice";
 import { backendApi } from "../api/backendApi";
+import { clearClientState } from "../client/clientSlice";
 import { clearPostState } from "../posts/postSlice";
 import { removeUser, saveUser, signOutUser } from "./userSlice";
 
@@ -65,6 +66,7 @@ export const userApiSlice = backendApi.injectEndpoints({
         try {
           dispatch(signOutUser());
           if (getState().posts.posts) await dispatch(clearPostState());
+          if (getState().clients.clients) await dispatch(clearClientState());
           if (getState().admin.users) await dispatch(clearUsers());
           dispatch(removeUser());
           await queryFulfilled;

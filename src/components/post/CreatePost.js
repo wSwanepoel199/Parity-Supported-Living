@@ -1,27 +1,32 @@
-import { Box, Button, DialogActions, DialogContent, DialogTitle, FormControl, FormControlLabel, Input, InputLabel, OutlinedInput, Switch, Typography } from "@mui/material";
+import { Box, Button, Checkbox, Chip, DialogActions, DialogContent, DialogTitle, FormControl, FormControlLabel, Input, InputAdornment, InputLabel, ListSubheader, MenuItem, OutlinedInput, Select, Switch, Typography } from "@mui/material";
+import SearchIcon from "@mui/icons-material/Search";
 import Grid from "@mui/material/Unstable_Grid2/";
 import { format, formatISO, parseISO } from "date-fns";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
+import { useGetAllClientsQuery } from "../../shared/redux/client/clientApiSlice";
 import { useAddPostMutation } from "../../shared/redux/posts/postApiSlice";
 
 const CreatePost = ({ setOpenDialog }) => {
   const userState = useSelector(state => state.user);
+  const { data } = useGetAllClientsQuery();
   const [addPost, { isLoading }] = useAddPostMutation();
   const [formData, setFormData] = useState({
     date: formatISO(new Date()),
     hours: 0,
     kilos: 0,
-    client: "",
+    clientId: "",
     notes: "",
     carerId: userState.user.userId,
     private: false,
   });
+  const [options, setOptions] = useState([]);
 
   useEffect(() => {
+    if (data) setOptions(data.data.data);
     if (isLoading) setOpenDialog(prev => { return { ...prev, open: !prev.open, type: '' }; });
 
-  }, [isLoading, setOpenDialog]);
+  }, [isLoading, setOpenDialog, data]);
 
   const handleInput = ({ value, name }) => {
     switch (name) {
@@ -96,16 +101,23 @@ const CreatePost = ({ setOpenDialog }) => {
             </FormControl>
           </Grid>
           <Grid sm={6} xs={12} className="flex justify-center">
-            <FormControl size="small" fullWidth margin="dense">
-              <InputLabel htmlFor="clientInput">Client's Name</InputLabel>
-              <Input
-                id="clientInput"
-                name="client"
-                type="text"
-                value={formData.client}
-                onChange={(e) => handleInput(e.target)}
-              />
-            </FormControl>
+            {options ?
+              <FormControl variant="standard" size="small" fullWidth margin="dense">
+                <InputLabel htmlFor="clientInput">Client</InputLabel>
+                <Select
+                  id="clientInput"
+                  name='clientId'
+                  required
+                  value={formData.clientId}
+                  onChange={(e) => handleInput(e.target)}
+                >
+                  {options?.map((client, index) => {
+                    return (
+                      <MenuItem key={index} value={client.clientId}>{client.firstName} {client?.lastName}</MenuItem>
+                    );
+                  })}
+                </Select>
+              </FormControl> : null}
           </Grid>
           <Grid sm={6} xs={12} className="flex justify-center">
             <FormControl size="small" fullWidth margin="dense">

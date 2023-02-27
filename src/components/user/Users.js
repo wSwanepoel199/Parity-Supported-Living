@@ -77,7 +77,7 @@ const Users = () => {
         field: 'clients',
         disableColumnMenu: true,
         valueFormatter: (params) => {
-          return params.value.map(client => client.clientId);
+          return params.value.map(client => client.clientId).join(", ");
         }
       },
     ],
@@ -112,7 +112,7 @@ const Users = () => {
           {
             field: 'options',
             headerName: "Options",
-            width: ["Admin", "Coordinator"].includes(userState.user.role) ? 140 : 70,
+            width: ["Admin"].includes(userState.user.role) ? 140 : 70,
             disableColumnMenu: true,
             disableColumnFilter: true,
             sortable: false,

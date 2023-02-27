@@ -11,6 +11,7 @@ const ViewPost = ({ setOpenDialog, post }) => {
   return (
     <Box>
       <DialogContent>
+        {console.log(formData)}
         <Grid container spacing={2} className="flex justify-center">
           <Grid xs={12} className=" border-b-2 border-b-gray-400 border-solid border-x-transparent border-t-transparent">
             <Typography>Details</Typography>
@@ -30,7 +31,9 @@ const ViewPost = ({ setOpenDialog, post }) => {
           <Grid xs={6} className="flex justify-center">
             <FormControl size="small" fullWidth margin="dense">
               <InputLabel shrink htmlFor="clientInput">Client's Name</InputLabel>
-              <Typography className={`p-3`}>{formData.client}</Typography>
+              {formData.client !== '' ?
+                <Typography className={`p-3`}>{`${formData.client.firstName} ${formData.client?.lastName}`}</Typography>
+                : <Typography className={`p-3`}>{`${formData.clientString}`}</Typography>}
             </FormControl>
           </Grid>
           <Grid xs={6} className="flex justify-center">

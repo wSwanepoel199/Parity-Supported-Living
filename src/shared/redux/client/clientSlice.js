@@ -15,10 +15,13 @@ export const clientSlice = createSlice({
         status: 'fetced',
         clients: action.payload
       };
+    },
+    clearClientState: () => {
+      return initialState;
     }
   },
 });
 
-export const { saveClients } = clientSlice.actions;
+export const { saveClients, clearClientState } = clientSlice.actions;
 
 export default clientSlice.reducer;

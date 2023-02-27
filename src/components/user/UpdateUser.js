@@ -28,7 +28,7 @@ const UpdateUser = ({ setOpenDialog, user }) => {
   const [options, setOptions] = useState([]);
 
   const displayedOptions = useMemo(
-    () => options.filter((option) => containsText(option.name, searchText)),
+    () => options?.filter((option) => containsText(option.name, searchText)),
     [options, searchText]
   );
 
@@ -36,31 +36,27 @@ const UpdateUser = ({ setOpenDialog, user }) => {
     const { clients, ...selectedUser } = user;
     setFormData(prev => {
       const clientIds = clients.map(client => client.clientId);
-      const parsedUser = JSON.parse(JSON.stringify(selectedUser).replace(/:null/gi, ":\"\""));
       return {
         ...prev,
-        ...parsedUser,
+        ...JSON.parse(JSON.stringify(selectedUser).replace(/:null/gi, ":\"\"")),
         clients: [
           ...clientIds
         ]
       };
     });
-    setOptions(clients);
+    if (clients) setOptions(clients);
   }, [user]);
-
-  useMemo(() => {
-    if (data) setOptions(data.data.data);
-  }, [data]);
 
   useEffect(() => {
     if (!mounted.current) {
       mounted.current = true;
     }
+    if (data) setOptions(data.data.data);
     if (isSuccess || isError) setOpenDialog(prev => { return { ...prev, open: !prev.open, type: '' }; });
     return () => {
       mounted.current = false;
     };
-  }, [mounted, isSuccess, isError, setOpenDialog]);
+  }, [mounted, isSuccess, isError, setOpenDialog, data]);
 
   const handleInput = (e) => {
     const { value, name } = e.target;
@@ -82,6 +78,7 @@ const UpdateUser = ({ setOpenDialog, user }) => {
 
   return (
     <Box component='form' onSubmit={(e) => handleSubmit(e)}>
+      {console.log(formData)}
       <DialogTitle>
         Edit User
       </DialogTitle>

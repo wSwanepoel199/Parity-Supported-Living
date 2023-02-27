@@ -65,6 +65,14 @@ const Posts = () => {
         disableColumnMenu: true,
         flex: 1,
         minWidth: 100,
+        renderCell: ({ row }) => {
+          console.log(row);
+          if (row.clientId === "") {
+            return <>{row.clientString}</>;
+          } else {
+            return <>{`${row.client.firstName} ${row.client?.lastName}`}</>;
+          }
+        }
       },
       {
         field: 'carer',
@@ -197,13 +205,13 @@ const Posts = () => {
                 }} >
                   <VisibilityIcon />
                 </IconButton>
-                {["Admin"].includes(userState.user.role) ? <IconButton onClick={() => {
+                {["Admin", "Coordinator"].includes(userState.user.role) ? <IconButton onClick={() => {
                   setSelectedRow(params.row.id);
                   setOpenDialog(prev => { return { ...prev, open: !prev.open, type: 'edit', data: params.row }; });
                 }}>
                   <EditIcon />
                 </IconButton> : null}
-                {["Admin"].includes(userState.user.role) ? <IconButton onClick={() => {
+                {["Admin", "Coordinator"].includes(userState.user.role) ? <IconButton onClick={() => {
                   setSelectedRow(params.row.id);
                   setOpenDialog(prev => { return { ...prev, open: !prev.open, type: 'delete', data: params.row }; });
                 }}>

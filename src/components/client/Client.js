@@ -12,12 +12,14 @@ import CreateClient from "./CreateClient";
 import UpdateClient from "./UpdateClient";
 import ConfirmDialog from "./ConfirmDialog";
 import ViewClient from "./ViewClient";
+import { useGetAllUsersQuery } from "../../shared/redux/admin/adminApiSlice";
 
 
 const Clients = () => {
   const clientState = useSelector(state => state.clients);
   const userState = useSelector(state => state.user);
   const { isFetching, isLoading, } = useGetAllClientsQuery(undefined, { refetchOnMountOrArgChange: true });
+  useGetAllUsersQuery(undefined, { refetchOnMountOrArgChange: true });
 
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
@@ -102,7 +104,7 @@ const Clients = () => {
         field: 'carers',
         disableColumnMenu: true,
         valueFormatter: (params) => {
-          return params.value.map(carer => carer.userId);
+          return params.value.map(carer => carer.userId).join(', ');
         }
       },
     ],

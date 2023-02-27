@@ -1,31 +1,50 @@
-import { Box, Button, DialogActions, DialogContent, DialogTitle, FormControl, FormControlLabel, Input, InputLabel, MenuItem, OutlinedInput, Select, Switch, Typography } from "@mui/material";
+import { Box, Button, DialogActions, DialogContent, DialogTitle, FormControl, FormControlLabel, FormHelperText, Input, InputLabel, MenuItem, OutlinedInput, Select, Switch, Typography } from "@mui/material";
 import Grid from "@mui/material/Unstable_Grid2/";
 import { format, formatISO, parseISO } from "date-fns";
 import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { useUpdatePostMutation } from "../../shared/redux/posts/postApiSlice";
 import { useGetAllUsersQuery } from "../../shared/redux/admin/adminApiSlice";
+import { useGetAllClientsQuery } from "../../shared/redux/client/clientApiSlice";
 
 const UpdatePost = ({ setOpenDialog, post }) => {
   const adminState = useSelector(state => state.admin);
+  const clientState = useSelector(state => state.clients);
   useGetAllUsersQuery();
+  useGetAllClientsQuery();
   const mounted = useRef();
   const [updatePost, { isLoading: updatePostLoading }] = useUpdatePostMutation();
-  const [formData, setFormData] = useState(JSON.parse(JSON.stringify(post).replace(/:null/gi, ":\"\"")));
-  const [options, setOptions] = useState([post.carer]);
+  const [formData, setFormData] = useState({
+    date: formatISO(new Date()),
+    hours: 0,
+    kilos: 0,
+    client: "",
+    notes: "",
+    private: false,
+    carerId: post.carerId,
+    clientId: post.clientId
+  });
+  const [carerOptions, setCarerOptions] = useState([post.carer]);
+  const [clientOptions, setClientOptions] = useState([post.client]);
+
 
   useEffect(() => {
     if (!mounted.current) {
-      if (adminState.users) {
-        setOptions(adminState.users);
-      }
+      setFormData(prev => {
+        return {
+          ...prev,
+          ...JSON.parse(JSON.stringify(post).replace(/:null/gi, ":\"\""))
+        };
+      });
       mounted.current = true;
     };
+    if (adminState.users) setCarerOptions(adminState.users);
+    if (clientState.clients) setClientOptions(clientState.clients);
     if (updatePostLoading) setOpenDialog(prev => { return { ...prev, open: !prev.open, type: '' }; });
     return () => {
       mounted.current = false;
     };
-  }, [mounted, post, setOpenDialog, updatePostLoading, adminState.users]);
+  }, [mounted, post, setOpenDialog, updatePostLoading, adminState.users, clientState.clients]);
 
   const handleInput = ({ value, name }) => {
     switch (name) {
@@ -108,17 +127,39 @@ const UpdatePost = ({ setOpenDialog, post }) => {
                 />
               </FormControl>
             </Grid>
+            {post.client === "" ?
+              <Grid sm={6} xs={12} className="flex justify-center">
+                <FormControl size="small" fullWidth margin="dense">
+                  <InputLabel htmlFor="clientInput">Client's Name</InputLabel>
+                  <Input
+                    id="clientInput"
+                    name="client"
+                    type="text"
+                    disabled
+                    value={formData.clientString}
+                    onChange={(e) => handleInput(e.target)}
+                  />
+                  <FormHelperText>Please Select Client from dropdown</FormHelperText>
+                </FormControl>
+              </Grid> : null}
             <Grid sm={6} xs={12} className="flex justify-center">
-              <FormControl size="small" fullWidth margin="dense">
-                <InputLabel htmlFor="clientInput">Client's Name</InputLabel>
-                <Input
-                  id="clientInput"
-                  name="client"
-                  type="text"
-                  value={formData.client}
-                  onChange={(e) => handleInput(e.target)}
-                />
-              </FormControl>
+              {clientOptions ?
+                <FormControl variant="standard" size="small" fullWidth margin="dense">
+                  <InputLabel htmlFor="clientInput">Client's Name</InputLabel>
+                  <Select
+                    id="clientInput"
+                    name='clientId'
+                    required
+                    value={formData.clientId}
+                    onChange={(e) => handleInput(e.target)}
+                  >
+                    {clientOptions?.map((client, index) => {
+                      return (
+                        <MenuItem key={index} value={client.clientId}>{client.firstName} {client?.lastName}</MenuItem>
+                      );
+                    })}
+                  </Select>
+                </FormControl> : null}
             </Grid>
             <Grid sm={6} xs={12} className="flex justify-center">
               <FormControl size="small" fullWidth margin="dense">
@@ -133,7 +174,7 @@ const UpdatePost = ({ setOpenDialog, post }) => {
               </FormControl>
             </Grid>
             <Grid sm={6} xs={12} className="flex justify-center">
-              {options ?
+              {carerOptions ?
                 <FormControl variant="standard" size="small" fullWidth margin="dense">
                   <InputLabel htmlFor="CarerInput">Carer</InputLabel>
                   <Select
@@ -143,7 +184,7 @@ const UpdatePost = ({ setOpenDialog, post }) => {
                     value={formData.carerId}
                     onChange={(e) => handleInput(e.target)}
                   >
-                    {options?.map((user, index) => {
+                    {carerOptions?.map((user, index) => {
                       return (
                         <MenuItem key={index} value={user.userId}>{user.firstName} {user?.lastName}</MenuItem>
                       );
