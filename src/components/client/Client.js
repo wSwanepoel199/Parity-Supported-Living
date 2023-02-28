@@ -12,14 +12,12 @@ import CreateClient from "./CreateClient";
 import UpdateClient from "./UpdateClient";
 import ConfirmDialog from "./ConfirmDialog";
 import ViewClient from "./ViewClient";
-import { useGetAllUsersQuery } from "../../shared/redux/admin/adminApiSlice";
 
 
 const Clients = () => {
   const clientState = useSelector(state => state.clients);
   const userState = useSelector(state => state.user);
   const { isFetching, isLoading, } = useGetAllClientsQuery(undefined, { refetchOnMountOrArgChange: true });
-  useGetAllUsersQuery(undefined, { refetchOnMountOrArgChange: true });
 
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
@@ -139,7 +137,7 @@ const Clients = () => {
           {
             field: 'options',
             headerName: "Options",
-            width: ["Admin", "Coordinator"].includes(userState.user.role) ? 140 : 70,
+            width: ["Admin", "Coordinator"].includes(userState.user.role) ? 130 : 70,
             disableColumnMenu: true,
             disableColumnFilter: true,
             sortable: false,

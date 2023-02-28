@@ -7,44 +7,57 @@ import { useUpdatePostMutation } from "../../shared/redux/posts/postApiSlice";
 import { useGetAllUsersQuery } from "../../shared/redux/admin/adminApiSlice";
 import { useGetAllClientsQuery } from "../../shared/redux/client/clientApiSlice";
 
-const UpdatePost = ({ setOpenDialog, post }) => {
+const UpdatePost = ({ setOpenDialog, data: post }) => {
   const adminState = useSelector(state => state.admin);
   const clientState = useSelector(state => state.clients);
-  useGetAllUsersQuery();
   useGetAllClientsQuery();
+  useGetAllUsersQuery();
   const mounted = useRef();
   const [updatePost, { isLoading: updatePostLoading }] = useUpdatePostMutation();
   const [formData, setFormData] = useState({
     date: formatISO(new Date()),
     hours: 0,
     kilos: 0,
-    client: "",
     notes: "",
     private: false,
+    clientString: '',
     carerId: post.carerId,
     clientId: post.clientId
   });
+
   const [carerOptions, setCarerOptions] = useState([post.carer]);
   const [clientOptions, setClientOptions] = useState([post.client]);
 
+  // useMemo(() => {
+  //   if (adminState.users && carerOptions.length === 1) setCarerOptions(() => adminState.users);
+  // }, [adminState.users, carerOptions]);
+
+  // useMemo(() => {
+  //   if (clientState.clients && clientOptions.length < 2) setClientOptions(() => clientState.clients);
+  // }, [clientState.clients, clientOptions]);
+
 
   useEffect(() => {
+    const parsedPost = JSON.stringify(post).replace(/:null/gi, ":\"\"");
     if (!mounted.current) {
       setFormData(prev => {
-        return {
-          ...prev,
-          ...JSON.parse(JSON.stringify(post).replace(/:null/gi, ":\"\""))
-        };
+        if (JSON.stringify(prev) !== parsedPost) {
+          return JSON.parse(parsedPost);
+        } else {
+          return prev;
+        }
       });
+      if (adminState.users && carerOptions.length === 1) setCarerOptions(adminState.users);
+      if (clientState.clients.length > 0 && clientOptions.length === 1) setClientOptions(clientState.clients);
+
       mounted.current = true;
     };
-    if (adminState.users) setCarerOptions(adminState.users);
-    if (clientState.clients) setClientOptions(clientState.clients);
     if (updatePostLoading) setOpenDialog(prev => { return { ...prev, open: !prev.open, type: '' }; });
     return () => {
-      mounted.current = false;
+      if (!mounted.current) return;
+      if (mounted.current) mounted.current = false;
     };
-  }, [mounted, post, setOpenDialog, updatePostLoading, adminState.users, clientState.clients]);
+  }, [mounted, post, setOpenDialog, updatePostLoading, clientState.clients, clientOptions, adminState.users, carerOptions]);
 
   const handleInput = ({ value, name }) => {
     switch (name) {
@@ -153,7 +166,7 @@ const UpdatePost = ({ setOpenDialog, post }) => {
                     value={formData.clientId}
                     onChange={(e) => handleInput(e.target)}
                   >
-                    {clientOptions?.map((client, index) => {
+                    {clientOptions.map((client, index) => {
                       return (
                         <MenuItem key={index} value={client.clientId}>{client.firstName} {client?.lastName}</MenuItem>
                       );
@@ -184,7 +197,7 @@ const UpdatePost = ({ setOpenDialog, post }) => {
                     value={formData.carerId}
                     onChange={(e) => handleInput(e.target)}
                   >
-                    {carerOptions?.map((user, index) => {
+                    {carerOptions.map((user, index) => {
                       return (
                         <MenuItem key={index} value={user.userId}>{user.firstName} {user?.lastName}</MenuItem>
                       );

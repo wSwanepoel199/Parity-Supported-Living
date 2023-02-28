@@ -112,7 +112,7 @@ const Users = () => {
           {
             field: 'options',
             headerName: "Options",
-            width: ["Admin"].includes(userState.user.role) ? 140 : 70,
+            width: ["Admin"].includes(userState.user.role) ? 130 : 70,
             disableColumnMenu: true,
             disableColumnFilter: true,
             sortable: false,

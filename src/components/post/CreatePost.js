@@ -1,8 +1,7 @@
-import { Box, Button, Checkbox, Chip, DialogActions, DialogContent, DialogTitle, FormControl, FormControlLabel, Input, InputAdornment, InputLabel, ListSubheader, MenuItem, OutlinedInput, Select, Switch, Typography } from "@mui/material";
-import SearchIcon from "@mui/icons-material/Search";
+import { Box, Button, DialogActions, DialogContent, DialogTitle, FormControl, FormControlLabel, Input, InputLabel, MenuItem, OutlinedInput, Select, Switch, Typography } from "@mui/material";
 import Grid from "@mui/material/Unstable_Grid2/";
 import { format, formatISO, parseISO } from "date-fns";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useGetAllClientsQuery } from "../../shared/redux/client/clientApiSlice";
 import { useAddPostMutation } from "../../shared/redux/posts/postApiSlice";

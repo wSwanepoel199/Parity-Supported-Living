@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import { useDeleteTargetPostMutation, } from "../../shared/redux/admin/adminApiSlice";
 
 
-const ConfirmDialog = ({ setOpenDialog, post }) => {
+const ConfirmDialog = ({ setOpenDialog, data: post }) => {
   const [deleteTargetPost, { isLoading, isError }] = useDeleteTargetPostMutation();
 
   useEffect(() => {

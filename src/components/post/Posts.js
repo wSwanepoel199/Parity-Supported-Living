@@ -37,6 +37,10 @@ const Posts = () => {
         disableColumnMenu: true,
       },
       {
+        field: 'clientId',
+        disableColumnMenu: true,
+      },
+      {
         field: 'private',
         headerName: 'Private',
         disableColumnMenu: true,
@@ -66,13 +70,17 @@ const Posts = () => {
         flex: 1,
         minWidth: 100,
         renderCell: ({ row }) => {
-          console.log(row);
           if (row.clientId === "") {
             return <>{row.clientString}</>;
           } else {
             return <>{`${row.client.firstName} ${row.client?.lastName}`}</>;
           }
-        }
+        },
+        disableExport: true
+      },
+      {
+        field: 'clientString',
+        disableColumnMenu: true,
       },
       {
         field: 'carer',
@@ -97,7 +105,7 @@ const Posts = () => {
         headerName: 'Distance(KM)',
         disableColumnMenu: true,
         flex: 1,
-        minWidth: 100,
+        minWidth: 110,
       },
       {
         field: 'notes',
@@ -136,8 +144,8 @@ const Posts = () => {
     setContextMenu(null);
   };
 
-  const openView = () => {
-    postState.posts.map((row) => {
+  const openView = (array) => {
+    array.map((row) => {
       if (row.id === selectedRow) {
         setOpenDialog(prev => { return { ...prev, open: !prev.open, type: 'view', data: row }; });
       }
@@ -146,8 +154,8 @@ const Posts = () => {
     handleClose();
   };
 
-  const openEdit = () => {
-    postState.posts.map((row) => {
+  const openEdit = (array) => {
+    array.map((row) => {
       if (row.id === selectedRow) {
         setOpenDialog(prev => { return { ...prev, open: !prev.open, type: 'edit', data: row }; });
       }
@@ -156,8 +164,8 @@ const Posts = () => {
     handleClose();
   };
 
-  const openDelete = () => {
-    postState.posts.map((row) => {
+  const openDelete = (array) => {
+    array.map((row) => {
       if (row.id === selectedRow) {
         setOpenDialog(prev => { return { ...prev, open: !prev.open, type: 'delete', data: row }; });
       }
@@ -185,7 +193,8 @@ const Posts = () => {
           columns: prev.columns.slice(0, -1)
         };
       });
-    } else if (!fullScreen && !table.columns.some(column => column['field'] === "options")) {
+    }
+    if (!fullScreen && !table.columns.some(column => column['field'] === "options")) {
       setTable({
         ...table,
         columns: [
@@ -193,12 +202,12 @@ const Posts = () => {
           {
             field: 'options',
             headerName: "Options",
-            width: ["Admin", "Coordinator"].includes(userState.user.role) ? 140 : 70,
+            width: ["Admin", "Coordinator"].includes(userState.user.role) ? 130 : 70,
             disableColumnMenu: true,
             disableColumnFilter: true,
             sortable: false,
             renderCell: (params) => (
-              <Box className={`flex justify-center`}>
+              <Box className={`flex justify-center w-full`}>
                 <IconButton onClick={() => {
                   setSelectedRow(params.row.id);
                   setOpenDialog(prev => { return { ...prev, open: !prev.open, type: 'view', data: params.row }; });
@@ -236,9 +245,9 @@ const Posts = () => {
         {
           openDialog.open
             ? (openDialog.type === "new" && <CreatePost setOpenDialog={setOpenDialog} />)
-            || (openDialog.type === "edit" && <UpdatePost setOpenDialog={setOpenDialog} post={openDialog.data} />)
-            || (openDialog.type === "view" && <ViewPost setOpenDialog={setOpenDialog} post={openDialog.data} />)
-            || (openDialog.type === "delete" && <ConfirmDialog setOpenDialog={setOpenDialog} post={openDialog.data} />)
+            || (openDialog.type === "edit" && <UpdatePost setOpenDialog={setOpenDialog} data={openDialog.data} />)
+            || (openDialog.type === "view" && <ViewPost setOpenDialog={setOpenDialog} data={openDialog.data} />)
+            || (openDialog.type === "delete" && <ConfirmDialog setOpenDialog={setOpenDialog} data={openDialog.data} />)
             : null
         }
       </Dialog>
@@ -285,6 +294,8 @@ const Posts = () => {
               columnVisibilityModel: {
                 // Hides listed coloumns
                 carerId: false,
+                clientId: false,
+                clientString: false,
                 options: !fullScreen,
                 private: ["Admin", "Coordinator"].includes(userState.user.role) ? true : false
               },
@@ -317,11 +328,11 @@ const Posts = () => {
             },
           }}
         >
-          <MenuItem onClick={openView}>View</MenuItem>
+          <MenuItem onClick={() => openView(postState.posts)}>View</MenuItem>
           {["Admin", "Coordinator"].includes(userState.user.role) ?
             ['Edit', 'Delete'].map((option, index) => {
               return (
-                <MenuItem key={index} onClick={option === "Edit" ? openEdit : openDelete}>{option}</MenuItem>
+                <MenuItem key={index} onClick={option === "Edit" ? () => openEdit(postState.posts) : () => openDelete(postState.posts)}>{option}</MenuItem>
               );
             }) : null}
         </Menu>
