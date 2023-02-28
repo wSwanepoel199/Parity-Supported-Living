@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import { useDeleteTargetUserMutation } from "../../shared/redux/admin/adminApiSlice";
 
 
-const ConfirmDialog = ({ setOpenDialog, user }) => {
+const ConfirmDialog = ({ setOpenDialog, data: user }) => {
   const [deleteTargetUser, { isLoading, isError }] = useDeleteTargetUserMutation();
 
   useEffect(() => {

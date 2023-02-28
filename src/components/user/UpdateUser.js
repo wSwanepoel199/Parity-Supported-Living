@@ -8,7 +8,7 @@ import { useGetAllClientsQuery } from "../../shared/redux/client/clientApiSlice"
 const containsText = (user, searchText) =>
   user.toLowerCase().indexOf(searchText.toLowerCase()) > -1;
 
-const UpdateUser = ({ setOpenDialog, user }) => {
+const UpdateUser = ({ setOpenDialog, data: user }) => {
   const { data } = useGetAllClientsQuery();
   const [updateUser, { isSuccess, isError }] = useUpdateUserMutation();
   const mounted = useRef();

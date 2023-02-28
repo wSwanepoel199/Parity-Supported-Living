@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import { useRemoveClientMutation } from "../../shared/redux/client/clientApiSlice";
 
 
-const ConfirmDialog = ({ setOpenDialog, client }) => {
+const ConfirmDialog = ({ setOpenDialog, data: client }) => {
   const [removeClient, { isLoading, isError }] = useRemoveClientMutation();
 
   useEffect(() => {

@@ -3,7 +3,7 @@ import Grid from "@mui/material/Unstable_Grid2/";
 import { format, parseISO } from "date-fns";
 import { useSelector } from "react-redux";
 
-const ViewClient = ({ setOpenDialog, client }) => {
+const ViewClient = ({ setOpenDialog, data: client }) => {
   const userState = useSelector(state => state.user);
   const formData = JSON.parse(JSON.stringify(client).replace(/:null/gi, ":\"\""));
 

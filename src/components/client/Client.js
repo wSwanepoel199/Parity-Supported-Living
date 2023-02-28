@@ -228,9 +228,9 @@ const Clients = () => {
         {
           openDialog.open
             ? (openDialog.type === "new" && <CreateClient setOpenDialog={setOpenDialog} />)
-            || (openDialog.type === "edit" && <UpdateClient setOpenDialog={setOpenDialog} client={openDialog.data} />)
-            || (openDialog.type === "view" && <ViewClient setOpenDialog={setOpenDialog} client={openDialog.data} />)
-            || (openDialog.type === "delete" && <ConfirmDialog setOpenDialog={setOpenDialog} client={openDialog.data} />)
+            || (openDialog.type === "edit" && <UpdateClient setOpenDialog={setOpenDialog} data={openDialog.data} />)
+            || (openDialog.type === "view" && <ViewClient setOpenDialog={setOpenDialog} data={openDialog.data} />)
+            || (openDialog.type === "delete" && <ConfirmDialog setOpenDialog={setOpenDialog} data={openDialog.data} />)
             : null
         }
       </Dialog>
