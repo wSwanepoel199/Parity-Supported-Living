@@ -69,7 +69,7 @@ const Posts = () => {
         minWidth: 100,
         renderCell: ({ row }) => {
           if (row.clientId === "") {
-            return <>{row.clientString}</>;
+            return <>{row.clientName}</>;
           } else {
             return <>{`${row.client.firstName} ${row.client?.lastName}`}</>;
           }
@@ -77,7 +77,7 @@ const Posts = () => {
         disableExport: true
       },
       {
-        field: 'clientString',
+        field: 'clientName',
         disableColumnMenu: true,
       },
       {
@@ -293,7 +293,7 @@ const Posts = () => {
                 // Hides listed coloumns
                 carerId: false,
                 clientId: false,
-                clientString: false,
+                clientName: false,
                 options: !fullScreen,
                 private: ["Admin", "Coordinator"].includes(userState.user.role) ? true : false
               },

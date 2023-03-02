@@ -16,7 +16,7 @@ const UpdatePost = ({ setOpenDialog, data: post }) => {
     kilos: 0,
     notes: "",
     private: false,
-    clientString: '',
+    clientName: '',
     carerId: post.carerId,
     clientId: ''
   });
@@ -76,6 +76,17 @@ const UpdatePost = ({ setOpenDialog, data: post }) => {
         });
         return;
       }
+      case 'clientId': {
+        console.log(value);
+        setFormData(prev => {
+          return {
+            ...prev,
+            [name]: value,
+            clientName: clientState.clients.find(client => client.clientId === value).name
+          };
+        });
+        return;
+      }
       default: {
         setFormData(prev => {
           return {
@@ -101,7 +112,7 @@ const UpdatePost = ({ setOpenDialog, data: post }) => {
 
   return (
     <Box component='form' onSubmit={(e) => handleSubmit(e)}>
-      {console.log(post)}
+      {console.log(formData)}
       <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
         <DialogTitle>
           Edit Note
@@ -146,7 +157,7 @@ const UpdatePost = ({ setOpenDialog, data: post }) => {
                     name="client"
                     type="text"
                     disabled
-                    value={formData.clientString}
+                    value={formData.clientName}
                     onChange={(e) => handleInput(e.target)}
                   />
                   <FormHelperText>Please Select Client from dropdown</FormHelperText>

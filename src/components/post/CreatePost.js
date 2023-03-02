@@ -14,6 +14,7 @@ const CreatePost = ({ setOpenDialog }) => {
     hours: 0,
     kilos: 0,
     clientId: "",
+    clientName: '',
     notes: "",
     carerId: userState.user.userId,
     private: false,
@@ -43,6 +44,16 @@ const CreatePost = ({ setOpenDialog }) => {
           return {
             ...prev,
             [name]: parseInt(value)
+          };
+        });
+        return;
+      }
+      case 'clientId': {
+        setFormData(prev => {
+          return {
+            ...prev,
+            [name]: value,
+            clientName: clientState.clients.find(client => client.clientId === value)
           };
         });
         return;

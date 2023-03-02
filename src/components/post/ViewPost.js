@@ -126,7 +126,7 @@ const ViewPost = ({ setOpenDialog, data: post }) => {
             </Collapse> : <Grid xs={12} className="flex justify-center">
               <FormControl size="small" fullWidth margin="dense">
                 <InputLabel shrink htmlFor="clientInput">Client's Name</InputLabel>
-                <Typography className={`p-3`}>{`${formData.clientString}`}</Typography>
+                <Typography className={`p-3`}>{`${formData.clientName}`}</Typography>
               </FormControl>
             </Grid>}
           <Grid xs={12}
