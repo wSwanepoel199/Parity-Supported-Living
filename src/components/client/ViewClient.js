@@ -6,10 +6,10 @@ import { useState } from "react";
 import { useSelector } from "react-redux";
 
 const ViewClient = ({ setOpenDialog, data: client }) => {
-  const userState = useSelector(state => state.user);
+  // const userState = useSelector(state => state.user);
   const adminState = useSelector(state => state.admin);
   const formData = JSON.parse(JSON.stringify(client).replace(/:null/gi, ":\"\""));
-  const users = [...client.carers, ...adminState?.users];
+  const users = [...client.carers, ...(adminState.users ? adminState.users : [])];
   const [open, setOpen] = useState({
     clientDetails: true,
     carersDetails: false,
@@ -135,7 +135,7 @@ const ViewClient = ({ setOpenDialog, data: client }) => {
             <Stack className={`divide-y divide-x-0 divide-slate-300 divide-solid border-[1px] border-slate-300 border-solid`}>
               {formData.posts.map((note, index) => {
                 const user = users.find(user => user.userId === note.carerId);
-                return (
+                if (user) return (
                   <Grid container spacing={0.5} key={index} className="flex justify-center">
                     <Grid sm={6} xs={12} className="flex justify-center">
                       <FormControl size="small" fullWidth margin="dense">
@@ -169,6 +169,10 @@ const ViewClient = ({ setOpenDialog, data: client }) => {
                     </Grid>
                   </Grid>
                 );
+                return (
+                  <Box key={index} className={`hidden`}>
+
+                  </Box>);
               })}
             </Stack>
           </Collapse>
