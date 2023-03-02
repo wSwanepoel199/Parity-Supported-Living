@@ -1,10 +1,10 @@
-import { Box, Button, Dialog, IconButton, LinearProgress, Menu, MenuItem, Typography, useMediaQuery, useTheme } from "@mui/material";
+import { Box, Button, Dialog, IconButton, LinearProgress, ListItemIcon, ListItemText, Menu, MenuItem, Typography, useMediaQuery, useTheme } from "@mui/material";
 import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import { DataGrid } from "@mui/x-data-grid";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 import Toolbar from "../Toolbar";
 import CreateUser from "./CreateUser";
@@ -14,6 +14,7 @@ import ConfirmDialog from "./ConfirmDialog";
 const Users = () => {
   const adminState = useSelector(state => state.admin);
   const userState = useSelector(state => state.user);
+  const rootState = useSelector(state => state.root);
 
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
@@ -62,7 +63,7 @@ const Users = () => {
         field: 'clientsName',
         headerName: 'Clients',
         disableExport: true,
-        flex: 2,
+        flex: 1,
         minWidth: 100,
         renderCell: (params) => {
           const clients = params.row.clients.map((clients) => `${clients.firstName} ${clients?.lastName}`).join(', ');
@@ -83,7 +84,7 @@ const Users = () => {
     pageSize: 10
   });
 
-  useMemo(() => {
+  useEffect(() => {
     if (adminState.users) {
       setTable(prev => {
         return {
@@ -160,8 +161,18 @@ const Users = () => {
     setContextMenu(null);
   };
 
-  const openEdit = () => {
-    adminState.users.map((row) => {
+  const openView = (array) => {
+    array.map((row) => {
+      if (row.id === selectedRow) {
+        setOpenDialog(prev => { return { ...prev, open: !prev.open, type: 'view', data: row }; });
+      }
+      return row;
+    });
+    handleClose();
+  };
+
+  const openEdit = (array) => {
+    array.map((row) => {
       if (row.id === selectedRow) {
         setOpenDialog(prev => { return { ...prev, open: !prev.open, type: 'edit', data: row }; });
       }
@@ -170,8 +181,8 @@ const Users = () => {
     handleClose();
   };
 
-  const openDelete = () => {
-    adminState.users.map((row) => {
+  const openDelete = (array) => {
+    array.map((row) => {
       if (row.id === selectedRow) {
         setOpenDialog(prev => { return { ...prev, open: !prev.open, type: 'delete', data: row }; });
       }
@@ -234,7 +245,7 @@ const Users = () => {
               style: fullScreen && { cursor: 'context-menu' },
             },
           }}
-          // loading={isFetching || isLoading}
+          loading={table.rows.length === 0 || rootState.status === "loading"}
           className="bg-slate-300"
           initialState={{
             columns: {
@@ -275,10 +286,30 @@ const Users = () => {
             },
           }}
         >
-          {userState.user.role === "Admin" ?
+          <MenuItem
+            onClick={() => openView(adminState.users)}>
+            <ListItemIcon>
+              <VisibilityIcon />
+            </ListItemIcon>
+            <ListItemText>
+              View
+            </ListItemText>
+          </MenuItem>
+          {["Admin"].includes(userState.user.role) ?
             ['Edit', 'Delete'].map((option, index) => {
               return (
-                <MenuItem key={index} onClick={option === "Edit" ? openEdit : openDelete}>{option}</MenuItem>
+                <MenuItem
+                  key={index}
+                  onClick={option === "Edit" ?
+                    () => openEdit(adminState.users) :
+                    () => openDelete(adminState.users)}>
+                  <ListItemIcon>
+                    {option === "Edit" ? <EditIcon /> : <DeleteIcon />}
+                  </ListItemIcon>
+                  <ListItemText>
+                    {option}
+                  </ListItemText>
+                </MenuItem>
               );
             }) : null}
         </Menu>

@@ -7,7 +7,7 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import DoneIcon from '@mui/icons-material/Done';
 import CloseIcon from '@mui/icons-material/Close';
 import { format, parseISO } from "date-fns";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 import CreatePost from "./CreatePost";
 import UpdatePost from "./UpdatePost";
@@ -18,6 +18,7 @@ import ConfirmDialog from "./ConfirmDialog";
 const Posts = () => {
   const postState = useSelector(state => state.posts);
   const userState = useSelector(state => state.user);
+  const rootState = useSelector(state => state.root);
 
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
@@ -172,7 +173,7 @@ const Posts = () => {
     handleClose();
   };
 
-  useMemo(() => {
+  useEffect(() => {
     if (postState.posts) {
       setTable(prev => {
         return {
@@ -285,7 +286,7 @@ const Posts = () => {
               style: fullScreen && { cursor: 'context-menu' },
             },
           }}
-          // loading={isFetching || isLoading}
+          loading={table.rows.length === 0 || rootState.status === "loading"}
           className="bg-slate-300"
           initialState={{
             columns: {

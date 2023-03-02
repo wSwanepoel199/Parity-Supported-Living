@@ -1,4 +1,4 @@
-import { Box, Button, Collapse, DialogActions, DialogContent, FormControl, FormControlLabel, InputLabel, Switch, Typography } from "@mui/material";
+import { Box, Button, Collapse, DialogActions, DialogContent, FormControl, InputLabel, Typography } from "@mui/material";
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import DoneIcon from '@mui/icons-material/Done';
 import CloseIcon from '@mui/icons-material/Close';
@@ -66,13 +66,13 @@ const ViewPost = ({ setOpenDialog, data: post }) => {
             </Grid>
           </Collapse>
           <Grid xs={12}
-            className=" 
-          border-b-2 
-          border-b-gray-400 
-          border-solid 
-          border-x-transparent 
+            className="
+          border-b-2
+          border-b-gray-400
+          border-solid
+          border-x-transparent
           border-t-transparent
-          flex 
+          flex
           justify-between"
             onClick={() => setOpen(prev => {
               return {
@@ -82,7 +82,9 @@ const ViewPost = ({ setOpenDialog, data: post }) => {
             })}
           >
             <Typography>Client Details</Typography>
-            {open.clientDetails ? <ArrowBackIosNewIcon className={`rotate-[-90deg]`} /> : <ArrowBackIosNewIcon />}
+            {formData.client ?
+              open.clientDetails ? <ArrowBackIosNewIcon className={`rotate-[-90deg]`} /> : <ArrowBackIosNewIcon />
+              : null}
           </Grid>
           {formData.client ?
             <Collapse

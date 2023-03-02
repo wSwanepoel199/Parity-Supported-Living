@@ -4,7 +4,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import { DataGrid } from "@mui/x-data-grid";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 import Toolbar from "../Toolbar";
 import CreateClient from "./CreateClient";
@@ -16,6 +16,7 @@ import ViewClient from "./ViewClient";
 const Clients = () => {
   const clientState = useSelector(state => state.clients);
   const userState = useSelector(state => state.user);
+  const rootState = useSelector(state => state.root);
 
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
@@ -108,7 +109,7 @@ const Clients = () => {
     pageSize: 10
   });
 
-  useMemo(() => {
+  useEffect(() => {
     if (clientState.clients) {
       setTable(prev => {
         return {
@@ -270,7 +271,7 @@ const Clients = () => {
               style: fullScreen && { cursor: 'context-menu' },
             },
           }}
-          // loading={isFetching || isLoading}
+          loading={table.rows.length === 0 || rootState.status === "loading"}
           className="bg-slate-300"
           initialState={{
             columns: {
