@@ -4,14 +4,10 @@ import { format, formatISO, parseISO } from "date-fns";
 import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { useUpdatePostMutation } from "../../shared/redux/posts/postApiSlice";
-import { useGetAllUsersQuery } from "../../shared/redux/admin/adminApiSlice";
-import { useGetAllClientsQuery } from "../../shared/redux/client/clientApiSlice";
 
 const UpdatePost = ({ setOpenDialog, data: post }) => {
-  const adminState = useSelector(state => state.admin);
   const clientState = useSelector(state => state.clients);
-  useGetAllClientsQuery();
-  useGetAllUsersQuery();
+  const adminState = useSelector(state => state.admin);
   const mounted = useRef();
   const [updatePost, { isLoading: updatePostLoading }] = useUpdatePostMutation();
   const [formData, setFormData] = useState({
@@ -22,11 +18,11 @@ const UpdatePost = ({ setOpenDialog, data: post }) => {
     private: false,
     clientString: '',
     carerId: post.carerId,
-    clientId: post.clientId
+    clientId: ''
   });
 
-  const [carerOptions, setCarerOptions] = useState([post.carer]);
-  const [clientOptions, setClientOptions] = useState([post.client]);
+  const [carerOptions, setCarerOptions] = useState([(post.carer || "")]);
+  const [clientOptions, setClientOptions] = useState([(post.client || "")]);
 
   // useMemo(() => {
   //   if (adminState.users && carerOptions.length === 1) setCarerOptions(() => adminState.users);
@@ -105,6 +101,7 @@ const UpdatePost = ({ setOpenDialog, data: post }) => {
 
   return (
     <Box component='form' onSubmit={(e) => handleSubmit(e)}>
+      {console.log(post)}
       <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
         <DialogTitle>
           Edit Note
@@ -140,7 +137,7 @@ const UpdatePost = ({ setOpenDialog, data: post }) => {
                 />
               </FormControl>
             </Grid>
-            {post.client === "" ?
+            {(formData.client === "" && formData.clientId === "") ?
               <Grid sm={6} xs={12} className="flex justify-center">
                 <FormControl size="small" fullWidth margin="dense">
                   <InputLabel htmlFor="clientInput">Client's Name</InputLabel>
@@ -241,7 +238,7 @@ const UpdatePost = ({ setOpenDialog, data: post }) => {
           label="Confidential"
         />
         <Box >
-          <Button color="success" variant="contained" type="submit">Update</Button>
+          <Button color="success" variant="contained" type="submit" disabled={formData.clientId === ""}>Update</Button>
           <Button onClick={() => setOpenDialog(prev => { return { ...prev, open: !prev.open, type: '', data: {} }; })}>Cancel</Button>
         </Box>
       </DialogActions>

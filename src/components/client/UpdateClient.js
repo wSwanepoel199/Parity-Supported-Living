@@ -4,8 +4,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import { forwardRef, useEffect, useMemo, useState } from "react";
 import PhoneInput from 'react-phone-input-2';
 import { useSelector } from "react-redux";
-import { useGetAllUsersQuery } from "../../shared/redux/admin/adminApiSlice";
-import { useCreateClientMutation } from "../../shared/redux/client/clientApiSlice";
+import { useUpdateClientMutation } from "../../shared/redux/client/clientApiSlice";
 // import 'react-phone-input-2/lib/style.css';
 
 const MyCustomInput = forwardRef((props, ref) => {
@@ -40,10 +39,9 @@ const MyCustomHelperText = () => {
 const containsText = (user, searchText) =>
   user.toLowerCase().indexOf(searchText.toLowerCase()) > -1;
 
-const UpdateClient = ({ setOpenDialog }) => {
+const UpdateClient = ({ setOpenDialog, data: client }) => {
   const adminState = useSelector(state => state.admin);
-  useGetAllUsersQuery();
-  const [createClient, { isSuccess, isError }] = useCreateClientMutation();
+  const [updateClient, { isSuccess, isError }] = useUpdateClientMutation();
   const options = adminState.users;
   const [formData, setFormData] = useState({
     firstName: '',
@@ -54,13 +52,28 @@ const UpdateClient = ({ setOpenDialog }) => {
     notes: '',
     carers: []
   });
-  const [address, setAddress] = useState(Array(4).fill(''));
+
+  const [address, setAddress] = useState(client.address.split(', '));
   const [searchText, setSearchText] = useState("");
 
   const displayedOptions = useMemo(
     () => options?.filter((option) => containsText(option.name, searchText)),
     [options, searchText]
   );
+
+  useMemo(() => {
+    const { carers, ...selectedClient } = client;
+    setFormData(prev => {
+      const carersIds = carers.map(carer => carer.userId);
+      return {
+        ...prev,
+        ...JSON.parse(JSON.stringify(selectedClient).replace(/:null/gi, ":\"\"")),
+        carers: [
+          ...carersIds
+        ]
+      };
+    });
+  }, [client]);
 
   useEffect(() => {
     if (isSuccess || isError) setOpenDialog(prev => { return { ...prev, open: !prev.open, type: '' }; });
@@ -116,15 +129,16 @@ const UpdateClient = ({ setOpenDialog }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    createClient(formData);
+    updateClient(formData);
     setOpenDialog(prev => { return { ...prev, open: !prev.open, type: '' }; });
   };
 
 
   return (
     <Box component='form' onSubmit={(e) => handleSubmit(e)}>
+      {console.log(formData)}
       <DialogTitle>
-        New Client
+        Edit {client.name}
       </DialogTitle>
       <DialogContent >
         <Grid container spacing={2} className="flex justify-center w-full">
@@ -324,7 +338,7 @@ const UpdateClient = ({ setOpenDialog }) => {
         </Grid>
       </DialogContent>
       <DialogActions>
-        <Button type="submit">Create</Button>
+        <Button color="success" variant="contained" type="submit">UPDATE</Button>
         <Button onClick={() => setOpenDialog(prev => { return { ...prev, open: !prev.open, type: '' }; })}>Cancel</Button>
       </DialogActions>
     </Box>

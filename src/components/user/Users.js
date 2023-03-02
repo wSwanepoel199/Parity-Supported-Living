@@ -6,7 +6,6 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import { DataGrid } from "@mui/x-data-grid";
 import { useMemo, useState } from "react";
 import { useSelector } from "react-redux";
-import { useGetAllUsersQuery } from "../../shared/redux/admin/adminApiSlice";
 import Toolbar from "../Toolbar";
 import CreateUser from "./CreateUser";
 import UpdateUser from "./UpdateUser";
@@ -15,7 +14,6 @@ import ConfirmDialog from "./ConfirmDialog";
 const Users = () => {
   const adminState = useSelector(state => state.admin);
   const userState = useSelector(state => state.user);
-  const { isFetching, isLoading, } = useGetAllUsersQuery(undefined, { refetchOnMountOrArgChange: true });
 
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
@@ -236,7 +234,7 @@ const Users = () => {
               style: fullScreen && { cursor: 'context-menu' },
             },
           }}
-          loading={isFetching || isLoading}
+          // loading={isFetching || isLoading}
           className="bg-slate-300"
           initialState={{
             columns: {

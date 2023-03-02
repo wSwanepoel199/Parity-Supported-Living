@@ -8,9 +8,10 @@ import { removeUser, saveUser } from "../user/userSlice";
 // TODO: keep looking into https://redux-toolkit.js.org/rtk-query/overview
 
 // "http://localhost:5000"
+// "http://192.168.56.101:5000"
 
 const baseAxiosQuery = axiosBaseQuery({
-  baseUrl: process.env.NODE_ENV === "production" ? process.env.REACT_APP_API_URL : "http://192.168.56.101:5000",
+  baseUrl: process.env.NODE_ENV === "production" ? process.env.REACT_APP_API_URL : "http://192.168.1.2:5000",
 });
 
 async function axiosBaseQueryWithReauth(arg, api) {

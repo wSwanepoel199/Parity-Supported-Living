@@ -1,4 +1,4 @@
-import { Box, Button, Dialog, IconButton, LinearProgress, Menu, MenuItem, Typography, useMediaQuery, useTheme } from "@mui/material";
+import { Box, Button, Dialog, IconButton, LinearProgress, ListItemIcon, ListItemText, Menu, MenuItem, Typography, useMediaQuery, useTheme } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
@@ -9,7 +9,6 @@ import CloseIcon from '@mui/icons-material/Close';
 import { format, parseISO } from "date-fns";
 import { useMemo, useState } from "react";
 import { useSelector } from "react-redux";
-import { useGetPostsQuery } from "../../shared/redux/posts/postApiSlice";
 import CreatePost from "./CreatePost";
 import UpdatePost from "./UpdatePost";
 import Toolbar from "../Toolbar";
@@ -19,7 +18,6 @@ import ConfirmDialog from "./ConfirmDialog";
 const Posts = () => {
   const postState = useSelector(state => state.posts);
   const userState = useSelector(state => state.user);
-  const { isLoading, isFetching, } = useGetPostsQuery(undefined, { refetchOnMountOrArgChange: true });
 
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
@@ -112,7 +110,7 @@ const Posts = () => {
         headerName: 'Notes',
         disableColumnMenu: true,
         flex: 3,
-        minWidth: 100,
+        minWidth: 200,
         renderCell: (value) => {
           const splitAtLineBreak = value.row.notes.split(/\r?\n/);
           const string = splitAtLineBreak.length >= 2 ? splitAtLineBreak[0] + "..." : splitAtLineBreak[0];
@@ -287,7 +285,7 @@ const Posts = () => {
               style: fullScreen && { cursor: 'context-menu' },
             },
           }}
-          loading={isFetching || isLoading}
+          // loading={isFetching || isLoading}
           className="bg-slate-300"
           initialState={{
             columns: {
@@ -328,11 +326,30 @@ const Posts = () => {
             },
           }}
         >
-          <MenuItem onClick={() => openView(postState.posts)}>View</MenuItem>
+          <MenuItem
+            onClick={() => openView(postState.posts)}>
+            <ListItemIcon>
+              <VisibilityIcon />
+            </ListItemIcon>
+            <ListItemText>
+              View
+            </ListItemText>
+          </MenuItem>
           {["Admin", "Coordinator"].includes(userState.user.role) ?
             ['Edit', 'Delete'].map((option, index) => {
               return (
-                <MenuItem key={index} onClick={option === "Edit" ? () => openEdit(postState.posts) : () => openDelete(postState.posts)}>{option}</MenuItem>
+                <MenuItem
+                  key={index}
+                  onClick={option === "Edit" ?
+                    () => openEdit(postState.posts) :
+                    () => openDelete(postState.posts)}>
+                  <ListItemIcon>
+                    {option === "Edit" ? <EditIcon /> : <DeleteIcon />}
+                  </ListItemIcon>
+                  <ListItemText>
+                    {option}
+                  </ListItemText>
+                </MenuItem>
               );
             }) : null}
         </Menu>

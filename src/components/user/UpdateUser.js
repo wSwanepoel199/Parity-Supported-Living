@@ -3,13 +3,13 @@ import SearchIcon from "@mui/icons-material/Search";
 import Grid from "@mui/material/Unstable_Grid2/";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useUpdateUserMutation } from "../../shared/redux/user/userApiSlice";
-import { useGetAllClientsQuery } from "../../shared/redux/client/clientApiSlice";
+import { useSelector } from "react-redux";
 
 const containsText = (user, searchText) =>
   user.toLowerCase().indexOf(searchText.toLowerCase()) > -1;
 
 const UpdateUser = ({ setOpenDialog, data: user }) => {
-  const { data } = useGetAllClientsQuery();
+  const clientState = useSelector(state => state.clients);
   const [updateUser, { isSuccess, isError }] = useUpdateUserMutation();
   const mounted = useRef();
   const [formData, setFormData] = useState({
@@ -51,12 +51,12 @@ const UpdateUser = ({ setOpenDialog, data: user }) => {
     if (!mounted.current) {
       mounted.current = true;
     }
-    if (data) setOptions(data.data.data);
+    if (clientState.clients.length > 0) setOptions(clientState.clients);
     if (isSuccess || isError) setOpenDialog(prev => { return { ...prev, open: !prev.open, type: '' }; });
     return () => {
       mounted.current = false;
     };
-  }, [mounted, isSuccess, isError, setOpenDialog, data]);
+  }, [mounted, isSuccess, isError, setOpenDialog, clientState.clients]);
 
   const handleInput = (e) => {
     const { value, name } = e.target;
@@ -78,9 +78,8 @@ const UpdateUser = ({ setOpenDialog, data: user }) => {
 
   return (
     <Box component='form' onSubmit={(e) => handleSubmit(e)}>
-      {console.log(formData)}
       <DialogTitle>
-        Edit User
+        Edit {user.name}
       </DialogTitle>
       {mounted.current ?
         <DialogContent>

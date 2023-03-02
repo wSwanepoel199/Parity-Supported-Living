@@ -1,12 +1,12 @@
 import { Box, Button, Collapse, DialogActions, DialogContent, FormControl, FormControlLabel, InputLabel, Switch, Typography } from "@mui/material";
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
+import DoneIcon from '@mui/icons-material/Done';
+import CloseIcon from '@mui/icons-material/Close';
 import Grid from "@mui/material/Unstable_Grid2/";
 import { format, parseISO } from "date-fns";
 import { useState } from "react";
-import { useSelector } from "react-redux";
 
 const ViewPost = ({ setOpenDialog, data: post }) => {
-  const userState = useSelector(state => state.user);
   const formData = JSON.parse(JSON.stringify(post).replace(/:null/gi, ":\"\""));
   const [open, setOpen] = useState({
     noteDetails: true,
@@ -29,7 +29,7 @@ const ViewPost = ({ setOpenDialog, data: post }) => {
               };
             })}
           >
-            <Typography>Note Details</Typography>
+            <Typography>Case Note Details</Typography>
             {open.noteDetails ? <ArrowBackIosNewIcon className={`rotate-[-90deg]`} /> : <ArrowBackIosNewIcon />}
           </Grid>
           <Collapse
@@ -118,7 +118,7 @@ const ViewPost = ({ setOpenDialog, data: post }) => {
                 </Grid>
                 <Grid xs={12} className="flex justify-center">
                   <FormControl size="small" fullWidth margin="dense">
-                    <InputLabel shrink htmlFor="clientInput">Client's Notes</InputLabel>
+                    <InputLabel shrink htmlFor="clientInput">Client's Details</InputLabel>
                     <Typography className={`p-3`}>{`${formData.client.notes}`}</Typography>
                   </FormControl>
                 </Grid>
@@ -138,7 +138,7 @@ const ViewPost = ({ setOpenDialog, data: post }) => {
               };
             })}
           >
-            <Typography>Notes</Typography>
+            <Typography>Case Notes</Typography>
             {open.notes ? <ArrowBackIosNewIcon className={`rotate-[-90deg]`} /> : <ArrowBackIosNewIcon />}
           </Grid>
           <Collapse
@@ -157,15 +157,11 @@ const ViewPost = ({ setOpenDialog, data: post }) => {
           </Collapse>
         </Grid>
       </DialogContent>
-      <DialogActions sx={{ justifyContent: ["Admin", "Coordinator"].includes(userState.user.role) ? 'space-between' : 'end', alignContent: 'space-between' }}>
-        {["Admin", "Coordinator"].includes(userState.user.role) ?
-          <FormControlLabel
-            control={
-              <Switch
-                checked={formData.private}
-              />}
-            label="Confidential"
-          /> : null}
+      <DialogActions sx={{ justifyContent: 'space-between', alignContent: 'space-between', alignItems: 'center', px: '20px' }}>
+        <Box className={`flex justify-center content-center`}>
+          <Typography className={`pr-1`}>Confidential: </Typography>
+          {post.private ? <DoneIcon /> : <CloseIcon />}
+        </Box>
         <Box>
           <Button onClick={() => setOpenDialog(prev => { return { ...prev, open: !prev.open, type: '', data: {} }; })}>Close</Button>
         </Box>

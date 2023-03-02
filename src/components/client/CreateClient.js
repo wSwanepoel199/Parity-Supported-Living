@@ -4,7 +4,6 @@ import SearchIcon from "@mui/icons-material/Search";
 import { forwardRef, useEffect, useMemo, useState } from "react";
 import PhoneInput from 'react-phone-input-2';
 import { useSelector } from "react-redux";
-import { useGetAllUsersQuery } from "../../shared/redux/admin/adminApiSlice";
 import { useCreateClientMutation } from "../../shared/redux/client/clientApiSlice";
 // import 'react-phone-input-2/lib/style.css';
 
@@ -42,7 +41,6 @@ const containsText = (user, searchText) =>
 
 const CreateClient = ({ setOpenDialog }) => {
   const adminState = useSelector(state => state.admin);
-  useGetAllUsersQuery();
   const [createClient, { isSuccess, isError }] = useCreateClientMutation();
   const options = adminState.users;
   const [formData, setFormData] = useState({

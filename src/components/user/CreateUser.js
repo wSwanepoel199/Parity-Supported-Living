@@ -2,14 +2,14 @@ import { Box, Button, Checkbox, Chip, DialogActions, DialogContent, DialogTitle,
 import SearchIcon from "@mui/icons-material/Search";
 import Grid from "@mui/material/Unstable_Grid2/";
 import { useEffect, useMemo, useState } from "react";
-import { useGetAllClientsQuery } from "../../shared/redux/client/clientApiSlice";
 import { useCreateUserMutation } from "../../shared/redux/user/userApiSlice";
+import { useSelector } from "react-redux";
 
 const containsText = (user, searchText) =>
   user.toLowerCase().indexOf(searchText.toLowerCase()) > -1;
 
 const CreateUser = ({ setOpenDialog }) => {
-  const { data } = useGetAllClientsQuery();
+  const clientState = useSelector(state => state.clients);
   const [createUser, { isSuccess, isError }] = useCreateUserMutation();
 
   const [formData, setFormData] = useState({
@@ -30,8 +30,8 @@ const CreateUser = ({ setOpenDialog }) => {
   );
 
   useMemo(() => {
-    if (data) setOptions(data.data.data);
-  }, [data]);
+    if (clientState.clients.length > 0) setOptions(clientState.clients);
+  }, [clientState]);
 
   useEffect(() => {
     if (isSuccess || isError) setOpenDialog(prev => { return { ...prev, open: !prev.open, type: '' }; });

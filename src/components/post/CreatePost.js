@@ -3,12 +3,11 @@ import Grid from "@mui/material/Unstable_Grid2/";
 import { format, formatISO, parseISO } from "date-fns";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { useGetAllClientsQuery } from "../../shared/redux/client/clientApiSlice";
 import { useAddPostMutation } from "../../shared/redux/posts/postApiSlice";
 
 const CreatePost = ({ setOpenDialog }) => {
   const userState = useSelector(state => state.user);
-  const { data } = useGetAllClientsQuery();
+  const clientState = useSelector(state => state.clients);
   const [addPost, { isLoading }] = useAddPostMutation();
   const [formData, setFormData] = useState({
     date: formatISO(new Date()),
@@ -22,10 +21,10 @@ const CreatePost = ({ setOpenDialog }) => {
   const [options, setOptions] = useState([]);
 
   useEffect(() => {
-    if (data) setOptions(data.data.data);
+    if (clientState.clients.length > 0) setOptions(clientState.clients);
     if (isLoading) setOpenDialog(prev => { return { ...prev, open: !prev.open, type: '' }; });
 
-  }, [isLoading, setOpenDialog, data]);
+  }, [isLoading, setOpenDialog, clientState.clients]);
 
   const handleInput = ({ value, name }) => {
     switch (name) {
