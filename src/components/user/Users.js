@@ -10,6 +10,7 @@ import Toolbar from "../Toolbar";
 import CreateUser from "./CreateUser";
 import UpdateUser from "./UpdateUser";
 import ConfirmDialog from "./ConfirmDialog";
+import ViewUser from "./ViewUser";
 
 const Users = () => {
   const adminState = useSelector(state => state.admin);
@@ -203,6 +204,7 @@ const Users = () => {
           openDialog.open
             ? (openDialog.type === "new" && <CreateUser setOpenDialog={setOpenDialog} />)
             || (openDialog.type === "edit" && <UpdateUser setOpenDialog={setOpenDialog} data={openDialog.data} />)
+            || (openDialog.type === "view" && <ViewUser setOpenDialog={setOpenDialog} data={openDialog.data} />)
             || (openDialog.type === "delete" && <ConfirmDialog setOpenDialog={setOpenDialog} data={openDialog.data} />)
             : null
         }

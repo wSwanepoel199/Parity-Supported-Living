@@ -53,7 +53,6 @@ const Posts = () => {
           );
         },
         valueFormatter: ({ value }) => {
-          console.log(value);
           return value;
         }
       },
