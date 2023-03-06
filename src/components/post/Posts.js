@@ -73,9 +73,9 @@ const Posts = () => {
         minWidth: 100,
         renderCell: ({ row }) => {
           if (row.clientId === "") {
-            return <>{row.clientName}</>;
+            return <p className={`text-ellipsis overflow-hidden whitespace-nowrap max-w-full`}>{row.clientName}</p>;
           } else {
-            return <>{`${row.client.firstName} ${row.client?.lastName}`}</>;
+            return <p className={`text-ellipsis overflow-hidden whitespace-nowrap max-w-full`}>{`${row.client.firstName} ${row.client?.lastName}`}</p>;
           }
         },
         disableExport: true
@@ -93,9 +93,9 @@ const Posts = () => {
         maxWidth: 150,
         renderCell: ({ row }) => {
           if (row.carerId === "") {
-            return <>{row.carerName}</>;
+            return <p className={`text-ellipsis overflow-hidden whitespace-nowrap max-w-full`}>{row.carerName}</p>;
           } else {
-            return <>{`${row.carer.firstName} ${row.carer?.lastName}`}</>;
+            return <p className={`text-ellipsis overflow-hidden whitespace-nowrap max-w-full`}>{`${row.carer.firstName} ${row.carer?.lastName}`}</p>;
           }
         },
         disableExport: true
