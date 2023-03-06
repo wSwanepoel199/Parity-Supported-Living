@@ -32,7 +32,7 @@ const ViewUser = ({ setOpenDialog, data: user }) => {
             })}
           >
             <Typography>{formData.name}'s Details</Typography>
-            {open.clientDetails ? <ArrowBackIosNewIcon className={`rotate-[-90deg]`} /> : <ArrowBackIosNewIcon />}
+            {open.userDetails ? <ArrowBackIosNewIcon className={`rotate-[-90deg]`} /> : <ArrowBackIosNewIcon />}
           </Grid>
           <Collapse
             in={open.userDetails}

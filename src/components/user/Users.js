@@ -247,7 +247,7 @@ const Users = () => {
               style: fullScreen && { cursor: 'context-menu' },
             },
           }}
-          loading={table.rows.length === 0 || rootState.status === "loading"}
+          loading={rootState.status === "loading"}
           className="bg-slate-300"
           initialState={{
             columns: {
