@@ -56,7 +56,7 @@ export const rootSlice = createSlice({
 
         return {
           ...state,
-          status: "success",
+          // status: "success",
           // msg: {
           //   status: action.payload.status,
           //   message: action.payload.data.message
