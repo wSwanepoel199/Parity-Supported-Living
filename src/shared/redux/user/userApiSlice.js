@@ -79,12 +79,12 @@ export const userApiSlice = backendApi.injectEndpoints({
     createUser: builder.mutation({
       query: (newUser) => ({ url: '/auth/register', method: 'post', data: newUser }),
       invalidatesTags: (result, error, args) =>
-        result ? [{ type: "user", id: "LIST" }, { type: "client", id: "LIST" },] : error ? console.error(error) : null
+        result ? [{ type: "user", id: "LIST" }, { type: "client", id: "LIST" }] : error ? console.error(error) : null
     }),
     updateUser: builder.mutation({
       query: (updatedUser) => ({ url: '/auth/update', method: 'put', data: updatedUser }),
       invalidatesTags: (result, error, args) =>
-        result ? [{ type: "user", id: "LIST" }, { type: "client", id: "LIST" },] : error ? console.error(error) : null
+        result ? [{ type: "user", id: "LIST" }, { type: "client", id: "LIST" }] : error ? console.error(error) : null
     })
   })
 });

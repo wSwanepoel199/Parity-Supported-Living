@@ -32,12 +32,12 @@ export const postApiSlice = backendApi.injectEndpoints({
         }
       },
       invalidatesTags: (result, error, args) =>
-        result ? [{ type: "post", id: "LIST" }, { type: 'client', id: "LIST" }] : error ? console.error(error) : null
+        result ? [{ type: "post", id: "LIST" }] : error ? console.error(error) : null
     }),
     updatePost: builder.mutation({
       query: (post) => ({ url: '/posts/update', method: 'put', data: post }),
       invalidatesTags: (result, error, args) =>
-        result ? [{ type: "post", id: "LIST" }, { type: 'client', id: "LIST" }] : error ? console.error(error) : null
+        result ? [{ type: "post", id: "LIST" }] : error ? console.error(error) : null
     })
   })
 });

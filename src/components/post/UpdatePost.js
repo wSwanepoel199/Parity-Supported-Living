@@ -78,7 +78,6 @@ const UpdatePost = ({ setOpenDialog, data: post }) => {
         return;
       }
       case 'clientId': {
-        console.log(value);
         setFormData(prev => {
           return {
             ...prev,
@@ -123,7 +122,6 @@ const UpdatePost = ({ setOpenDialog, data: post }) => {
 
   return (
     <Box component='form' onSubmit={(e) => handleSubmit(e)}>
-      {console.log(formData)}
       <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
         <DialogTitle>
           Edit Note

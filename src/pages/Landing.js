@@ -7,6 +7,7 @@ import PasswordReset from "../components/PasswordReset";
 import { useGetAllClientsQuery } from "../shared/redux/client/clientApiSlice";
 import { useGetAllUsersQuery } from "../shared/redux/admin/adminApiSlice";
 import { useGetPostsQuery } from "../shared/redux/posts/postApiSlice";
+import { memo } from "react";
 
 const Landing = () => {
   const userState = useSelector(state => state.user);
@@ -40,4 +41,4 @@ const Landing = () => {
   );
 };
 
-export default Landing;
+export default memo(Landing);

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { memo, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Grid from "@mui/material/Unstable_Grid2";
 import { Box, Button, Checkbox, FormControl, FormControlLabel, FormGroup, IconButton, Input, InputAdornment, InputLabel, Typography } from "@mui/material";
@@ -87,4 +87,4 @@ const SignIn = () => {
   );
 };
 
-export default SignIn;
+export default memo(SignIn);
