@@ -12,7 +12,7 @@ import { ExpirationPlugin } from 'workbox-expiration';
 import { precacheAndRoute, createHandlerBoundToURL } from 'workbox-precaching';
 import { registerRoute } from 'workbox-routing';
 import { StaleWhileRevalidate } from 'workbox-strategies';
-import { read, utils } from 'xlsx';
+import { read, utils, write } from 'xlsx';
 
 clientsClaim();
 
@@ -70,11 +70,15 @@ self.addEventListener('message', async (event) => {
     self.skipWaiting();
     // self.registration.update();
   }
-  if (event.data && event.data.type === "excel") {
+  if (event.data && event.data.type === "import") {
     const f = await (event.data?.data).arrayBuffer();
     const wb = read(f);
     const data = utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]]);
     event.ports[0].postMessage(data);
+  }
+  if (event.data && event.data.type === "export") {
+    const f = await write(event.data?.data, { type: 'array', bookType: 'csv' });
+    event.ports[0].postMessage({ type: 'export', file: f });
   }
   // if (event.data && event.data.type === "skipWait") {
   //   console.log("skip waiting through message");

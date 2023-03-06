@@ -1,4 +1,4 @@
-import { Box, Button, Dialog, IconButton, LinearProgress, ListItemIcon, ListItemText, Menu, MenuItem, Typography, useMediaQuery, useTheme } from "@mui/material";
+import { Box, Button, Dialog, IconButton, LinearProgress, Menu, MenuItem, Typography, useMediaQuery, useTheme } from "@mui/material";
 import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -7,13 +7,14 @@ import { DataGrid } from "@mui/x-data-grid";
 import { useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 import Toolbar from "../Toolbar";
-import CreateUser from "./CreateUser";
-import UpdateUser from "./UpdateUser";
+import CreateClient from "./CreateClient";
+import UpdateClient from "./UpdateClient";
 import ConfirmDialog from "./ConfirmDialog";
-import ViewUser from "./ViewUser";
+import ViewClient from "./ViewClient";
 
-const Users = () => {
-  const adminState = useSelector(state => state.admin);
+
+const Clients = () => {
+  const clientState = useSelector(state => state.clients);
   const userState = useSelector(state => state.user);
   const rootState = useSelector(state => state.root);
 
@@ -33,12 +34,9 @@ const Users = () => {
         disableExport: true
       },
       {
-        field: 'userId',
-      },
-      {
-        field: 'role',
-        headerName: 'Role',
-        width: 95,
+        field: 'clientId',
+        flex: 1,
+        minWidth: 100,
       },
       {
         field: 'firstName',
@@ -61,23 +59,49 @@ const Users = () => {
         minWidth: 100,
       },
       {
-        field: 'clientsName',
-        headerName: 'Clients',
+        field: 'phoneNumber',
+        headerName: 'Number',
+        flex: 1,
+        minWidth: 100,
+      },
+      {
+        field: 'address',
+        headerName: 'Address',
+        flex: 1,
+        minWidth: 100,
+      },
+      {
+        field: 'carersName',
+        headerName: 'Carers',
         disableExport: true,
         flex: 1,
         minWidth: 100,
         renderCell: (params) => {
-          const clients = params.row.clients.map((clients) => `${clients.firstName} ${clients?.lastName}`).join(', ');
+          const carers = params.row.carers.map((carer) => `${carer.firstName}`).join(', ');
           return <Box className={`text-ellipsis overflow-hidden whitespace-nowrap max-w-full`}>
-            {clients}
+            {carers}
           </Box>;
         },
       },
       {
-        field: 'clients',
+        field: 'notes',
+        headerName: 'Notes',
+        disableColumnMenu: true,
+        flex: 2,
+        minWidth: 100,
+        renderCell: (value) => {
+          const splitAtLineBreak = value.row.notes.split(/\r?\n/);
+          const string = splitAtLineBreak.length >= 2 ? splitAtLineBreak[0] + "..." : splitAtLineBreak[0];
+          return (
+            <Box className={`text-ellipsis overflow-hidden whitespace-nowrap max-w-full`} >{string}</Box>
+          );
+        }
+      },
+      {
+        field: 'carers',
         disableColumnMenu: true,
         valueFormatter: (params) => {
-          return params.value.map(client => client.clientId).join(", ");
+          return params.value.map(carer => carer.userId).join(', ');
         }
       },
     ],
@@ -86,15 +110,15 @@ const Users = () => {
   });
 
   useEffect(() => {
-    if (adminState.users) {
+    if (clientState.clients) {
       setTable(prev => {
         return {
           ...prev,
-          rows: JSON.parse(JSON.stringify(adminState.users).replace(/:null/gi, ":\"\""))
+          rows: JSON.parse(JSON.stringify(clientState.clients).replace(/:null/gi, ":\"\""))
         };
       });
     }
-  }, [adminState.users]);
+  }, [clientState.clients]);
 
   useMemo(() => {
     if (fullScreen && table.columns.some(column => column['field'] === "options")) {
@@ -112,7 +136,7 @@ const Users = () => {
           {
             field: 'options',
             headerName: "Options",
-            width: ["Admin"].includes(userState.user.role) ? 130 : 70,
+            width: ["Admin", "Coordinator"].includes(userState.user.role) ? 130 : 70,
             disableColumnMenu: true,
             disableColumnFilter: true,
             sortable: false,
@@ -162,8 +186,8 @@ const Users = () => {
     setContextMenu(null);
   };
 
-  const openView = (array) => {
-    array.map((row) => {
+  const openView = () => {
+    clientState.clients.map((row) => {
       if (row.id === selectedRow) {
         setOpenDialog(prev => { return { ...prev, open: !prev.open, type: 'view', data: row }; });
       }
@@ -172,8 +196,8 @@ const Users = () => {
     handleClose();
   };
 
-  const openEdit = (array) => {
-    array.map((row) => {
+  const openEdit = () => {
+    clientState.clients.map((row) => {
       if (row.id === selectedRow) {
         setOpenDialog(prev => { return { ...prev, open: !prev.open, type: 'edit', data: row }; });
       }
@@ -182,8 +206,8 @@ const Users = () => {
     handleClose();
   };
 
-  const openDelete = (array) => {
-    array.map((row) => {
+  const openDelete = () => {
+    clientState.clients.map((row) => {
       if (row.id === selectedRow) {
         setOpenDialog(prev => { return { ...prev, open: !prev.open, type: 'delete', data: row }; });
       }
@@ -194,7 +218,7 @@ const Users = () => {
 
   return (
     <div className="w-full h-full max-w-screen-lg mx-auto flex flex-col ">
-      <Typography variant="h3" component="div" className={`py-5`}>Users</Typography>
+      <Typography variant="h3" component="div" className={`py-5`}>Clients</Typography>
       <Dialog
         fullScreen={fullScreen}
         open={openDialog.open}
@@ -202,9 +226,9 @@ const Users = () => {
       >
         {
           openDialog.open
-            ? (openDialog.type === "new" && <CreateUser setOpenDialog={setOpenDialog} />)
-            || (openDialog.type === "edit" && <UpdateUser setOpenDialog={setOpenDialog} data={openDialog.data} />)
-            || (openDialog.type === "view" && <ViewUser setOpenDialog={setOpenDialog} data={openDialog.data} />)
+            ? (openDialog.type === "new" && <CreateClient setOpenDialog={setOpenDialog} />)
+            || (openDialog.type === "edit" && <UpdateClient setOpenDialog={setOpenDialog} data={openDialog.data} />)
+            || (openDialog.type === "view" && <ViewClient setOpenDialog={setOpenDialog} data={openDialog.data} />)
             || (openDialog.type === "delete" && <ConfirmDialog setOpenDialog={setOpenDialog} data={openDialog.data} />)
             : null
         }
@@ -234,11 +258,11 @@ const Users = () => {
                 <Box>
                   {userState.user.role === "Admin" ?
                     <Button startIcon={<AddIcon />} onClick={() => setOpenDialog(prev => { return { ...prev, open: !prev.open, type: 'new' }; })}>
-                      New User
+                      New Client
                     </Button> : null}
                 </Box>
               ),
-              type: 'user',
+              type: 'client',
               csvOptions: { allColumns: true },
               clearSelect: setSelectedRow
             },
@@ -254,10 +278,10 @@ const Users = () => {
               columnVisibilityModel: {
                 // Hides listed coloumns
                 id: false,
-                userId: false,
+                clientId: false,
                 firstName: false,
                 lastName: false,
-                clients: false,
+                carers: false
               },
             },
             sorting: {
@@ -288,30 +312,11 @@ const Users = () => {
             },
           }}
         >
-          <MenuItem
-            onClick={() => openView(adminState.users)}>
-            <ListItemIcon>
-              <VisibilityIcon />
-            </ListItemIcon>
-            <ListItemText>
-              View
-            </ListItemText>
-          </MenuItem>
-          {["Admin"].includes(userState.user.role) ?
+          <MenuItem onClick={openView}>View</MenuItem>
+          {["Admin", "Coordinator"].includes(userState.user.role) ?
             ['Edit', 'Delete'].map((option, index) => {
               return (
-                <MenuItem
-                  key={index}
-                  onClick={option === "Edit" ?
-                    () => openEdit(adminState.users) :
-                    () => openDelete(adminState.users)}>
-                  <ListItemIcon>
-                    {option === "Edit" ? <EditIcon /> : <DeleteIcon />}
-                  </ListItemIcon>
-                  <ListItemText>
-                    {option}
-                  </ListItemText>
-                </MenuItem>
+                <MenuItem key={index} onClick={option === "Edit" ? openEdit : openDelete}>{option}</MenuItem>
               );
             }) : null}
         </Menu>
@@ -320,4 +325,4 @@ const Users = () => {
   );
 };
 
-export default Users;
+export default Clients;

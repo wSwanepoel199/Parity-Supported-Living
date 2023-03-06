@@ -1,16 +1,17 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import { useSelector } from 'react-redux';
+import { Backdrop, CircularProgress, } from '@mui/material';
 // import Dashboard from './components/Dashboard';
 import Landing from './pages/Landing';
 import SignIn from './pages/SignIn';
-import { useRefreshUserMutation, } from './shared/redux/user/userApiSlice';
-import Posts from './components/post/Posts copy';
-import Users from './components/user/Users copy';
+import Posts from './components/post/Posts';
+import Users from './components/user/Users';
+import Clients from './components/client/Client';
 import ProtectedRoute from './shared/utils/ProtectedRoute';
-import { Backdrop, CircularProgress, } from '@mui/material';
 import PromptForUpdate from './shared/utils/PrompUpdateServiceWorker';
 import CustomAlert from './shared/utils/CustomAlert';
+import { useRefreshUserMutation, } from './shared/redux/user/userApiSlice';
 
 function App() {
   const mounted = useRef();
@@ -61,6 +62,37 @@ function App() {
     }
   }, [rootState]);
 
+  // useEffect(() => {
+  //   console.log(location);
+  //   return location.listen(location => {
+  //     if (location.action === 'PUSH') {
+  //       setLocationKeys([location.key]);
+  //     }
+
+  //     if (location.action === "POP") {
+  //       if (locationKeys[1] === location.key) {
+  //         setLocationKeys(([_, ...keys]) => keys);
+
+  //         // Handle forward event
+
+  //       } else {
+  //         setLocationKeys((keys) => [location.key, ...keys]);
+
+  //         // Handle back event
+
+  //       }
+  //     }
+  //   });
+  // }, [locationKeys, location]);
+
+  // const onBackPress = () => {
+  //   const { nav, dispatch } = this.props;
+  //   if (nav.index === 0) {
+  //     return false;
+  //   }
+  //   // dispatch(NavigationActions.back());
+  //   return true;
+  // };
 
   return (
     <div className={`w-full min-h-screen bg-slate-400 flex flex-col justify-center items-center`}>
@@ -78,6 +110,9 @@ function App() {
             <Route path="/" element={userState.status === "loggedIn" ? <Landing /> : <SignIn />}>
               <Route index element={
                 <Posts />
+              } />
+              <Route path="clients" element={
+                <Clients />
               } />
               <Route path="users" element={
                 <ProtectedRoute>

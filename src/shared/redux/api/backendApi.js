@@ -7,8 +7,11 @@ import { removeUser, saveUser } from "../user/userSlice";
 
 // TODO: keep looking into https://redux-toolkit.js.org/rtk-query/overview
 
+// "http://localhost:5000"
+// "http://192.168.56.101:5000"
+
 const baseAxiosQuery = axiosBaseQuery({
-  baseUrl: process.env.NODE_ENV === "production" ? process.env.REACT_APP_API_URL : "http://192.168.56.101:5000",
+  baseUrl: process.env.NODE_ENV === "production" ? process.env.REACT_APP_API_URL : "http://192.168.1.2:5000",
 });
 
 async function axiosBaseQueryWithReauth(arg, api) {
@@ -36,7 +39,7 @@ async function axiosBaseQueryWithReauth(arg, api) {
 export const backendApi = createApi({
   reducerPath: 'backendApi',
   baseQuery: axiosBaseQueryWithReauth,
-  tagTypes: ['post', 'user', 'Index'],
+  tagTypes: ['post', 'user', 'client', 'Index'],
   endpoints: (builder) => ({
     checkToken: builder.query({
       query: () => ({ url: '/auth/checkToken', method: 'get' })
@@ -56,7 +59,7 @@ export const backendApi = createApi({
         }
       },
       invalidatesTags: (result, error, args) =>
-        result ? [{ type: result.type, id: "LIST" }] : error ? console.error(error) : null
+        result ? [{ type: 'user' }, { type: 'post' }, { type: 'client' }] : error ? console.error(error) : null
     })
   })
 });

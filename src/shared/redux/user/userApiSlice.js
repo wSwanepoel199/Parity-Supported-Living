@@ -1,6 +1,7 @@
 import { fetchStoredTokenLocal } from "../../utils/authToken";
 import { clearUsers } from "../admin/adminSlice";
 import { backendApi } from "../api/backendApi";
+import { clearClientState } from "../client/clientSlice";
 import { clearPostState } from "../posts/postSlice";
 import { removeUser, saveUser, signOutUser } from "./userSlice";
 
@@ -65,6 +66,7 @@ export const userApiSlice = backendApi.injectEndpoints({
         try {
           dispatch(signOutUser());
           if (getState().posts.posts) await dispatch(clearPostState());
+          if (getState().clients.clients) await dispatch(clearClientState());
           if (getState().admin.users) await dispatch(clearUsers());
           dispatch(removeUser());
           await queryFulfilled;
@@ -77,12 +79,12 @@ export const userApiSlice = backendApi.injectEndpoints({
     createUser: builder.mutation({
       query: (newUser) => ({ url: '/auth/register', method: 'post', data: newUser }),
       invalidatesTags: (result, error, args) =>
-        result ? [{ type: "user", id: "LIST" }] : error ? console.error(error) : null
+        result ? [{ type: "user", id: "LIST" }, { type: "client", id: "LIST" },] : error ? console.error(error) : null
     }),
     updateUser: builder.mutation({
       query: (updatedUser) => ({ url: '/auth/update', method: 'put', data: updatedUser }),
       invalidatesTags: (result, error, args) =>
-        result ? [{ type: "user", id: "LIST" }] : error ? console.error(error) : null
+        result ? [{ type: "user", id: "LIST" }, { type: "client", id: "LIST" },] : error ? console.error(error) : null
     })
   })
 });

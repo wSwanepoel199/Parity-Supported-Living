@@ -1,32 +1,62 @@
-import { Box, Button, DialogActions, DialogContent, DialogTitle, FormControl, FormControlLabel, Input, InputLabel, MenuItem, Select, Switch, } from "@mui/material";
+import { Box, Button, Checkbox, Chip, DialogActions, DialogContent, DialogTitle, FormControl, FormControlLabel, Input, InputAdornment, InputLabel, ListSubheader, MenuItem, OutlinedInput, Select, Switch, Typography, } from "@mui/material";
+import SearchIcon from "@mui/icons-material/Search";
 import Grid from "@mui/material/Unstable_Grid2/";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useUpdateUserMutation } from "../../shared/redux/user/userApiSlice";
+import { useSelector } from "react-redux";
 
-const UpdateUser = ({ setOpenDialog, user }) => {
+const containsText = (user, searchText) =>
+  user.toLowerCase().indexOf(searchText.toLowerCase()) > -1;
+
+const UpdateUser = ({ setOpenDialog, data: user }) => {
+  const clientState = useSelector(state => state.clients);
   const [updateUser, { isSuccess, isError }] = useUpdateUserMutation();
   const mounted = useRef();
   const [formData, setFormData] = useState({
     showPassword: false,
-    resetPassword: true
+    resetPassword: true,
+    email: '',
+    lastName: '',
+    firstName: '',
+    role: '',
+    clients: [],
   });
+
+
+  const [searchText, setSearchText] = useState("");
+
+  const [options, setOptions] = useState([]);
+
+  const displayedOptions = useMemo(
+    () => options?.filter((option) => containsText(option.name, searchText)),
+    [options, searchText]
+  );
+
+  useMemo(() => {
+    const { clients, ...selectedUser } = user;
+    setFormData(prev => {
+      const clientIds = clients.map(client => client.clientId);
+      return {
+        ...prev,
+        ...JSON.parse(JSON.stringify(selectedUser).replace(/:null/gi, ":\"\"")),
+        clients: [
+          ...clientIds
+        ]
+      };
+    });
+    if (clients) setOptions(clients);
+  }, [user]);
 
   useEffect(() => {
     if (!mounted.current) {
-      const parsedUser = JSON.parse(JSON.stringify(user).replace(/:null/gi, ":\"\""));
-      setFormData(prev => {
-        return {
-          ...prev,
-          ...parsedUser
-        };
-      });
       mounted.current = true;
     }
+    if (clientState.clients.length > 0) setOptions(clientState.clients);
     if (isSuccess || isError) setOpenDialog(prev => { return { ...prev, open: !prev.open, type: '' }; });
     return () => {
       mounted.current = false;
     };
-  }, [mounted, user, isSuccess, isError, setOpenDialog]);
+  }, [mounted, isSuccess, isError, setOpenDialog, clientState.clients]);
 
   const handleInput = (e) => {
     const { value, name } = e.target;
@@ -48,14 +78,15 @@ const UpdateUser = ({ setOpenDialog, user }) => {
 
   return (
     <Box component='form' onSubmit={(e) => handleSubmit(e)}>
-      <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-        <DialogTitle>
-          Edit Note
-        </DialogTitle>
-      </Box>
+      <DialogTitle>
+        Edit {user.name}
+      </DialogTitle>
       {mounted.current ?
         <DialogContent>
           <Grid container spacing={2} className="flex justify-center w-full">
+            <Grid xs={12} className=" border-b-2 border-b-gray-400 border-solid border-x-transparent border-t-transparent">
+              <Typography>Details</Typography>
+            </Grid>
             <Grid sm={6} xs={12} className="flex justify-center">
               <FormControl size="small" fullWidth margin="dense">
                 <InputLabel shrink htmlFor="firstNameInput">First Name</InputLabel>
@@ -83,20 +114,21 @@ const UpdateUser = ({ setOpenDialog, user }) => {
               </FormControl>
             </Grid>
             <Grid sm={6} xs={12} className="flex justify-center">
-              <FormControl variant="standard" size="small" fullWidth margin="dense">
-                <InputLabel shrink htmlFor="roleInput" className={`px-5`}>Role</InputLabel>
-                <Select
-                  id="roleInput"
-                  name='role'
-                  required
-                  value={formData.role}
-                  onChange={handleInput}
-                >
-                  <MenuItem value={"Admin"}>Admin</MenuItem>
-                  <MenuItem value={"Carer"}>Carer</MenuItem>
-                  <MenuItem value={"Coordinator"}>Coordinator</MenuItem>
-                </Select>
-              </FormControl>
+              {["Admin", "Carer", "Coordinator"].includes(formData.role) ?
+                <FormControl variant="standard" size="small" fullWidth margin="dense">
+                  <InputLabel shrink htmlFor="roleInput" className={`px-5`}>Role</InputLabel>
+                  <Select
+                    id="roleInput"
+                    name='role'
+                    required
+                    value={formData.role}
+                    onChange={handleInput}
+                  >
+                    <MenuItem value={"Admin"}>Admin</MenuItem>
+                    <MenuItem value={"Carer"}>Carer</MenuItem>
+                    <MenuItem value={"Coordinator"}>Coordinator</MenuItem>
+                  </Select>
+                </FormControl> : null}
             </Grid>
             <Grid sm={6} xs={12} className="flex justify-center">
               <FormControl size="small" fullWidth margin="dense">
@@ -110,6 +142,65 @@ const UpdateUser = ({ setOpenDialog, user }) => {
                   onChange={handleInput}
                 />
               </FormControl>
+            </Grid>
+            <Grid xs={12} className=" border-b-2 border-b-gray-400 border-solid border-x-transparent border-t-transparent">
+              <Typography>Clients</Typography>
+            </Grid>
+            <Grid xs={12} className="flex justify-center">
+              {options ?
+                <FormControl variant="standard" size="small" fullWidth margin="dense">
+                  <Select
+                    id="clientsInput"
+                    name='clients'
+                    multiple
+                    required
+                    input={<OutlinedInput id="clientsListInput" />}
+                    renderValue={(selected) => (
+                      <Box
+                        className={`flex flex-wrap gap-2`}
+                      >
+                        {selected.map((value, index) => {
+                          return (
+                            <Box key={index}>
+                              <Chip label={options.find((user) => value === user.clientId).name} />
+                            </Box>
+                          );
+                        })}
+                      </Box>
+                    )}
+                    MenuProps={{ autoFocus: false }}
+                    value={formData.clients}
+                    onChange={(e) => handleInput(e)}
+                    onClose={() => setSearchText("")}
+                  >
+                    <ListSubheader>
+                      <Input
+                        size="small"
+                        autoFocus
+                        fullWidth
+                        startAdornment={
+                          <InputAdornment position="start">
+                            <SearchIcon />
+                          </InputAdornment>
+                        }
+                        onChange={(e) => setSearchText(e.target.value)}
+                        onKeyDown={(e) => {
+                          if (e.key !== "Escape") {
+                            // Prevents autoselecting item while typing (default Select behaviour)
+                            e.stopPropagation();
+                          }
+                        }}
+                      />
+                    </ListSubheader>
+                    {displayedOptions?.map((client, index) => {
+                      return (
+                        <MenuItem key={index} value={client.clientId}>
+                          <Checkbox checked={formData.clients.indexOf(client.clientId) > -1} />
+                          {client.firstName} {client?.lastName}</MenuItem>
+                      );
+                    })}
+                  </Select>
+                </FormControl> : null}
             </Grid>
           </Grid>
         </DialogContent>
@@ -132,7 +223,7 @@ const UpdateUser = ({ setOpenDialog, user }) => {
 
         />
         <Box >
-          <Button type="submit">Edit</Button>
+          <Button color="success" variant="contained" type="submit">UPDATE</Button>
           <Button onClick={() => setOpenDialog(prev => { return { ...prev, open: !prev.open, type: '' }; })}>Cancel</Button>
         </Box>
       </DialogActions>

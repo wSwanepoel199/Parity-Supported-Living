@@ -1,10 +1,15 @@
-import { Box, Button, DialogActions, DialogContent, DialogTitle, FormControl, Input, InputLabel, MenuItem, Select } from "@mui/material";
+import { Box, Button, Checkbox, Chip, DialogActions, DialogContent, DialogTitle, FormControl, Input, InputAdornment, InputLabel, ListSubheader, MenuItem, OutlinedInput, Select, Typography } from "@mui/material";
+import SearchIcon from "@mui/icons-material/Search";
 import Grid from "@mui/material/Unstable_Grid2/";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useCreateUserMutation } from "../../shared/redux/user/userApiSlice";
+import { useSelector } from "react-redux";
 
+const containsText = (user, searchText) =>
+  user.toLowerCase().indexOf(searchText.toLowerCase()) > -1;
 
 const CreateUser = ({ setOpenDialog }) => {
+  const clientState = useSelector(state => state.clients);
   const [createUser, { isSuccess, isError }] = useCreateUserMutation();
 
   const [formData, setFormData] = useState({
@@ -12,7 +17,21 @@ const CreateUser = ({ setOpenDialog }) => {
     lastName: '',
     role: '',
     email: '',
+    clients: []
   });
+
+  const [searchText, setSearchText] = useState("");
+
+  const [options, setOptions] = useState([]);
+
+  const displayedOptions = useMemo(
+    () => options.filter((option) => containsText(option.name, searchText)),
+    [options, searchText]
+  );
+
+  useMemo(() => {
+    if (clientState.clients.length > 0) setOptions(clientState.clients);
+  }, [clientState]);
 
   useEffect(() => {
     if (isSuccess || isError) setOpenDialog(prev => { return { ...prev, open: !prev.open, type: '' }; });
@@ -42,6 +61,9 @@ const CreateUser = ({ setOpenDialog }) => {
       </DialogTitle>
       <DialogContent >
         <Grid container spacing={2} className="flex justify-center w-full">
+          <Grid xs={12} className=" border-b-2 border-b-gray-400 border-solid border-x-transparent border-t-transparent">
+            <Typography>Details</Typography>
+          </Grid>
           <Grid sm={6} xs={12} className="flex justify-center">
             <FormControl size="small" fullWidth margin="dense">
               <InputLabel shrink htmlFor="firstNameInput">First Name</InputLabel>
@@ -97,10 +119,69 @@ const CreateUser = ({ setOpenDialog }) => {
               />
             </FormControl>
           </Grid>
+          <Grid xs={12} className=" border-b-2 border-b-gray-400 border-solid border-x-transparent border-t-transparent">
+            <Typography>Clients</Typography>
+          </Grid>
+          <Grid xs={12} className="flex justify-center">
+            {options ?
+              <FormControl variant="standard" size="small" fullWidth margin="dense">
+                <Select
+                  id="clientsInput"
+                  name='clients'
+                  multiple
+                  required
+                  input={<OutlinedInput id="clientsListInput" />}
+                  renderValue={(selected) => (
+                    <Box
+                      className={`flex flex-wrap gap-2`}
+                    >
+                      {selected.map((value, index) => {
+                        return (
+                          <Box key={index}>
+                            <Chip label={options.find((user) => value === user.clientId).name} />
+                          </Box>
+                        );
+                      })}
+                    </Box>
+                  )}
+                  MenuProps={{ autoFocus: false }}
+                  value={formData.clients}
+                  onChange={(e) => handleInput(e)}
+                  onClose={() => setSearchText("")}
+                >
+                  <ListSubheader>
+                    <Input
+                      size="small"
+                      autoFocus
+                      fullWidth
+                      startAdornment={
+                        <InputAdornment position="start">
+                          <SearchIcon />
+                        </InputAdornment>
+                      }
+                      onChange={(e) => setSearchText(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key !== "Escape") {
+                          // Prevents autoselecting item while typing (default Select behaviour)
+                          e.stopPropagation();
+                        }
+                      }}
+                    />
+                  </ListSubheader>
+                  {displayedOptions?.map((client, index) => {
+                    return (
+                      <MenuItem key={index} value={client.clientId}>
+                        <Checkbox checked={formData.clients.indexOf(client.clientId) > -1} />
+                        {client.firstName} {client?.lastName}</MenuItem>
+                    );
+                  })}
+                </Select>
+              </FormControl> : null}
+          </Grid>
         </Grid>
       </DialogContent>
       <DialogActions>
-        <Button type="submit">Create</Button>
+        <Button color="success" variant="contained" type="submit">CREATE</Button>
         <Button onClick={() => setOpenDialog(prev => { return { ...prev, open: !prev.open, type: '' }; })}>Cancel</Button>
       </DialogActions>
     </Box>

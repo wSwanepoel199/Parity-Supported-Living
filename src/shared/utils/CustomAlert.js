@@ -11,7 +11,7 @@ const CustomAlert = ({ alert }) => {
     <Collapse
       in={['error'].includes(rootState.status)}
       unmountOnExit
-      className={`absolute z-50 left-0 top-0 w-full`}
+      className={`fixed z-50 left-0 top-0 w-full`}
     >
       {alert ?
         <Alert

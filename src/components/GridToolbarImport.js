@@ -22,7 +22,7 @@ const GridToolbarImport = ({ type }) => {
   useEffect(() => {
     if (upload.file) {
       if (process.env.NODE_ENV === "production") {
-        sendMessage({ type: 'excel', data: upload.file })
+        sendMessage({ type: 'import', data: upload.file })
           .then(res => uploadFile({ data: res, type: upload.type }))
           .catch(err => {
             console.error(err);
@@ -63,21 +63,12 @@ const GridToolbarImport = ({ type }) => {
     }
     if (e.target.files[0]) {
       setUpload(prev => {
-        // if (e.target.files[0].type === "application/json") {
-        //   dispatch(storeError({ status: 422, statusText: 'UnprocessableEntity', message: "Can't process json files" }));
-        //   return {
-        //     ...prev,
-        //     color: 'error',
-        //     text: 'EXCEL FILES ONLY'
-        //   };
-        // } else {
         return {
           ...prev,
           color: 'primary',
           text: 'UPLOAD',
           file: e.target.files[0]
         };
-        // }
       });
       e.target.value = null;
       return;

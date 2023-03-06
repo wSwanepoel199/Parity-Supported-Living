@@ -1,31 +1,60 @@
-import { Box, Button, DialogActions, DialogContent, DialogTitle, FormControl, FormControlLabel, Input, InputLabel, MenuItem, OutlinedInput, Select, Switch } from "@mui/material";
+import { Box, Button, DialogActions, DialogContent, DialogTitle, FormControl, FormControlLabel, FormHelperText, Input, InputLabel, MenuItem, OutlinedInput, Select, Switch, Typography } from "@mui/material";
 import Grid from "@mui/material/Unstable_Grid2/";
 import { format, formatISO, parseISO } from "date-fns";
 import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { useUpdatePostMutation } from "../../shared/redux/posts/postApiSlice";
-import { useGetAllUsersQuery } from "../../shared/redux/admin/adminApiSlice";
 
-const UpdatePost = ({ setOpenDialog, post }) => {
+const UpdatePost = ({ setOpenDialog, data: post }) => {
+  const clientState = useSelector(state => state.clients);
   const adminState = useSelector(state => state.admin);
-  useGetAllUsersQuery();
   const mounted = useRef();
   const [updatePost, { isLoading: updatePostLoading }] = useUpdatePostMutation();
-  const [formData, setFormData] = useState(JSON.parse(JSON.stringify(post).replace(/:null/gi, ":\"\"")));
-  const [options, setOptions] = useState([post.carer]);
+  const [formData, setFormData] = useState({
+    date: formatISO(new Date()),
+    hours: 0,
+    kilos: 0,
+    notes: "",
+    private: false,
+    clientId: '',
+    clientName: '',
+    carerId: post.carerId,
+    carerName: ''
+  });
+
+  const [carerOptions, setCarerOptions] = useState([(post.carer || "")]);
+  const [clientOptions, setClientOptions] = useState([(post.client || "")]);
+
+  // useMemo(() => {
+  //   if (adminState.users && carerOptions.length === 1) setCarerOptions(() => adminState.users);
+  // }, [adminState.users, carerOptions]);
+
+  // useMemo(() => {
+  //   if (clientState.clients && clientOptions.length < 2) setClientOptions(() => clientState.clients);
+  // }, [clientState.clients, clientOptions]);
+
 
   useEffect(() => {
+    const parsedPost = JSON.stringify(post).replace(/:null/gi, ":\"\"");
     if (!mounted.current) {
-      if (adminState.users) {
-        setOptions(adminState.users);
-      }
+      setFormData(prev => {
+        if (JSON.stringify(prev) !== parsedPost) {
+          return JSON.parse(parsedPost);
+        } else {
+          return prev;
+        }
+      });
+      if (adminState.users && carerOptions.length === 1) setCarerOptions(adminState.users);
+      if (clientState.clients.length > 0 && clientOptions.length === 1) setClientOptions(clientState.clients);
+
       mounted.current = true;
     };
     if (updatePostLoading) setOpenDialog(prev => { return { ...prev, open: !prev.open, type: '' }; });
     return () => {
-      mounted.current = false;
+      if (!mounted.current) return;
+      if (mounted.current) mounted.current = false;
     };
-  }, [mounted, post, setOpenDialog, updatePostLoading, adminState.users]);
+  }, [mounted, post, setOpenDialog, updatePostLoading, clientState.clients, clientOptions, adminState.users, carerOptions]);
 
   const handleInput = ({ value, name }) => {
     switch (name) {
@@ -44,6 +73,27 @@ const UpdatePost = ({ setOpenDialog, post }) => {
           return {
             ...prev,
             [name]: parseInt(value)
+          };
+        });
+        return;
+      }
+      case 'clientId': {
+        console.log(value);
+        setFormData(prev => {
+          return {
+            ...prev,
+            [name]: value,
+            clientName: clientState.clients.find(client => client.clientId === value).name
+          };
+        });
+        return;
+      }
+      case 'carerId': {
+        setFormData(prev => {
+          return {
+            ...prev,
+            [name]: value,
+            carerName: adminState.users.find(carer => carer.userId === value).name
           };
         });
         return;
@@ -72,7 +122,8 @@ const UpdatePost = ({ setOpenDialog, post }) => {
 
 
   return (
-    <Box>
+    <Box component='form' onSubmit={(e) => handleSubmit(e)}>
+      {console.log(formData)}
       <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
         <DialogTitle>
           Edit Note
@@ -81,6 +132,9 @@ const UpdatePost = ({ setOpenDialog, post }) => {
       {mounted.current ?
         <DialogContent>
           <Grid container spacing={2} className="flex justify-center">
+            <Grid xs={12} className=" border-b-2 border-b-gray-400 border-solid border-x-transparent border-t-transparent">
+              <Typography>Details</Typography>
+            </Grid>
             <Grid sm={6} xs={12} className="flex justify-center">
               <FormControl size="small" fullWidth margin="dense">
                 <InputLabel shrink htmlFor="dateInput" >Support Date</InputLabel>
@@ -105,17 +159,39 @@ const UpdatePost = ({ setOpenDialog, post }) => {
                 />
               </FormControl>
             </Grid>
+            {(formData.client === "" && formData.clientId === "") ?
+              <Grid sm={6} xs={12} className="flex justify-center">
+                <FormControl size="small" fullWidth margin="dense">
+                  <InputLabel htmlFor="clientInput">Client's Name</InputLabel>
+                  <Input
+                    id="clientInput"
+                    name="client"
+                    type="text"
+                    disabled
+                    value={formData.clientName}
+                    onChange={(e) => handleInput(e.target)}
+                  />
+                  <FormHelperText>Client Details lost, please select new Client from dropdown</FormHelperText>
+                </FormControl>
+              </Grid> : null}
             <Grid sm={6} xs={12} className="flex justify-center">
-              <FormControl size="small" fullWidth margin="dense">
-                <InputLabel htmlFor="clientInput">Client's Name</InputLabel>
-                <Input
-                  id="clientInput"
-                  name="client"
-                  type="text"
-                  value={formData.client}
-                  onChange={(e) => handleInput(e.target)}
-                />
-              </FormControl>
+              {clientOptions ?
+                <FormControl variant="standard" size="small" fullWidth margin="dense">
+                  <InputLabel htmlFor="clientInput">Client's Name</InputLabel>
+                  <Select
+                    id="clientInput"
+                    name='clientId'
+                    required
+                    value={formData.clientId}
+                    onChange={(e) => handleInput(e.target)}
+                  >
+                    {clientOptions.map((client, index) => {
+                      return (
+                        <MenuItem key={index} value={client.clientId}>{client.firstName} {client?.lastName}</MenuItem>
+                      );
+                    })}
+                  </Select>
+                </FormControl> : null}
             </Grid>
             <Grid sm={6} xs={12} className="flex justify-center">
               <FormControl size="small" fullWidth margin="dense">
@@ -129,8 +205,23 @@ const UpdatePost = ({ setOpenDialog, post }) => {
                 />
               </FormControl>
             </Grid>
+            {(formData.carer === "" && formData.carerId === "") ?
+              <Grid sm={6} xs={12} className="flex justify-center">
+                <FormControl size="small" fullWidth margin="dense">
+                  <InputLabel htmlFor="carerInput">Carer</InputLabel>
+                  <Input
+                    id="carerInput"
+                    name="carer"
+                    type="text"
+                    disabled
+                    value={formData.carerName}
+                    onChange={(e) => handleInput(e.target)}
+                  />
+                  <FormHelperText>Carer details lost, please select Carer from dropdown</FormHelperText>
+                </FormControl>
+              </Grid> : null}
             <Grid sm={6} xs={12} className="flex justify-center">
-              {options ?
+              {carerOptions ?
                 <FormControl variant="standard" size="small" fullWidth margin="dense">
                   <InputLabel htmlFor="CarerInput">Carer</InputLabel>
                   <Select
@@ -140,7 +231,7 @@ const UpdatePost = ({ setOpenDialog, post }) => {
                     value={formData.carerId}
                     onChange={(e) => handleInput(e.target)}
                   >
-                    {options?.map((user, index) => {
+                    {carerOptions.map((user, index) => {
                       return (
                         <MenuItem key={index} value={user.userId}>{user.firstName} {user?.lastName}</MenuItem>
                       );
@@ -148,14 +239,15 @@ const UpdatePost = ({ setOpenDialog, post }) => {
                   </Select>
                 </FormControl> : null}
             </Grid>
+            <Grid xs={12} className=" border-b-2 border-b-gray-400 border-solid border-x-transparent border-t-transparent">
+              <Typography>Notes</Typography>
+            </Grid>
             <Grid xs={12} className="flex justify-center">
               <FormControl size="small" fullWidth margin="dense">
-                <InputLabel htmlFor="notesInput">Notes</InputLabel>
                 <OutlinedInput
                   id="notesInput"
                   name="notes"
                   type="text"
-                  label="Notes"
                   multiline
                   minRows={4}
                   value={formData.notes}
@@ -183,7 +275,7 @@ const UpdatePost = ({ setOpenDialog, post }) => {
           label="Confidential"
         />
         <Box >
-          <Button onClick={(e) => handleSubmit(e)}>Edit</Button>
+          <Button color="success" variant="contained" type="submit" disabled={formData.clientId === "" || formData.carerId === ""}>Update</Button>
           <Button onClick={() => setOpenDialog(prev => { return { ...prev, open: !prev.open, type: '', data: {} }; })}>Cancel</Button>
         </Box>
       </DialogActions>

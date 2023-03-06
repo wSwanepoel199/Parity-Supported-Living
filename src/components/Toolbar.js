@@ -7,17 +7,19 @@ const Toolbar = ({ children, type, csvOptions, clearSelect }) => {
   const userState = useSelector(state => state.user.user);
 
   return (
-    <GridToolbarContainer className="justify-between">
-      <Box>
+    <GridToolbarContainer className="flex justify-between w-full">
+      <Box className={`flex flex-wrap justify-start`}>
         {/* <GridToolbarColumnsButton/> */}
         {/* <GridToolbarFilterButton /> */}
         <GridToolbarDensitySelector />
-        <Box>
+        <Box >
           {userState.role === "Admin" ? <GridToolbarExport csvOptions={csvOptions} onClick={() => clearSelect([])} /> : null}
-          {userState.role === "Admin" ? <GridToolbarImport type={type} /> : null}
+          {(userState.role === "Admin") ? <GridToolbarImport type={type} /> : null}
         </Box>
       </Box>
-      {children}
+      <Box className={`ml-auto mr-[4px]`}>
+        {children}
+      </Box>
     </GridToolbarContainer>
   );
 };

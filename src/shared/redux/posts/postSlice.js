@@ -1,21 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
-// import api from "../../utils/api";
 
 const initialState = {
   status: 'asleep'
 };
-
-// const isPending = (action) => {
-//   return action.type.endsWith('pending');
-// };
-
-// const isFulfilled = (action) => {
-//   return action.type.endsWith('fulfilled');
-// };
-
-// const isRejected = (action) => {
-//   return action.type.endsWith('rejected');
-// };
 
 export const postSlice = createSlice({
   name: 'posts',
@@ -34,41 +21,7 @@ export const postSlice = createSlice({
       };
     }
   },
-  // extraReducers(builder) {
-  //   console.log(builder);
-  //   builder
-  //     .addMatcher(isPending, () => {
-  //       return {
-  //         ...initialState,
-  //         status: "fetching"
-  //       };
-  //     })
-  //     .addMatcher(isFulfilled, (state, action) => {
-  //       return {
-  //         ...state,
-  //         status: "fetched",
-  //       };
-  //     })
-  //     .addMatcher(isRejected, (state, action) => {
-  //       return {
-  //         ...state,
-  //         status: "failed",
-  //         error: action.error.message
-  //       };
-  //     });
-  // }
 });
-
-
-// export const getUser = createAsyncThunk('user/getUser', async (details) => {
-//   const res = await api("post", '/auth/login', { data: details });
-//   return res;
-// });
-
-// export const getPosts = createAsyncThunk('/posts/getAllPosts', async () => {
-//   const res = await api('get', '/posts/');
-//   return res;
-// });
 
 export const { savePosts, clearPostState } = postSlice.actions;
 
