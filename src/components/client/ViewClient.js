@@ -1,15 +1,15 @@
 import { Box, Button, Collapse, DialogActions, DialogContent, FormControl, InputLabel, Stack, Typography } from "@mui/material";
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import Grid from "@mui/material/Unstable_Grid2/";
-import { format, parseISO } from "date-fns";
+// import { format, parseISO } from "date-fns";
 import { useState } from "react";
-import { useSelector } from "react-redux";
+// import { useSelector } from "react-redux";
 
 const ViewClient = ({ setOpenDialog, data: client }) => {
   // const userState = useSelector(state => state.user);
-  const adminState = useSelector(state => state.admin);
+  // const adminState = useSelector(state => state.admin);
   const formData = JSON.parse(JSON.stringify(client).replace(/:null/gi, ":\"\""));
-  const users = [...client.carers, ...(adminState.users ? adminState.users : [])];
+  // const users = [...client.carers, ...(adminState.users ? adminState.users : [])];
   const [open, setOpen] = useState({
     clientDetails: true,
     carersDetails: false,
@@ -30,7 +30,7 @@ const ViewClient = ({ setOpenDialog, data: client }) => {
               };
             })}
           >
-            <Typography>{formData.name} Details</Typography>
+            <Typography>{formData.name}'s Details</Typography>
             {open.clientDetails ? <ArrowBackIosNewIcon className={`rotate-[-90deg]`} /> : <ArrowBackIosNewIcon />}
           </Grid>
           <Collapse
@@ -39,7 +39,7 @@ const ViewClient = ({ setOpenDialog, data: client }) => {
               w-[90%]
               `}
           >
-            <Stack className={` border-[1px] border-slate-300 border-solid`}>
+            <Stack className={` border-[1px] border-slate-300 border-solid mt-[11px]`}>
               <Grid container spacing={1} className="flex justify-center">
                 <Grid sm={6} xs={12} className="flex justify-center">
                   <FormControl size="small" fullWidth margin="dense">
@@ -93,7 +93,7 @@ const ViewClient = ({ setOpenDialog, data: client }) => {
               in={open.carersDetails}
               className={`w-[90%]`}
             >
-              <Stack className={`divide-y divide-x-0 divide-slate-300 divide-solid border-[1px] border-slate-300 border-solid`}>
+              <Stack className={`divide-y divide-x-0 divide-slate-300 divide-solid border-[1px] border-slate-300 border-solid mt-[11px]`}>
                 {formData.carers.map((carer, index) => {
                   return (
                     <Grid container spacing={0.5} key={index} className={`flex justify-between flex-wrap `}>
@@ -114,7 +114,7 @@ const ViewClient = ({ setOpenDialog, data: client }) => {
                 })}
               </Stack>
             </Collapse> : null}
-          <Grid xs={12}
+          {/* <Grid xs={12}
             className=" border-b-2 border-b-gray-400 border-solid border-x-transparent border-t-transparent flex justify-between"
             onClick={() => setOpen(prev => {
               return {
@@ -132,7 +132,7 @@ const ViewClient = ({ setOpenDialog, data: client }) => {
               w-[90%]
               `}
           >
-            <Stack className={`divide-y divide-x-0 divide-slate-300 divide-solid border-[1px] border-slate-300 border-solid`}>
+            <Stack className={`divide-y divide-x-0 divide-slate-300 divide-solid border-[1px] border-slate-300 border-solid mt-[11px]`}>
               {formData.posts.map((note, index) => {
                 const user = users.find(user => user.userId === note.carerId);
                 if (user) return (
@@ -169,13 +169,10 @@ const ViewClient = ({ setOpenDialog, data: client }) => {
                     </Grid>
                   </Grid>
                 );
-                return (
-                  <Box key={index} className={`hidden`}>
-
-                  </Box>);
+                return (<Box key={index} className={`hidden`} />);
               })}
             </Stack>
-          </Collapse>
+          </Collapse> */}
         </Grid>
       </DialogContent>
       <DialogActions sx={{ justifyContent: 'end', alignContent: 'space-between', alignItems: 'center', px: '20px' }}>

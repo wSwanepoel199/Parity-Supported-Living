@@ -14,7 +14,7 @@ const Toolbar = ({ children, type, csvOptions, clearSelect }) => {
         <GridToolbarDensitySelector />
         <Box >
           {userState.role === "Admin" ? <GridToolbarExport csvOptions={csvOptions} onClick={() => clearSelect([])} /> : null}
-          {(userState.role === "Admin" && type !== 'client') ? <GridToolbarImport type={type} /> : null}
+          {(userState.role === "Admin") ? <GridToolbarImport type={type} /> : null}
         </Box>
       </Box>
       <Box className={`ml-auto mr-[4px]`}>

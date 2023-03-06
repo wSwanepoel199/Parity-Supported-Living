@@ -59,7 +59,7 @@ export const backendApi = createApi({
         }
       },
       invalidatesTags: (result, error, args) =>
-        result ? [{ type: result.type, id: "LIST" }] : error ? console.error(error) : null
+        result ? [{ type: 'user' }, { type: 'post' }, { type: 'client' }] : error ? console.error(error) : null
     })
   })
 });

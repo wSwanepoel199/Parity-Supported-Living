@@ -17,6 +17,7 @@ const CreatePost = ({ setOpenDialog }) => {
     clientName: '',
     notes: "",
     carerId: userState.user.userId,
+    carerName: `${userState.user.firstName} ${userState.user?.lastName}`,
     private: false,
   });
   const [options, setOptions] = useState([]);

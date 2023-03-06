@@ -57,12 +57,17 @@ const ViewPost = ({ setOpenDialog, data: post }) => {
                   <Typography id="distanceInput" className={`p-3`}>{formData.kilos !== '' ? `${formData.kilos}` : 0}</Typography>
                 </FormControl>
               </Grid>
-              <Grid sm={6} xs={12} className="flex justify-center">
+              {formData.carer ? <Grid sm={6} xs={12} className="flex justify-center">
                 <FormControl size="small" fullWidth margin="dense">
                   <InputLabel shrink htmlFor="CarerInput">Carer</InputLabel>
                   <Typography id="carerInput" className={`p-3`}>{formData.carer.firstName} {formData.carer?.lastName}</Typography>
                 </FormControl>
-              </Grid>
+              </Grid> : <Grid sm={6} xs={12} className="flex justify-center">
+                <FormControl size="small" fullWidth margin="dense">
+                  <InputLabel shrink htmlFor="CarerInput">Carer</InputLabel>
+                  <Typography id="carerInput" className={`p-3`}>{formData.carerName}</Typography>
+                </FormControl>
+              </Grid>}
             </Grid>
           </Collapse>
           <Grid xs={12}

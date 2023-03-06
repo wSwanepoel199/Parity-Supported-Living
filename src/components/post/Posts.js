@@ -51,6 +51,10 @@ const Posts = () => {
               {value ? <DoneIcon /> : <CloseIcon />}
             </Box>
           );
+        },
+        valueFormatter: ({ value }) => {
+          console.log(value);
+          return value;
         }
       },
       {
@@ -88,10 +92,18 @@ const Posts = () => {
         flex: 1,
         minWidth: 100,
         maxWidth: 150,
-        valueGetter: (params) => {
-          return `${params.value.firstName} ${params.value?.lastName}`;
+        renderCell: ({ row }) => {
+          if (row.carerId === "") {
+            return <>{row.carerName}</>;
+          } else {
+            return <>{`${row.carer.firstName} ${row.carer?.lastName}`}</>;
+          }
         },
         disableExport: true
+      },
+      {
+        field: 'carerName',
+        disableColumnMenu: true,
       },
       {
         field: 'hours',
@@ -295,6 +307,7 @@ const Posts = () => {
                 carerId: false,
                 clientId: false,
                 clientName: false,
+                carerName: false,
                 options: !fullScreen,
                 private: ["Admin", "Coordinator"].includes(userState.user.role) ? true : false
               },

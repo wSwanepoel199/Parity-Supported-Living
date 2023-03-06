@@ -16,9 +16,10 @@ const UpdatePost = ({ setOpenDialog, data: post }) => {
     kilos: 0,
     notes: "",
     private: false,
+    clientId: '',
     clientName: '',
     carerId: post.carerId,
-    clientId: ''
+    carerName: ''
   });
 
   const [carerOptions, setCarerOptions] = useState([(post.carer || "")]);
@@ -83,6 +84,16 @@ const UpdatePost = ({ setOpenDialog, data: post }) => {
             ...prev,
             [name]: value,
             clientName: clientState.clients.find(client => client.clientId === value).name
+          };
+        });
+        return;
+      }
+      case 'carerId': {
+        setFormData(prev => {
+          return {
+            ...prev,
+            [name]: value,
+            carerName: adminState.users.find(carer => carer.userId === value).name
           };
         });
         return;
@@ -160,7 +171,7 @@ const UpdatePost = ({ setOpenDialog, data: post }) => {
                     value={formData.clientName}
                     onChange={(e) => handleInput(e.target)}
                   />
-                  <FormHelperText>Please Select Client from dropdown</FormHelperText>
+                  <FormHelperText>Client Details lost, please select new Client from dropdown</FormHelperText>
                 </FormControl>
               </Grid> : null}
             <Grid sm={6} xs={12} className="flex justify-center">
@@ -194,6 +205,21 @@ const UpdatePost = ({ setOpenDialog, data: post }) => {
                 />
               </FormControl>
             </Grid>
+            {(formData.carer === "" && formData.carerId === "") ?
+              <Grid sm={6} xs={12} className="flex justify-center">
+                <FormControl size="small" fullWidth margin="dense">
+                  <InputLabel htmlFor="carerInput">Carer</InputLabel>
+                  <Input
+                    id="carerInput"
+                    name="carer"
+                    type="text"
+                    disabled
+                    value={formData.carerName}
+                    onChange={(e) => handleInput(e.target)}
+                  />
+                  <FormHelperText>Carer details lost, please select Carer from dropdown</FormHelperText>
+                </FormControl>
+              </Grid> : null}
             <Grid sm={6} xs={12} className="flex justify-center">
               {carerOptions ?
                 <FormControl variant="standard" size="small" fullWidth margin="dense">
@@ -249,7 +275,7 @@ const UpdatePost = ({ setOpenDialog, data: post }) => {
           label="Confidential"
         />
         <Box >
-          <Button color="success" variant="contained" type="submit" disabled={formData.clientId === ""}>Update</Button>
+          <Button color="success" variant="contained" type="submit" disabled={formData.clientId === "" || formData.carerId === ""}>Update</Button>
           <Button onClick={() => setOpenDialog(prev => { return { ...prev, open: !prev.open, type: '', data: {} }; })}>Cancel</Button>
         </Box>
       </DialogActions>
