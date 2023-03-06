@@ -136,7 +136,6 @@ const UpdateClient = ({ setOpenDialog, data: client }) => {
 
   return (
     <Box component='form' onSubmit={(e) => handleSubmit(e)}>
-      {console.log(formData)}
       <DialogTitle>
         Edit {client.name}
       </DialogTitle>

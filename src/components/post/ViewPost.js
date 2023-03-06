@@ -18,7 +18,6 @@ const ViewPost = ({ setOpenDialog, data: post }) => {
   return (
     <Box>
       <DialogContent>
-        {console.log(formData)}
         <Grid container spacing={2} className="flex justify-center">
           <Grid xs={12}
             className=" border-b-2 border-b-gray-400 border-solid border-x-transparent border-t-transparent flex justify-between"

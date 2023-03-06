@@ -7,7 +7,7 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import DoneIcon from '@mui/icons-material/Done';
 import CloseIcon from '@mui/icons-material/Close';
 import { format, parseISO } from "date-fns";
-import { useEffect, useMemo, useState } from "react";
+import { memo, useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 import CreatePost from "./CreatePost";
 import UpdatePost from "./UpdatePost";
@@ -371,4 +371,4 @@ const Posts = () => {
   );
 };
 
-export default Posts;
+export default memo(Posts);

@@ -4,7 +4,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import { DataGrid } from "@mui/x-data-grid";
-import { useEffect, useMemo, useState } from "react";
+import { memo, useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 import Toolbar from "../Toolbar";
 import CreateClient from "./CreateClient";
@@ -325,4 +325,4 @@ const Clients = () => {
   );
 };
 
-export default Clients;
+export default memo(Clients);
