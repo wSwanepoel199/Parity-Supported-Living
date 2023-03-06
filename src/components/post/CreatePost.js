@@ -54,7 +54,7 @@ const CreatePost = ({ setOpenDialog }) => {
           return {
             ...prev,
             [name]: value,
-            clientName: clientState.clients.find(client => client.clientId === value)
+            clientName: clientState.clients.find(client => client.clientId === value).name
           };
         });
         return;
