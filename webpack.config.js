@@ -11,8 +11,6 @@ const InterpolateHtmlPlugin = require('react-dev-utils/InterpolateHtmlPlugin');
 
 const webpack = require('webpack');
 
-const babel_config = require('./babel.config');
-
 
 module.exports = function (_env, argv) {
   require('dotenv').config();
@@ -21,7 +19,7 @@ module.exports = function (_env, argv) {
   const isDevelopment = !isProduction;
 
   const PUBLIC_PATH = '/';
-  const PUBLIC_URL = '';
+  const PUBLIC_URL = '.';
 
   const webpackPlugins = [
     new HtmlWebpackPlugin({
@@ -84,7 +82,7 @@ module.exports = function (_env, argv) {
     output: {
       path: path.resolve(__dirname, "build"),
       filename: "static/js/[name].[contenthash:8].js",
-      // publicPath: PUBLIC_PATH,
+      publicPath: PUBLIC_PATH,
       clean: true,
       // devtoolModuleFilenameTemplate: info => path.resolve(info.absoluteResourcePath).replace(/\\/g, '/'),
     },
