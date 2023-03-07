@@ -1,7 +1,7 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const WorkboxWebpackPlugin = require('workbox-webpack-plugin');
-const Dotenv = require('dotenv-webpack');
+// const Dotenv = require('dotenv-webpack');
 const CopyPlugin = require('copy-webpack-plugin');
 const CompressionPlugin = require("compression-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
@@ -30,7 +30,6 @@ module.exports = function (_env, argv) {
     new InterpolateHtmlPlugin(HtmlWebpackPlugin, {
       'PUBLIC_URL': PUBLIC_URL
     }),
-    new Dotenv(),
     new webpack.DefinePlugin(
       {
         "process.env.NODE_ENV": JSON.stringify(
@@ -40,9 +39,6 @@ module.exports = function (_env, argv) {
       {
         'process.env.PUBLIC_PATH': JSON.stringify(PUBLIC_PATH),
       },
-      {
-        'process.env.PUBLIC_URL': JSON.stringify(PUBLIC_URL),
-      }
     ),
     new CopyPlugin({
       patterns: [
