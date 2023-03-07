@@ -59,6 +59,7 @@ const Users = () => {
         headerName: 'Email',
         flex: 1,
         minWidth: 100,
+        renderCell: ({ value }) => <p className={`text-ellipsis overflow-hidden whitespace-nowrap max-w-full`}>{value}</p>,
       },
       {
         field: 'clientsName',

@@ -50,6 +50,7 @@ const Clients = () => {
         flex: 1,
         minWidth: 100,
         valueGetter: ({ row }) => { return `${row.firstName} ${row?.lastName}`; },
+        renderCell: ({ value }) => <Box className={`text-ellipsis overflow-hidden whitespace-nowrap max-w-full`}>{value}</Box>,
         disableExport: true
       },
       {
@@ -57,18 +58,21 @@ const Clients = () => {
         headerName: 'Email',
         flex: 1,
         minWidth: 100,
+        renderCell: ({ value }) => <Box className={`text-ellipsis overflow-hidden whitespace-nowrap max-w-full`}>{value}</Box>
       },
       {
         field: 'phoneNumber',
         headerName: 'Number',
         flex: 1,
         minWidth: 100,
+        renderCell: ({ value }) => <Box className={`text-ellipsis overflow-hidden whitespace-nowrap max-w-full`}>{value}</Box>
       },
       {
         field: 'address',
         headerName: 'Address',
         flex: 1,
         minWidth: 100,
+        renderCell: ({ value }) => <Box className={`text-ellipsis overflow-hidden whitespace-nowrap max-w-full`}>{value}</Box>
       },
       {
         field: 'carersName',
