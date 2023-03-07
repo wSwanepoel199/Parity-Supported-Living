@@ -55,7 +55,7 @@ module.exports = function (_env, argv) {
       exclude: ["service-worker.js"],
       test: /\.js(\?.*)?$/,
       minRatio: 0.8,
-      deleteOriginalAssets: true,
+      deleteOriginalAssets: false,
     }),
     isProduction &&
     new MiniCssExtractPlugin({
@@ -72,7 +72,7 @@ module.exports = function (_env, argv) {
   }
 
   return {
-    devtool: isDevelopment && "cheap-module-source-map",
+    devtool: isDevelopment ? "cheap-module-source-map" : "source-map",
     entry: {
       'app': "./src/index.js",
     },
@@ -170,6 +170,7 @@ module.exports = function (_env, argv) {
             mangle: {
               safari10: true
             },
+            sourceMap: true,
             output: {
               comments: false,
               ascii_only: true
@@ -185,23 +186,23 @@ module.exports = function (_env, argv) {
         minSize: 0,
         maxInitialRequests: 20,
         maxAsyncRequests: 20,
-        // cacheGroups: {
-        //   vendors: {
-        //     test: /[\\/]node_modules[\\/]/,
-        //     name(module, chunks, cacheGroupKey) {
-        //       const packageName = module.context.match(
-        //         /[\\/]node_modules[\\/](.*?)([\\/]|$)/
-        //       )[1];
-        //       return `${cacheGroupKey}.${packageName.replace("@", "")}`;
-        //     }
-        //   },
-        //   common: {
-        //     minChunks: 2,
-        //     priority: -10
-        //   }
-        // }
+        cacheGroups: {
+          vendors: {
+            test: /[\\/]node_modules[\\/]/,
+            name(module, chunks, cacheGroupKey) {
+              const packageName = module.context.match(
+                /[\\/]node_modules[\\/](.*?)([\\/]|$)/
+              )[1];
+              return `${cacheGroupKey}.${packageName.replace("@", "")}`;
+            }
+          },
+          common: {
+            minChunks: 2,
+            priority: -10
+          }
+        }
       },
-      runtimeChunk: false
+      runtimeChunk: true
     },
     plugins: webpackPlugins,
   };

@@ -8,10 +8,10 @@ app.use(express.urlencoded({ extended: true }));
 
 const redirectionFilter = function (req, res, next) {
   const date = new Date();
-  const url = `${req.protocol}:\/\/${req.hostname}:${port}${req.url}`;
+  const url = `${req.protocol}://${req.hostname}:${port}${req.url}`;
 
   if (req.get('X-Forwarded-Proto') === 'http') {
-    const redirectTo = `https:\/\/${req.hostname}${req.url}`;
+    const redirectTo = `https://${req.hostname}${req.url}`;
     console.log(`${date} Redirecting ${url} --> ${redirectTo}`);
     res.redirect(301, redirectTo);
   } else {
