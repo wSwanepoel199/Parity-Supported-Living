@@ -27,7 +27,7 @@ precacheAndRoute(self.__WB_MANIFEST);
 // https://developers.google.com/web/fundamentals/architecture/app-shell
 const fileExtensionRegexp = new RegExp('/[^/?]+\\.[^/]+$');
 
-// Checks for Public_url in env, if its not prescent just assigns .
+// Checks for Public_url in env, if its not present just assigns .
 const Public_url = process.env.PUBLIC_URL || '.';
 
 registerRoute(
