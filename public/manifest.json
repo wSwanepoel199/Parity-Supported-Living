@@ -4,7 +4,8 @@
   "icons": [
     {
       "src": "PSLPineapple.ico",
-      "sizes": "256x256"
+      "sizes": "256x256",
+      "purpose": "maskable"
     },
     {
       "src": "PSLPineapple192.png",

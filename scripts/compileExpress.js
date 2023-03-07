@@ -23,11 +23,13 @@ app.get('/*', redirectionFilter);
 
 // allows express to serve ziped files
 app.get('*.js', function (req, res, next) {
-  if (req.url === '/app.js') {
+  if (req.url === "/service-worker.js") {
+    next();
+  } else {
     req.url = req.url + '.gz';
     res.set('Content-Encoding', 'gzip');
+    next();
   }
-  next();
 });
 
 // Your static pre-build assets folder
