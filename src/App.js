@@ -96,7 +96,6 @@ function App() {
 
   return (
     <div className={`w-full min-h-screen bg-slate-400 flex flex-col justify-center items-center`}>
-      {console.log(process.env.PUBLIC_URL)}
       {(mounted.current || isUninitialized) ?
         <>
           <Backdrop
