@@ -77,16 +77,16 @@ module.exports = function (_env, argv) {
   }
 
   return {
-    // devtool: isDevelopment && "cheap-module-source-map",
+    devtool: isDevelopment && "cheap-module-source-map",
     entry: {
       'app': "./src/index.js",
     },
     output: {
       path: path.resolve(__dirname, "build"),
       filename: "static/js/[name].[contenthash:8].js",
-      publicPath: PUBLIC_PATH,
+      // publicPath: PUBLIC_PATH,
       clean: true,
-      devtoolModuleFilenameTemplate: info => path.resolve(info.absoluteResourcePath).replace(/\\/g, '/'),
+      // devtoolModuleFilenameTemplate: info => path.resolve(info.absoluteResourcePath).replace(/\\/g, '/'),
     },
     devServer: {
       compress: true,
