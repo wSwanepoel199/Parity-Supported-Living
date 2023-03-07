@@ -1,7 +1,7 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const WorkboxWebpackPlugin = require('workbox-webpack-plugin');
-// const Dotenv = require('dotenv-webpack');
+const Dotenv = require('dotenv-webpack');
 const CopyPlugin = require('copy-webpack-plugin');
 const CompressionPlugin = require("compression-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
@@ -11,17 +11,18 @@ const InterpolateHtmlPlugin = require('react-dev-utils/InterpolateHtmlPlugin');
 
 const webpack = require('webpack');
 
-require('dotenv').config();
+// require('dotenv').config();
 
 module.exports = function (_env, argv) {
 
   const isProduction = argv.mode === "production";
   const isDevelopment = !isProduction;
 
-  const PUBLIC_PATH = process.env.PUBLIC_PATH || '/';
-  const PUBLIC_URL = process.env.PUBLIC_URL || '.';
+  const PUBLIC_PATH = _env.PUBLIC_PATH || '/';
+  const PUBLIC_URL = _env.PUBLIC_URL || '.';
 
   const webpackPlugins = [
+    new Dotenv(),
     new HtmlWebpackPlugin({
       template: path.resolve(__dirname, 'public/index.html'),
       filename: 'index.html',
