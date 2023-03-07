@@ -18,8 +18,8 @@ module.exports = function (_env, argv) {
   const isProduction = argv.mode === "production";
   const isDevelopment = !isProduction;
 
-  const PUBLIC_PATH = '/';
-  const PUBLIC_URL = '.';
+  const PUBLIC_PATH = process.env.PUBLIC_PATH || '/';
+  const PUBLIC_URL = process.env.PUBLIC_URL || '.';
 
   const webpackPlugins = [
     new HtmlWebpackPlugin({
@@ -27,7 +27,7 @@ module.exports = function (_env, argv) {
       filename: 'index.html',
       inject: true,
     }),
-    new InterpolateHtmlPlugin(HtmlWebpackPlugin, {
+    new InterpolateHtmlPlugin({
       'PUBLIC_URL': PUBLIC_URL
     }),
     new Dotenv(),
