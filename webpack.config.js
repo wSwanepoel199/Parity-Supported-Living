@@ -27,7 +27,7 @@ module.exports = function (_env, argv) {
       filename: 'index.html',
       inject: true,
     }),
-    new InterpolateHtmlPlugin({
+    new InterpolateHtmlPlugin(HtmlWebpackPlugin, {
       'PUBLIC_URL': PUBLIC_URL
     }),
     new Dotenv(),
