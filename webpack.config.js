@@ -10,19 +10,19 @@ const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
 const InterpolateHtmlPlugin = require('react-dev-utils/InterpolateHtmlPlugin');
 
 const webpack = require('webpack');
-
-// require('dotenv').config();
+const dotenv = require('dotenv');
 
 module.exports = function (_env, argv) {
+  dotenv.config();
 
   const isProduction = argv.mode === "production";
   const isDevelopment = !isProduction;
 
-  const PUBLIC_PATH = _env.PUBLIC_PATH || '/';
-  const PUBLIC_URL = _env.PUBLIC_URL || '.';
+  const PUBLIC_PATH = process.env.PUBLIC_PATH || '/';
+  const PUBLIC_URL = process.env.PUBLIC_URL || '.';
+  const REACT_APP_API_URL = process.env.REACT_APP_API_URL || 'http://192.168.1.2:5000';
 
   const webpackPlugins = [
-    new Dotenv(),
     new HtmlWebpackPlugin({
       template: path.resolve(__dirname, 'public/index.html'),
       filename: 'index.html',
@@ -31,16 +31,16 @@ module.exports = function (_env, argv) {
     new InterpolateHtmlPlugin(HtmlWebpackPlugin, {
       'PUBLIC_URL': PUBLIC_URL
     }),
-    new webpack.DefinePlugin(
-      {
-        "process.env.NODE_ENV": JSON.stringify(
-          isProduction ? "production" : "development"
-        ),
-      },
-      {
-        'process.env.PUBLIC_PATH': JSON.stringify(PUBLIC_PATH),
-      },
-    ),
+    new webpack.DefinePlugin({
+      'process.env': JSON.stringify(process.env),
+      "process.env.NODE_ENV": JSON.stringify(
+        isProduction ? "production" : "development"
+      ),
+      'process.env.PUBLIC_PATH': JSON.stringify(PUBLIC_PATH),
+      'process.env.PUBLIC_URL': JSON.stringify(PUBLIC_URL),
+      'process.env.REACT_APP_API_URL': JSON.stringify(REACT_APP_API_URL),
+    }),
+    new Dotenv(),
     new CopyPlugin({
       patterns: [
         { from: './public/PSLPineapple.ico', to: '' },
