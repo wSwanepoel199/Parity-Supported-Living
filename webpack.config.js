@@ -11,9 +11,9 @@ const InterpolateHtmlPlugin = require('react-dev-utils/InterpolateHtmlPlugin');
 
 const webpack = require('webpack');
 
+require('dotenv').config();
 
 module.exports = function (_env, argv) {
-  require('dotenv').config();
 
   const isProduction = argv.mode === "production";
   const isDevelopment = !isProduction;
