@@ -1,7 +1,7 @@
 import { Box, Button, Checkbox, Chip, DialogActions, DialogContent, DialogTitle, FormControl, FormHelperText, Input, InputAdornment, InputLabel, ListSubheader, MenuItem, OutlinedInput, Select, Typography, useFormControl } from "@mui/material";
 import Grid from "@mui/material/Unstable_Grid2/";
 import SearchIcon from "@mui/icons-material/Search";
-import { forwardRef, useEffect, useMemo, useState } from "react";
+import { forwardRef, useMemo, useState } from "react";
 import PhoneInput from 'react-phone-input-2';
 import { useSelector } from "react-redux";
 import { useUpdateClientMutation } from "../../shared/redux/client/clientApiSlice";
@@ -41,7 +41,7 @@ const containsText = (user, searchText) =>
 
 const UpdateClient = ({ setOpenDialog, data: client }) => {
   const adminState = useSelector(state => state.admin);
-  const [updateClient, { isSuccess, isError }] = useUpdateClientMutation();
+  const [updateClient] = useUpdateClientMutation();
   const options = adminState.users;
   const [formData, setFormData] = useState({
     firstName: '',
@@ -74,10 +74,6 @@ const UpdateClient = ({ setOpenDialog, data: client }) => {
       };
     });
   }, [client]);
-
-  useEffect(() => {
-    if (isSuccess || isError) setOpenDialog(prev => { return { ...prev, open: !prev.open, type: '' }; });
-  }, [isSuccess, isError, setOpenDialog]);
 
   const handleInput = (e) => {
     const { value, name } = e.target;

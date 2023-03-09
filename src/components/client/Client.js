@@ -1,31 +1,32 @@
-import { Box, Button, Dialog, IconButton, LinearProgress, Menu, MenuItem, Typography, useMediaQuery, useTheme } from "@mui/material";
+import { Box, Button, Typography } from "@mui/material";
 import AddIcon from '@mui/icons-material/Add';
-import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/Delete';
-import VisibilityIcon from '@mui/icons-material/Visibility';
-import { DataGrid } from "@mui/x-data-grid";
-import { memo, useEffect, useMemo, useState } from "react";
+// import EditIcon from '@mui/icons-material/Edit';
+// import DeleteIcon from '@mui/icons-material/Delete';
+// import VisibilityIcon from '@mui/icons-material/Visibility';
+// import { DataGrid } from "@mui/x-data-grid";
+import { lazy, memo, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import Toolbar from "../Toolbar";
+// import Toolbar from "../Toolbar";
 import CreateClient from "./CreateClient";
 import UpdateClient from "./UpdateClient";
 import ConfirmDialog from "./ConfirmDialog";
 import ViewClient from "./ViewClient";
+const GeneralDataGrid = lazy(() => import('../GeneralDataGrid'));
 
 
 const Clients = () => {
   const clientState = useSelector(state => state.clients);
   const userState = useSelector(state => state.user);
-  const rootState = useSelector(state => state.root);
+  // const rootState = useSelector(state => state.root);
 
-  const theme = useTheme();
-  const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
+  // const theme = useTheme();
+  // const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
 
-  const [openDialog, setOpenDialog] = useState({
-    open: false,
-    type: '',
-    data: {}
-  });
+  // const [openDialog, setOpenDialog] = useState({
+  //   open: false,
+  //   type: '',
+  //   data: {}
+  // });
 
   const [table, setTable] = useState({
     columns: [
@@ -124,106 +125,145 @@ const Clients = () => {
     }
   }, [clientState.clients]);
 
-  useMemo(() => {
-    if (fullScreen && table.columns.some(column => column['field'] === "options")) {
-      setTable(prev => {
-        return {
-          ...prev,
-          columns: prev.columns.slice(0, -1)
-        };
-      });
-    } else if (!fullScreen && !table.columns.some(column => column['field'] === "options")) {
-      setTable({
-        ...table,
-        columns: [
-          ...table.columns,
-          {
-            field: 'options',
-            headerName: "Options",
-            width: ["Admin", "Coordinator"].includes(userState.user.role) ? 130 : 70,
-            disableColumnMenu: true,
-            disableColumnFilter: true,
-            sortable: false,
-            renderCell: (params) => (
-              <Box className={`flex justify-center`}>
-                <IconButton onClick={() => {
-                  setSelectedRow(params.row.id);
-                  setOpenDialog(prev => { return { ...prev, open: !prev.open, type: 'view', data: params.row }; });
-                }} >
-                  <VisibilityIcon />
-                </IconButton>
-                {["Admin"].includes(userState.user.role) ? <IconButton onClick={() => {
-                  setSelectedRow(params.row.id);
-                  setOpenDialog(prev => { return { ...prev, open: !prev.open, type: 'edit', data: params.row }; });
-                }}>
-                  <EditIcon />
-                </IconButton> : null}
-                {["Admin"].includes(userState.user.role) ? <IconButton onClick={() => {
-                  setSelectedRow(params.row.id);
-                  setOpenDialog(prev => { return { ...prev, open: !prev.open, type: 'delete', data: params.row }; });
-                }}>
-                  <DeleteIcon />
-                </IconButton> : null}
-              </Box>
-            ),
-            disableExport: true
-          }]
-      });
-    }
-  }, [fullScreen, table, userState.user.role]);
+  // useMemo(() => {
+  //   if (fullScreen && table.columns.some(column => column['field'] === "options")) {
+  //     setTable(prev => {
+  //       return {
+  //         ...prev,
+  //         columns: prev.columns.slice(0, -1)
+  //       };
+  //     });
+  //   } else if (!fullScreen && !table.columns.some(column => column['field'] === "options")) {
+  //     setTable({
+  //       ...table,
+  //       columns: [
+  //         ...table.columns,
+  //         {
+  //           field: 'options',
+  //           headerName: "Options",
+  //           width: ["Admin", "Coordinator"].includes(userState.user.role) ? 130 : 70,
+  //           disableColumnMenu: true,
+  //           disableColumnFilter: true,
+  //           sortable: false,
+  //           renderCell: (params) => (
+  //             <Box className={`flex justify-center`}>
+  //               <IconButton onClick={() => {
+  //                 setSelectedRow(params.row.id);
+  //                 setOpenDialog(prev => { return { ...prev, open: !prev.open, type: 'view', data: params.row }; });
+  //               }} >
+  //                 <VisibilityIcon />
+  //               </IconButton>
+  //               {["Admin"].includes(userState.user.role) ? <IconButton onClick={() => {
+  //                 setSelectedRow(params.row.id);
+  //                 setOpenDialog(prev => { return { ...prev, open: !prev.open, type: 'edit', data: params.row }; });
+  //               }}>
+  //                 <EditIcon />
+  //               </IconButton> : null}
+  //               {["Admin"].includes(userState.user.role) ? <IconButton onClick={() => {
+  //                 setSelectedRow(params.row.id);
+  //                 setOpenDialog(prev => { return { ...prev, open: !prev.open, type: 'delete', data: params.row }; });
+  //               }}>
+  //                 <DeleteIcon />
+  //               </IconButton> : null}
+  //             </Box>
+  //           ),
+  //           disableExport: true
+  //         }]
+  //     });
+  //   }
+  // }, [fullScreen, table, userState.user.role]);
 
-  const [selectedRow, setSelectedRow] = useState();
+  // const [selectedRow, setSelectedRow] = useState();
 
-  const [contextMenu, setContextMenu] = useState(null);
+  // const [contextMenu, setContextMenu] = useState(null);
 
-  const handleContextMenu = (event) => {
-    event.preventDefault();
-    setSelectedRow(Number(event.currentTarget.getAttribute('data-id')));
-    setContextMenu(
-      contextMenu === null
-        ? { mouseX: event.clientX - 2, mouseY: event.clientY - 4 }
-        : null,
-    );
-  };
+  // const handleContextMenu = (event) => {
+  //   event.preventDefault();
+  //   setSelectedRow(Number(event.currentTarget.getAttribute('data-id')));
+  //   setContextMenu(
+  //     contextMenu === null
+  //       ? { mouseX: event.clientX - 2, mouseY: event.clientY - 4 }
+  //       : null,
+  //   );
+  // };
 
-  const handleClose = () => {
-    setContextMenu(null);
-  };
+  // const handleClose = () => {
+  //   setContextMenu(null);
+  // };
 
-  const openView = () => {
-    clientState.clients.map((row) => {
-      if (row.id === selectedRow) {
-        setOpenDialog(prev => { return { ...prev, open: !prev.open, type: 'view', data: row }; });
-      }
-      return row;
-    });
-    handleClose();
-  };
+  // const openView = () => {
+  //   clientState.clients.map((row) => {
+  //     if (row.id === selectedRow) {
+  //       setOpenDialog(prev => { return { ...prev, open: !prev.open, type: 'view', data: row }; });
+  //     }
+  //     return row;
+  //   });
+  //   handleClose();
+  // };
 
-  const openEdit = () => {
-    clientState.clients.map((row) => {
-      if (row.id === selectedRow) {
-        setOpenDialog(prev => { return { ...prev, open: !prev.open, type: 'edit', data: row }; });
-      }
-      return row;
-    });
-    handleClose();
-  };
+  // const openEdit = () => {
+  //   clientState.clients.map((row) => {
+  //     if (row.id === selectedRow) {
+  //       setOpenDialog(prev => { return { ...prev, open: !prev.open, type: 'edit', data: row }; });
+  //     }
+  //     return row;
+  //   });
+  //   handleClose();
+  // };
 
-  const openDelete = () => {
-    clientState.clients.map((row) => {
-      if (row.id === selectedRow) {
-        setOpenDialog(prev => { return { ...prev, open: !prev.open, type: 'delete', data: row }; });
-      }
-      return row;
-    });
-    handleClose();
-  };
+  // const openDelete = () => {
+  //   clientState.clients.map((row) => {
+  //     if (row.id === selectedRow) {
+  //       setOpenDialog(prev => { return { ...prev, open: !prev.open, type: 'delete', data: row }; });
+  //     }
+  //     return row;
+  //   });
+  //   handleClose();
+  // };
 
   return (
     <div className="w-full h-full max-w-screen-lg mx-auto flex flex-col ">
       <Typography variant="h3" component="div" className={`py-5`}>Clients</Typography>
-      <Dialog
+      <GeneralDataGrid
+        intialTable={table}
+        type="post"
+        optionPermissions={{
+          create: ["Admin"].includes(userState.user.role),
+          edit: ["Admin"].includes(userState.user.role),
+          view: userState.status === 'loggedIn',
+          delete: ["Admin"].includes(userState.user.role),
+        }}
+        tableArray={clientState.clients}
+        dialogOptions={{
+          Create: (props) => <CreateClient {...props} />,
+          Update: (props) => <UpdateClient {...props} />,
+          View: (props) => <ViewClient {...props} />,
+          Delete: (props) => <ConfirmDialog {...props} />,
+        }}
+        NewEntry={(props) => <Button startIcon={<AddIcon />} {...props}>
+          New Client
+        </Button>
+        }
+        columns={{
+          columnVisibilityModel: {
+            // Hides listed coloumns
+            id: false,
+            clientId: false,
+            firstName: false,
+            lastName: false,
+            carers: false
+          },
+        }}
+        sorting={{
+          sortModel: [
+            {
+              field: 'id',
+              sort: 'desc',
+            },
+          ],
+        }}
+      />
+      {/* <Dialog
         fullScreen={fullScreen}
         open={openDialog.open}
         className={`z-30 max-w-full`}
@@ -324,7 +364,7 @@ const Clients = () => {
               );
             }) : null}
         </Menu>
-      </Box>
+      </Box> */}
     </div>
   );
 };

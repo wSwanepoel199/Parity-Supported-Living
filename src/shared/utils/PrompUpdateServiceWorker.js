@@ -1,23 +1,10 @@
 import { Button, IconButton, Snackbar } from "@mui/material";
 import CloseIcon from '@mui/icons-material/Close';
 import deferredPromise from "./deferredPromise";
-import { useEffect, useRef } from "react";
 
 export const promptForUpdate = new deferredPromise();
 
 const PromptForUpdate = ({ update, setUpdate }) => {
-  const mounted = useRef();
-
-  useEffect(() => {
-    if (!mounted.current) {
-
-      mounted.current = true;
-    }
-
-    return () => {
-      mounted.current = false;
-    };
-  }, [mounted]);
 
   const handleUpdate = () => {
     // sendMessage({ type: 'SKIP_WAITING' });
@@ -51,16 +38,14 @@ const PromptForUpdate = ({ update, setUpdate }) => {
 
   return (
     <>
-      {mounted.current ?
-        <Snackbar
-          open={update}
-          message="Update Available"
-          action={action}
-          ContentProps={{
-            className: `bg-slate-500`
-          }}
-        />
-        : null}
+      <Snackbar
+        open={update}
+        message="Update Available"
+        action={action}
+        ContentProps={{
+          className: `bg-slate-500`
+        }}
+      />
     </>
   );
 };

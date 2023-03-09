@@ -10,7 +10,7 @@ const containsText = (user, searchText) =>
 
 const UpdateUser = ({ setOpenDialog, data: user }) => {
   const clientState = useSelector(state => state.clients);
-  const [updateUser, { isSuccess, isError }] = useUpdateUserMutation();
+  const [updateUser] = useUpdateUserMutation();
   const mounted = useRef();
   const [formData, setFormData] = useState({
     showPassword: false,
@@ -52,11 +52,10 @@ const UpdateUser = ({ setOpenDialog, data: user }) => {
       mounted.current = true;
     }
     if (clientState.clients.length > 0) setOptions(clientState.clients);
-    if (isSuccess || isError) setOpenDialog(prev => { return { ...prev, open: !prev.open, type: '' }; });
     return () => {
       mounted.current = false;
     };
-  }, [mounted, isSuccess, isError, setOpenDialog, clientState.clients]);
+  }, [mounted, setOpenDialog, clientState.clients]);
 
   const handleInput = (e) => {
     const { value, name } = e.target;
@@ -73,6 +72,7 @@ const UpdateUser = ({ setOpenDialog, data: user }) => {
     delete formData.showPassword;
     delete formData.name;
     updateUser(formData);
+    setOpenDialog(prev => { return { ...prev, open: !prev.open, type: '' }; });
   };
 
 

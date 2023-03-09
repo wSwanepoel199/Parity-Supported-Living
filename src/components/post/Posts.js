@@ -1,32 +1,32 @@
-import { Box, Button, Dialog, IconButton, LinearProgress, ListItemIcon, ListItemText, Menu, MenuItem, Typography, useMediaQuery, useTheme } from "@mui/material";
-import { DataGrid } from "@mui/x-data-grid";
+import { Box, Button, Typography } from "@mui/material";
 import AddIcon from '@mui/icons-material/Add';
-import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/Delete';
-import VisibilityIcon from '@mui/icons-material/Visibility';
+// import EditIcon from '@mui/icons-material/Edit';
+// import DeleteIcon from '@mui/icons-material/Delete';
+// import VisibilityIcon from '@mui/icons-material/Visibility';
 import DoneIcon from '@mui/icons-material/Done';
 import CloseIcon from '@mui/icons-material/Close';
 import { format, parseISO } from "date-fns";
-import { memo, useEffect, useMemo, useState } from "react";
+import { lazy, memo, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import CreatePost from "./CreatePost";
 import UpdatePost from "./UpdatePost";
-import Toolbar from "../Toolbar";
+// import Toolbar from "../Toolbar";
 import ViewPost from "./ViewPost";
 import ConfirmDialog from "./ConfirmDialog";
+const GeneralDataGrid = lazy(() => import('../GeneralDataGrid'));
 
 const Posts = () => {
   const postState = useSelector(state => state.posts);
   const userState = useSelector(state => state.user);
-  const rootState = useSelector(state => state.root);
+  // const rootState = useSelector(state => state.root);
 
-  const theme = useTheme();
-  const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
-  const [openDialog, setOpenDialog] = useState({
-    open: false,
-    type: '',
-    data: {}
-  });
+  // const theme = useTheme();
+  // const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
+  // const [openDialog, setOpenDialog] = useState({
+  //   open: false,
+  //   type: '',
+  //   data: {}
+  // });
 
 
   const [table, setTable] = useState({
@@ -136,53 +136,53 @@ const Posts = () => {
     pageSize: 10,
   });
 
-  const [selectedRow, setSelectedRow] = useState();
+  // const [selectedRow, setSelectedRow] = useState();
 
-  const [contextMenu, setContextMenu] = useState(null);
+  // const [contextMenu, setContextMenu] = useState(null);
 
-  const handleContextMenu = (event) => {
-    event.preventDefault();
-    setSelectedRow(Number(event.currentTarget.getAttribute('data-id')));
-    setContextMenu(
-      contextMenu === null
-        ? { mouseX: event.clientX - 2, mouseY: event.clientY - 4 }
-        : null,
-    );
-  };
+  // const handleContextMenu = (event) => {
+  //   event.preventDefault();
+  //   setSelectedRow(Number(event.currentTarget.getAttribute('data-id')));
+  //   setContextMenu(
+  //     contextMenu === null
+  //       ? { mouseX: event.clientX - 2, mouseY: event.clientY - 4 }
+  //       : null,
+  //   );
+  // };
 
-  const handleClose = () => {
-    setContextMenu(null);
-  };
+  // const handleClose = () => {
+  //   setContextMenu(null);
+  // };
 
-  const openView = (array) => {
-    array.map((row) => {
-      if (row.id === selectedRow) {
-        setOpenDialog(prev => { return { ...prev, open: !prev.open, type: 'view', data: row }; });
-      }
-      return row;
-    });
-    handleClose();
-  };
+  // const openView = (array) => {
+  //   array.map((row) => {
+  //     if (row.id === selectedRow) {
+  //       setOpenDialog(prev => { return { ...prev, open: !prev.open, type: 'view', data: row }; });
+  //     }
+  //     return row;
+  //   });
+  //   handleClose();
+  // };
 
-  const openEdit = (array) => {
-    array.map((row) => {
-      if (row.id === selectedRow) {
-        setOpenDialog(prev => { return { ...prev, open: !prev.open, type: 'edit', data: row }; });
-      }
-      return row;
-    });
-    handleClose();
-  };
+  // const openEdit = (array) => {
+  //   array.map((row) => {
+  //     if (row.id === selectedRow) {
+  //       setOpenDialog(prev => { return { ...prev, open: !prev.open, type: 'edit', data: row }; });
+  //     }
+  //     return row;
+  //   });
+  //   handleClose();
+  // };
 
-  const openDelete = (array) => {
-    array.map((row) => {
-      if (row.id === selectedRow) {
-        setOpenDialog(prev => { return { ...prev, open: !prev.open, type: 'delete', data: row }; });
-      }
-      return row;
-    });
-    handleClose();
-  };
+  // const openDelete = (array) => {
+  //   array.map((row) => {
+  //     if (row.id === selectedRow) {
+  //       setOpenDialog(prev => { return { ...prev, open: !prev.open, type: 'delete', data: row }; });
+  //     }
+  //     return row;
+  //   });
+  //   handleClose();
+  // };
 
   useEffect(() => {
     if (postState.posts) {
@@ -195,59 +195,99 @@ const Posts = () => {
     }
   }, [postState.posts]);
 
-  useMemo(() => {
-    if (fullScreen && table.columns.some(column => column['field'] === "options")) {
-      setTable(prev => {
-        return {
-          ...prev,
-          columns: prev.columns.slice(0, -1)
-        };
-      });
-    }
-    if (!fullScreen && !table.columns.some(column => column['field'] === "options")) {
-      setTable({
-        ...table,
-        columns: [
-          ...table.columns,
-          {
-            field: 'options',
-            headerName: "Options",
-            width: ["Admin", "Coordinator"].includes(userState.user.role) ? 130 : 70,
-            disableColumnMenu: true,
-            disableColumnFilter: true,
-            sortable: false,
-            renderCell: (params) => (
-              <Box className={`flex justify-center w-full`}>
-                <IconButton onClick={() => {
-                  setSelectedRow(params.row.id);
-                  setOpenDialog(prev => { return { ...prev, open: !prev.open, type: 'view', data: params.row }; });
-                }} >
-                  <VisibilityIcon />
-                </IconButton>
-                {["Admin", "Coordinator"].includes(userState.user.role) ? <IconButton onClick={() => {
-                  setSelectedRow(params.row.id);
-                  setOpenDialog(prev => { return { ...prev, open: !prev.open, type: 'edit', data: params.row }; });
-                }}>
-                  <EditIcon />
-                </IconButton> : null}
-                {["Admin", "Coordinator"].includes(userState.user.role) ? <IconButton onClick={() => {
-                  setSelectedRow(params.row.id);
-                  setOpenDialog(prev => { return { ...prev, open: !prev.open, type: 'delete', data: params.row }; });
-                }}>
-                  <DeleteIcon />
-                </IconButton> : null}
-              </Box>
-            ),
-            disableExport: true
-          }]
-      });
-    }
-  }, [fullScreen, table, userState.user.role]);
+  // useMemo(() => {
+  //   if (fullScreen && table.columns.some(column => column['field'] === "options")) {
+  //     setTable(prev => {
+  //       return {
+  //         ...prev,
+  //         columns: prev.columns.slice(0, -1)
+  //       };
+  //     });
+  //   }
+  //   if (!fullScreen && !table.columns.some(column => column['field'] === "options")) {
+  //     setTable({
+  //       ...table,
+  //       columns: [
+  //         ...table.columns,
+  //         {
+  //           field: 'options',
+  //           headerName: "Options",
+  //           width: ["Admin", "Coordinator"].includes(userState.user.role) ? 130 : 70,
+  //           disableColumnMenu: true,
+  //           disableColumnFilter: true,
+  //           sortable: false,
+  //           renderCell: (params) => (
+  //             <Box className={`flex justify-center w-full`}>
+  //               <IconButton onClick={() => {
+  //                 setSelectedRow(params.row.id);
+  //                 setOpenDialog(prev => { return { ...prev, open: !prev.open, type: 'view', data: params.row }; });
+  //               }} >
+  //                 <VisibilityIcon />
+  //               </IconButton>
+  //               {["Admin", "Coordinator"].includes(userState.user.role) ? <IconButton onClick={() => {
+  //                 setSelectedRow(params.row.id);
+  //                 setOpenDialog(prev => { return { ...prev, open: !prev.open, type: 'edit', data: params.row }; });
+  //               }}>
+  //                 <EditIcon />
+  //               </IconButton> : null}
+  //               {["Admin", "Coordinator"].includes(userState.user.role) ? <IconButton onClick={() => {
+  //                 setSelectedRow(params.row.id);
+  //                 setOpenDialog(prev => { return { ...prev, open: !prev.open, type: 'delete', data: params.row }; });
+  //               }}>
+  //                 <DeleteIcon />
+  //               </IconButton> : null}
+  //             </Box>
+  //           ),
+  //           disableExport: true
+  //         }]
+  //     });
+  //   }
+  // }, [fullScreen, table, userState.user.role]);
 
   return (
     <div className="w-full h-full max-w-screen-lg mx-auto flex flex-col ">
       <Typography variant="h3" component="div" className={`py-5`}>Notes</Typography>
-      <Dialog
+      <GeneralDataGrid
+        intialTable={table}
+        type="post"
+        optionPermissions={{
+          create: userState.status === 'loggedIn',
+          edit: ["Admin", "Coordinator"].includes(userState.user.role),
+          view: userState.status === 'loggedIn',
+          delete: ["Admin", "Coordinator"].includes(userState.user.role),
+        }}
+        tableArray={postState.posts}
+        dialogOptions={{
+          Create: (props) => <CreatePost {...props} />,
+          Update: (props) => <UpdatePost {...props} />,
+          View: (props) => <ViewPost {...props} />,
+          Delete: (props) => <ConfirmDialog {...props} />,
+        }}
+        NewEntry={(props) => <Button startIcon={<AddIcon />} {...props}>
+          New Note
+        </Button>
+        }
+        columns={{
+          columnVisibilityModel: {
+            // Hides listed coloumns
+            carerId: false,
+            clientId: false,
+            clientName: false,
+            carerName: false,
+            // options: !fullScreen,
+            private: ["Admin", "Coordinator"].includes(userState.user.role) ? true : false
+          },
+        }}
+        sorting={{
+          sortModel: [
+            {
+              field: 'date',
+              sort: 'desc',
+            },
+          ],
+        }}
+      />
+      {/* <Dialog
         fullScreen={fullScreen}
         open={openDialog.open}
         className={`z-30 max-w-full`}
@@ -366,7 +406,7 @@ const Posts = () => {
               );
             }) : null}
         </Menu>
-      </Box>
+      </Box> */}
     </div>
   );
 };

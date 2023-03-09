@@ -1,23 +1,30 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, Suspense, lazy } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import { Backdrop, CircularProgress, } from '@mui/material';
+import { Backdrop, Button, CircularProgress, Container, } from '@mui/material';
 // import Dashboard from './components/Dashboard';
-import Landing from './pages/Landing';
-import SignIn from './pages/SignIn';
-import Posts from './components/post/Posts';
-import Users from './components/user/Users';
-import Clients from './components/client/Client';
 import ProtectedRoute from './shared/utils/ProtectedRoute';
 import PromptForUpdate from './shared/utils/PrompUpdateServiceWorker';
 import CustomAlert from './shared/utils/CustomAlert';
 import { useRefreshUserMutation, } from './shared/redux/user/userApiSlice';
+import Appbar from "./components/Appbar";
+
+// import Landing from './pages/Landing';
+const Landing = lazy(() => import('./pages/Landing'));
+// import SignIn from './pages/SignIn';
+const SignIn = lazy(() => import('./pages/SignIn'));
+// import Posts from './components/post/Posts';
+const Posts = lazy(() => import('./components/post/Posts'));
+// import Users from './components/user/Users';
+const Users = lazy(() => import('./components/user/Users'));
+// import Clients from './components/client/Client';
+const Clients = lazy(() => import('./components/client/Client'));
 
 function App() {
   const mounted = useRef();
   const userState = useSelector(state => state.user);
   const rootState = useSelector(state => state.root);
-  const [refreshUser, { isUninitialized, }] = useRefreshUserMutation();
+  const [refreshUser] = useRefreshUserMutation();
   const [alert, setAlert] = useState(undefined);
   const [update, setUpdate] = useState(false);
 
@@ -95,34 +102,42 @@ function App() {
   // };
 
   return (
-    <div className={`w-full min-h-screen bg-slate-400 flex flex-col justify-center items-center`}>
-      {(mounted.current || isUninitialized) ?
-        <>
-          <Backdrop
-            open={rootState.status === "loading"}
-            className={`z-40`}
-          >
+    <div className={`w-full min-h-screen bg-slate-400 flex flex-col`}>
+      {/* {(mounted.current || isUninitialized) ? */}
+      <>
+        <Backdrop
+          open={rootState.status === "loading"}
+          className={`z-40`}
+        >
+          <CircularProgress />
+        </Backdrop>
+        <CustomAlert alert={alert} />
+        <PromptForUpdate update={update} setUpdate={setUpdate} />
+        {userState.status === "loggedIn" ? <Appbar /> : null}
+        <Container className={`flex-grow flex justify-center items-center`}>
+          <Suspense fallback={
             <CircularProgress />
-          </Backdrop>
-          <CustomAlert alert={alert} />
-          <PromptForUpdate update={update} setUpdate={setUpdate} />
-          <Routes>
-            <Route path="/" element={userState.status === "loggedIn" ? <Landing /> : <SignIn />}>
-              <Route index element={
-                <Posts />
-              } />
-              <Route path="clients" element={
-                <Clients />
-              } />
-              <Route path="users" element={
-                <ProtectedRoute>
-                  <Users />
-                </ProtectedRoute>
-              } />
-            </Route>
-          </Routes>
-        </>
-        : null}
+          }>
+            <Routes>
+              <Route path="/" element={userState.status === "loggedIn" ? <Landing /> : <SignIn />}>
+                <Route index element={
+                  <Posts />
+                } />
+                <Route path="clients" element={
+                  <Clients />
+                } />
+                <Route path="users" element={
+                  <ProtectedRoute>
+                    <Users />
+                  </ProtectedRoute>
+                } />
+              </Route>
+            </Routes>
+          </Suspense>
+        </Container>
+        {process.env.NODE_ENV === 'development' ? <Button onClick={refreshUser}>Refresh</Button> : null}
+      </>
+      {/* : null} */}
     </div>
   );
 }

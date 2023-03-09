@@ -49,7 +49,7 @@ const UpdatePost = ({ setOpenDialog, data: post }) => {
 
       mounted.current = true;
     };
-    if (updatePostLoading) setOpenDialog(prev => { return { ...prev, open: !prev.open, type: '' }; });
+    // if (updatePostLoading) setOpenDialog(prev => { return { ...prev, open: !prev.open, type: '' }; });
     return () => {
       if (!mounted.current) return;
       if (mounted.current) mounted.current = false;
@@ -117,6 +117,7 @@ const UpdatePost = ({ setOpenDialog, data: post }) => {
       }
     });
     updatePost(parsedForm);
+    setOpenDialog(prev => { return { ...prev, open: !prev.open, type: '' }; });
   };
 
 

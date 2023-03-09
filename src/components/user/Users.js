@@ -1,30 +1,16 @@
-import { Box, Button, Dialog, IconButton, LinearProgress, ListItemIcon, ListItemText, Menu, MenuItem, Typography, useMediaQuery, useTheme } from "@mui/material";
+import { Box, Button, Typography, } from "@mui/material";
 import AddIcon from '@mui/icons-material/Add';
-import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/Delete';
-import VisibilityIcon from '@mui/icons-material/Visibility';
-import { DataGrid } from "@mui/x-data-grid";
-import { memo, useEffect, useMemo, useState } from "react";
+import { lazy, memo, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import Toolbar from "../Toolbar";
 import CreateUser from "./CreateUser";
 import UpdateUser from "./UpdateUser";
 import ConfirmDialog from "./ConfirmDialog";
 import ViewUser from "./ViewUser";
+const GeneralDataGrid = lazy(() => import('../GeneralDataGrid'));
 
 const Users = () => {
   const adminState = useSelector(state => state.admin);
   const userState = useSelector(state => state.user);
-  const rootState = useSelector(state => state.root);
-
-  const theme = useTheme();
-  const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
-
-  const [openDialog, setOpenDialog] = useState({
-    open: false,
-    type: '',
-    data: {}
-  });
 
   const [table, setTable] = useState({
     columns: [
@@ -97,226 +83,48 @@ const Users = () => {
     }
   }, [adminState.users]);
 
-  useMemo(() => {
-    if (fullScreen && table.columns.some(column => column['field'] === "options")) {
-      setTable(prev => {
-        return {
-          ...prev,
-          columns: prev.columns.slice(0, -1)
-        };
-      });
-    } else if (!fullScreen && !table.columns.some(column => column['field'] === "options")) {
-      setTable({
-        ...table,
-        columns: [
-          ...table.columns,
-          {
-            field: 'options',
-            headerName: "Options",
-            width: ["Admin"].includes(userState.user.role) ? 130 : 70,
-            disableColumnMenu: true,
-            disableColumnFilter: true,
-            sortable: false,
-            renderCell: (params) => (
-              <Box className={`flex justify-center`}>
-                <IconButton onClick={() => {
-                  setSelectedRow(params.row.id);
-                  setOpenDialog(prev => { return { ...prev, open: !prev.open, type: 'view', data: params.row }; });
-                }} >
-                  <VisibilityIcon />
-                </IconButton>
-                {["Admin"].includes(userState.user.role) ? <IconButton onClick={() => {
-                  setSelectedRow(params.row.id);
-                  setOpenDialog(prev => { return { ...prev, open: !prev.open, type: 'edit', data: params.row }; });
-                }}>
-                  <EditIcon />
-                </IconButton> : null}
-                {["Admin"].includes(userState.user.role) ? <IconButton onClick={() => {
-                  setSelectedRow(params.row.id);
-                  setOpenDialog(prev => { return { ...prev, open: !prev.open, type: 'delete', data: params.row }; });
-                }}>
-                  <DeleteIcon />
-                </IconButton> : null}
-              </Box>
-            ),
-            disableExport: true
-          }]
-      });
-    }
-  }, [fullScreen, table, userState.user.role]);
-
-  const [selectedRow, setSelectedRow] = useState();
-
-  const [contextMenu, setContextMenu] = useState(null);
-
-  const handleContextMenu = (event) => {
-    event.preventDefault();
-    setSelectedRow(Number(event.currentTarget.getAttribute('data-id')));
-    setContextMenu(
-      contextMenu === null
-        ? { mouseX: event.clientX - 2, mouseY: event.clientY - 4 }
-        : null,
-    );
-  };
-
-  const handleClose = () => {
-    setContextMenu(null);
-  };
-
-  const openView = (array) => {
-    array.map((row) => {
-      if (row.id === selectedRow) {
-        setOpenDialog(prev => { return { ...prev, open: !prev.open, type: 'view', data: row }; });
-      }
-      return row;
-    });
-    handleClose();
-  };
-
-  const openEdit = (array) => {
-    array.map((row) => {
-      if (row.id === selectedRow) {
-        setOpenDialog(prev => { return { ...prev, open: !prev.open, type: 'edit', data: row }; });
-      }
-      return row;
-    });
-    handleClose();
-  };
-
-  const openDelete = (array) => {
-    array.map((row) => {
-      if (row.id === selectedRow) {
-        setOpenDialog(prev => { return { ...prev, open: !prev.open, type: 'delete', data: row }; });
-      }
-      return row;
-    });
-    handleClose();
-  };
-
   return (
     <div className="w-full h-full max-w-screen-lg mx-auto flex flex-col ">
       <Typography variant="h3" component="div" className={`py-5`}>Users</Typography>
-      <Dialog
-        fullScreen={fullScreen}
-        open={openDialog.open}
-        className={`z-30 max-w-full`}
-      >
-        {
-          openDialog.open
-            ? (openDialog.type === "new" && <CreateUser setOpenDialog={setOpenDialog} />)
-            || (openDialog.type === "edit" && <UpdateUser setOpenDialog={setOpenDialog} data={openDialog.data} />)
-            || (openDialog.type === "view" && <ViewUser setOpenDialog={setOpenDialog} data={openDialog.data} />)
-            || (openDialog.type === "delete" && <ConfirmDialog setOpenDialog={setOpenDialog} data={openDialog.data} />)
-            : null
+      <GeneralDataGrid
+        intialTable={table}
+        type="user"
+        optionPermissions={{
+          create: ["Admin"].includes(userState.user.role),
+          edit: ["Admin"].includes(userState.user.role),
+          view: userState.status === 'loggedIn',
+          delete: ["Admin"].includes(userState.user.role),
+        }}
+        tableArray={adminState.users}
+        dialogOptions={{
+          Create: (props) => <CreateUser {...props} />,
+          Update: (props) => <UpdateUser {...props} />,
+          View: (props) => <ViewUser {...props} />,
+          Delete: (props) => <ConfirmDialog {...props} />,
+        }}
+        NewEntry={(props) => <Button startIcon={<AddIcon />} {...props}>
+          New User
+        </Button>
         }
-      </Dialog>
-      <Box className={`flex`}>
-        <DataGrid
-          {...table}
-          onPageSizeChange={(newPageSize) => setTable(prev => {
-            return {
-              ...prev,
-              pageSize: newPageSize,
-            };
-          })}
-          rowsPerPageOptions={[10, 20, 30]}
-          pagination
-          autoHeight
-          disableSelectionOnClick
-          hideFooterSelectedRowCount
-          selectionModel={selectedRow}
-          components={{
-            Toolbar: Toolbar,
-            LoadingOverlay: LinearProgress,
-          }}
-          componentsProps={{
-            toolbar: {
-              children: (
-                <Box>
-                  {userState.user.role === "Admin" ?
-                    <Button startIcon={<AddIcon />} onClick={() => setOpenDialog(prev => { return { ...prev, open: !prev.open, type: 'new' }; })}>
-                      New User
-                    </Button> : null}
-                </Box>
-              ),
-              type: 'user',
-              csvOptions: { allColumns: true },
-              clearSelect: setSelectedRow
+        columns={{
+          columnVisibilityModel: {
+            // Hides listed coloumns
+            id: false,
+            userId: false,
+            firstName: false,
+            lastName: false,
+            clients: false,
+          },
+        }}
+        sorting={{
+          sortModel: [
+            {
+              field: 'id',
+              sort: 'desc',
             },
-            row: {
-              onContextMenu: fullScreen ? handleContextMenu : null,
-              style: fullScreen && { cursor: 'context-menu' },
-            },
-          }}
-          loading={rootState.status === "loading"}
-          className="bg-slate-300"
-          initialState={{
-            columns: {
-              columnVisibilityModel: {
-                // Hides listed coloumns
-                id: false,
-                userId: false,
-                firstName: false,
-                lastName: false,
-                clients: false,
-              },
-            },
-            sorting: {
-              sortModel: [
-                {
-                  field: 'id',
-                  sort: 'desc',
-                },
-              ],
-            },
-          }}
-        />
-        <Menu
-          open={contextMenu !== null}
-          onClose={handleClose}
-          anchorReference="anchorPosition"
-          anchorPosition={
-            contextMenu !== null
-              ? { top: contextMenu.mouseY, left: contextMenu.mouseX }
-              : undefined
-          }
-          componentsProps={{
-            root: {
-              onContextMenu: (e) => {
-                e.preventDefault();
-                handleClose();
-              },
-            },
-          }}
-        >
-          <MenuItem
-            onClick={() => openView(adminState.users)}>
-            <ListItemIcon>
-              <VisibilityIcon />
-            </ListItemIcon>
-            <ListItemText>
-              View
-            </ListItemText>
-          </MenuItem>
-          {["Admin"].includes(userState.user.role) ?
-            ['Edit', 'Delete'].map((option, index) => {
-              return (
-                <MenuItem
-                  key={index}
-                  onClick={option === "Edit" ?
-                    () => openEdit(adminState.users) :
-                    () => openDelete(adminState.users)}>
-                  <ListItemIcon>
-                    {option === "Edit" ? <EditIcon /> : <DeleteIcon />}
-                  </ListItemIcon>
-                  <ListItemText>
-                    {option}
-                  </ListItemText>
-                </MenuItem>
-              );
-            }) : null}
-        </Menu>
-      </Box>
+          ],
+        }}
+      />
     </div>
   );
 };

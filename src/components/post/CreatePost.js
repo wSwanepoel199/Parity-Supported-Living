@@ -24,7 +24,7 @@ const CreatePost = ({ setOpenDialog }) => {
 
   useEffect(() => {
     if (clientState.clients.length > 0) setOptions(clientState.clients);
-    if (isLoading) setOpenDialog(prev => { return { ...prev, open: !prev.open, type: '' }; });
+    // if (isLoading) setOpenDialog(prev => { return { ...prev, open: !prev.open, type: '' }; });
 
   }, [isLoading, setOpenDialog, clientState.clients]);
 
@@ -73,6 +73,7 @@ const CreatePost = ({ setOpenDialog }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     addPost(formData);
+    setOpenDialog(prev => { return { ...prev, open: !prev.open, type: '' }; });
   };
 
 

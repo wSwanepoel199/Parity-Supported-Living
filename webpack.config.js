@@ -8,6 +8,7 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const TerserWebpackPlugin = require("terser-webpack-plugin");
 const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
 const InterpolateHtmlPlugin = require('react-dev-utils/InterpolateHtmlPlugin');
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 const webpack = require('webpack');
 const dotenv = require('dotenv');
@@ -61,7 +62,8 @@ module.exports = function (_env, argv) {
     new MiniCssExtractPlugin({
       filename: "static/css/[name].[contenthash:8].css",
       chunkFilename: "static/css/[name].[contenthash:8].chunk.css"
-    })
+    }),
+    isDevelopment && new BundleAnalyzerPlugin(),
   ].filter(Boolean);
 
   if (isProduction) {
@@ -81,7 +83,7 @@ module.exports = function (_env, argv) {
       filename: "static/js/[name].[contenthash:8].js",
       publicPath: PUBLIC_PATH,
       clean: true,
-      // devtoolModuleFilenameTemplate: info => path.resolve(info.absoluteResourcePath).replace(/\\/g, '/'),
+      devtoolModuleFilenameTemplate: info => path.resolve(info.absoluteResourcePath).replace(/\\/g, '/'),
     },
     devServer: {
       compress: true,
@@ -117,11 +119,11 @@ module.exports = function (_env, argv) {
         },
         {
           test: /\.(js|jsx|ts|tsx)$/,
-          exclude: /node_modules/,
+          exclude: /(node_modules|bower_components)/,
           use: {
             loader: "babel-loader",
             options: {
-              presets: ['@babel/preset-env', ['@babel/preset-react', { "runtime": "automatic" }]],
+              // presets: ['@babel/preset-env', ['@babel/preset-react', { "runtime": "automatic" }]],
               cacheDirectory: true,
               cacheCompression: false,
               envName: isProduction ? "production" : "development"

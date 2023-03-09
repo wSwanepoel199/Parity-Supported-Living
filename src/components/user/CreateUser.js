@@ -1,7 +1,7 @@
 import { Box, Button, Checkbox, Chip, DialogActions, DialogContent, DialogTitle, FormControl, Input, InputAdornment, InputLabel, ListSubheader, MenuItem, OutlinedInput, Select, Typography } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import Grid from "@mui/material/Unstable_Grid2/";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { useCreateUserMutation } from "../../shared/redux/user/userApiSlice";
 import { useSelector } from "react-redux";
 
@@ -10,7 +10,7 @@ const containsText = (user, searchText) =>
 
 const CreateUser = ({ setOpenDialog }) => {
   const clientState = useSelector(state => state.clients);
-  const [createUser, { isSuccess, isError }] = useCreateUserMutation();
+  const [createUser] = useCreateUserMutation();
 
   const [formData, setFormData] = useState({
     firstName: '',
@@ -33,10 +33,6 @@ const CreateUser = ({ setOpenDialog }) => {
     if (clientState.clients.length > 0) setOptions(clientState.clients);
   }, [clientState]);
 
-  useEffect(() => {
-    if (isSuccess || isError) setOpenDialog(prev => { return { ...prev, open: !prev.open, type: '' }; });
-  }, [isSuccess, isError, setOpenDialog]);
-
   const handleInput = (e) => {
     const { value, name } = e.target;
     setFormData(prev => {
@@ -50,7 +46,7 @@ const CreateUser = ({ setOpenDialog }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     createUser(formData);
-    // setOpenDialog(prev => { return { ...prev, open: !prev.open, type: '' }; });
+    setOpenDialog(prev => { return { ...prev, open: !prev.open, type: '' }; });
   };
 
 
