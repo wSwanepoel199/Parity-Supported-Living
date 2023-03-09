@@ -185,7 +185,7 @@ module.exports = function (_env, argv) {
       innerGraph: false,
       splitChunks: {
         chunks: "all",
-        minSize: 0,
+        minSize: 20000,
         maxInitialRequests: 20,
         maxAsyncRequests: 20,
         cacheGroups: {
@@ -196,15 +196,18 @@ module.exports = function (_env, argv) {
                 /[\\/]node_modules[\\/](.*?)([\\/]|$)/
               )[1];
               return `${cacheGroupKey}.${packageName.replace("@", "")}`;
-            }
+            },
+            priority: -10,
+            reuseExistingChunk: true,
+
           },
           common: {
             minChunks: 2,
-            priority: -10
+            priority: -20
           }
         }
       },
-      runtimeChunk: true
+      runtimeChunk: 'multiple'
     },
     plugins: webpackPlugins,
   };
