@@ -9,6 +9,7 @@ const TerserWebpackPlugin = require("terser-webpack-plugin");
 const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
 const InterpolateHtmlPlugin = require('react-dev-utils/InterpolateHtmlPlugin');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+const RobotPlugin = require('robotstxt-webpack-plugin');
 
 const webpack = require('webpack');
 const dotenv = require('dotenv');
@@ -48,13 +49,19 @@ module.exports = function (_env, argv) {
         { from: './public/manifest.json', to: '' },
         { from: './public/PSLPineapple192.png', to: '' },
         { from: './public/PSLPineapple512.png', to: '' },
+        { from: './public/PSLAppleTouch192.png', to: '' },
+        { from: './public/Parity supported living.png', to: '' },
+        { from: './public/robots.txt', to: '' },
+
       ],
     }),
+    new RobotPlugin(),
+    isProduction &&
     new CompressionPlugin({
       filename: "[path][base].gz[query]",
       algorithm: "gzip",
       exclude: ["service-worker.js"],
-      test: /\.js(\?.*)?$/,
+      test: /\.(js)(\?.*)?$/,
       minRatio: 0.8,
       deleteOriginalAssets: false,
     }),
@@ -63,18 +70,16 @@ module.exports = function (_env, argv) {
       filename: "static/css/[name].[contenthash:8].css",
       chunkFilename: "static/css/[name].[contenthash:8].chunk.css"
     }),
+    isProduction &&
+    new WorkboxWebpackPlugin.InjectManifest({
+      swSrc: './src/service-worker.js',
+      swDest: 'service-worker.js',
+    }),
     isDevelopment && new BundleAnalyzerPlugin(),
   ].filter(Boolean);
 
-  if (isProduction) {
-    webpackPlugins.push(new WorkboxWebpackPlugin.InjectManifest({
-      swSrc: './src/service-worker.js',
-      swDest: 'service-worker.js',
-    }));
-  }
-
   return {
-    devtool: isDevelopment ? "cheap-module-source-map" : "source-map",
+    devtool: isDevelopment && "source-map",
     entry: {
       'app': "./src/index.js",
     },
@@ -86,10 +91,21 @@ module.exports = function (_env, argv) {
       devtoolModuleFilenameTemplate: info => path.resolve(info.absoluteResourcePath).replace(/\\/g, '/'),
     },
     devServer: {
+      static: {
+        directory: path.join(__dirname, 'public')
+      },
       compress: true,
+      port: 3000,
       historyApiFallback: true,
-      open: true,
-      overlay: true
+      open: false,
+      hot: true,
+      bonjour: {
+        type: 'http',
+        protocol: 'udp',
+      },
+      client: {
+        overlay: true,
+      },
     },
     module: {
       rules: [
@@ -159,7 +175,15 @@ module.exports = function (_env, argv) {
       ]
     },
     resolve: {
-      extensions: [".js", ".jsx", ".ts", ".tsx"]
+      extensions: [".js", ".jsx", ".ts", ".tsx"],
+      alias: {
+        '@mui/base': '@mui/base/legacy',
+        '@mui/lab': '@mui/lab/legacy',
+        '@mui/material': '@mui/material/legacy',
+        '@mui/styled-engine': '@mui/styled-engine/legacy',
+        '@mui/system': '@mui/system/legacy',
+        '@mui/utils': '@mui/utils/legacy',
+      }
     },
     optimization: {
       minimize: isProduction,
@@ -210,5 +234,8 @@ module.exports = function (_env, argv) {
       runtimeChunk: 'multiple'
     },
     plugins: webpackPlugins,
+    experiments: {
+      topLevelAwait: true
+    }
   };
 };

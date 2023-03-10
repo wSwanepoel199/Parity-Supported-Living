@@ -1,11 +1,16 @@
-import React, { memo, useEffect, useState } from "react";
+import React, { lazy, memo, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Grid from "@mui/material/Unstable_Grid2";
 import { Box, Button, Checkbox, FormControl, FormControlLabel, FormGroup, IconButton, Input, InputAdornment, InputLabel, Typography } from "@mui/material";
-import LoginIcon from '@mui/icons-material/Login';
-import Visibility from "@mui/icons-material/Visibility";
-import VisibilityOff from "@mui/icons-material/VisibilityOff";
+import Grid from "@mui/material/Unstable_Grid2";
 import { useLoginUserMutation } from "../shared/redux/user/userApiSlice";
+
+// import LoginIcon from '@mui/icons-material/Login';
+// import Visibility from "@mui/icons-material/Visibility";
+// import VisibilityOff from "@mui/icons-material/VisibilityOff";
+
+const LoginIcon = lazy(() => import('@mui/icons-material/Login'));
+const Visibility = lazy(() => import('@mui/icons-material/Visibility'));
+const VisibilityOff = lazy(() => import('@mui/icons-material/VisibilityOff'));
 
 const SignIn = () => {
   const navigate = useNavigate();

@@ -31,6 +31,11 @@ app.get('*.js', function (req, res, next) {
     next();
   }
 });
+// app.get('*.ico', function (req, res, next) {
+//     req.url = req.url + '.gz';
+//     res.set('Content-Encoding', 'gzip');
+//     next();
+// });
 
 // Your static pre-build assets folder
 app.use(express.static(path.join(__dirname, '..', 'build')));

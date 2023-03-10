@@ -1,13 +1,13 @@
 import React, { useEffect, useRef, useState, Suspense, lazy } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import { Backdrop, Button, CircularProgress, Container, } from '@mui/material';
+import { Backdrop, Box, Button, CircularProgress, Container, } from '@mui/material';
 // import Dashboard from './components/Dashboard';
 import ProtectedRoute from './shared/utils/ProtectedRoute';
 import PromptForUpdate from './shared/utils/PrompUpdateServiceWorker';
-import CustomAlert from './shared/utils/CustomAlert';
 import { useRefreshUserMutation, } from './shared/redux/user/userApiSlice';
 import Appbar from "./components/Appbar";
+
 
 // import Landing from './pages/Landing';
 const Landing = lazy(() => import('./pages/Landing'));
@@ -19,6 +19,8 @@ const Posts = lazy(() => import('./components/post/Posts'));
 const Users = lazy(() => import('./components/user/Users'));
 // import Clients from './components/client/Client';
 const Clients = lazy(() => import('./components/client/Client'));
+// import CustomAlert from './shared/utils/CustomAlert';
+const CustomAlert = lazy(() => import('./shared/utils/CustomAlert'));
 
 function App() {
   const mounted = useRef();
@@ -102,22 +104,25 @@ function App() {
   // };
 
   return (
-    <div className={`w-full min-h-screen bg-slate-400 flex flex-col`}>
+    <div className={`w-full min-h-[100dvh] bg-slate-400 flex flex-col`}>
       {/* {(mounted.current || isUninitialized) ? */}
       <>
-        <Backdrop
-          open={rootState.status === "loading"}
-          className={`z-40`}
-        >
-          <CircularProgress />
-        </Backdrop>
-        <CustomAlert alert={alert} />
-        <PromptForUpdate update={update} setUpdate={setUpdate} />
-        {userState.status === "loggedIn" ? <Appbar /> : null}
-        <Container className={`flex-grow flex justify-center items-center`}>
-          <Suspense fallback={
+        {rootState.status === "loading" ?
+          <Backdrop
+            open={rootState.status === "loading"}
+            className={`z-40`}
+          >
             <CircularProgress />
-          }>
+          </Backdrop> : null}
+        {userState.status === "loggedIn" ? <Appbar /> : null}
+        <Suspense fallback={
+          <Box className={`flex-grow flex justify-center items-center`}>
+            <CircularProgress />
+          </Box>
+        }>
+          <CustomAlert alert={alert} />
+          <PromptForUpdate update={update} setUpdate={setUpdate} />
+          <Container className={`flex-grow flex justify-center items-center`}>
             <Routes>
               <Route path="/" element={userState.status === "loggedIn" ? <Landing /> : <SignIn />}>
                 <Route index element={
@@ -133,8 +138,8 @@ function App() {
                 } />
               </Route>
             </Routes>
-          </Suspense>
-        </Container>
+          </Container>
+        </Suspense>
         {process.env.NODE_ENV === 'development' ? <Button onClick={refreshUser}>Refresh</Button> : null}
       </>
       {/* : null} */}

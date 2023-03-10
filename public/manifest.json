@@ -13,6 +13,11 @@
       "sizes": "192x192"
     },
     {
+      "src": "PSLAppleTouch192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
       "src": "PSLPineapple512.png",
       "type": "image/png",
       "sizes": "512x512"

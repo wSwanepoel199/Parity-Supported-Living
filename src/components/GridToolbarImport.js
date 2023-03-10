@@ -3,11 +3,14 @@ import FileUploadOutlinedIcon from '@mui/icons-material/FileUploadOutlined';
 import { useEffect, useRef, useState } from "react";
 import { useUploadFileMutation } from "../shared/redux/api/backendApi";
 import { sendMessage } from "../shared/utils/api";
-import { read, utils } from "xlsx";
+// import { read, utils } from "xlsx";
 import { useDispatch } from "react-redux";
 import { storeError } from "../shared/redux/root/rootSlice";
 
+const xlsx = await import('xlsx');
+
 const GridToolbarImport = ({ type }) => {
+  const { read, utils } = xlsx;
   const dispatch = useDispatch();
   const inputRef = useRef(null);
   const [uploadFile] = useUploadFileMutation();
@@ -19,7 +22,15 @@ const GridToolbarImport = ({ type }) => {
     file: null
   });
 
+
   useEffect(() => {
+    const formatFile = async (file) => {
+      const f = await (file).arrayBuffer();
+      const wb = read(f);
+      const data = utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]]);
+      return data;
+    };
+
     if (upload.file) {
       if (process.env.NODE_ENV === "production") {
         sendMessage({ type: 'import', data: upload.file })
@@ -44,14 +55,8 @@ const GridToolbarImport = ({ type }) => {
         };
       });
     }
-  }, [upload, uploadFile, inputRef, dispatch]);
+  }, [upload, uploadFile, inputRef, dispatch, read, utils]);
 
-  const formatFile = async (file) => {
-    const f = await (file).arrayBuffer();
-    const wb = read(f);
-    const data = utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]]);
-    return data;
-  };
 
   const handleUpload = () => {
     inputRef.current?.click();
