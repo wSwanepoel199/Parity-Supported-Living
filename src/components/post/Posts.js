@@ -1,5 +1,6 @@
 import { Box, Button, Typography } from "@mui/material";
 import AddIcon from '@mui/icons-material/Add';
+import PriorityHighIcon from '@mui/icons-material/PriorityHigh';
 // import EditIcon from '@mui/icons-material/Edit';
 // import DeleteIcon from '@mui/icons-material/Delete';
 // import VisibilityIcon from '@mui/icons-material/Visibility';
@@ -73,7 +74,10 @@ const Posts = () => {
         minWidth: 100,
         renderCell: ({ row }) => {
           if (row.clientId === "") {
-            return <p className={`text-ellipsis overflow-hidden whitespace-nowrap max-w-full`}>{row.clientName}</p>;
+            return <p className={`text-ellipsis overflow-hidden whitespace-nowrap max-w-full`}>
+              <PriorityHighIcon fontSize="small" color="error" /> {row.clientName}</p>;
+          } else if (row.clientName === "" && row.clientId !== "") {
+            return <p className={`text-ellipsis overflow-hidden whitespace-nowrap max-w-full`}><PriorityHighIcon fontSize="small" color="error" /> {`${row.client.firstName} ${row.client?.lastName}`}</p>;
           } else {
             return <p className={`text-ellipsis overflow-hidden whitespace-nowrap max-w-full`}>{`${row.client.firstName} ${row.client?.lastName}`}</p>;
           }
@@ -93,7 +97,10 @@ const Posts = () => {
         maxWidth: 150,
         renderCell: ({ row }) => {
           if (row.carerId === "") {
-            return <p className={`text-ellipsis overflow-hidden whitespace-nowrap max-w-full`}>{row.carerName}</p>;
+            return <p className={`text-ellipsis overflow-hidden whitespace-nowrap max-w-full`}>
+              <PriorityHighIcon fontSize="small" color="error" /> {row.carerName}</p>;
+          } else if (row.carerName === "" && row.carerId !== "") {
+            return <p className={`text-ellipsis overflow-hidden whitespace-nowrap max-w-full`}><PriorityHighIcon fontSize="small" color="error" /> {`${row.carer.firstName} ${row.carer?.lastName}`}</p>;
           } else {
             return <p className={`text-ellipsis overflow-hidden whitespace-nowrap max-w-full`}>{`${row.carer.firstName} ${row.carer?.lastName}`}</p>;
           }

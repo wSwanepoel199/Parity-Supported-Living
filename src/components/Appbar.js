@@ -2,7 +2,7 @@ import { AppBar, Avatar, Box, Container, IconButton, Menu, MenuItem, Toolbar, Ty
 import { useTheme } from '@mui/material/styles';
 import MenuIcon from '@mui/icons-material/Menu';
 import { useSelector } from "react-redux";
-import { useEffect, useRef, useState } from "react";
+import { memo, useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useLogoutUserMutation } from "../shared/redux/user/userApiSlice";
 
@@ -153,4 +153,4 @@ const Appbar = () => {
   );
 };
 
-export default Appbar;
+export default memo(Appbar);

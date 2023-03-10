@@ -2,7 +2,7 @@ import { Box, Button, Checkbox, Chip, DialogActions, DialogContent, DialogTitle,
 import { useFormControl } from '@mui/material/FormControl';
 import Grid from "@mui/material/Unstable_Grid2/";
 import SearchIcon from "@mui/icons-material/Search";
-import { forwardRef, useMemo, useState } from "react";
+import { forwardRef, memo, useMemo, useState } from "react";
 import PhoneInput from 'react-phone-input-2';
 import { useSelector } from "react-redux";
 import { useUpdateClientMutation } from "../../shared/redux/client/clientApiSlice";
@@ -341,4 +341,4 @@ const UpdateClient = ({ setOpenDialog, data: client }) => {
   );
 };
 
-export default UpdateClient;
+export default memo(UpdateClient);

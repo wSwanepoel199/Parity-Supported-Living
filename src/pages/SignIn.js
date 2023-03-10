@@ -92,4 +92,4 @@ const SignIn = () => {
   );
 };
 
-export default memo(SignIn);
+export default SignIn;

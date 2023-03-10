@@ -1,4 +1,5 @@
 import { Box, Button, DialogActions, DialogContent, DialogContentText, DialogTitle } from "@mui/material";
+import { memo } from "react";
 import { useDeleteTargetPostMutation, } from "../../shared/redux/admin/adminApiSlice";
 
 
@@ -28,4 +29,4 @@ const ConfirmDialog = ({ setOpenDialog, data: post }) => {
   );
 };
 
-export default ConfirmDialog;
+export default memo(ConfirmDialog);

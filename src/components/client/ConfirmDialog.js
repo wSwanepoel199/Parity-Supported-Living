@@ -1,4 +1,5 @@
 import { Box, Button, DialogActions, DialogContent, DialogContentText, DialogTitle } from "@mui/material";
+import { memo } from "react";
 import { useRemoveClientMutation } from "../../shared/redux/client/clientApiSlice";
 
 
@@ -24,4 +25,4 @@ const ConfirmDialog = ({ setOpenDialog, data: client }) => {
   );
 };
 
-export default ConfirmDialog;
+export default memo(ConfirmDialog);

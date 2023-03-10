@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState, Suspense, lazy } from 'react';
+import React, { useEffect, useRef, useState, Suspense, lazy, memo } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { Backdrop, Box, Button, CircularProgress, Container, } from '@mui/material';
@@ -8,6 +8,7 @@ import PromptForUpdate from './shared/utils/PrompUpdateServiceWorker';
 import { useRefreshUserMutation, } from './shared/redux/user/userApiSlice';
 import Appbar from "./components/Appbar";
 
+// inverstigate crashing when auth token expire
 
 // import Landing from './pages/Landing';
 const Landing = lazy(() => import('./pages/Landing'));

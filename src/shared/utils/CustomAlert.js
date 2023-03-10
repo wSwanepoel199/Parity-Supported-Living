@@ -2,6 +2,7 @@ import { Collapse, Alert, IconButton, AlertTitle } from "@mui/material";
 import CloseIcon from '@mui/icons-material/Close';
 import { useDispatch, useSelector } from "react-redux";
 import { clearMessage } from "../redux/root/rootSlice";
+import { memo } from "react";
 
 const CustomAlert = ({ alert }) => {
   const rootState = useSelector(state => state.root);
@@ -37,4 +38,4 @@ const CustomAlert = ({ alert }) => {
   );
 };
 
-export default CustomAlert;
+export default memo(CustomAlert);

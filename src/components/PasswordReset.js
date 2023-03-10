@@ -1,7 +1,7 @@
 import { Box, Button, DialogActions, DialogContent, DialogContentText, DialogTitle, FormControl, IconButton, Input, InputAdornment, InputLabel } from "@mui/material";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
-import { useState } from "react";
+import { memo, useState } from "react";
 import { useSelector } from "react-redux";
 import { useResetPassMutation } from "../shared/redux/user/userApiSlice";
 
@@ -65,4 +65,4 @@ const PasswordReset = () => {
   );
 };
 
-export default PasswordReset;
+export default memo(PasswordReset);

@@ -1,7 +1,7 @@
 import { Box, Button, DialogActions, DialogContent, DialogTitle, FormControl, FormControlLabel, Input, InputLabel, MenuItem, OutlinedInput, Select, Switch, Typography } from "@mui/material";
 import Grid from "@mui/material/Unstable_Grid2/";
 import { format, formatISO, parseISO } from "date-fns";
-import { useEffect, useState } from "react";
+import { memo, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useAddPostMutation } from "../../shared/redux/posts/postApiSlice";
 
@@ -186,4 +186,4 @@ const CreatePost = ({ setOpenDialog }) => {
   );
 };
 
-export default CreatePost;
+export default memo(CreatePost);

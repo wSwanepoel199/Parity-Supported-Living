@@ -1,7 +1,7 @@
 import { Box, Button, Checkbox, Chip, DialogActions, DialogContent, DialogTitle, FormControl, FormControlLabel, Input, InputAdornment, InputLabel, ListSubheader, MenuItem, OutlinedInput, Select, Switch, Typography, } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import Grid from "@mui/material/Unstable_Grid2/";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { memo, useEffect, useMemo, useRef, useState } from "react";
 import { useUpdateUserMutation } from "../../shared/redux/user/userApiSlice";
 import { useSelector } from "react-redux";
 
@@ -231,4 +231,4 @@ const UpdateUser = ({ setOpenDialog, data: user }) => {
   );
 };
 
-export default UpdateUser;
+export default memo(UpdateUser);

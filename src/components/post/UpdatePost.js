@@ -1,7 +1,7 @@
 import { Box, Button, DialogActions, DialogContent, DialogTitle, FormControl, FormControlLabel, FormHelperText, Input, InputLabel, MenuItem, OutlinedInput, Select, Switch, Typography } from "@mui/material";
 import Grid from "@mui/material/Unstable_Grid2/";
 import { format, formatISO, parseISO } from "date-fns";
-import { useEffect, useRef, useState } from "react";
+import { memo, useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { useUpdatePostMutation } from "../../shared/redux/posts/postApiSlice";
 
@@ -39,7 +39,9 @@ const UpdatePost = ({ setOpenDialog, data: post }) => {
     if (!mounted.current) {
       setFormData(prev => {
         if (JSON.stringify(prev) !== parsedPost) {
-          return JSON.parse(parsedPost);
+          return {
+            ...JSON.parse(parsedPost),
+          };
         } else {
           return prev;
         }
@@ -50,6 +52,12 @@ const UpdatePost = ({ setOpenDialog, data: post }) => {
       mounted.current = true;
     };
     // if (updatePostLoading) setOpenDialog(prev => { return { ...prev, open: !prev.open, type: '' }; });
+    if ((post.carerName === null || post.carerName === "") && post.carerId !== "") setFormData(prev => {
+      return {
+        ...prev,
+        carerName: `${post.carer.firstName} ${post.carer?.lastName}`
+      };
+    });
     return () => {
       if (!mounted.current) return;
       if (mounted.current) mounted.current = false;
@@ -123,6 +131,7 @@ const UpdatePost = ({ setOpenDialog, data: post }) => {
 
   return (
     <Box component='form' onSubmit={(e) => handleSubmit(e)}>
+      {console.log(formData, post)}
       <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
         <DialogTitle>
           Edit Note
@@ -282,4 +291,4 @@ const UpdatePost = ({ setOpenDialog, data: post }) => {
   );
 };
 
-export default UpdatePost;
+export default memo(UpdatePost);

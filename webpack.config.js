@@ -10,6 +10,7 @@ const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
 const InterpolateHtmlPlugin = require('react-dev-utils/InterpolateHtmlPlugin');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const RobotPlugin = require('robotstxt-webpack-plugin');
+const SitemapPlugin = require('sitemap-webpack-plugin').default;
 
 const webpack = require('webpack');
 const dotenv = require('dotenv');
@@ -23,6 +24,18 @@ module.exports = function (_env, argv) {
   const PUBLIC_PATH = process.env.PUBLIC_PATH || '/';
   const PUBLIC_URL = process.env.PUBLIC_URL || '.';
   const REACT_APP_API_URL = process.env.REACT_APP_API_URL || 'http://192.168.1.2:5000';
+
+  const paths = [
+    {
+      path: '/'
+    },
+    {
+      path: '/users/'
+    },
+    {
+      path: '/clients/'
+    },
+  ];
 
   const webpackPlugins = [
     new HtmlWebpackPlugin({
@@ -55,6 +68,14 @@ module.exports = function (_env, argv) {
 
       ],
     }),
+    new SitemapPlugin({
+      base: 'https://paritysl.herokuapp.com',
+      paths,
+      options: {
+        filename: 'map.xml'
+      }
+    }),
+    isProduction &&
     new RobotPlugin(),
     isProduction &&
     new CompressionPlugin({

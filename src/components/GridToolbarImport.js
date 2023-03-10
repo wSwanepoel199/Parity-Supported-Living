@@ -1,6 +1,6 @@
 import { Button } from "@mui/material";
 import FileUploadOutlinedIcon from '@mui/icons-material/FileUploadOutlined';
-import { useEffect, useRef, useState } from "react";
+import { memo, useEffect, useRef, useState } from "react";
 import { useUploadFileMutation } from "../shared/redux/api/backendApi";
 import { sendMessage } from "../shared/utils/api";
 // import { read, utils } from "xlsx";
@@ -97,4 +97,4 @@ const GridToolbarImport = ({ type }) => {
   );
 };
 
-export default GridToolbarImport;
+export default memo(GridToolbarImport);

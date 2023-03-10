@@ -3,7 +3,7 @@ import { Box, Button, Collapse, DialogActions, DialogContent, FormControl, Input
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import Grid from "@mui/material/Unstable_Grid2/";
 // import { format, parseISO } from "date-fns";
-import { useState } from "react";
+import { memo, useState } from "react";
 // import { useSelector } from "react-redux";
 
 const ViewUser = ({ setOpenDialog, data: user }) => {
@@ -23,7 +23,7 @@ const ViewUser = ({ setOpenDialog, data: user }) => {
       <DialogContent>
         <Grid container spacing={2} className="flex justify-center">
           <Grid xs={12}
-            className=" border-b-2 border-b-gray-400 border-solid border-x-transparent border-t-transparent flex justify-between"
+            className={`border-b-2 border-b-gray-400 border-solid border-x-transparent border-t-transparent flex justify-between group ${open.userDetails && 'userDetails'}`}
             onClick={() => setOpen(prev => {
               return {
                 ...prev,
@@ -32,7 +32,7 @@ const ViewUser = ({ setOpenDialog, data: user }) => {
             })}
           >
             <Typography>{formData.name}'s Details</Typography>
-            {open.userDetails ? <ArrowBackIosNewIcon className={`rotate-[-90deg]`} /> : <ArrowBackIosNewIcon />}
+            <ArrowBackIosNewIcon className={`transition group-[.userDetails]:rotate-[-90deg] duration-100 ease-linear`} />
           </Grid>
           <Collapse
             in={open.userDetails}
@@ -76,7 +76,7 @@ const ViewUser = ({ setOpenDialog, data: user }) => {
             </Stack>
           </Collapse>
           <Grid xs={12}
-            className="border-b-2 border-b-gray-400 border-solid border-x-transparent border-t-transparent flex justify-between"
+            className={`border-b-2 border-b-gray-400 border-solid border-x-transparent border-t-transparent flex justify-between group ${open.clientDetails && 'clientDetails'}`}
             onClick={() => setOpen(prev => {
               return {
                 ...prev,
@@ -86,7 +86,7 @@ const ViewUser = ({ setOpenDialog, data: user }) => {
           >
             <Typography>Clients Details</Typography>
             {formData.clients ?
-              open.clientDetails ? <ArrowBackIosNewIcon className={`rotate-[-90deg]`} /> : <ArrowBackIosNewIcon />
+              <ArrowBackIosNewIcon className={`transition group-[.clientDetails]:rotate-[-90deg] duration-100 ease-linear`} />
               : null}
           </Grid>
           {formData.clients ?
@@ -203,4 +203,4 @@ const ViewUser = ({ setOpenDialog, data: user }) => {
   );
 };
 
-export default ViewUser;
+export default memo(ViewUser);

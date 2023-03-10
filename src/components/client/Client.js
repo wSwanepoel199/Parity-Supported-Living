@@ -226,7 +226,7 @@ const Clients = () => {
       <Typography variant="h3" component="div" className={`py-5`}>Clients</Typography>
       <GeneralDataGrid
         intialTable={table}
-        type="post"
+        type="client"
         optionPermissions={{
           create: ["Admin"].includes(userState.user.role),
           edit: ["Admin"].includes(userState.user.role),

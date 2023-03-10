@@ -24,7 +24,7 @@ const Landing = () => {
 
 
   return (
-    <div className="w-full self-start pb-6 ">
+    <div className="w-full self-start pb-6">
       {/* <Appbar /> */}
       <Dialog
         fullScreen={fullScreen}

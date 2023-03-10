@@ -2,7 +2,7 @@ import { Box, Button, Collapse, DialogActions, DialogContent, FormControl, Input
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import Grid from "@mui/material/Unstable_Grid2/";
 // import { format, parseISO } from "date-fns";
-import { useState } from "react";
+import { memo, useState } from "react";
 // import { useSelector } from "react-redux";
 
 const ViewClient = ({ setOpenDialog, data: client }) => {
@@ -22,7 +22,15 @@ const ViewClient = ({ setOpenDialog, data: client }) => {
       <DialogContent>
         <Grid container spacing={2} className="flex justify-center">
           <Grid xs={12}
-            className=" border-b-2 border-b-gray-400 border-solid border-x-transparent border-t-transparent flex justify-between"
+            className={` 
+            border-b-2
+             border-b-gray-400 
+             border-solid 
+             border-x-transparent 
+             border-t-transparent 
+             flex 
+             justify-between
+             group ${open.clientDetails && 'clientDetails'}`}
             onClick={() => setOpen(prev => {
               return {
                 ...prev,
@@ -31,7 +39,8 @@ const ViewClient = ({ setOpenDialog, data: client }) => {
             })}
           >
             <Typography>{formData.name}'s Details</Typography>
-            {open.clientDetails ? <ArrowBackIosNewIcon className={`rotate-[-90deg]`} /> : <ArrowBackIosNewIcon />}
+            <ArrowBackIosNewIcon className={`transition group-[.clientDetails]:rotate-[-90deg] duration-100 ease-linear`} />
+
           </Grid>
           <Collapse
             in={open.clientDetails}
@@ -75,7 +84,9 @@ const ViewClient = ({ setOpenDialog, data: client }) => {
             </Stack>
           </Collapse>
           <Grid xs={12}
-            className="border-b-2 border-b-gray-400 border-solid border-x-transparent border-t-transparent flex justify-between"
+            className={`border-b-2 border-b-gray-400 border-solid border-x-transparent border-t-transparent 
+            flex justify-between
+            group ${open.carersDetails && 'carersDetails'}`}
             onClick={() => setOpen(prev => {
               return {
                 ...prev,
@@ -85,7 +96,7 @@ const ViewClient = ({ setOpenDialog, data: client }) => {
           >
             <Typography>Carers Details</Typography>
             {formData.carers ?
-              open.carersDetails ? <ArrowBackIosNewIcon className={`rotate-[-90deg]`} /> : <ArrowBackIosNewIcon />
+              <ArrowBackIosNewIcon className={`transition group-[.carersDetails]:rotate-[-90deg] duration-100 ease-linear`} />
               : null}
           </Grid>
           {formData.carers ?
@@ -184,4 +195,4 @@ const ViewClient = ({ setOpenDialog, data: client }) => {
   );
 };
 
-export default ViewClient;
+export default memo(ViewClient);

@@ -1,7 +1,7 @@
 import { Box, Button, Checkbox, Chip, DialogActions, DialogContent, DialogTitle, FormControl, Input, InputAdornment, InputLabel, ListSubheader, MenuItem, OutlinedInput, Select, Typography } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import Grid from "@mui/material/Unstable_Grid2/";
-import { useMemo, useState } from "react";
+import { memo, useMemo, useState } from "react";
 import { useCreateUserMutation } from "../../shared/redux/user/userApiSlice";
 import { useSelector } from "react-redux";
 
@@ -184,4 +184,4 @@ const CreateUser = ({ setOpenDialog }) => {
   );
 };
 
-export default CreateUser;
+export default memo(CreateUser);

@@ -1,6 +1,7 @@
 import { Button, IconButton, Snackbar } from "@mui/material";
 import CloseIcon from '@mui/icons-material/Close';
 import deferredPromise from "./deferredPromise";
+import { memo } from "react";
 
 export const promptForUpdate = new deferredPromise();
 
@@ -50,4 +51,4 @@ const PromptForUpdate = ({ update, setUpdate }) => {
   );
 };
 
-export default PromptForUpdate;
+export default memo(PromptForUpdate);

@@ -4,7 +4,7 @@ import DoneIcon from '@mui/icons-material/Done';
 import CloseIcon from '@mui/icons-material/Close';
 import Grid from "@mui/material/Unstable_Grid2/";
 import { format, parseISO } from "date-fns";
-import { useState } from "react";
+import { memo, useState } from "react";
 
 const ViewPost = ({ setOpenDialog, data: post }) => {
   const formData = JSON.parse(JSON.stringify(post).replace(/:null/gi, ":\"\""));
@@ -20,7 +20,7 @@ const ViewPost = ({ setOpenDialog, data: post }) => {
       <DialogContent>
         <Grid container spacing={2} className="flex justify-center">
           <Grid xs={12}
-            className=" border-b-2 border-b-gray-400 border-solid border-x-transparent border-t-transparent flex justify-between"
+            className={`border-b-2 border-b-gray-400 border-solid border-x-transparent border-t-transparent flex justify-between group ${open.noteDetails && 'noteDetails'}`}
             onClick={() => setOpen(prev => {
               return {
                 ...prev,
@@ -29,15 +29,15 @@ const ViewPost = ({ setOpenDialog, data: post }) => {
             })}
           >
             <Typography>Case Note Details</Typography>
-            {open.noteDetails ? <ArrowBackIosNewIcon className={`rotate-[-90deg]`} /> : <ArrowBackIosNewIcon />}
+            <ArrowBackIosNewIcon className={`transition group-[.noteDetails]:rotate-[-90deg] duration-100 ease-linear`} />
           </Grid>
           <Collapse
             in={open.noteDetails}
             className={`
-              w-full
+              w-[90%]
               `}
           >
-            <Grid container spacing={2} className="flex justify-center">
+            <Grid container spacing={2} className="flex justify-center border-[1px] border-slate-300 border-solid mt-[11px]">
               <Grid sm={6} xs={12} className="flex justify-center">
                 <FormControl size="small" fullWidth margin="dense">
                   <InputLabel shrink htmlFor="dateInput" >Support Date</InputLabel>
@@ -70,14 +70,15 @@ const ViewPost = ({ setOpenDialog, data: post }) => {
             </Grid>
           </Collapse>
           <Grid xs={12}
-            className="
+            className={`
           border-b-2
           border-b-gray-400
           border-solid
           border-x-transparent
           border-t-transparent
           flex
-          justify-between"
+          justify-between
+          group ${open.clientDetails && 'clientDetails'}`}
             onClick={() => setOpen(prev => {
               return {
                 ...prev,
@@ -87,18 +88,18 @@ const ViewPost = ({ setOpenDialog, data: post }) => {
           >
             <Typography>Client Details</Typography>
             {formData.client ?
-              open.clientDetails ? <ArrowBackIosNewIcon className={`rotate-[-90deg]`} /> : <ArrowBackIosNewIcon />
+              <ArrowBackIosNewIcon className={`transition group-[.clientDetails]:rotate-[-90deg] duration-100 ease-linear`} />
               : null}
           </Grid>
           {formData.client ?
             <Collapse
               in={open.clientDetails}
               className={`
-              w-full
+              w-[90%]
               `}
             >
-              <Grid container>
-                <Grid sm={6} xs={12} className="flex justify-center">
+              <Grid container className={`border-[1px] border-slate-300 border-solid mt-[11px]`}>
+                <Grid sm={6} xs={12} className="flex justify-center ">
                   <FormControl size="small" fullWidth margin="dense">
                     <InputLabel shrink htmlFor="clientInput">Client's Name</InputLabel>
                     <Typography className={`p-3`}>{`${formData.client.firstName} ${formData.client?.lastName}`}</Typography>
@@ -136,7 +137,7 @@ const ViewPost = ({ setOpenDialog, data: post }) => {
               </FormControl>
             </Grid>}
           <Grid xs={12}
-            className=" border-b-2 border-b-gray-400 border-solid border-x-transparent border-t-transparent flex justify-between"
+            className={`border-b-2 border-b-gray-400 border-solid border-x-transparent border-t-transparent flex justify-between group ${open.notes && 'notes'}`}
             onClick={() => setOpen(prev => {
               return {
                 ...prev,
@@ -145,18 +146,19 @@ const ViewPost = ({ setOpenDialog, data: post }) => {
             })}
           >
             <Typography>Case Notes</Typography>
-            {open.notes ? <ArrowBackIosNewIcon className={`rotate-[-90deg]`} /> : <ArrowBackIosNewIcon />}
+            <ArrowBackIosNewIcon className={`transition group-[.notes]:rotate-[-90deg] duration-100 ease-linear`} />
           </Grid>
           <Collapse
             in={open.notes}
             className={`
-              w-full
+            w-full
+              max-w-90%
               `}
           >
             <Grid container>
-              <Grid xs={12} className="flex justify-center">
+              <Grid xs={12} className="flex justify-center border-[1px] border-slate-300 border-solid mt-[11px] w-full">
                 <FormControl size="small" fullWidth margin="dense">
-                  <Typography id="notesInput" className={`p-3`}>{formData.notes}</Typography>
+                  <Typography id="notesInput" className={``}>{formData.notes}</Typography>
                 </FormControl>
               </Grid>
             </Grid>
@@ -176,4 +178,4 @@ const ViewPost = ({ setOpenDialog, data: post }) => {
   );
 };
 
-export default ViewPost;
+export default memo(ViewPost);
