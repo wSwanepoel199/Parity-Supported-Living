@@ -1,11 +1,11 @@
-import React, { useEffect, useRef, useState, Suspense, lazy } from 'react';
+import React, { useEffect, useRef, useState, Suspense, lazy, memo } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { Backdrop, Box, Button, CircularProgress, Container, } from '@mui/material';
 // import Dashboard from './components/Dashboard';
 import ProtectedRoute from './shared/utils/ProtectedRoute';
-import PromptForUpdate from './shared/utils/PrompUpdateServiceWorker';
-import CustomAlert from './shared/utils/CustomAlert';
+// import PromptForUpdate from './shared/utils/PrompUpdateServiceWorker';
+// import CustomAlert from './shared/utils/CustomAlert';
 import { useRefreshUserMutation, } from './shared/redux/user/userApiSlice';
 import Appbar from "./components/Appbar";
 import SignIn from './pages/SignIn';
@@ -14,6 +14,7 @@ import SignIn from './pages/SignIn';
 
 // import Landing from './pages/Landing';
 const Landing = lazy(() => import('./pages/Landing'));
+// import SignIn from './pages/SignIn';
 // const SignIn = lazy(() => import('./pages/SignIn'));
 // import Posts from './components/post/Posts';
 const Posts = lazy(() => import('./components/post/Posts'));
@@ -21,7 +22,10 @@ const Posts = lazy(() => import('./components/post/Posts'));
 const Users = lazy(() => import('./components/user/Users'));
 // import Clients from './components/client/Client';
 const Clients = lazy(() => import('./components/client/Client'));
-// const CustomAlert = lazy(() => import('./shared/utils/CustomAlert'));
+// import CustomAlert from './shared/utils/CustomAlert';
+const CustomAlert = lazy(() => import('./shared/utils/CustomAlert'));
+// import PromptForUpdate from './shared/utils/PrompUpdateServiceWorker';
+const PromptForUpdate = lazy(() => import('./shared/utils/PrompUpdateServiceWorker'));
 
 function App() {
   const mounted = useRef();
@@ -37,29 +41,26 @@ function App() {
   // TODO Impliment Client system so carers can selected a client from the drop down
 
   useEffect(() => {
-    if (!mounted.current) {
-      if (rootState.msg?.data === "auth") {
-        refreshUser();
-      }
-      mounted.current = true;
-    }
-    if (mounted.current) {
-      window.updateAvailable
-        .then(isAvailable => {
-          if (isAvailable) {
-            setUpdate(prev => { return true; });
-          }
-        })
-        .catch((err) => {
-          console.error(err);
-        });
-    }
-
-
-    return () => {
-      mounted.current = false;
-    };
-  }, [mounted, userState.status, refreshUser, setUpdate, rootState.msg]);
+    // if (!mounted.current) {
+    //   // if (rootState.msg?.data === "auth") {
+    //   //   import('./shared/redux/user/userApiSlice')
+    //   //     .then(obj => console.log(obj))
+    //   //     .catch(err => console.error(err));
+    //   //   // refreshUser();
+    //   // }
+    //   mounted.current = true;
+    // }
+    // if (mounted.current) {
+    window.updateAvailable
+      .then(isAvailable => {
+        if (isAvailable) {
+          setUpdate(prev => { return true; });
+        }
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  }, []);
 
   useEffect(() => {
     if (['error'].includes(rootState.status) && rootState.status !== "loading") {
@@ -70,7 +71,10 @@ function App() {
         };
       });
     }
-  }, [rootState]);
+    if (['error'].includes(rootState.status) && rootState.msg.status === 403) {
+      refreshUser();
+    }
+  }, [rootState, refreshUser]);
 
   // useEffect(() => {
   //   console.log(location);
@@ -141,7 +145,7 @@ function App() {
             </Routes>
           </Container>
         </Suspense>
-        {process.env.NODE_ENV === 'development' ? <Button onClick={refreshUser}>Refresh</Button> : null}
+        {/* {process.env.NODE_ENV === 'development' ? <Button onClick={refreshUser}>Refresh</Button> : null} */}
       </>
       {/* : null} */}
     </div>
@@ -149,4 +153,4 @@ function App() {
 }
 
 
-export default App;
+export default memo(App);

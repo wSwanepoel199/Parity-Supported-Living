@@ -14,7 +14,8 @@ import UpdatePost from "./UpdatePost";
 // import Toolbar from "../Toolbar";
 import ViewPost from "./ViewPost";
 import ConfirmDialog from "./ConfirmDialog";
-const GeneralDataGrid = lazy(() => import('../GeneralDataGrid'));
+import GeneralDataGrid from "../GeneralDataGrid";
+// const GeneralDataGrid = lazy(() => import('../GeneralDataGrid'));
 
 const Posts = () => {
   const postState = useSelector(state => state.posts);

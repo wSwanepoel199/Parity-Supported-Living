@@ -4,13 +4,13 @@ import { Box, Button, Checkbox, FormControl, FormControlLabel, FormGroup, IconBu
 import Grid from "@mui/material/Unstable_Grid2";
 import { useLoginUserMutation } from "../shared/redux/user/userApiSlice";
 
-// import LoginIcon from '@mui/icons-material/Login';
-// import Visibility from "@mui/icons-material/Visibility";
-// import VisibilityOff from "@mui/icons-material/VisibilityOff";
+import LoginIcon from '@mui/icons-material/Login';
+import Visibility from "@mui/icons-material/Visibility";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
 
-const LoginIcon = lazy(() => import('@mui/icons-material/Login'));
-const Visibility = lazy(() => import('@mui/icons-material/Visibility'));
-const VisibilityOff = lazy(() => import('@mui/icons-material/VisibilityOff'));
+// const LoginIcon = lazy(() => import('@mui/icons-material/Login'));
+// const Visibility = lazy(() => import('@mui/icons-material/Visibility'));
+// const VisibilityOff = lazy(() => import('@mui/icons-material/VisibilityOff'));
 
 const SignIn = () => {
   const navigate = useNavigate();
@@ -92,4 +92,4 @@ const SignIn = () => {
   );
 };
 
-export default SignIn;
+export default memo(SignIn);

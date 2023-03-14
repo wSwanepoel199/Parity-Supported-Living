@@ -53,12 +53,14 @@ export const userApiSlice = backendApi.injectEndpoints({
         catch (err) {
           console.error(err);
           if (err.error.status === 403) {
-            if (getState().posts.posts) await dispatch(clearPostState());
-            if (getState().admin.users) await dispatch(clearUsers());
-            dispatch(removeUser());
+            // if (getState().posts.posts) await dispatch(clearPostState());
+            // if (getState().admin.users) await dispatch(clearUsers());
+            // dispatch(removeUser());
           }
         }
-      }
+      },
+      invalidatesTags: (result, error, args) =>
+        result ? [{ type: "post", id: "LIST" }, { type: "client", id: "LIST" }] : error ? console.error(error) : null
     }),
     logoutUser: builder.mutation({
       query: (signout) => ({ url: '/auth/logout', method: 'post', data: { userId: signout } }),

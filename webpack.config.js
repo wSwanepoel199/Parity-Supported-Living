@@ -230,7 +230,7 @@ module.exports = function (_env, argv) {
       ],
       innerGraph: false,
       splitChunks: {
-        chunks: "all",
+        chunks: "async",
         minSize: 20000,
         maxInitialRequests: 20,
         maxAsyncRequests: 20,
@@ -253,7 +253,7 @@ module.exports = function (_env, argv) {
           }
         }
       },
-      runtimeChunk: 'multiple'
+      runtimeChunk: 'single'
     },
     plugins: webpackPlugins,
     experiments: {
