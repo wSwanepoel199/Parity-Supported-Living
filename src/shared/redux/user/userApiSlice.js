@@ -53,9 +53,10 @@ export const userApiSlice = backendApi.injectEndpoints({
         catch (err) {
           console.error(err);
           if (err.error.status === 403) {
-            // if (getState().posts.posts) await dispatch(clearPostState());
-            // if (getState().admin.users) await dispatch(clearUsers());
-            // dispatch(removeUser());
+            if (getState().posts.posts) await dispatch(clearPostState());
+            if (getState().admin.users) await dispatch(clearUsers());
+            if (getState().clients.clients) await dispatch(clearClientState());
+            dispatch(removeUser());
           }
         }
       },
