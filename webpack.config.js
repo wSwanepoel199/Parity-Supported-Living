@@ -23,7 +23,7 @@ module.exports = function (_env, argv) {
 
   const PUBLIC_PATH = process.env.PUBLIC_PATH || '/';
   const PUBLIC_URL = process.env.PUBLIC_URL || '.';
-  const REACT_APP_API_URL = process.env.REACT_APP_API_URL || 'http://192.168.1.2:5000';
+  const REACT_APP_API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
 
   const paths = [
     {
@@ -44,7 +44,8 @@ module.exports = function (_env, argv) {
       inject: true,
     }),
     new InterpolateHtmlPlugin(HtmlWebpackPlugin, {
-      'PUBLIC_URL': PUBLIC_URL
+      'PUBLIC_URL': PUBLIC_URL,
+      'REACT_APP_API_URL': REACT_APP_API_URL,
     }),
     new webpack.DefinePlugin({
       // 'process.env': JSON.stringify(process.env),
@@ -76,8 +77,6 @@ module.exports = function (_env, argv) {
       }
     }),
     isProduction &&
-    new RobotPlugin(),
-    isProduction &&
     new CompressionPlugin({
       filename: "[path][base].gz[query]",
       algorithm: "gzip",
@@ -86,6 +85,8 @@ module.exports = function (_env, argv) {
       minRatio: 0.8,
       deleteOriginalAssets: false,
     }),
+    isProduction &&
+    new RobotPlugin(),
     isProduction &&
     new MiniCssExtractPlugin({
       filename: "static/css/[name].[contenthash:8].css",

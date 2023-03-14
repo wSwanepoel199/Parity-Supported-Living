@@ -5,23 +5,23 @@ import { Backdrop, Box, Button, CircularProgress, Container, } from '@mui/materi
 // import Dashboard from './components/Dashboard';
 import ProtectedRoute from './shared/utils/ProtectedRoute';
 import PromptForUpdate from './shared/utils/PrompUpdateServiceWorker';
+import CustomAlert from './shared/utils/CustomAlert';
 import { useRefreshUserMutation, } from './shared/redux/user/userApiSlice';
 import Appbar from "./components/Appbar";
+import SignIn from './pages/SignIn';
 
 // inverstigate crashing when auth token expire
 
 // import Landing from './pages/Landing';
 const Landing = lazy(() => import('./pages/Landing'));
-// import SignIn from './pages/SignIn';
-const SignIn = lazy(() => import('./pages/SignIn'));
+// const SignIn = lazy(() => import('./pages/SignIn'));
 // import Posts from './components/post/Posts';
 const Posts = lazy(() => import('./components/post/Posts'));
 // import Users from './components/user/Users';
 const Users = lazy(() => import('./components/user/Users'));
 // import Clients from './components/client/Client';
 const Clients = lazy(() => import('./components/client/Client'));
-// import CustomAlert from './shared/utils/CustomAlert';
-const CustomAlert = lazy(() => import('./shared/utils/CustomAlert'));
+// const CustomAlert = lazy(() => import('./shared/utils/CustomAlert'));
 
 function App() {
   const mounted = useRef();

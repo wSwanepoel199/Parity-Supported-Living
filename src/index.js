@@ -8,9 +8,9 @@ import store from './shared/redux/store';
 import reportWebVitals from './reportWebVitals';
 
 import './index.css';
-// import App from './App';
+import App from './App';
 
-const App = lazy(() => import('./App'));
+// const App = lazy(() => import('./App'));
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(

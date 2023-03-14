@@ -2,6 +2,7 @@ import { createApi } from "@reduxjs/toolkit/dist/query/react";
 import { axiosBaseQuery } from "../../utils/api";
 import { fetchStoredTokenLocal } from "../../utils/authToken";
 import { clearUsers } from "../admin/adminSlice";
+import { clearClientState } from "../client/clientSlice";
 import { clearPostState } from "../posts/postSlice";
 import { removeUser, saveUser } from "../user/userSlice";
 
@@ -11,7 +12,7 @@ import { removeUser, saveUser } from "../user/userSlice";
 // "http://192.168.56.101:5000"
 
 const baseAxiosQuery = axiosBaseQuery({
-  baseUrl: process.env.NODE_ENV === "production" ? process.env.REACT_APP_API_URL : "http://192.168.1.2:5000",
+  baseUrl: process.env.REACT_APP_API_URL
 });
 
 async function axiosBaseQueryWithReauth(arg, api) {
@@ -30,6 +31,7 @@ async function axiosBaseQueryWithReauth(arg, api) {
     } else {
       if (api.getState().posts.posts) await api.dispatch(clearPostState());
       if (api.getState().admin.users) await api.dispatch(clearUsers());
+      if (api.getState().clients.clients) await api.dispatch(clearClientState());
       api.dispatch(removeUser());
     }
   }
