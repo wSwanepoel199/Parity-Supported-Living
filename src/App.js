@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState, Suspense, lazy, memo } from 'react';
+import React, { useEffect, useRef, useState, Suspense, lazy } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { Backdrop, Box, Button, CircularProgress, Container, } from '@mui/material';

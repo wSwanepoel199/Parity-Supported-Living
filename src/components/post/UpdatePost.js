@@ -131,7 +131,6 @@ const UpdatePost = ({ setOpenDialog, data: post }) => {
 
   return (
     <Box component='form' onSubmit={(e) => handleSubmit(e)}>
-      {console.log(formData, post)}
       <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
         <DialogTitle>
           Edit Note
