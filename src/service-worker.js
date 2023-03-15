@@ -66,6 +66,8 @@ registerRoute(
   })
 );
 
+// import { read, utils, write } from 'xlsx';
+
 // This allows the web app to trigger skipWaiting via
 // registration.waiting.postMessage({type: 'SKIP_WAITING'})
 self.addEventListener('message', async (event) => {

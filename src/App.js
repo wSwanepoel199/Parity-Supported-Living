@@ -1,7 +1,7 @@
-import React, { useEffect, useRef, useState, Suspense, lazy, memo } from 'react';
+import React, { useEffect, useState, Suspense, lazy, memo } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import { Backdrop, Box, Button, CircularProgress, Container, } from '@mui/material';
+import { Backdrop, Box, CircularProgress, Container, } from '@mui/material';
 // import Dashboard from './components/Dashboard';
 import ProtectedRoute from './shared/utils/ProtectedRoute';
 // import PromptForUpdate from './shared/utils/PrompUpdateServiceWorker';
@@ -28,7 +28,6 @@ const CustomAlert = lazy(() => import('./shared/utils/CustomAlert'));
 const PromptForUpdate = lazy(() => import('./shared/utils/PrompUpdateServiceWorker'));
 
 function App() {
-  const mounted = useRef();
   const userState = useSelector(state => state.user);
   const rootState = useSelector(state => state.root);
   const [refreshUser] = useRefreshUserMutation();

@@ -7,10 +7,7 @@ import { sendMessage } from "../shared/utils/api";
 import { useDispatch } from "react-redux";
 import { storeError } from "../shared/redux/root/rootSlice";
 
-const xlsx = await import('xlsx');
-
 const GridToolbarImport = ({ type }) => {
-  const { read, utils } = xlsx;
   const dispatch = useDispatch();
   const inputRef = useRef(null);
   const [uploadFile] = useUploadFileMutation();
@@ -24,11 +21,16 @@ const GridToolbarImport = ({ type }) => {
 
 
   useEffect(() => {
-    const formatFile = async (file) => {
-      const f = await (file).arrayBuffer();
-      const wb = read(f);
-      const data = utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]]);
-      return data;
+    const formatFile = (file) => {
+      if (process.env.NODE_ENV === "development") import('xlsx').then(({ read, utils }) => {
+        const f = (file).arrayBuffer();
+        const wb = read(f);
+        const data = utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]]);
+        return data;
+      })
+        .catch(err => {
+          console.error(err);
+        });
     };
 
     if (upload.file) {
@@ -40,6 +42,7 @@ const GridToolbarImport = ({ type }) => {
             dispatch(storeError({ status: 422, statusText: 'UnprocessableEntity', message: err.message }));
           });
       } else {
+        console.log("formatFile");
         formatFile(upload.file)
           .then(res => uploadFile({ data: res, type: upload.type }))
           .catch(err => {
@@ -55,7 +58,7 @@ const GridToolbarImport = ({ type }) => {
         };
       });
     }
-  }, [upload, uploadFile, inputRef, dispatch, read, utils]);
+  }, [upload, uploadFile, inputRef, dispatch]);
 
 
   const handleUpload = () => {

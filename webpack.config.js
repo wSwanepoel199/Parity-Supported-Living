@@ -208,6 +208,10 @@ module.exports = function (_env, argv) {
       }
     },
     optimization: {
+      innerGraph: true,
+      sideEffects: true,
+      concatenateModules: true,
+      runtimeChunk: "single",
       minimize: isProduction,
       minimizer: [
         new TerserWebpackPlugin({
@@ -218,7 +222,7 @@ module.exports = function (_env, argv) {
             mangle: {
               safari10: true
             },
-            sourceMap: true,
+            sourceMap: isDevelopment,
             output: {
               comments: false,
               ascii_only: true
@@ -228,12 +232,12 @@ module.exports = function (_env, argv) {
         }),
         new CssMinimizerPlugin()
       ],
-      innerGraph: false,
       splitChunks: {
-        chunks: "async",
+        chunks: "all",
         minSize: 20000,
         maxInitialRequests: 20,
         maxAsyncRequests: 20,
+        enforceSizeThreshold: 50000,
         cacheGroups: {
           vendors: {
             test: /[\\/]node_modules[\\/]/,
@@ -249,11 +253,12 @@ module.exports = function (_env, argv) {
           },
           common: {
             minChunks: 2,
-            priority: -20
+            priority: -20,
+            reuseExistingChunk: true,
           }
         }
       },
-      runtimeChunk: 'single'
+
     },
     plugins: webpackPlugins,
     experiments: {
