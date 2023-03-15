@@ -208,9 +208,9 @@ module.exports = function (_env, argv) {
       }
     },
     optimization: {
-      innerGraph: true,
-      sideEffects: false,
-      concatenateModules: true,
+      // innerGraph: false,
+      // sideEffects: false,
+      // concatenateModules: false,
       runtimeChunk: "single",
       minimize: isProduction,
       minimizer: [
