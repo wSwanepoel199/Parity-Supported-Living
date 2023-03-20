@@ -22,10 +22,6 @@ const GeneralDataGrid = ({ intialTable, NewEntry, type, dialogOptions, optionPer
     pageSize: 10
   });
 
-  useMemo(() => {
-    setTable(intialTable);
-  }, [intialTable]);
-
   const [permissions, setPermissions] = useState({
     create: false,
     edit: false,
@@ -34,44 +30,12 @@ const GeneralDataGrid = ({ intialTable, NewEntry, type, dialogOptions, optionPer
   });
 
   useMemo(() => {
-    setPermissions(optionPermissions);
-  }, [optionPermissions]);
-
-  const [tableState, setTableState] = useState({});
-
-  useMemo(() => {
-    setTableState(prev => {
-      return {
+    setTable((prev) => {
+      if (intialTable?.columns?.length > 0) return {
         ...prev,
-        columns,
-        sorting
-      };
-    });
-  }, [columns, sorting]);
-
-  const [selectedRow, setSelectedRow] = useState();
-
-  const [contextMenu, setContextMenu] = useState(null);
-
-  const [openDialog, setOpenDialog] = useState({
-    open: false,
-    type: '',
-    data: {}
-  });
-
-  useMemo(() => {
-    if (fullScreen && table.columns.some(column => column['field'] === "options")) {
-      setTable(prev => {
-        return {
-          ...prev,
-          columns: prev.columns.slice(0, -1)
-        };
-      });
-    } else if (!fullScreen && !table.columns.some(column => column['field'] === "options")) {
-      setTable({
-        ...table,
+        ...intialTable,
         columns: [
-          ...table.columns,
+          ...intialTable.columns,
           {
             field: 'options',
             headerName: "Options",
@@ -103,9 +67,35 @@ const GeneralDataGrid = ({ intialTable, NewEntry, type, dialogOptions, optionPer
             ),
             disableExport: true
           }]
-      });
-    }
-  }, [fullScreen, table, permissions]);
+      };
+    });
+  }, [intialTable, permissions]);
+
+  useMemo(() => {
+    setPermissions(optionPermissions);
+  }, [optionPermissions]);
+
+  const [tableState, setTableState] = useState({});
+
+  useMemo(() => {
+    setTableState(prev => {
+      return {
+        ...prev,
+        columns,
+        sorting
+      };
+    });
+  }, [columns, sorting]);
+
+  const [selectedRow, setSelectedRow] = useState();
+
+  const [contextMenu, setContextMenu] = useState(null);
+
+  const [openDialog, setOpenDialog] = useState({
+    open: false,
+    type: '',
+    data: {}
+  });
 
   const handleContextMenu = (event) => {
     event.preventDefault();

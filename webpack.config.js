@@ -76,7 +76,6 @@ module.exports = function (_env, argv) {
         filename: 'map.xml'
       }
     }),
-    isProduction &&
     new CompressionPlugin({
       filename: "[path][base].gz[query]",
       algorithm: "gzip",
@@ -239,18 +238,16 @@ module.exports = function (_env, argv) {
         maxAsyncRequests: 20,
         enforceSizeThreshold: 50000,
         cacheGroups: {
-          vendors: {
-            test: /[\\/]node_modules[\\/]/,
-            name(module, chunks, cacheGroupKey) {
-              const packageName = module.context.match(
-                /[\\/]node_modules[\\/](.*?)([\\/]|$)/
-              )[1];
-              return `${cacheGroupKey}.${packageName.replace("@", "")}`;
-            },
-            priority: -10,
-            reuseExistingChunk: true,
-
-          },
+          // vendor: {
+          //   test: /[\\/]node_modules[\\/]/,
+          //   name(module, chunks, cacheGroupKey) {
+          //     const packageName = module.context.match(
+          //       /[\\/]node_modules[\\/](.*?)([\\/]|$)/
+          //     )[1];
+          //     return `${cacheGroupKey}.${packageName.replace("@", "")}`;
+          //   },
+          //   priority: -10,
+          // },
           common: {
             minChunks: 2,
             priority: -20,
