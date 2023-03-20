@@ -99,7 +99,3 @@ For easy user interface development and management [Material UI](https://mui.com
 ## Contributions
 
 Contributions and suggestions welcome.
-
-## License
-
-[MIT](https://choosealicense.com/licenses/mit/)
