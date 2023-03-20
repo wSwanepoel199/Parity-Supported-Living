@@ -7,21 +7,25 @@ A React.js web application build with create-react-app for creating and maintain
 Clone the [PSL Notes](https://github.com/wSwanepoel199/Parity-Supported-Living) repo.
 
 Ensure node has been installed by running the following command in a console/terminal.
+
 ```bash
 node --version
 ```
 
 navigate into the cloned repo and run
+
 ```bash
 npm i
 ```
 
 Once installed create a .env file using
+
 ```bash
 touch .env
 ```
 
 Once the .env file is created open in and define the following values
+
 ```text
 REACT_APP_API_URL: the url for your backend
 PUBLIC_PATH: the default path for all application assets
@@ -33,16 +37,19 @@ Once these values have been defined in your .env you can follow either the Defau
 ### Default React
 
 To run the dev server use
+
 ```bash
 npm run dev
 ```
 
 To build the application run
+
 ```bash
 npm run buildReact
 ```
 
 To start the production server using the built application run
+
 ```bash
 npm run start
 ```
@@ -50,24 +57,29 @@ npm run start
 ### Custom Webpack
 
 To start the dev server run
+
 ```bash
 npm run devWP
 ```
 
 To build the application run
+
 ```bash
 npm run build
 ```
 
 To start the built application run
+
 ```bash
 npm run start
 ```
 
 To build and start the application quickly you can run
+
 ```bash
 npm run startProd
 ```
+
 this will run the build and start scripts automatically.
 
 ## Usage
@@ -82,7 +94,7 @@ If a user in an Admin or Coordinator they will also be able to edit and delete c
 
 For easy user interface development and management [Material UI](https://mui.com/) and its dependencies where used, including [Emotion](https://emotion.sh/docs/introduction). [Axios](https://axios-http.com/) is used for more control over backend API calls and [Redux Toolkit](https://redux-toolkit.js.org/) for application state management. [React-Router](https://reactrouter.com/en/main) is used for in application routing and [SheetJS](https://docs.sheetjs.com/) to allow for excel document processing to upload data to the backend. [React-Phone-Input-2](https://github.com/bl00mber/react-phone-input-2) is used for easier mobile inputs and [Date-FNS](https://date-fns.org/) is used to farmat ISO datetime values to more readable altenratives
 
-[Workbox](https://developer.chrome.com/docs/workbox/) is used to create and maintain a service worker for offline use and to allow the application to be installed on mobile devices as a PWA. [Dotenv](https://github.com/motdotla/dotenv) and [Express](https://expressjs.com/) are used to run a script to serve the application and redirect any not http requests to https, as well as to convert any "* .js" requests to the compressed "* .js.gz" file.
+[Workbox](https://developer.chrome.com/docs/workbox/) is used to create and maintain a service worker for offline use and to allow the application to be installed on mobile devices as a PWA. [Dotenv](https://github.com/motdotla/dotenv) and [Express](https://expressjs.com/) are used to run a script to serve the application and redirect any not http requests to https, as well as to convert any ".js" requests to the compressed ".js.gz" file.
 
 ## Contributions
 
