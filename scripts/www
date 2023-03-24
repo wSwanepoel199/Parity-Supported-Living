@@ -4,10 +4,12 @@ const app = express();
 const port = process.env.PORT || 3000;
 const https = require('https');
 const fs = require('fs');
+require('dotenv').config();
+
 
 var options = {
-  key: fs.readFileSync(__dirname + '/../certs/key.pem'),
-  cert: fs.readFileSync(__dirname + '/../certs/cert.pem')
+  key: fs.readFileSync(__dirname + '/..' + process.env.SSL_KEY_FILE),
+  cert: fs.readFileSync(__dirname + '/..' + process.env.SSL_CRT_FILE)
 };
 
 app.use(express.json());

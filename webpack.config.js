@@ -116,14 +116,9 @@ module.exports = function (_env, argv) {
       static: {
         directory: path.join(__dirname, 'public')
       },
-      compress: true,
-      port: 3000,
-      historyApiFallback: true,
-      open: false,
-      hot: true,
       https: {
-        key: fs.readFileSync('./certs/key.pem'),
-        cert: fs.readFileSync('./certs/cert.pem'),
+        key: fs.readFileSync(__dirname + process.env.SSL_KEY_FILE),
+        cert: fs.readFileSync(__dirname + process.env.SSL_CRT_FILE)
       },
       // bonjour: {
       //   type: 'http',
@@ -132,6 +127,11 @@ module.exports = function (_env, argv) {
       client: {
         overlay: true,
       },
+      compress: true,
+      port: process.env.PORT || 3000,
+      historyApiFallback: true,
+      open: false,
+      hot: true,
     },
     module: {
       rules: [
@@ -243,16 +243,16 @@ module.exports = function (_env, argv) {
         maxAsyncRequests: 20,
         enforceSizeThreshold: 50000,
         cacheGroups: {
-          // vendor: {
-          //   test: /[\\/]node_modules[\\/]/,
-          //   name(module, chunks, cacheGroupKey) {
-          //     const packageName = module.context.match(
-          //       /[\\/]node_modules[\\/](.*?)([\\/]|$)/
-          //     )[1];
-          //     return `${cacheGroupKey}.${packageName.replace("@", "")}`;
-          //   },
-          //   priority: -10,
-          // },
+          vendors: {
+            test: /[\\/]node_modules[\\/]/,
+            name(module, chunks, cacheGroupKey) {
+              const packageName = module.context.match(
+                /[\\/]node_modules[\\/](.*?)([\\/]|$)/
+              )[1];
+              return `${cacheGroupKey}.${packageName.replace("@", "")}`;
+            },
+            priority: -10,
+          },
           common: {
             minChunks: 2,
             priority: -20,
