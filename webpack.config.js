@@ -11,6 +11,7 @@ const InterpolateHtmlPlugin = require('react-dev-utils/InterpolateHtmlPlugin');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const RobotPlugin = require('robotstxt-webpack-plugin');
 const SitemapPlugin = require('sitemap-webpack-plugin').default;
+const fs = require('fs');
 
 const webpack = require('webpack');
 const dotenv = require('dotenv');
@@ -120,10 +121,14 @@ module.exports = function (_env, argv) {
       historyApiFallback: true,
       open: false,
       hot: true,
-      bonjour: {
-        type: 'http',
-        protocol: 'udp',
+      https: {
+        key: fs.readFileSync('./key.pem'),
+        cert: fs.readFileSync('./cert.pem'),
       },
+      // bonjour: {
+      //   type: 'https',
+      //   protocol: 'udp',
+      // },
       client: {
         overlay: true,
       },

@@ -10,7 +10,7 @@
     "build": "NODE_ENV=production webpack --mode=production",
     "buildDev": "NODE_ENV=development webpack --mode=development",
     "serve": "serve -s build",
-    "start": "node scripts/compileExpress.js",
+    "start": "HTTPS=true SSL_CRT_FILE=cert.pem SSL_KEY_FILE=key.pem node scripts/compileExpress.js",
     "eject": "react-scripts eject",
     "startProd": "npm run build && npm run start",
     "startDev": "npm run buildDev && npm run start",
