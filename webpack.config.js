@@ -122,11 +122,11 @@ module.exports = function (_env, argv) {
       open: false,
       hot: true,
       https: {
-        key: fs.readFileSync('./key.pem'),
-        cert: fs.readFileSync('./cert.pem'),
+        key: fs.readFileSync('./certs/key.pem'),
+        cert: fs.readFileSync('./certs/cert.pem'),
       },
       // bonjour: {
-      //   type: 'https',
+      //   type: 'http',
       //   protocol: 'udp',
       // },
       client: {

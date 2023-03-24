@@ -2,6 +2,13 @@ const express = require('express');
 const path = require('path');
 const app = express();
 const port = process.env.PORT || 3000;
+const https = require('https');
+const fs = require('fs');
+
+var options = {
+  key: fs.readFileSync(__dirname + '/../certs/key.pem'),
+  cert: fs.readFileSync(__dirname + '/../certs/cert.pem')
+};
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -50,6 +57,8 @@ app.get('*', function (req, res) {
   res.sendFile(path.join(__dirname, '..', 'build/index.html'));
 });
 
-app.listen(port, () => {
+var server = https.createServer(options, app);
+
+server.listen(port, () => {
   console.log("Server is running on port: ", port);
 });
