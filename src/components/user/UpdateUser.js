@@ -1,5 +1,6 @@
-import { Box, Button, Checkbox, Chip, DialogActions, DialogContent, DialogTitle, FormControl, FormControlLabel, Input, InputAdornment, InputLabel, ListSubheader, MenuItem, OutlinedInput, Select, Switch, Typography, } from "@mui/material";
+import { Box, Button, Checkbox, Chip, DialogActions, DialogContent, DialogTitle, FormControl, FormControlLabel, IconButton, Input, InputAdornment, InputLabel, ListSubheader, MenuItem, OutlinedInput, Select, Switch, Typography, } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
+import CloseIcon from '@mui/icons-material/Close';
 import Grid from "@mui/material/Unstable_Grid2/";
 import { memo, useEffect, useMemo, useRef, useState } from "react";
 import { useUpdateUserMutation } from "../../shared/redux/user/userApiSlice";
@@ -78,8 +79,13 @@ const UpdateUser = ({ setOpenDialog, data: user }) => {
 
   return (
     <Box component='form' onSubmit={(e) => handleSubmit(e)}>
-      <DialogTitle>
-        Edit {user.name}
+      <DialogTitle className={`flex justify-between items-center`}>
+        <Typography variant="h6" component="p">
+          Edit {user.name}
+        </Typography>
+        <IconButton onClick={() => setOpenDialog(prev => { return { ...prev, open: !prev.open, type: '', data: {} }; })}>
+          <CloseIcon />
+        </IconButton>
       </DialogTitle>
       {mounted.current ?
         <DialogContent>
@@ -223,8 +229,8 @@ const UpdateUser = ({ setOpenDialog, data: user }) => {
 
         />
         <Box >
-          <Button color="success" variant="contained" type="submit">UPDATE</Button>
           <Button onClick={() => setOpenDialog(prev => { return { ...prev, open: !prev.open, type: '' }; })}>Cancel</Button>
+          <Button color="success" variant="contained" type="submit">UPDATE</Button>
         </Box>
       </DialogActions>
     </Box>

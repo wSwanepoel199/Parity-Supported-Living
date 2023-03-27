@@ -1,6 +1,7 @@
 
-import { Box, Button, Collapse, DialogActions, DialogContent, FormControl, InputLabel, Stack, Typography } from "@mui/material";
+import { Box, Button, Collapse, DialogActions, DialogContent, DialogTitle, FormControl, IconButton, InputLabel, Stack, Typography } from "@mui/material";
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
+import CloseIcon from '@mui/icons-material/Close';
 import Grid from "@mui/material/Unstable_Grid2/";
 // import { format, parseISO } from "date-fns";
 import { memo, useState } from "react";
@@ -20,6 +21,14 @@ const ViewUser = ({ setOpenDialog, data: user }) => {
 
   return (
     <Box>
+      <DialogTitle className={`flex justify-between items-center`}>
+        <Typography variant="h6" component="p">
+          Viewing {user.name}
+        </Typography>
+        <IconButton onClick={() => setOpenDialog(prev => { return { ...prev, open: !prev.open, type: '', data: {} }; })}>
+          <CloseIcon />
+        </IconButton>
+      </DialogTitle>
       <DialogContent>
         <Grid container spacing={2} className="flex justify-center">
           <Grid xs={12}

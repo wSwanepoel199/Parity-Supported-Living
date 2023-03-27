@@ -1,7 +1,8 @@
-import { Box, Button, Checkbox, Chip, DialogActions, DialogContent, DialogTitle, FormControl, FormHelperText, Input, InputAdornment, InputLabel, ListSubheader, MenuItem, OutlinedInput, Select, Typography } from "@mui/material";
+import { Box, Button, Checkbox, Chip, DialogActions, DialogContent, DialogTitle, FormControl, FormHelperText, IconButton, Input, InputAdornment, InputLabel, ListSubheader, MenuItem, OutlinedInput, Select, Typography } from "@mui/material";
 import { useFormControl } from '@mui/material/FormControl';
 import Grid from "@mui/material/Unstable_Grid2/";
 import SearchIcon from "@mui/icons-material/Search";
+import CloseIcon from '@mui/icons-material/Close';
 import { forwardRef, memo, useMemo, useState } from "react";
 import PhoneInput from 'react-phone-input-2';
 import { useSelector } from "react-redux";
@@ -118,8 +119,13 @@ const CreateClient = ({ setOpenDialog }) => {
 
   return (
     <Box component='form' onSubmit={(e) => handleSubmit(e)}>
-      <DialogTitle>
-        New Client
+      <DialogTitle className={`flex justify-between items-center`}>
+        <Typography variant="h6" component="p">
+          New Client
+        </Typography>
+        <IconButton onClick={() => setOpenDialog(prev => { return { ...prev, open: !prev.open, type: '', data: {} }; })}>
+          <CloseIcon />
+        </IconButton>
       </DialogTitle>
       <DialogContent >
         <Grid container spacing={2} className="flex justify-center w-full">
@@ -319,8 +325,8 @@ const CreateClient = ({ setOpenDialog }) => {
         </Grid>
       </DialogContent>
       <DialogActions>
-        <Button color="success" variant="contained" type="submit">CREATE</Button>
         <Button onClick={() => setOpenDialog(prev => { return { ...prev, open: !prev.open, type: '' }; })}>Cancel</Button>
+        <Button color="success" variant="contained" type="submit">CREATE</Button>
       </DialogActions>
     </Box>
   );

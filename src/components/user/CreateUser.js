@@ -1,5 +1,6 @@
-import { Box, Button, Checkbox, Chip, DialogActions, DialogContent, DialogTitle, FormControl, Input, InputAdornment, InputLabel, ListSubheader, MenuItem, OutlinedInput, Select, Typography } from "@mui/material";
+import { Box, Button, Checkbox, Chip, DialogActions, DialogContent, DialogTitle, FormControl, IconButton, Input, InputAdornment, InputLabel, ListSubheader, MenuItem, OutlinedInput, Select, Typography } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
+import CloseIcon from '@mui/icons-material/Close';
 import Grid from "@mui/material/Unstable_Grid2/";
 import { memo, useMemo, useState } from "react";
 import { useCreateUserMutation } from "../../shared/redux/user/userApiSlice";
@@ -52,8 +53,13 @@ const CreateUser = ({ setOpenDialog }) => {
 
   return (
     <Box component='form' onSubmit={(e) => handleSubmit(e)}>
-      <DialogTitle>
-        New User
+      <DialogTitle className={`flex justify-between items-center`}>
+        <Typography variant="h6" component="p">
+          New User
+        </Typography>
+        <IconButton onClick={() => setOpenDialog(prev => { return { ...prev, open: !prev.open, type: '', data: {} }; })}>
+          <CloseIcon />
+        </IconButton>
       </DialogTitle>
       <DialogContent >
         <Grid container spacing={2} className="flex justify-center w-full">
