@@ -1,5 +1,6 @@
-import { Box, Button, DialogActions, DialogContent, DialogTitle, FormControl, FormControlLabel, Input, InputLabel, MenuItem, OutlinedInput, Select, Switch, Typography } from "@mui/material";
+import { Box, Button, DialogActions, DialogContent, DialogTitle, FormControl, FormControlLabel, IconButton, Input, InputLabel, MenuItem, OutlinedInput, Select, Switch, Typography } from "@mui/material";
 import Grid from "@mui/material/Unstable_Grid2/";
+import CloseIcon from '@mui/icons-material/Close';
 import { format, formatISO, parseISO } from "date-fns";
 import { memo, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
@@ -79,8 +80,13 @@ const CreatePost = ({ setOpenDialog }) => {
 
   return (
     <Box component='form' onSubmit={(e) => handleSubmit(e)}>
-      <DialogTitle>
-        New Note
+      <DialogTitle className={`flex justify-between items-center`}>
+        <Typography variant="h6" component="p">
+          New Note
+        </Typography>
+        <IconButton onClick={() => setOpenDialog(prev => { return { ...prev, open: !prev.open, type: '', data: {} }; })}>
+          <CloseIcon />
+        </IconButton>
       </DialogTitle>
       <DialogContent>
         <Grid container spacing={2} className="flex justify-center">
@@ -178,8 +184,8 @@ const CreatePost = ({ setOpenDialog }) => {
 
         />
         <Box>
-          <Button color="success" variant="contained" type="submit">Create</Button>
           <Button onClick={() => setOpenDialog(prev => { return { ...prev, open: !prev.open, type: '', data: {} }; })}>Cancel</Button>
+          <Button color="success" variant="contained" type="submit">Create</Button>
         </Box>
       </DialogActions>
     </Box>

@@ -1,4 +1,5 @@
-import { Box, Button, DialogActions, DialogContent, DialogContentText, DialogTitle } from "@mui/material";
+import { Box, Button, DialogActions, DialogContent, DialogContentText, DialogTitle, IconButton, Typography } from "@mui/material";
+import CloseIcon from '@mui/icons-material/Close';
 import { memo } from "react";
 import { useRemoveClientMutation } from "../../shared/redux/client/clientApiSlice";
 
@@ -13,7 +14,14 @@ const ConfirmDialog = ({ setOpenDialog, data: client }) => {
 
   return (
     <Box>
-      <DialogTitle>Delete {client.firstName}?</DialogTitle>
+      <DialogTitle className={`flex justify-between items-center`}>
+        <Typography variant="h6" component="p">
+          Delete {client.firstName}?
+        </Typography>
+        <IconButton onClick={() => setOpenDialog(prev => { return { ...prev, open: !prev.open, type: '', data: {} }; })}>
+          <CloseIcon />
+        </IconButton>
+      </DialogTitle>
       <DialogContent>
         <DialogContentText>Are you sure you want to delete {client.firstName}?</DialogContentText>
       </DialogContent>

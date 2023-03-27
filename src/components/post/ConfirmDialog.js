@@ -1,4 +1,5 @@
-import { Box, Button, DialogActions, DialogContent, DialogContentText, DialogTitle } from "@mui/material";
+import { Box, Button, DialogActions, DialogContent, DialogContentText, DialogTitle, IconButton, Typography } from "@mui/material";
+import CloseIcon from '@mui/icons-material/Close';
 import { memo } from "react";
 import { useDeleteTargetPostMutation, } from "../../shared/redux/admin/adminApiSlice";
 
@@ -17,7 +18,14 @@ const ConfirmDialog = ({ setOpenDialog, data: post }) => {
 
   return (
     <Box>
-      <DialogTitle>Delete Note?</DialogTitle>
+      <DialogTitle className={`flex justify-between items-center`}>
+        <Typography variant="h6" component="p">
+          Delete Note?
+        </Typography>
+        <IconButton onClick={() => setOpenDialog(prev => { return { ...prev, open: !prev.open, type: '', data: {} }; })}>
+          <CloseIcon />
+        </IconButton>
+      </DialogTitle>
       <DialogContent>
         <DialogContentText>Are you sure you want to delete this case note?</DialogContentText>
       </DialogContent>

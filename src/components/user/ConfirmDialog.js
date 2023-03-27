@@ -1,4 +1,5 @@
-import { Box, Button, DialogActions, DialogContent, DialogContentText, DialogTitle } from "@mui/material";
+import { Box, Button, DialogActions, DialogContent, DialogContentText, DialogTitle, IconButton, Typography } from "@mui/material";
+import CloseIcon from '@mui/icons-material/Close';
 import { memo } from "react";
 import { useDeleteTargetUserMutation } from "../../shared/redux/admin/adminApiSlice";
 
@@ -13,7 +14,14 @@ const ConfirmDialog = ({ setOpenDialog, data: user }) => {
 
   return (
     <Box>
-      <DialogTitle>Delete {user.name}?</DialogTitle>
+      <DialogTitle className={`flex justify-between items-center`}>
+        <Typography variant="h6" component="p">
+          Delete {user.name}?
+        </Typography>
+        <IconButton onClick={() => setOpenDialog(prev => { return { ...prev, open: !prev.open, type: '', data: {} }; })}>
+          <CloseIcon />
+        </IconButton>
+      </DialogTitle>
       <DialogContent>
         <DialogContentText>Are you sure you want to delete {user.name}?</DialogContentText>
       </DialogContent>

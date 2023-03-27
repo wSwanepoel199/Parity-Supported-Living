@@ -28,8 +28,13 @@ const CustomAlert = lazy(() => import('./shared/utils/CustomAlert'));
 const PromptForUpdate = lazy(() => import('./shared/utils/PrompUpdateServiceWorker'));
 
 function App() {
-  const userState = useSelector(state => state.user);
-  const rootState = useSelector(state => state.root);
+  const state = useSelector(state => {
+    return {
+      user: state.user,
+      root: state.root
+    };
+  });
+  // const rootState = useSelector(state => state.root);
   const [refreshUser] = useRefreshUserMutation();
   const [alert, setAlert] = useState(undefined);
   const [update, setUpdate] = useState(false);
@@ -61,18 +66,18 @@ function App() {
   }, []);
 
   useEffect(() => {
-    if (['error'].includes(rootState.status) && rootState.status !== "loading") {
+    if (['error'].includes(state.root.status) && state.root.status !== "loading") {
       setAlert(prev => {
         return {
           ...prev,
-          ...rootState
+          ...state.root
         };
       });
     }
-    if (['error'].includes(rootState.status) && rootState.msg.status === 403) {
-      refreshUser();
-    }
-  }, [rootState, refreshUser]);
+    // if (['error'].includes(state.root.status) && state.root.msg.status === 403) {
+    //   refreshUser();
+    // }
+  }, [state.root, refreshUser]);
 
   // useEffect(() => {
   //   console.log(location);
@@ -110,14 +115,14 @@ function App() {
     <div className={`w-full min-h-[100dvh] bg-slate-400 flex flex-col`}>
       {/* {(mounted.current || isUninitialized) ? */}
       <>
-        {rootState.status === "loading" ?
+        {state.root.status === "loading" ?
           <Backdrop
-            open={rootState.status === "loading"}
+            open={state.root.status === "loading"}
             className={`z-40`}
           >
             <CircularProgress />
           </Backdrop> : null}
-        {userState.status === "loggedIn" ? <Appbar /> : null}
+        {state.user.status === "loggedIn" ? <Appbar /> : null}
         <Suspense fallback={
           <Box className={`flex-grow flex justify-center items-center`}>
             <CircularProgress />
@@ -127,7 +132,7 @@ function App() {
           <PromptForUpdate update={update} setUpdate={setUpdate} />
           <Container className={`flex-grow flex justify-center items-center`}>
             <Routes>
-              <Route path="/" element={userState.status === "loggedIn" ? <Landing /> : <SignIn />}>
+              <Route path="/" element={state.user.status === "loggedIn" ? <Landing /> : <SignIn />}>
                 <Route index element={
                   <Posts />
                 } />

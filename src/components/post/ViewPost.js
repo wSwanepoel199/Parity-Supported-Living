@@ -1,4 +1,4 @@
-import { Box, Button, Collapse, DialogActions, DialogContent, FormControl, InputLabel, Typography } from "@mui/material";
+import { Box, Button, Collapse, DialogActions, DialogContent, DialogTitle, FormControl, IconButton, InputLabel, Typography } from "@mui/material";
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import DoneIcon from '@mui/icons-material/Done';
 import CloseIcon from '@mui/icons-material/Close';
@@ -17,6 +17,14 @@ const ViewPost = ({ setOpenDialog, data: post }) => {
 
   return (
     <Box>
+      <DialogTitle className={`flex justify-between items-center`}>
+        <Typography variant="h6" component="p">
+          Viewing Note {post.id}
+        </Typography>
+        <IconButton onClick={() => setOpenDialog(prev => { return { ...prev, open: !prev.open, type: '', data: {} }; })}>
+          <CloseIcon />
+        </IconButton>
+      </DialogTitle>
       <DialogContent>
         <Grid container spacing={2} className="flex justify-center">
           <Grid xs={12}

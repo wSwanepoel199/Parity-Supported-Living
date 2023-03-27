@@ -56,6 +56,8 @@ npm run start
 
 ### Custom Webpack
 
+Webpack dev and prod servers are setup to use https protocol, follow [mkcert]("https://github.com/FiloSottile/mkcert") instructions to install and generate the required key.pem and cert.pem in certs
+
 To start the dev server run
 
 ```bash

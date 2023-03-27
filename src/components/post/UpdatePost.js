@@ -1,5 +1,6 @@
-import { Box, Button, DialogActions, DialogContent, DialogTitle, FormControl, FormControlLabel, FormHelperText, Input, InputLabel, MenuItem, OutlinedInput, Select, Switch, Typography } from "@mui/material";
+import { Box, Button, DialogActions, DialogContent, DialogTitle, FormControl, FormControlLabel, FormHelperText, IconButton, Input, InputLabel, MenuItem, OutlinedInput, Select, Switch, Typography } from "@mui/material";
 import Grid from "@mui/material/Unstable_Grid2/";
+import CloseIcon from '@mui/icons-material/Close';
 import { format, formatISO, parseISO } from "date-fns";
 import { memo, useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
@@ -131,11 +132,14 @@ const UpdatePost = ({ setOpenDialog, data: post }) => {
 
   return (
     <Box component='form' onSubmit={(e) => handleSubmit(e)}>
-      <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-        <DialogTitle>
+      <DialogTitle className={`flex justify-between items-center`}>
+        <Typography variant="h6" component="p">
           Edit Note
-        </DialogTitle>
-      </Box>
+        </Typography>
+        <IconButton onClick={() => setOpenDialog(prev => { return { ...prev, open: !prev.open, type: '', data: {} }; })}>
+          <CloseIcon />
+        </IconButton>
+      </DialogTitle>
       {mounted.current ?
         <DialogContent>
           <Grid container spacing={2} className="flex justify-center">
@@ -282,8 +286,8 @@ const UpdatePost = ({ setOpenDialog, data: post }) => {
           label="Confidential"
         />
         <Box >
-          <Button color="success" variant="contained" type="submit" disabled={formData.clientId === "" || formData.carerId === ""}>Update</Button>
           <Button onClick={() => setOpenDialog(prev => { return { ...prev, open: !prev.open, type: '', data: {} }; })}>Cancel</Button>
+          <Button color="success" variant="contained" type="submit" disabled={formData.clientId === "" || formData.carerId === ""}>Update</Button>
         </Box>
       </DialogActions>
     </Box>
