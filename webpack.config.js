@@ -11,7 +11,7 @@ const InterpolateHtmlPlugin = require('react-dev-utils/InterpolateHtmlPlugin');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const RobotPlugin = require('robotstxt-webpack-plugin');
 const SitemapPlugin = require('sitemap-webpack-plugin').default;
-const fs = require('fs');
+// const fs = require('fs');
 
 const webpack = require('webpack');
 const dotenv = require('dotenv');
@@ -116,14 +116,11 @@ module.exports = function (_env, argv) {
       static: {
         directory: path.join(__dirname, 'public')
       },
-      https: {
-        key: fs.readFileSync(__dirname + process.env.SSL_KEY_FILE),
-        cert: fs.readFileSync(__dirname + process.env.SSL_CRT_FILE)
+      // https: true,
+      bonjour: {
+        type: 'http',
+        protocol: 'udp',
       },
-      // bonjour: {
-      //   type: 'http',
-      //   protocol: 'udp',
-      // },
       client: {
         overlay: true,
       },
@@ -243,16 +240,16 @@ module.exports = function (_env, argv) {
         maxAsyncRequests: 20,
         enforceSizeThreshold: 50000,
         cacheGroups: {
-          vendors: {
-            test: /[\\/]node_modules[\\/]/,
-            name(module, chunks, cacheGroupKey) {
-              const packageName = module.context.match(
-                /[\\/]node_modules[\\/](.*?)([\\/]|$)/
-              )[1];
-              return `${cacheGroupKey}.${packageName.replace("@", "")}`;
-            },
-            priority: -10,
-          },
+          // vendors: {
+          //   test: /[\\/]node_modules[\\/]/,
+          //   name(module, chunks, cacheGroupKey) {
+          //     const packageName = module.context.match(
+          //       /[\\/]node_modules[\\/](.*?)([\\/]|$)/
+          //     )[1];
+          //     return `${cacheGroupKey}.${packageName.replace("@", "")}`;
+          //   },
+          //   priority: -10,
+          // },
           common: {
             minChunks: 2,
             priority: -20,

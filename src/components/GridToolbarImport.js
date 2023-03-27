@@ -94,10 +94,9 @@ const GridToolbarImport = ({ type }) => {
         onChange={handleFileChange}
         className={`hidden`}
       >
-
       </input>
     </>
   );
 };
 
-export default memo(GridToolbarImport);
+export default GridToolbarImport;
