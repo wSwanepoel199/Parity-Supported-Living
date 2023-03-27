@@ -4,7 +4,7 @@ import PriorityHighIcon from '@mui/icons-material/PriorityHigh';
 import DoneIcon from '@mui/icons-material/Done';
 import CloseIcon from '@mui/icons-material/Close';
 import { format, parseISO } from "date-fns";
-import { lazy, memo, useEffect, useState } from "react";
+import { lazy, memo, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 import { GeneralDataGrid } from "../../Components";
 
@@ -18,8 +18,14 @@ const ViewPost = lazy(() => import('./ViewPost/ViewPost'));
 const ConfirmDialog = lazy(() => import('./ConfirmDialog/ConfirmDialog'));
 
 const Posts = () => {
-  const postState = useSelector(state => state.posts);
-  const userState = useSelector(state => state.user);
+  const { posts, user } = useSelector(state => {
+    return {
+      posts: state.posts,
+      user: state.user
+    };
+  });
+  // const postState = useSelector(state => state.posts);
+  // const userState = useSelector(state => state.user);
 
 
   const [table, setTable] = useState({
@@ -135,16 +141,16 @@ const Posts = () => {
     pageSize: 10,
   });
 
-  useEffect(() => {
-    if (postState.posts) {
+  useMemo(() => {
+    if (posts.posts) {
       setTable(prev => {
         return {
           ...prev,
-          rows: JSON.parse(JSON.stringify(postState.posts).replace(/:null/gi, ":\"\""))
+          rows: JSON.parse(JSON.stringify(posts.posts).replace(/:null/gi, ":\"\""))
         };
       });
     }
-  }, [postState.posts]);
+  }, [posts.posts]);
 
   return (
     <div className="w-full h-full max-w-screen-lg mx-auto flex flex-col ">
@@ -153,12 +159,12 @@ const Posts = () => {
         intialTable={table}
         type="post"
         optionPermissions={{
-          create: userState.status === 'loggedIn',
-          edit: ["Admin", "Coordinator"].includes(userState.user.role),
-          view: userState.status === 'loggedIn',
-          delete: ["Admin", "Coordinator"].includes(userState.user.role),
+          create: user.status === 'loggedIn',
+          edit: ["Admin", "Coordinator"].includes(user.user.role),
+          view: user.status === 'loggedIn',
+          delete: ["Admin", "Coordinator"].includes(user.user.role),
         }}
-        tableArray={postState.posts}
+        tableArray={posts.posts}
         dialogOptions={{
           Create: (props) => <CreatePost {...props} />,
           Update: (props) => <UpdatePost {...props} />,
@@ -177,7 +183,7 @@ const Posts = () => {
             clientName: false,
             carerName: false,
             // options: !fullScreen,
-            private: ["Admin", "Coordinator"].includes(userState.user.role) ? true : false
+            private: ["Admin", "Coordinator"].includes(user.user.role) ? true : false
           },
         }}
         sorting={{

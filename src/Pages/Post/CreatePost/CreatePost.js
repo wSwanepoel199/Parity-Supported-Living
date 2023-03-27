@@ -6,7 +6,7 @@ import { memo, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useAddPostMutation } from "../../../Redux/posts/postApiSlice";
 
-const CreatePost = ({ setOpenDialog }) => {
+const CreatePost = ({ setOpenDialog, mobile }) => {
   const userState = useSelector(state => state.user);
   const clientState = useSelector(state => state.clients);
   const [addPost, { isLoading }] = useAddPostMutation();
@@ -184,7 +184,12 @@ const CreatePost = ({ setOpenDialog }) => {
 
         />
         <Box>
-          <Button onClick={() => setOpenDialog(prev => { return { ...prev, open: !prev.open, type: '', data: {} }; })}>Cancel</Button>
+          {!mobile &&
+            <Button
+              onClick={() =>
+                setOpenDialog(prev => {
+                  return { ...prev, open: !prev.open, type: '' };
+                })}>Cancel</Button>}
           <Button color="success" variant="contained" type="submit">Create</Button>
         </Box>
       </DialogActions>

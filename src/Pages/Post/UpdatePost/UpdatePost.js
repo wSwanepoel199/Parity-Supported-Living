@@ -6,7 +6,7 @@ import { memo, useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { useUpdatePostMutation } from "../../../Redux/posts/postApiSlice";
 
-const UpdatePost = ({ setOpenDialog, data: post }) => {
+const UpdatePost = ({ setOpenDialog, data: post, mobile }) => {
   const clientState = useSelector(state => state.clients);
   const adminState = useSelector(state => state.admin);
   const mounted = useRef();
@@ -286,7 +286,12 @@ const UpdatePost = ({ setOpenDialog, data: post }) => {
           label="Confidential"
         />
         <Box >
-          <Button onClick={() => setOpenDialog(prev => { return { ...prev, open: !prev.open, type: '', data: {} }; })}>Cancel</Button>
+          {!mobile &&
+            <Button
+              onClick={() =>
+                setOpenDialog(prev => {
+                  return { ...prev, open: !prev.open, type: '' };
+                })}>Cancel</Button>}
           <Button color="success" variant="contained" type="submit" disabled={formData.clientId === "" || formData.carerId === ""}>Update</Button>
         </Box>
       </DialogActions>

@@ -41,7 +41,7 @@ const MyCustomHelperText = () => {
 const containsText = (user, searchText) =>
   user.toLowerCase().indexOf(searchText.toLowerCase()) > -1;
 
-const UpdateClient = ({ setOpenDialog, data: client }) => {
+const UpdateClient = ({ setOpenDialog, data: client, mobile }) => {
   const adminState = useSelector(state => state.admin);
   const [updateClient] = useUpdateClientMutation();
   const options = adminState.users;
@@ -340,7 +340,12 @@ const UpdateClient = ({ setOpenDialog, data: client }) => {
         </Grid>
       </DialogContent>
       <DialogActions>
-        <Button onClick={() => setOpenDialog(prev => { return { ...prev, open: !prev.open, type: '' }; })}>Cancel</Button>
+        {!mobile &&
+          <Button
+            onClick={() =>
+              setOpenDialog(prev => {
+                return { ...prev, open: !prev.open, type: '' };
+              })}>Cancel</Button>}
         <Button color="success" variant="contained" type="submit">UPDATE</Button>
       </DialogActions>
     </Box>

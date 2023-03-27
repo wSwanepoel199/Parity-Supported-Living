@@ -150,10 +150,10 @@ const GeneralDataGrid = ({ intialTable, NewEntry, type, dialogOptions, optionPer
       >
         {
           openDialog.open
-            ? (openDialog.type === "new" && <Create setOpenDialog={setOpenDialog} />)
-            || (openDialog.type === "edit" && <Update setOpenDialog={setOpenDialog} data={openDialog.data} />)
-            || (openDialog.type === "view" && <View setOpenDialog={setOpenDialog} data={openDialog.data} />)
-            || (openDialog.type === "delete" && <Delete setOpenDialog={setOpenDialog} data={openDialog.data} />)
+            ? (openDialog.type === "new" && <Create setOpenDialog={setOpenDialog} mobile={fullScreen} />)
+            || (openDialog.type === "edit" && <Update setOpenDialog={setOpenDialog} data={openDialog.data} mobile={fullScreen} />)
+            || (openDialog.type === "view" && <View setOpenDialog={setOpenDialog} data={openDialog.data} mobile={fullScreen} />)
+            || (openDialog.type === "delete" && <Delete setOpenDialog={setOpenDialog} data={openDialog.data} mobile={fullScreen} />)
             : null
         }
       </Dialog>

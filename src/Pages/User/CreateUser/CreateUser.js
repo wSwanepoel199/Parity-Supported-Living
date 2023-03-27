@@ -9,7 +9,7 @@ import { useSelector } from "react-redux";
 const containsText = (user, searchText) =>
   user.toLowerCase().indexOf(searchText.toLowerCase()) > -1;
 
-const CreateUser = ({ setOpenDialog }) => {
+const CreateUser = ({ setOpenDialog, mobile }) => {
   const clientState = useSelector(state => state.clients);
   const [createUser] = useCreateUserMutation();
 
@@ -131,7 +131,6 @@ const CreateUser = ({ setOpenDialog }) => {
                   id="clientsInput"
                   name='clients'
                   multiple
-                  required
                   input={<OutlinedInput id="clientsListInput" />}
                   renderValue={(selected) => (
                     <Box
@@ -183,8 +182,13 @@ const CreateUser = ({ setOpenDialog }) => {
         </Grid>
       </DialogContent>
       <DialogActions>
+        {!mobile &&
+          <Button
+            onClick={() =>
+              setOpenDialog(prev => {
+                return { ...prev, open: !prev.open, type: '' };
+              })}>Cancel</Button>}
         <Button color="success" variant="contained" type="submit">CREATE</Button>
-        <Button onClick={() => setOpenDialog(prev => { return { ...prev, open: !prev.open, type: '' }; })}>Cancel</Button>
       </DialogActions>
     </Box>
   );

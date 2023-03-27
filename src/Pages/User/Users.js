@@ -1,6 +1,6 @@
 import { Box, Button, Typography, } from "@mui/material";
 import AddIcon from '@mui/icons-material/Add';
-import { lazy, memo, useEffect, useState } from "react";
+import { lazy, memo, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 import { GeneralDataGrid } from "../../Components";
 
@@ -14,8 +14,14 @@ const ViewUser = lazy(() => import('./ViewUser/ViewUser'));
 const ConfirmDialog = lazy(() => import('./ConfirmDialog/ConfirmDialog'));
 
 const Users = () => {
-  const adminState = useSelector(state => state.admin);
-  const userState = useSelector(state => state.user);
+  // const adminState = useSelector(state => state.admin);
+  // const userState = useSelector(state => state.user);
+  const { admin, user } = useSelector(state => {
+    return {
+      admin: state.admin,
+      user: state.user
+    };
+  });
 
   const [table, setTable] = useState({
     columns: [
@@ -77,16 +83,16 @@ const Users = () => {
     pageSize: 10
   });
 
-  useEffect(() => {
-    if (adminState.users) {
+  useMemo(() => {
+    if (admin.users) {
       setTable(prev => {
         return {
           ...prev,
-          rows: JSON.parse(JSON.stringify(adminState.users).replace(/:null/gi, ":\"\""))
+          rows: JSON.parse(JSON.stringify(admin.users).replace(/:null/gi, ":\"\""))
         };
       });
     }
-  }, [adminState.users]);
+  }, [admin.users]);
 
   return (
     <div className="w-full h-full max-w-screen-lg mx-auto flex flex-col ">
@@ -95,12 +101,12 @@ const Users = () => {
         intialTable={table}
         type="user"
         optionPermissions={{
-          create: ["Admin"].includes(userState.user.role),
-          edit: ["Admin"].includes(userState.user.role),
-          view: userState.status === 'loggedIn',
-          delete: ["Admin"].includes(userState.user.role),
+          create: ["Admin"].includes(user.user.role),
+          edit: ["Admin"].includes(user.user.role),
+          view: user.status === 'loggedIn',
+          delete: ["Admin"].includes(user.user.role),
         }}
-        tableArray={adminState.users}
+        tableArray={admin.users}
         dialogOptions={{
           Create: (props) => <CreateUser {...props} />,
           Update: (props) => <UpdateUser {...props} />,

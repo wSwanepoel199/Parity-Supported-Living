@@ -9,7 +9,7 @@ import { useSelector } from "react-redux";
 const containsText = (user, searchText) =>
   user.toLowerCase().indexOf(searchText.toLowerCase()) > -1;
 
-const UpdateUser = ({ setOpenDialog, data: user }) => {
+const UpdateUser = ({ setOpenDialog, data: user, mobile }) => {
   const clientState = useSelector(state => state.clients);
   const [updateUser] = useUpdateUserMutation();
   const mounted = useRef();
@@ -159,7 +159,6 @@ const UpdateUser = ({ setOpenDialog, data: user }) => {
                     id="clientsInput"
                     name='clients'
                     multiple
-                    required
                     input={<OutlinedInput id="clientsListInput" />}
                     renderValue={(selected) => (
                       <Box
@@ -229,7 +228,12 @@ const UpdateUser = ({ setOpenDialog, data: user }) => {
 
         />
         <Box >
-          <Button onClick={() => setOpenDialog(prev => { return { ...prev, open: !prev.open, type: '' }; })}>Cancel</Button>
+          {!mobile &&
+            <Button
+              onClick={() =>
+                setOpenDialog(prev => {
+                  return { ...prev, open: !prev.open, type: '' };
+                })}>Cancel</Button>}
           <Button color="success" variant="contained" type="submit">UPDATE</Button>
         </Box>
       </DialogActions>

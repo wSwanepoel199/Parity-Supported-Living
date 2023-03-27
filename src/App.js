@@ -61,6 +61,14 @@ function App() {
   }, [state.root, refreshUser]);
 
   // useEffect(() => {
+  //   window.addEventListener('popstate', e => {
+  //     e.preventDefault();
+  //     console.log(e);
+  //     window.onbeforeunload = function () { return "Don't Do That"; };
+  //   });
+  // }, []);
+
+  // useEffect(() => {
   //   console.log(location);
   //   return location.listen(location => {
   //     if (location.action === 'PUSH') {
