@@ -11,7 +11,7 @@ const InterpolateHtmlPlugin = require('react-dev-utils/InterpolateHtmlPlugin');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const RobotPlugin = require('robotstxt-webpack-plugin');
 const SitemapPlugin = require('sitemap-webpack-plugin').default;
-// const fs = require('fs');
+const fs = require('fs');
 
 const webpack = require('webpack');
 const dotenv = require('dotenv');
@@ -116,11 +116,14 @@ module.exports = function (_env, argv) {
       static: {
         directory: path.join(__dirname, 'public')
       },
-      // https: true,
-      bonjour: {
-        type: 'http',
-        protocol: 'udp',
+      https: {
+        key: fs.readFileSync('./certs/key.pem'),
+        cert: fs.readFileSync('./certs/cert.pem')
       },
+      // bonjour: {
+      //   type: 'https',
+      //   protocol: 'udp',
+      // },
       client: {
         overlay: true,
       },

@@ -3,7 +3,7 @@ import FileUploadOutlinedIcon from '@mui/icons-material/FileUploadOutlined';
 import { memo, useEffect, useRef, useState } from "react";
 import { useUploadFileMutation } from "../shared/redux/api/backendApi";
 import { sendMessage } from "../shared/utils/api";
-// import { read, utils } from "xlsx";
+import { read, utils } from "xlsx";
 import { useDispatch } from "react-redux";
 import { storeError } from "../shared/redux/root/rootSlice";
 
@@ -19,19 +19,20 @@ const GridToolbarImport = ({ type }) => {
     file: null
   });
 
+  async function formatFile(file) {
+    // if (process.env.NODE_ENV === "development") import('xlsx').then(({ read, utils }) => {
+    const f = await (file).arrayBuffer();
+    const wb = read(f);
+    const data = utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]]);
+    console.log(data);
+    return data;
+    // })
+    //   .catch(err => {
+    //     console.error(err);
+    //   });
+  };
 
   useEffect(() => {
-    const formatFile = (file) => {
-      if (process.env.NODE_ENV === "development") import('xlsx').then(({ read, utils }) => {
-        const f = (file).arrayBuffer();
-        const wb = read(f);
-        const data = utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]]);
-        return data;
-      })
-        .catch(err => {
-          console.error(err);
-        });
-    };
 
     if (upload.file) {
       if (process.env.NODE_ENV === "production") {
@@ -94,9 +95,10 @@ const GridToolbarImport = ({ type }) => {
         onChange={handleFileChange}
         className={`hidden`}
       >
+
       </input>
     </>
   );
 };
 
-export default GridToolbarImport;
+export default memo(GridToolbarImport);

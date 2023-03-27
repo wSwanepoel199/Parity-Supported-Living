@@ -53,7 +53,12 @@ export const rootSlice = createSlice({
         }
       })
       .addMatcher(isFulfilled, (state, action) => {
-
+        // if (["getPosts", "getAllClients", "getAllUsers"].includes(action.meta?.arg.endpointName)) {
+        //   return {
+        //     ...state,
+        //     status: state.status === "error" ? state.state : "success"
+        //   };
+        // }
         return {
           ...state,
           status: state.status === "loading" ? "success" : state.status,
