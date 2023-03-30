@@ -1,9 +1,9 @@
 import { lazy } from "react";
 
-// import Landing from "./Landing/Landing";
-const Landing = lazy(() => import('./Landing/Landing'));
-// import SignIn from "./SignIn/SignIn";
-const SignIn = lazy(() => import('./SignIn/SignIn'));
+import Landing from "./Landing/Landing";
+// const Landing = lazy(() => import('./Landing/Landing'));
+import SignIn from "./SignIn/SignIn";
+// const SignIn = lazy(() => import('./SignIn/SignIn'));
 // import Users from './User/Users';
 const Users = lazy(() => import('./User/Users'));
 // import Posts from './Post/Posts';

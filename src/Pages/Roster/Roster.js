@@ -1,4 +1,4 @@
-import { Paper, Typography } from "@mui/material";
+import { LinearProgress, Paper, Typography } from "@mui/material";
 import {
   ViewState,
 } from '@devexpress/dx-react-scheduler';
@@ -20,6 +20,8 @@ import { useEffect, useState } from "react";
 import { data as appointments } from './appointments';
 import ResourceSwitcher from "./ResourceSwitcher/ResourceSwitcher";
 import { useSelector } from "react-redux";
+import AppointmentContent from "./AppointmentContentContainer/AppointmentContentContainer";
+import FlexibleSpace from "./ToolbarFlexibleSpace/ToolbarFlexibleSpace";
 
 function Roster() {
   const { admin, clients } = useSelector(state => {
@@ -92,16 +94,22 @@ function Roster() {
     });
   }
 
+  const ToolbarWithLoading = (
+    ({ children, ...props }) => (
+      <div className={`relative`}>
+        <Toolbar.Root {...props}>
+          {children}
+        </Toolbar.Root>
+        <LinearProgress className={`absolute w-full bottom-0 left-0`} />
+      </div>
+    )
+  );
+
   // const currentDate = new Date();
 
   return (
     <div className="w-full h-full max-w-screen-lg mx-auto flex flex-col">
       <Typography variant="h3" component="div" className={`py-5`}>Roster</Typography>
-      <ResourceSwitcher
-        resources={data.resources}
-        mainResourceName={data.mainResourceName}
-        onChange={changeMainResource}
-      />
       <Paper>
         <Scheduler
           data={data.appointments}
@@ -119,11 +127,22 @@ function Roster() {
             endDayHour={20}
           />
           <MonthView />
-          <Toolbar />
+          <Toolbar
+            // rootComponent={ToolbarWithLoading}
+            flexibleSpaceComponent={() => (<FlexibleSpace>
+              <ResourceSwitcher
+                resources={data.resources}
+                mainResourceName={data.mainResourceName}
+                onChange={changeMainResource}
+              />
+            </FlexibleSpace>)}
+          />
           <DateNavigator />
           <TodayButton />
           <ViewSwitcher />
-          <Appointments />
+          <Appointments
+            appointmentContentComponent={AppointmentContent}
+          />
           <AppointmentTooltip />
           <Resources
             data={data.resources}
@@ -131,10 +150,10 @@ function Roster() {
           />
         </Scheduler>
       </Paper>
-      <pre>
+      {/* <pre className={`max-w-full`}>
         {JSON.stringify(data, null, 2)}
         {console.log(data)}
-      </pre>
+      </pre> */}
     </div>
   );
 }
