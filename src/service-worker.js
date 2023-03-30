@@ -12,7 +12,7 @@ import { ExpirationPlugin } from 'workbox-expiration';
 import { precacheAndRoute, createHandlerBoundToURL } from 'workbox-precaching';
 import { registerRoute } from 'workbox-routing';
 import { StaleWhileRevalidate } from 'workbox-strategies';
-import { read, utils } from 'xlsx';
+import { read, utils, write } from 'xlsx';
 
 clientsClaim();
 
@@ -26,6 +26,10 @@ precacheAndRoute(self.__WB_MANIFEST);
 // are fulfilled with your index.html shell. Learn more at
 // https://developers.google.com/web/fundamentals/architecture/app-shell
 const fileExtensionRegexp = new RegExp('/[^/?]+\\.[^/]+$');
+
+// Checks for Public_url in env, if its not present just assigns .
+const Public_url = process.env.PUBLIC_URL || '.';
+
 registerRoute(
   // Return false to exempt requests from being fulfilled by index.html.
   ({ request, url }) => {
@@ -44,7 +48,7 @@ registerRoute(
 
     return true;
   },
-  createHandlerBoundToURL(process.env.PUBLIC_URL + '/index.html')
+  createHandlerBoundToURL(Public_url + '/index.html')
 );
 
 // An example runtime caching route for requests that aren't handled by the
@@ -62,6 +66,8 @@ registerRoute(
   })
 );
 
+// import { read, utils, write } from 'xlsx';
+
 // This allows the web app to trigger skipWaiting via
 // registration.waiting.postMessage({type: 'SKIP_WAITING'})
 self.addEventListener('message', async (event) => {
@@ -70,11 +76,15 @@ self.addEventListener('message', async (event) => {
     self.skipWaiting();
     // self.registration.update();
   }
-  if (event.data && event.data.type === "excel") {
+  if (event.data && event.data.type === "import") {
     const f = await (event.data?.data).arrayBuffer();
     const wb = read(f);
     const data = utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]]);
     event.ports[0].postMessage(data);
+  }
+  if (event.data && event.data.type === "export") {
+    const f = await write(event.data?.data, { type: 'array', bookType: 'csv' });
+    event.ports[0].postMessage({ type: 'export', file: f });
   }
   // if (event.data && event.data.type === "skipWait") {
   //   console.log("skip waiting through message");

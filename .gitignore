@@ -24,6 +24,10 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
+certs/cert.pem
+certs/csr.pem
+certs/key.pem
+
 # package-lock.json
 /package-lock.json
 /src/backend/package-lock.json

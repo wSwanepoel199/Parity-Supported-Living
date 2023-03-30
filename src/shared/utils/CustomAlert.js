@@ -2,6 +2,7 @@ import { Collapse, Alert, IconButton, AlertTitle } from "@mui/material";
 import CloseIcon from '@mui/icons-material/Close';
 import { useDispatch, useSelector } from "react-redux";
 import { clearMessage } from "../redux/root/rootSlice";
+import { memo } from "react";
 
 const CustomAlert = ({ alert }) => {
   const rootState = useSelector(state => state.root);
@@ -11,7 +12,7 @@ const CustomAlert = ({ alert }) => {
     <Collapse
       in={['error'].includes(rootState.status)}
       unmountOnExit
-      className={`absolute z-50 left-0 top-0 w-full`}
+      className={`fixed z-50 left-0 top-0 w-full`}
     >
       {alert ?
         <Alert
@@ -37,4 +38,4 @@ const CustomAlert = ({ alert }) => {
   );
 };
 
-export default CustomAlert;
+export default memo(CustomAlert);

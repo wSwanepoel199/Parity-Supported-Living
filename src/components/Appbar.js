@@ -1,7 +1,8 @@
-import { AppBar, Avatar, Box, Container, IconButton, Menu, MenuItem, Toolbar, Typography, useMediaQuery, useTheme } from "@mui/material";
+import { AppBar, Avatar, Box, Container, IconButton, Menu, MenuItem, Toolbar, Typography, useMediaQuery } from "@mui/material";
+import { useTheme } from '@mui/material/styles';
 import MenuIcon from '@mui/icons-material/Menu';
 import { useSelector } from "react-redux";
-import { useEffect, useRef, useState } from "react";
+import { memo, useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useLogoutUserMutation } from "../shared/redux/user/userApiSlice";
 
@@ -92,6 +93,9 @@ const Appbar = () => {
                 <MenuItem component={Link} to="/" href="/">
                   <Typography textAlign="center">Notes</Typography>
                 </MenuItem>
+                <MenuItem component={Link} to="/clients" href="/clients">
+                  <Typography textAlign="center">Clients</Typography>
+                </MenuItem>
                 {["Admin", "Coordinator"].includes(userState.user.role) ? <MenuItem component={Link} to="/users" href="/users">
                   <Typography textAlign="center">Users</Typography>
                 </MenuItem> : null}
@@ -149,4 +153,4 @@ const Appbar = () => {
   );
 };
 
-export default Appbar;
+export default memo(Appbar);

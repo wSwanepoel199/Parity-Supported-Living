@@ -2,16 +2,25 @@ const express = require('express');
 const path = require('path');
 const app = express();
 const port = process.env.PORT || 3000;
+// const https = require('https');
+// const fs = require('fs');
+require('dotenv').config();
+
+
+// var options = {
+//   key: fs.readFileSync(__dirname + '/..' + process.env.SSL_KEY_FILE),
+//   cert: fs.readFileSync(__dirname + '/..' + process.env.SSL_CRT_FILE)
+// };
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 const redirectionFilter = function (req, res, next) {
   const date = new Date();
-  const url = `${req.protocol}:\/\/${req.hostname}:${port}${req.url}`;
+  const url = `${req.protocol}://${req.hostname}:${port}${req.url}`;
 
   if (req.get('X-Forwarded-Proto') === 'http') {
-    const redirectTo = `https:\/\/${req.hostname}${req.url}`;
+    const redirectTo = `https://${req.hostname}${req.url}`;
     console.log(`${date} Redirecting ${url} --> ${redirectTo}`);
     res.redirect(301, redirectTo);
   } else {
@@ -23,12 +32,19 @@ app.get('/*', redirectionFilter);
 
 // allows express to serve ziped files
 app.get('*.js', function (req, res, next) {
-  if (req.url === '/app.js') {
+  if (req.url === "/service-worker.js") {
+    next();
+  } else {
     req.url = req.url + '.gz';
     res.set('Content-Encoding', 'gzip');
+    next();
   }
-  next();
 });
+// app.get('*.ico', function (req, res, next) {
+//     req.url = req.url + '.gz';
+//     res.set('Content-Encoding', 'gzip');
+//     next();
+// });
 
 // Your static pre-build assets folder
 app.use(express.static(path.join(__dirname, '..', 'build')));
@@ -42,6 +58,8 @@ app.get('/', function (req, res) {
 app.get('*', function (req, res) {
   res.sendFile(path.join(__dirname, '..', 'build/index.html'));
 });
+
+// var server = https.createServer(options, app);
 
 app.listen(port, () => {
   console.log("Server is running on port: ", port);

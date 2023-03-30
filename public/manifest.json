@@ -4,10 +4,16 @@
   "icons": [
     {
       "src": "PSLPineapple.ico",
-      "sizes": "256x256"
+      "sizes": "256x256",
+      "purpose": "maskable"
     },
     {
       "src": "PSLPineapple192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "PSLAppleTouch192.png",
       "type": "image/png",
       "sizes": "192x192"
     },

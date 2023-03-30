@@ -1,18 +1,14 @@
 import { Box, Button, DialogActions, DialogContent, DialogContentText, DialogTitle, IconButton, Typography } from "@mui/material";
 import CloseIcon from '@mui/icons-material/Close';
 import { memo } from "react";
-import { useDeleteTargetPostMutation, } from "../../shared/redux/admin/adminApiSlice";
+import { useRemoveClientMutation } from "../../shared/redux/client/clientApiSlice";
 
 
-const ConfirmDialog = ({ setOpenDialog, data: post }) => {
-  const [deleteTargetPost] = useDeleteTargetPostMutation();
-
-  // useEffect(() => {
-  //   if (isLoading || isError) setOpenDialog(prev => { return { ...prev, open: !prev.open, type: '' }; });
-  // }, [isLoading, isError, setOpenDialog]);
+const ConfirmDialog = ({ setOpenDialog, data: client }) => {
+  const [removeClient] = useRemoveClientMutation();
 
   const handleDelete = () => {
-    deleteTargetPost(post);
+    removeClient({ clientId: client.clientId });
     setOpenDialog(prev => { return { ...prev, open: !prev.open, type: '' }; });
   };
 
@@ -20,14 +16,14 @@ const ConfirmDialog = ({ setOpenDialog, data: post }) => {
     <Box>
       <DialogTitle className={`flex justify-between items-center`}>
         <Typography variant="h6" component="p">
-          Delete Note?
+          Delete {client.firstName}?
         </Typography>
         <IconButton onClick={() => setOpenDialog(prev => { return { ...prev, open: !prev.open, type: '', data: {} }; })}>
           <CloseIcon />
         </IconButton>
       </DialogTitle>
       <DialogContent>
-        <DialogContentText>Are you sure you want to delete this case note?</DialogContentText>
+        <DialogContentText>Are you sure you want to delete {client.firstName}?</DialogContentText>
       </DialogContent>
       <DialogActions sx={{ justifyContent: 'space-between' }}>
         <Button color="error" variant="contained" onClick={handleDelete}>DELETE</Button>

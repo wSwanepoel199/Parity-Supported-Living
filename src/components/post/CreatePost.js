@@ -1,27 +1,33 @@
-import { Box, Button, DialogActions, DialogContent, DialogTitle, FormControl, FormControlLabel, Input, InputLabel, OutlinedInput, Switch } from "@mui/material";
+import { Box, Button, DialogActions, DialogContent, DialogTitle, FormControl, FormControlLabel, IconButton, Input, InputLabel, MenuItem, OutlinedInput, Select, Switch, Typography } from "@mui/material";
 import Grid from "@mui/material/Unstable_Grid2/";
+import CloseIcon from '@mui/icons-material/Close';
 import { format, formatISO, parseISO } from "date-fns";
-import { useEffect, useState } from "react";
+import { memo, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useAddPostMutation } from "../../shared/redux/posts/postApiSlice";
 
 const CreatePost = ({ setOpenDialog }) => {
   const userState = useSelector(state => state.user);
+  const clientState = useSelector(state => state.clients);
   const [addPost, { isLoading }] = useAddPostMutation();
   const [formData, setFormData] = useState({
     date: formatISO(new Date()),
     hours: 0,
     kilos: 0,
-    client: "",
+    clientId: "",
+    clientName: '',
     notes: "",
     carerId: userState.user.userId,
+    carerName: `${userState.user.firstName} ${userState.user?.lastName}`,
     private: false,
   });
+  const [options, setOptions] = useState([]);
 
   useEffect(() => {
-    if (isLoading) setOpenDialog(prev => { return { ...prev, open: !prev.open, type: '' }; });
+    if (clientState.clients.length > 0) setOptions(clientState.clients);
+    // if (isLoading) setOpenDialog(prev => { return { ...prev, open: !prev.open, type: '' }; });
 
-  }, [isLoading, setOpenDialog]);
+  }, [isLoading, setOpenDialog, clientState.clients]);
 
   const handleInput = ({ value, name }) => {
     switch (name) {
@@ -44,6 +50,16 @@ const CreatePost = ({ setOpenDialog }) => {
         });
         return;
       }
+      case 'clientId': {
+        setFormData(prev => {
+          return {
+            ...prev,
+            [name]: value,
+            clientName: clientState.clients.find(client => client.clientId === value).name
+          };
+        });
+        return;
+      }
       default: {
         setFormData(prev => {
           return {
@@ -58,16 +74,25 @@ const CreatePost = ({ setOpenDialog }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     addPost(formData);
+    setOpenDialog(prev => { return { ...prev, open: !prev.open, type: '' }; });
   };
 
 
   return (
     <Box component='form' onSubmit={(e) => handleSubmit(e)}>
-      <DialogTitle>
-        New Note
+      <DialogTitle className={`flex justify-between items-center`}>
+        <Typography variant="h6" component="p">
+          New Note
+        </Typography>
+        <IconButton onClick={() => setOpenDialog(prev => { return { ...prev, open: !prev.open, type: '', data: {} }; })}>
+          <CloseIcon />
+        </IconButton>
       </DialogTitle>
       <DialogContent>
         <Grid container spacing={2} className="flex justify-center">
+          <Grid xs={12} className=" border-b-2 border-b-gray-400 border-solid border-x-transparent border-t-transparent">
+            <Typography>Details</Typography>
+          </Grid>
           <Grid sm={6} xs={12} className="flex justify-center">
             <FormControl size="small" fullWidth margin="dense">
               <InputLabel shrink htmlFor="dateInput">Support Date</InputLabel>
@@ -93,16 +118,23 @@ const CreatePost = ({ setOpenDialog }) => {
             </FormControl>
           </Grid>
           <Grid sm={6} xs={12} className="flex justify-center">
-            <FormControl size="small" fullWidth margin="dense">
-              <InputLabel htmlFor="clientInput">Client's Name</InputLabel>
-              <Input
-                id="clientInput"
-                name="client"
-                type="text"
-                value={formData.client}
-                onChange={(e) => handleInput(e.target)}
-              />
-            </FormControl>
+            {options ?
+              <FormControl variant="standard" size="small" fullWidth margin="dense">
+                <InputLabel htmlFor="clientInput">Client</InputLabel>
+                <Select
+                  id="clientInput"
+                  name='clientId'
+                  required
+                  value={formData.clientId}
+                  onChange={(e) => handleInput(e.target)}
+                >
+                  {options?.map((client, index) => {
+                    return (
+                      <MenuItem key={index} value={client.clientId}>{client.firstName} {client?.lastName}</MenuItem>
+                    );
+                  })}
+                </Select>
+              </FormControl> : null}
           </Grid>
           <Grid sm={6} xs={12} className="flex justify-center">
             <FormControl size="small" fullWidth margin="dense">
@@ -116,14 +148,15 @@ const CreatePost = ({ setOpenDialog }) => {
               />
             </FormControl>
           </Grid>
+          <Grid xs={12} className=" border-b-2 border-b-gray-400 border-solid border-x-transparent border-t-transparent">
+            <Typography>Notes</Typography>
+          </Grid>
           <Grid xs={12} className="flex justify-center">
             <FormControl size="small" fullWidth margin="dense">
-              <InputLabel htmlFor="notesInput">Notes</InputLabel>
               <OutlinedInput
                 id="notesInput"
                 name="notes"
                 type="text"
-                label="Notes"
                 multiline
                 minRows={4}
                 value={formData.notes}
@@ -151,12 +184,12 @@ const CreatePost = ({ setOpenDialog }) => {
 
         />
         <Box>
-          <Button type="submit">Create</Button>
           <Button onClick={() => setOpenDialog(prev => { return { ...prev, open: !prev.open, type: '', data: {} }; })}>Cancel</Button>
+          <Button color="success" variant="contained" type="submit">Create</Button>
         </Box>
       </DialogActions>
     </Box>
   );
 };
 
-export default CreatePost;
+export default memo(CreatePost);

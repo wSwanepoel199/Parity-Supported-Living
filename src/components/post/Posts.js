@@ -1,34 +1,53 @@
-import { Box, Button, Dialog, Input, LinearProgress, Typography, useMediaQuery, useTheme } from "@mui/material";
-import { DataGrid } from "@mui/x-data-grid";
+import { Box, Button, Typography } from "@mui/material";
 import AddIcon from '@mui/icons-material/Add';
+import PriorityHighIcon from '@mui/icons-material/PriorityHigh';
+import DoneIcon from '@mui/icons-material/Done';
+import CloseIcon from '@mui/icons-material/Close';
 import { format, parseISO } from "date-fns";
-import { useEffect, useState } from "react";
+import { memo, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { useGetPostsQuery } from "../../shared/redux/posts/postSlice";
 import CreatePost from "./CreatePost";
 import UpdatePost from "./UpdatePost";
-import Toolbar from "../Toolbar";
+import ViewPost from "./ViewPost";
+import ConfirmDialog from "./ConfirmDialog";
+import GeneralDataGrid from "../GeneralDataGrid";
 
 const Posts = () => {
   const postState = useSelector(state => state.posts);
-  const { isLoading, isFetching, isSuccess } = useGetPostsQuery();
+  const userState = useSelector(state => state.user);
 
-  const theme = useTheme();
-  const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
-  const [openDialog, setOpenDialog] = useState({
-    open: false,
-    type: '',
-    data: {}
-  });
 
   const [table, setTable] = useState({
     columns: [
       {
         field: 'carerId',
+        disableColumnMenu: true,
+      },
+      {
+        field: 'clientId',
+        disableColumnMenu: true,
+      },
+      {
+        field: 'private',
+        headerName: 'Private',
+        disableColumnMenu: true,
+        width: 65,
+        sortable: false,
+        renderCell: ({ value }) => {
+          return (
+            <Box className={`w-full flex justify-center items-center flex-row`}>
+              {value ? <DoneIcon /> : <CloseIcon />}
+            </Box>
+          );
+        },
+        valueFormatter: ({ value }) => {
+          return value;
+        }
       },
       {
         field: 'date',
         headerName: 'Date',
+        disableColumnMenu: true,
         valueFormatter: ({ value }) => `${value}`,
         renderCell: ({ value }) => value ? <p>{format(parseISO(value), 'dd/MM/yyyy')}</p> : null,
         flex: 1,
@@ -37,139 +56,136 @@ const Posts = () => {
       {
         field: 'client',
         headerName: 'Client',
+        disableColumnMenu: true,
         flex: 1,
         minWidth: 100,
+        renderCell: ({ row }) => {
+          if (row.clientId === "") {
+            return <p className={`text-ellipsis overflow-hidden whitespace-nowrap max-w-full`}>
+              <PriorityHighIcon fontSize="small" color="error" /> {row.clientName}</p>;
+          } else if (row.clientName === "" && row.clientId !== "") {
+            return <p className={`text-ellipsis overflow-hidden whitespace-nowrap max-w-full`}><PriorityHighIcon fontSize="small" color="error" /> {`${row.client.firstName} ${row.client?.lastName}`}</p>;
+          } else {
+            return <p className={`text-ellipsis overflow-hidden whitespace-nowrap max-w-full`}>{`${row.client.firstName} ${row.client?.lastName}`}</p>;
+          }
+        },
+        disableExport: true
+      },
+      {
+        field: 'clientName',
+        disableColumnMenu: true,
       },
       {
         field: 'carer',
         headerName: 'Carer',
+        disableColumnMenu: true,
         flex: 1,
         minWidth: 100,
-        valueGetter: (params) => {
-          return params.value ? `${params.value.firstName} ${params.value?.lastName}` : "No Carer";
+        maxWidth: 150,
+        renderCell: ({ row }) => {
+          if (row.carerId === "") {
+            return <p className={`text-ellipsis overflow-hidden whitespace-nowrap max-w-full`}>
+              <PriorityHighIcon fontSize="small" color="error" /> {row.carerName}</p>;
+          } else if (row.carerName === "" && row.carerId !== "") {
+            return <p className={`text-ellipsis overflow-hidden whitespace-nowrap max-w-full`}><PriorityHighIcon fontSize="small" color="error" /> {`${row.carer.firstName} ${row.carer?.lastName}`}</p>;
+          } else {
+            return <p className={`text-ellipsis overflow-hidden whitespace-nowrap max-w-full`}>{`${row.carer.firstName} ${row.carer?.lastName}`}</p>;
+          }
         },
+        disableExport: true
+      },
+      {
+        field: 'carerName',
+        disableColumnMenu: true,
       },
       {
         field: 'hours',
         headerName: 'Hours',
-        flex: 1,
-        minWidth: 100,
+        disableColumnMenu: true,
+        width: 60
       },
       {
         field: 'kilos',
         headerName: 'Distance(KM)',
+        disableColumnMenu: true,
         flex: 1,
-        minWidth: 100,
+        minWidth: 110,
       },
       {
         field: 'notes',
         headerName: 'Notes',
+        disableColumnMenu: true,
         flex: 3,
-        minWidth: 300,
-        valueGetter: (params) => {
-          return params.value;
-        },
+        minWidth: 200,
         renderCell: (value) => {
           const splitAtLineBreak = value.row.notes.split(/\r?\n/);
-          const string = splitAtLineBreak.length >= 1 ?
-            splitAtLineBreak[0].toString().slice(0, 34) +
-            ((value.row.notes.toString().length > 34 || splitAtLineBreak.length >= 2) ? "..." : " ")
-            : splitAtLineBreak[0];
+          const string = splitAtLineBreak.length >= 2 ? splitAtLineBreak[0] + "..." : splitAtLineBreak[0];
           return (
-            <Input
-              value={string}
-              fullWidth
-              disableUnderline
-              multiline
-              readOnly
-            />
+            <Box className={`text-ellipsis overflow-hidden whitespace-nowrap max-w-full`} >{string}</Box>
           );
         }
-      }
+      },
     ],
     rows: [],
     pageSize: 10,
   });
 
-
   useEffect(() => {
-    if (isSuccess && postState.posts) {
-      const parsedPost = JSON.parse(JSON.stringify(postState.posts).replace(/:null/gi, ":\"\""));
+    if (postState.posts) {
       setTable(prev => {
         return {
           ...prev,
-          rows: parsedPost
+          rows: JSON.parse(JSON.stringify(postState.posts).replace(/:null/gi, ":\"\""))
         };
       });
     }
-  }, [postState.posts, isSuccess]);
+  }, [postState.posts]);
 
   return (
     <div className="w-full h-full max-w-screen-lg mx-auto flex flex-col ">
       <Typography variant="h3" component="div" className={`py-5`}>Notes</Typography>
-      <Dialog
-        fullScreen={fullScreen}
-        open={openDialog.open}
-      // onClose={() => setOpenDialog(prev => { return { ...prev, open: !prev.open, type: '', data: {} }; })}
-      >
-        {
-          openDialog.open
-            ? (openDialog.type === "new" && <CreatePost setOpenDialog={setOpenDialog} />) || (openDialog.type === "edit" && <UpdatePost setOpenDialog={setOpenDialog} post={openDialog.data} />)
-            : null
+      <GeneralDataGrid
+        intialTable={table}
+        type="post"
+        optionPermissions={{
+          create: userState.status === 'loggedIn',
+          edit: ["Admin", "Coordinator"].includes(userState.user.role),
+          view: userState.status === 'loggedIn',
+          delete: ["Admin", "Coordinator"].includes(userState.user.role),
+        }}
+        tableArray={postState.posts}
+        dialogOptions={{
+          Create: (props) => <CreatePost {...props} />,
+          Update: (props) => <UpdatePost {...props} />,
+          View: (props) => <ViewPost {...props} />,
+          Delete: (props) => <ConfirmDialog {...props} />,
+        }}
+        NewEntry={(props) => <Button startIcon={<AddIcon />} {...props}>
+          New Note
+        </Button>
         }
-      </Dialog>
-      <Box className={`flex `}>
-        <DataGrid
-          {...table}
-          onPageSizeChange={(newPageSize) => setTable(prev => {
-            return {
-              ...prev,
-              pageSize: newPageSize,
-            };
-          })}
-          rowsPerPageOptions={[10, 20, 30]}
-          pagination
-          autoHeight
-          disableSelectionOnClick
-          onRowClick={(row) => setOpenDialog(prev => { return { ...prev, open: !prev.open, type: 'edit', data: row.row }; })}
-          components={{
-            Toolbar: Toolbar,
-            LoadingOverlay: LinearProgress,
-          }}
-          componentsProps={{
-            toolbar: {
-              children: (
-                <Box>
-                  <Button startIcon={<AddIcon />} onClick={() => setOpenDialog(prev => { return { ...prev, open: !prev.open, type: 'new' }; })}>
-                    New Note
-                  </Button>
-                </Box>),
-              type: 'post',
-              csvOptions: { allColumns: true }
-            }
-          }}
-          loading={isFetching || isLoading}
-          className="bg-slate-300"
-          initialState={{
-            columns: {
-              columnVisibilityModel: {
-                // Hide columns status and traderName, the other columns will remain visible
-                carerId: false,
-              },
+        columns={{
+          columnVisibilityModel: {
+            // Hides listed coloumns
+            carerId: false,
+            clientId: false,
+            clientName: false,
+            carerName: false,
+            // options: !fullScreen,
+            private: ["Admin", "Coordinator"].includes(userState.user.role) ? true : false
+          },
+        }}
+        sorting={{
+          sortModel: [
+            {
+              field: 'date',
+              sort: 'desc',
             },
-            sorting: {
-              sortModel: [
-                {
-                  field: 'date',
-                  sort: 'desc',
-                },
-              ],
-            },
-          }}
-        />
-      </Box>
+          ],
+        }}
+      />
     </div>
   );
 };
 
-export default Posts;
+export default memo(Posts);

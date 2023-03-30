@@ -1,29 +1,16 @@
-import { Box, Button, Dialog, IconButton, LinearProgress, Typography, useMediaQuery, useTheme } from "@mui/material";
+import { Box, Button, Typography, } from "@mui/material";
 import AddIcon from '@mui/icons-material/Add';
-import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/Delete';
-import { DataGrid } from "@mui/x-data-grid";
-import { useEffect, useState } from "react";
+import { lazy, memo, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { useGetAllUsersQuery } from "../../shared/redux/admin/adminSlice";
-import Toolbar from "../Toolbar";
 import CreateUser from "./CreateUser";
 import UpdateUser from "./UpdateUser";
 import ConfirmDialog from "./ConfirmDialog";
+import ViewUser from "./ViewUser";
+const GeneralDataGrid = lazy(() => import('../GeneralDataGrid'));
 
 const Users = () => {
   const adminState = useSelector(state => state.admin);
   const userState = useSelector(state => state.user);
-  const { isFetching, isLoading, isSuccess } = useGetAllUsersQuery();
-
-  const theme = useTheme();
-  const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
-
-  const [openDialog, setOpenDialog] = useState({
-    open: false,
-    type: '',
-    data: {}
-  });
 
   const [table, setTable] = useState({
     columns: [
@@ -32,11 +19,12 @@ const Users = () => {
         disableExport: true
       },
       {
+        field: 'userId',
+      },
+      {
         field: 'role',
         headerName: 'Role',
-        flex: 1,
-        minWidth: 100,
-        maxWidth: 100
+        width: 95,
       },
       {
         field: 'firstName',
@@ -48,7 +36,7 @@ const Users = () => {
         field: 'name',
         headerName: 'Name',
         flex: 1,
-        minWidth: 160,
+        minWidth: 100,
         valueGetter: ({ row }) => { return `${row.firstName} ${row?.lastName}`; },
         disableExport: true
       },
@@ -56,125 +44,89 @@ const Users = () => {
         field: 'email',
         headerName: 'Email',
         flex: 1,
-        minWidth: 200,
+        minWidth: 100,
+        renderCell: ({ value }) => <p className={`text-ellipsis overflow-hidden whitespace-nowrap max-w-full`}>{value}</p>,
       },
       {
-        field: 'userId',
+        field: 'clientsName',
+        headerName: 'Clients',
+        disableExport: true,
         flex: 1,
         minWidth: 100,
+        renderCell: (params) => {
+          const clients = params.row.clients.map((clients) => `${clients.firstName} ${clients?.lastName}`).join(', ');
+          return <Box className={`text-ellipsis overflow-hidden whitespace-nowrap max-w-full`}>
+            {clients}
+          </Box>;
+        },
       },
       {
-        field: 'options',
-        headerName: "Options",
-        flex: 1,
-        minWidth: 100,
-        maxWidth: 100,
+        field: 'clients',
         disableColumnMenu: true,
-        disableColumnFilter: true,
-        sortable: false,
-        renderCell: (params) => (
-          <>
-            {userState.user.role === "Admin" ?
-              <IconButton onClick={() => setOpenDialog(prev => { return { ...prev, open: !prev.open, type: 'edit', data: params.row }; })}>
-                <EditIcon />
-              </IconButton> : null}
-            <IconButton onClick={() => setOpenDialog(prev => { return { ...prev, open: !prev.open, type: 'delete', data: params.row }; })}>
-              <DeleteIcon />
-            </IconButton>
-          </>
-        ),
-        disableExport: true
-      }
+        valueFormatter: (params) => {
+          return params.value.map(client => client.clientId).join(", ");
+        }
+      },
     ],
     rows: [],
     pageSize: 10
   });
 
   useEffect(() => {
-    if (isSuccess && adminState.users) {
-      const parsedUsers = JSON.parse(JSON.stringify(adminState.users).replace(/:null/gi, ":\"\""));
+    if (adminState.users) {
       setTable(prev => {
         return {
           ...prev,
-          rows: parsedUsers
+          rows: JSON.parse(JSON.stringify(adminState.users).replace(/:null/gi, ":\"\""))
         };
       });
     }
-  }, [adminState.users, isSuccess]);
+  }, [adminState.users]);
 
   return (
     <div className="w-full h-full max-w-screen-lg mx-auto flex flex-col ">
-      {/* (openDialog.type === "new" && <CreateUser setOpenDialog={setOpenDialog} />) || (openDialog.type === "edit" && <UpdatePost setOpenDialog={setOpenDialog} post={openDialog.data} />) */}
       <Typography variant="h3" component="div" className={`py-5`}>Users</Typography>
-      <Dialog
-        fullScreen={fullScreen}
-        open={openDialog.open}
-      // onClose={() => setOpenDialog(prev => { return { ...prev, open: !prev.open, type: '', data: {} }; })}
-      >
-        {
-          openDialog.open
-            ? (openDialog.type === "new" && <CreateUser setOpenDialog={setOpenDialog} />)
-            || (openDialog.type === "edit" && <UpdateUser setOpenDialog={setOpenDialog} user={openDialog.data} />)
-            || (openDialog.type === "delete" && <ConfirmDialog setOpenDialog={setOpenDialog} user={openDialog.data} />)
-            : null
+      <GeneralDataGrid
+        intialTable={table}
+        type="user"
+        optionPermissions={{
+          create: ["Admin"].includes(userState.user.role),
+          edit: ["Admin"].includes(userState.user.role),
+          view: userState.status === 'loggedIn',
+          delete: ["Admin"].includes(userState.user.role),
+        }}
+        tableArray={adminState.users}
+        dialogOptions={{
+          Create: (props) => <CreateUser {...props} />,
+          Update: (props) => <UpdateUser {...props} />,
+          View: (props) => <ViewUser {...props} />,
+          Delete: (props) => <ConfirmDialog {...props} />,
+        }}
+        NewEntry={(props) => <Button startIcon={<AddIcon />} {...props}>
+          New User
+        </Button>
         }
-      </Dialog>
-      <Box className={`flex`}>
-        <DataGrid
-          {...table}
-          onPageSizeChange={(newPageSize) => setTable(prev => {
-            return {
-              ...prev,
-              pageSize: newPageSize,
-            };
-          })}
-          rowsPerPageOptions={[10, 20, 30]}
-          pagination
-          autoHeight
-          disableSelectionOnClick
-          components={{
-            Toolbar: Toolbar,
-            LoadingOverlay: LinearProgress,
-          }}
-          componentsProps={{
-            toolbar: {
-              children: (
-                <Box>
-                  {userState.user.role === "Admin" ?
-                    <Button startIcon={<AddIcon />} onClick={() => setOpenDialog(prev => { return { ...prev, open: !prev.open, type: 'new' }; })}>
-                      New User
-                    </Button> : null}
-                </Box>
-              ),
-              type: 'user',
-              csvOptions: { allColumns: true }
-            }
-          }}
-          loading={isFetching || isLoading}
-          className="bg-slate-300"
-          initialState={{
-            columns: {
-              columnVisibilityModel: {
-                // Hides listed coloumns
-                id: false,
-                userId: false,
-                firstName: false,
-                lastName: false,
-              },
+        columns={{
+          columnVisibilityModel: {
+            // Hides listed coloumns
+            id: false,
+            userId: false,
+            firstName: false,
+            lastName: false,
+            clients: false,
+          },
+        }}
+        sorting={{
+          sortModel: [
+            {
+              field: 'id',
+              sort: 'desc',
             },
-            sorting: {
-              sortModel: [
-                {
-                  field: 'date',
-                  sort: 'desc',
-                },
-              ],
-            },
-          }}
-        />
-      </Box>
+          ],
+        }}
+      />
     </div>
   );
 };
 
-export default Users;
+export default memo(Users);
