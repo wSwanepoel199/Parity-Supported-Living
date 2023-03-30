@@ -1,7 +1,5 @@
 import { lazy } from "react";
-// import Dashboard from "./Dashboard";
 import Appbar from "./Appbar/Appbar";
-// const Appbar = lazy(() => import('./Appbar/Appbar'));
 // import PasswordReset from "./PasswordReset";
 const PasswordReset = lazy(() => import('./PasswordReset'));
 // import ProtectedRoute from "./ProtectedRoute";

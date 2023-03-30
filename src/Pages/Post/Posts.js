@@ -75,7 +75,7 @@ const Posts = () => {
             return <p className={`text-ellipsis overflow-hidden whitespace-nowrap max-w-full`}>
               <PriorityHighIcon fontSize="small" color="error" /> {row.clientName}</p>;
           } else if (row.clientName === "" && row.clientId !== "") {
-            return <p className={`text-ellipsis overflow-hidden whitespace-nowrap max-w-full`}><PriorityHighIcon fontSize="small" color="error" /> {`${row.client.firstName} ${row.client?.lastName}`}</p>;
+            return <p className={`text-ellipsis overflow-hidden whitespace-nowrap max-w-full`}><PriorityHighIcon fontSize="small" color="warning" /> {`${row.client.firstName} ${row.client?.lastName}`}</p>;
           } else {
             return <p className={`text-ellipsis overflow-hidden whitespace-nowrap max-w-full`}>{`${row.client.firstName} ${row.client?.lastName}`}</p>;
           }
@@ -98,7 +98,7 @@ const Posts = () => {
             return <p className={`text-ellipsis overflow-hidden whitespace-nowrap max-w-full`}>
               <PriorityHighIcon fontSize="small" color="error" /> {row.carerName}</p>;
           } else if (row.carerName === "" && row.carerId !== "") {
-            return <p className={`text-ellipsis overflow-hidden whitespace-nowrap max-w-full`}><PriorityHighIcon fontSize="small" color="error" /> {`${row.carer.firstName} ${row.carer?.lastName}`}</p>;
+            return <p className={`text-ellipsis overflow-hidden whitespace-nowrap max-w-full`}><PriorityHighIcon fontSize="small" color="warning" /> {`${row.carer.firstName} ${row.carer?.lastName}`}</p>;
           } else {
             return <p className={`text-ellipsis overflow-hidden whitespace-nowrap max-w-full`}>{`${row.carer.firstName} ${row.carer?.lastName}`}</p>;
           }

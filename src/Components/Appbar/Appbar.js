@@ -99,6 +99,9 @@ const Appbar = () => {
                 {["Admin", "Coordinator"].includes(userState.user.role) ? <MenuItem component={Link} to="/users" href="/users">
                   <Typography textAlign="center">Users</Typography>
                 </MenuItem> : null}
+                <MenuItem component={Link} to="/roster" href="/roster">
+                  <Typography>Roster</Typography>
+                </MenuItem>
               </Menu>
             </Box>
             <Box className={`flex w-full  justify-center items-center`}>
