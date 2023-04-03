@@ -18,6 +18,7 @@ export default configureStore({
     admin: adminReducer,
     clients: clientReducer
   },
+  devTools: process.env.NODE_ENV === "development",
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(backendApi.middleware),
 

@@ -1,5 +1,7 @@
 import { LinearProgress, Paper, Typography } from "@mui/material";
 import {
+  EditingState,
+  IntegratedEditing,
   ViewState,
 } from '@devexpress/dx-react-scheduler';
 import {
@@ -13,7 +15,9 @@ import {
   ViewSwitcher,
   DateNavigator,
   TodayButton,
-  Resources
+  Resources,
+  ConfirmationDialog,
+  AppointmentForm
 } from '@devexpress/dx-react-scheduler-material-ui';
 import { useEffect, useState } from "react";
 
@@ -22,6 +26,7 @@ import ResourceSwitcher from "./ResourceSwitcher/ResourceSwitcher";
 import { useSelector } from "react-redux";
 import AppointmentContent from "./AppointmentContentContainer/AppointmentContentContainer";
 import FlexibleSpace from "./ToolbarFlexibleSpace/ToolbarFlexibleSpace";
+import CustomViewSwitcher from "./ViewSwitcher/ViewSwitcher";
 
 function Roster() {
   const { admin, clients } = useSelector(state => {
@@ -44,7 +49,7 @@ function Roster() {
   });
 
   useEffect(() => {
-    if (admin.users?.length > 0) {
+    if (admin.users?.length > 0 && !["carerId"].includes(data.resources.fieldName)) {
       setData(prev => {
         return {
           ...prev,
@@ -65,7 +70,7 @@ function Roster() {
   }, [admin]);
 
   useEffect(() => {
-    if (clients.clients?.length > 0) {
+    if (clients.clients?.length > 0 && !["clientId"].includes(data.resources.fieldName)) {
       setData(prev => {
         return {
           ...prev,
@@ -86,6 +91,7 @@ function Roster() {
   }, [clients]);
 
   function changeMainResource(newResourceName) {
+    console.log(newResourceName);
     setData(prev => {
       return {
         ...prev,
@@ -93,6 +99,28 @@ function Roster() {
       };
     });
   }
+
+  function commitChanges({ added, changed, deleted }) {
+    setData((prev) => {
+      let { appointments } = prev;
+      if (added) {
+        const startingAddedId = appointments.length > 0 ? appointments[appointments.length - 1].id + 1 : 0;
+        appointments = [...appointments, { id: startingAddedId, ...added }];
+      }
+      if (changed) {
+        appointments = appointments.map(appointment => (
+          changed[appointment.id] ? { ...appointment, ...changed[appointment.id] } : appointment));
+      }
+      if (deleted !== undefined) {
+        appointments = appointments.filter(appointment => appointment.id !== deleted);
+      }
+
+      return {
+        ...prev,
+        appointments
+      };
+    });
+  };
 
   const ToolbarWithLoading = (
     ({ children, ...props }) => (
@@ -118,6 +146,10 @@ function Roster() {
             defaultCurrentDate="2023-03-30"
             defaultCurrentViewName="Week"
           />
+          <EditingState
+            onCommitChanges={commitChanges}
+          />
+          <IntegratedEditing />
           <DayView
             startDayHour={8}
             endDayHour={20}
@@ -127,6 +159,7 @@ function Roster() {
             endDayHour={20}
           />
           <MonthView />
+          <ConfirmationDialog />
           <Toolbar
             // rootComponent={ToolbarWithLoading}
             flexibleSpaceComponent={() => (<FlexibleSpace>
@@ -138,12 +171,16 @@ function Roster() {
             </FlexibleSpace>)}
           />
           <DateNavigator />
-          <TodayButton />
-          <ViewSwitcher />
+          <ViewSwitcher
+            switcherComponent={(props) => (<CustomViewSwitcher
+              {...props} />)}
+          />
+          {/* <TodayButton /> */}
           <Appointments
             appointmentContentComponent={AppointmentContent}
           />
           <AppointmentTooltip />
+          <AppointmentForm />
           <Resources
             data={data.resources}
             mainResourceName={data.mainResourceName}
