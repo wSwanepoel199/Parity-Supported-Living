@@ -67,7 +67,7 @@ function Roster() {
         };
       });
     }
-  }, [admin]);
+  }, [admin, data.resources.fieldName]);
 
   useEffect(() => {
     if (clients.clients?.length > 0 && !["clientId"].includes(data.resources.fieldName)) {
@@ -88,7 +88,7 @@ function Roster() {
         };
       });
     }
-  }, [clients]);
+  }, [clients, data.resources.fieldName]);
 
   function changeMainResource(newResourceName) {
     console.log(newResourceName);
