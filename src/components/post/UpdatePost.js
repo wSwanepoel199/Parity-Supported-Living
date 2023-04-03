@@ -287,7 +287,7 @@ const UpdatePost = ({ setOpenDialog, data: post }) => {
         />
         <Box >
           <Button onClick={() => setOpenDialog(prev => { return { ...prev, open: !prev.open, type: '', data: {} }; })}>Cancel</Button>
-          <Button color="success" variant="contained" type="submit" disabled={formData.clientId === "" || formData.carerId === ""}>Update</Button>
+          <Button color="success" variant="contained" type="submit" disabled={formData.clientId === ""}>Update</Button>
         </Box>
       </DialogActions>
     </Box>
