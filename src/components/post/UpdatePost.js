@@ -192,7 +192,6 @@ const UpdatePost = ({ setOpenDialog, data: post }) => {
                   <Select
                     id="clientInput"
                     name='clientId'
-                    required
                     value={formData.clientId}
                     onChange={(e) => handleInput(e.target)}
                   >
@@ -238,7 +237,6 @@ const UpdatePost = ({ setOpenDialog, data: post }) => {
                   <Select
                     id="carerInput"
                     name='carerId'
-                    required
                     value={formData.carerId}
                     onChange={(e) => handleInput(e.target)}
                   >
