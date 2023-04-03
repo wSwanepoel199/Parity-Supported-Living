@@ -7,6 +7,7 @@ import { Appbar, ProtectedRoute, CustomAlert, PromptForUpdate } from "./Componen
 import { SignIn, Landing, Posts, Users, Clients, Roster } from './Pages';
 
 // inverstigate crashing when auth token expire
+// Datagrid resets each time update occurs, FIX
 
 function App() {
   const state = useSelector(state => {
