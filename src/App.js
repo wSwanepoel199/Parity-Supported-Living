@@ -1,31 +1,13 @@
-import React, { useEffect, useState, Suspense, lazy, memo } from 'react';
+import React, { useEffect, useState, Suspense, memo } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { Backdrop, Box, CircularProgress, Container, } from '@mui/material';
-// import Dashboard from './components/Dashboard';
-import ProtectedRoute from './shared/utils/ProtectedRoute';
-// import PromptForUpdate from './shared/utils/PrompUpdateServiceWorker';
-// import CustomAlert from './shared/utils/CustomAlert';
-import { useRefreshUserMutation, } from './shared/redux/user/userApiSlice';
-import Appbar from "./components/Appbar";
-import SignIn from './pages/SignIn';
+import { useRefreshUserMutation, } from './Redux/user/userApiSlice';
+import { Appbar, ProtectedRoute, CustomAlert, PromptForUpdate } from "./Components";
+import { SignIn, Landing, Posts, Users, Clients } from './Pages';
 
 // inverstigate crashing when auth token expire
-
-// import Landing from './pages/Landing';
-const Landing = lazy(() => import('./pages/Landing'));
-// import SignIn from './pages/SignIn';
-// const SignIn = lazy(() => import('./pages/SignIn'));
-// import Posts from './components/post/Posts';
-const Posts = lazy(() => import('./components/post/Posts'));
-// import Users from './components/user/Users';
-const Users = lazy(() => import('./components/user/Users'));
-// import Clients from './components/client/Client';
-const Clients = lazy(() => import('./components/client/Client'));
-// import CustomAlert from './shared/utils/CustomAlert';
-const CustomAlert = lazy(() => import('./shared/utils/CustomAlert'));
-// import PromptForUpdate from './shared/utils/PrompUpdateServiceWorker';
-const PromptForUpdate = lazy(() => import('./shared/utils/PrompUpdateServiceWorker'));
+// Datagrid resets each time update occurs, FIX
 
 function App() {
   const state = useSelector(state => {
@@ -34,7 +16,6 @@ function App() {
       root: state.root
     };
   });
-  // const rootState = useSelector(state => state.root);
   const [refreshUser] = useRefreshUserMutation();
   const [alert, setAlert] = useState(undefined);
   const [update, setUpdate] = useState(false);
@@ -44,20 +25,10 @@ function App() {
   // TODO remove auth token from being saved locally inorder to encourage regular refreshing, or don't, just think about it, maybe save it for next version of app
 
   useEffect(() => {
-    // if (!mounted.current) {
-    //   // if (rootState.msg?.data === "auth") {
-    //   //   import('./shared/redux/user/userApiSlice')
-    //   //     .then(obj => console.log(obj))
-    //   //     .catch(err => console.error(err));
-    //   //   // refreshUser();
-    //   // }
-    //   mounted.current = true;
-    // }
-    // if (mounted.current) {
     window.updateAvailable
       .then(isAvailable => {
         if (isAvailable) {
-          setUpdate(prev => { return true; });
+          setUpdate(true);
         }
       })
       .catch((err) => {
@@ -79,41 +50,8 @@ function App() {
     // }
   }, [state.root, refreshUser]);
 
-  // useEffect(() => {
-  //   console.log(location);
-  //   return location.listen(location => {
-  //     if (location.action === 'PUSH') {
-  //       setLocationKeys([location.key]);
-  //     }
-
-  //     if (location.action === "POP") {
-  //       if (locationKeys[1] === location.key) {
-  //         setLocationKeys(([_, ...keys]) => keys);
-
-  //         // Handle forward event
-
-  //       } else {
-  //         setLocationKeys((keys) => [location.key, ...keys]);
-
-  //         // Handle back event
-
-  //       }
-  //     }
-  //   });
-  // }, [locationKeys, location]);
-
-  // const onBackPress = () => {
-  //   const { nav, dispatch } = this.props;
-  //   if (nav.index === 0) {
-  //     return false;
-  //   }
-  //   // dispatch(NavigationActions.back());
-  //   return true;
-  // };
-
   return (
     <div className={`w-full min-h-[100dvh] bg-slate-400 flex flex-col`}>
-      {/* {(mounted.current || isUninitialized) ? */}
       <>
         {state.root.status === "loading" ?
           <Backdrop
@@ -150,7 +88,6 @@ function App() {
         </Suspense>
         {/* {process.env.NODE_ENV === 'development' ? <Button onClick={refreshUser}>Refresh</Button> : null} */}
       </>
-      {/* : null} */}
     </div>
   );
 }
