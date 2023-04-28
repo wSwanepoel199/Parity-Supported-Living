@@ -10,7 +10,5 @@ const Users = lazy(() => import('./User/Users'));
 const Posts = lazy(() => import('./Post/Posts'));
 // import Clients from './Client/Clients';
 const Clients = lazy(() => import('./Client/Clients'));
-// import Roster from "./Roster/Roster";
-const Roster = lazy(() => import('./Roster/Roster'));
 
-export { Landing, SignIn, Users, Posts, Clients, Roster };
+export { Landing, SignIn, Users, Posts, Clients };
