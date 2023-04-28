@@ -1,8 +1,8 @@
 // This optional code is used to register a service worker.
 // register() is not called by default.
 
-import deferredPromise from "./shared/utils/deferredPromise";
-import { promptForUpdate } from "./shared/utils/PrompUpdateServiceWorker";
+import deferredPromise from "./Helpers/deferredPromise";
+import { promptForUpdate } from "./Components/PrompUpdateServiceWorker";
 
 // This lets the app load faster on subsequent visits in production, and gives
 // it offline capabilities. However, it also means that developers (and users)
