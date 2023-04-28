@@ -139,7 +139,6 @@ const CreateClient = ({ setOpenDialog, mobile }) => {
                 id="firstNameInput"
                 name="firstName"
                 type="text"
-                required
                 value={formData.firstName}
                 onChange={handleInput}
               />
@@ -152,7 +151,6 @@ const CreateClient = ({ setOpenDialog, mobile }) => {
                 id="lastNameInput"
                 name="lastName"
                 type="text"
-                required
                 value={formData.lastName}
                 onChange={handleInput}
               />
@@ -169,7 +167,6 @@ const CreateClient = ({ setOpenDialog, mobile }) => {
                 inputProps={{
                   component: PhoneInput,
                 }}
-                required
                 value={formData.phoneNumber}
                 onChange={(value, country, e, formattedValue) => handleInput(e)}
               />
@@ -182,8 +179,7 @@ const CreateClient = ({ setOpenDialog, mobile }) => {
               <Input
                 id="emailInput"
                 name="email"
-                type="email"
-                required
+                type="text"
                 value={formData.email}
                 onChange={handleInput}
               />
@@ -199,7 +195,6 @@ const CreateClient = ({ setOpenDialog, mobile }) => {
                 id="addressInput"
                 name="addressStreet"
                 type="text"
-                required
                 value={address[0]}
                 onChange={handleInput}
               />
@@ -212,7 +207,6 @@ const CreateClient = ({ setOpenDialog, mobile }) => {
                 id="addressInput"
                 name="addressCity"
                 type="text"
-                required
                 value={address[1]}
                 onChange={handleInput}
               />
@@ -225,7 +219,6 @@ const CreateClient = ({ setOpenDialog, mobile }) => {
                 id="addressInput"
                 name="addressState"
                 type="text"
-                required
                 value={address[2]}
                 onChange={handleInput}
               />
@@ -238,7 +231,6 @@ const CreateClient = ({ setOpenDialog, mobile }) => {
                 id="addressInput"
                 name="addressZIP"
                 type="number"
-                required
                 value={address[3]}
                 onChange={handleInput}
               />
@@ -254,7 +246,6 @@ const CreateClient = ({ setOpenDialog, mobile }) => {
                   id="carerInput"
                   name='carersId'
                   multiple
-                  required
                   input={<OutlinedInput id="carersListInput" />}
                   renderValue={(selected) => (
                     <Box

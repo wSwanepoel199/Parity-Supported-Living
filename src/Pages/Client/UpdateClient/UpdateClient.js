@@ -194,7 +194,7 @@ const UpdateClient = ({ setOpenDialog, data: client, mobile }) => {
               <Input
                 id="emailInput"
                 name="email"
-                type="email"
+                type="text"
                 value={formData.email}
                 onChange={handleInput}
               />

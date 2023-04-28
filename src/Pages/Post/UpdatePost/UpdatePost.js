@@ -284,10 +284,6 @@ const UpdatePost = ({ setOpenDialog, data: post, mobile }) => {
           label="Confidential"
         />
         <Box >
-<<<<<<< HEAD:src/components/post/UpdatePost.js
-          <Button onClick={() => setOpenDialog(prev => { return { ...prev, open: !prev.open, type: '', data: {} }; })}>Cancel</Button>
-          <Button color="success" variant="contained" type="submit" disabled={formData.clientId === ""}>Update</Button>
-=======
           {!mobile &&
             <Button
               onClick={() =>
@@ -295,7 +291,6 @@ const UpdatePost = ({ setOpenDialog, data: post, mobile }) => {
                   return { ...prev, open: !prev.open, type: '' };
                 })}>Cancel</Button>}
           <Button color="success" variant="contained" type="submit" disabled={formData.clientId === "" || formData.carerId === ""}>Update</Button>
->>>>>>> 3e5a49898a6bfc3c38f3920bfb3992cd798104f4:src/Pages/Post/UpdatePost/UpdatePost.js
         </Box>
       </DialogActions>
     </Box>

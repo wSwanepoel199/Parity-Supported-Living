@@ -100,6 +100,7 @@ const CreatePost = ({ setOpenDialog, mobile }) => {
                 id="dateInput"
                 name="date"
                 type="date"
+                required
                 value={format(parseISO(formData.date), 'yyyy-MM-dd')}
                 onChange={(e) => handleInput(e.target)}
               />
@@ -112,6 +113,7 @@ const CreatePost = ({ setOpenDialog, mobile }) => {
                 id="timeInput"
                 name="hours"
                 type="number"
+                required
                 value={formData.hours}
                 onChange={(e) => handleInput(e.target)}
               />
@@ -143,6 +145,7 @@ const CreatePost = ({ setOpenDialog, mobile }) => {
                 id="distanceInput"
                 name="kilos"
                 type="number"
+                required
                 value={formData.kilos}
                 onChange={(e) => handleInput(e.target)}
               />

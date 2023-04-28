@@ -15,7 +15,7 @@ import { PasswordReset } from "../../Components/";
 const Landing = () => {
   const userState = useSelector(state => state.user);
   // const skipQuery = useRef(userState.status === 'loggedIn');
-  const skipUsers = userState.user.role !== ("Admin" || "Coordinator");
+  const skipUsers = userState.user?.role !== ("Admin" || "Coordinator");
   useGetAllClientsQuery(undefined, { refetchOnMountOrArgChange: true });
   useGetAllUsersQuery(undefined, { skip: skipUsers, refetchOnMountOrArgChange: true });
   useGetPostsQuery(undefined, { refetchOnMountOrArgChange: true });
@@ -32,13 +32,13 @@ const Landing = () => {
       {/* <Appbar /> */}
       <Dialog
         fullScreen={fullScreen}
-        open={userState.user.resetPassword}
+        open={userState.user?.resetPassword}
         className={`z-30`}
       >
         <PasswordReset />
       </Dialog>
 
-      {!userState.user.resetPassword ?
+      {!userState.user?.resetPassword ?
         <Stack>
           <Outlet />
         </Stack> : null}
