@@ -87,34 +87,61 @@ const GeneralDataGrid = ({ intialTable, NewEntry, type, dialogOptions, optionPer
     });
   }, [columns, sorting]);
 
-  const [selectedRow, setSelectedRow] = useState();
-
-  const [contextMenu, setContextMenu] = useState(null);
-
   const [openDialog, setOpenDialog] = useState({
     open: false,
     type: '',
     data: {}
   });
 
+  const handleDialog = (type, row) => {
+    setOpenDialog({ ...openDialog, open: !openDialog.open, type: type, data: row });
+  };
+
+  const [selectedRow, setSelectedRow] = useState();
+
+  const [contextMenu, setContextMenu] = useState({
+    open: false,
+    mouse: null
+  });
+
   const handleContextMenu = (event) => {
+    console.log("handlingMenu");
     event.preventDefault();
     setSelectedRow(Number(event.currentTarget.getAttribute('data-id')));
-    setContextMenu(
-      contextMenu === null
-        ? { mouseX: event.clientX - 2, mouseY: event.clientY - 4 }
-        : null,
+    setContextMenu(prev => {
+      return {
+        ...prev,
+        open: true,
+        mouse: { mouseX: event.clientX - 2, mouseY: event.clientY - 4 }
+      };
+    }
+      // contextMenu === null
+      //   ? {
+      //     open: false,
+      //     position: { mouseX: event.clientX - 2, mouseY: event.clientY - 4 }
+      //   }
+      //   : {
+      //     open: false,
+      //     position: null
+      //   },
     );
   };
 
   const handleClose = () => {
-    setContextMenu(null);
+    setContextMenu(prev => {
+      return {
+        ...prev,
+        open: false
+      };
+    });
   };
 
   const openView = (array) => {
     array.map((row) => {
+      console.log(row, selectedRow);
       if (row.id === selectedRow) {
-        setOpenDialog(prev => { return { ...prev, open: !prev.open, type: 'view', data: row }; });
+        handleDialog('view', row);
+        // setOpenDialog({ ...openDialog, open: !openDialog.open, type: 'view', data: row });
       }
       return row;
     });
@@ -124,7 +151,8 @@ const GeneralDataGrid = ({ intialTable, NewEntry, type, dialogOptions, optionPer
   const openEdit = (array) => {
     array.map((row) => {
       if (row.id === selectedRow) {
-        setOpenDialog(prev => { return { ...prev, open: !prev.open, type: 'edit', data: row }; });
+        handleDialog('edit', row);
+        // setOpenDialog(prev => { return { ...prev, open: !prev.open, type: 'edit', data: row }; });
       }
       return row;
     });
@@ -134,7 +162,8 @@ const GeneralDataGrid = ({ intialTable, NewEntry, type, dialogOptions, optionPer
   const openDelete = (array) => {
     array.map((row) => {
       if (row.id === selectedRow) {
-        setOpenDialog(prev => { return { ...prev, open: !prev.open, type: 'delete', data: row }; });
+        handleDialog('delete', row);
+        // setOpenDialog(prev => { return { ...prev, open: !prev.open, type: 'delete', data: row }; });
       }
       return row;
     });
@@ -145,7 +174,7 @@ const GeneralDataGrid = ({ intialTable, NewEntry, type, dialogOptions, optionPer
     <>
       <Dialog
         fullScreen={fullScreen}
-        open={openDialog.open}
+        open={openDialog.open && contextMenu.open === false}
         className={`z-30 max-w-full`}
       >
         {
@@ -182,22 +211,23 @@ const GeneralDataGrid = ({ intialTable, NewEntry, type, dialogOptions, optionPer
             csvOptions: { allColumns: true },
             clearSelect: setSelectedRow
           },
-          row: {
-            onContextMenu: fullScreen ? handleContextMenu : null,
-            style: fullScreen && { cursor: 'context-menu' },
-          },
+          // row: {
+          //   onContextMenu: fullScreen ? handleContextMenu : null,
+          //   style: fullScreen && { cursor: 'context-menu' },
+          // },
         }}
         loading={rootState.status === "loading"}
         className="bg-slate-300"
         initialState={{ ...tableState }}
       />
-      <Menu
-        open={contextMenu !== null}
+      {/* {console.log(contextMenu)} */}
+      {/* <Menu
+        open={contextMenu.open}
         onClose={handleClose}
         anchorReference="anchorPosition"
         anchorPosition={
-          contextMenu !== null
-            ? { top: contextMenu.mouseY, left: contextMenu.mouseX }
+          contextMenu.mouse !== null
+            ? { top: contextMenu.mouse.mouseY, left: contextMenu.mouse.mouseX }
             : undefined
         }
         componentsProps={{
@@ -235,7 +265,7 @@ const GeneralDataGrid = ({ intialTable, NewEntry, type, dialogOptions, optionPer
               </MenuItem>
             );
           }) : null}
-      </Menu>
+      </Menu> */}
     </>
   );
 };
