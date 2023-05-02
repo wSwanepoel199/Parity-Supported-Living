@@ -1,17 +1,13 @@
 import { Box, Button, Typography } from "@mui/material";
 import AddIcon from '@mui/icons-material/Add';
-import { lazy, memo, useMemo, useState } from "react";
+import { memo, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 import { GeneralDataGrid } from "../../Components";
+import CreateClient from "./CreateClient/CreateClient";
+import UpdateClient from "./UpdateClient/UpdateClient";
+import ViewClient from "./ViewClient/ViewClient";
+import ConfirmDialog from "./ConfirmDialog/ConfirmDialog";
 
-// import CreateClient from "./CreateClient/CreateClient";
-const CreateClient = lazy(() => import('./CreateClient/CreateClient'));
-// import UpdateClient from "./UpdateClient/UpdateClient";
-const UpdateClient = lazy(() => import('./UpdateClient/UpdateClient'));
-// import ViewClient from "./ViewClient/ViewClient";
-const ViewClient = lazy(() => import('./ViewClient/ViewClient'));
-// import ConfirmDialog from "./ConfirmDialog/ConfirmDialog";
-const ConfirmDialog = lazy(() => import('./ConfirmDialog/ConfirmDialog'));
 
 
 const Clients = () => {

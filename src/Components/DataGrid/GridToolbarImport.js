@@ -24,7 +24,6 @@ const GridToolbarImport = ({ type }) => {
     const f = await (file).arrayBuffer();
     const wb = read(f);
     const data = utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]]);
-    console.log(data);
     return data;
     // })
     //   .catch(err => {
@@ -43,12 +42,11 @@ const GridToolbarImport = ({ type }) => {
             dispatch(storeError({ status: 422, statusText: 'UnprocessableEntity', message: err.message }));
           });
       } else {
-        console.log("formatFile");
         formatFile(upload.file)
           .then(res => uploadFile({ data: res, type: upload.type }))
           .catch(err => {
             console.error(err);
-            console.log(err);
+            // console.log(err);
             dispatch(storeError({ status: 422, statusText: 'UnprocessableEntity', message: err.message }));
           });
       }

@@ -1,17 +1,12 @@
 import { Box, Button, Typography, } from "@mui/material";
 import AddIcon from '@mui/icons-material/Add';
-import { lazy, memo, useMemo, useState } from "react";
+import { memo, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 import { GeneralDataGrid } from "../../Components";
-
-// import CreateUser from "./CreateUser/CreateUser";
-const CreateUser = lazy(() => import('./CreateUser/CreateUser'));
-// import UpdateUser from "./UpdateUser/UpdateUser";
-const UpdateUser = lazy(() => import('./UpdateUser/UpdateUser'));
-// import ViewUser from "./ViewUser/ViewUser";
-const ViewUser = lazy(() => import('./ViewUser/ViewUser'));
-//import ConfirmDialog from "./ConfirmDialog/ConfirmDialog";
-const ConfirmDialog = lazy(() => import('./ConfirmDialog/ConfirmDialog'));
+import CreateUser from "./CreateUser/CreateUser";
+import UpdateUser from "./UpdateUser/UpdateUser";
+import ViewUser from "./ViewUser/ViewUser";
+import ConfirmDialog from "./ConfirmDialog/ConfirmDialog";
 
 const Users = () => {
   // const adminState = useSelector(state => state.admin);
