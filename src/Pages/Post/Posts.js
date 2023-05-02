@@ -4,18 +4,13 @@ import PriorityHighIcon from '@mui/icons-material/PriorityHigh';
 import DoneIcon from '@mui/icons-material/Done';
 import CloseIcon from '@mui/icons-material/Close';
 import { format, parseISO } from "date-fns";
-import { lazy, memo, useMemo, useState } from "react";
+import { memo, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 import { GeneralDataGrid } from "../../Components";
-
-// import CreatePost from "./CreatePost/CreatePost";
-const CreatePost = lazy(() => import('./CreatePost/CreatePost'));
-// import UpdatePost from "./UpdatePost/UpdatePost";
-const UpdatePost = lazy(() => import('./UpdatePost/UpdatePost'));
-// import ViewPost from "./ViewPost/ViewPost";
-const ViewPost = lazy(() => import('./ViewPost/ViewPost'));
-// import ConfirmDialog from "./ConfirmDialog/ConfirmDialog";
-const ConfirmDialog = lazy(() => import('./ConfirmDialog/ConfirmDialog'));
+import CreatePost from "./CreatePost/CreatePost";
+import UpdatePost from "./UpdatePost/UpdatePost";
+import ViewPost from "./ViewPost/ViewPost";
+import ConfirmDialog from "./ConfirmDialog/ConfirmDialog";
 
 const Posts = () => {
   const { posts, user } = useSelector(state => {
