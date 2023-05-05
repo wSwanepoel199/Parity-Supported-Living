@@ -1,11 +1,15 @@
 const express = require('express');
 const path = require('path');
 const app = express();
-const port = process.env.PORT || 3000;
-// const https = require('https');
-// const fs = require('fs');
+var os = require('os');
+const https = require('https');
+const fs = require('fs');
+const handler = require('serve-handler');
+const http = require('http');
 require('dotenv').config();
 
+
+const port = process.env.PORT || 3000;
 
 // var options = {
 //   key: fs.readFileSync(__dirname + '/..' + process.env.SSL_KEY_FILE),
@@ -30,16 +34,16 @@ const redirectionFilter = function (req, res, next) {
 
 app.get('/*', redirectionFilter);
 
-// allows express to serve ziped files
-app.get('*.js', function (req, res, next) {
-  if (req.url === "/service-worker.js") {
-    next();
-  } else {
-    req.url = req.url + '.gz';
-    res.set('Content-Encoding', 'gzip');
-    next();
-  }
-});
+// // allows express to serve ziped files
+// app.get('*.js', function (req, res, next) {
+//   if (req.url === "/service-worker.js") {
+//     next();
+//   } else {
+//     req.url = req.url + '.gz';
+//     res.set('Content-Encoding', 'gzip');
+//     next();
+//   }
+// });
 // app.get('*.ico', function (req, res, next) {
 //     req.url = req.url + '.gz';
 //     res.set('Content-Encoding', 'gzip');
@@ -60,7 +64,12 @@ app.get('*', function (req, res) {
 });
 
 // var server = https.createServer(options, app);
-
-app.listen(port, () => {
+// console.log(app);
+const server = http.createServer((req, res) => {
+  return handler(req, res);
+});
+console.log(server);
+server.listen(port, () => {
   console.log("Server is running on port: ", port);
 });
+

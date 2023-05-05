@@ -51,7 +51,7 @@ function App() {
   }, [state.root, refreshUser]);
 
   return (
-    <div className={`w-full min-h-[100dvh] bg-slate-400 flex flex-col`}>
+    <div className={`w-full min-h-[100vh] bg-slate-400 flex flex-col`}>
       <>
         {state.root.status === "loading" ?
           <Backdrop
