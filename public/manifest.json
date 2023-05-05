@@ -28,7 +28,7 @@
       "sizes": "2258x1224"
     }
   ],
-  "start_url": "/",
+  "start_url": "https://paritysl-dev.herokuapp.com/",
   "display": "standalone",
   "theme_color": "#3D3D3D",
   "background_color": "#000000",
