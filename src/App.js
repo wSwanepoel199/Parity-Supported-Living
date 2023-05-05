@@ -1,7 +1,8 @@
 import React, { useEffect, useState, Suspense, memo } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import { Backdrop, Box, CircularProgress, Container, } from '@mui/material';
+import { Backdrop, Box, Button, CircularProgress, Container, IconButton, Snackbar, } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
 import { useRefreshUserMutation, } from './Redux/user/userApiSlice';
 import { Appbar, ProtectedRoute, CustomAlert, PromptForUpdate } from "./Components";
 import { SignIn, Landing, Posts, Users, Clients } from './Pages';
@@ -19,6 +20,8 @@ function App() {
   const [refreshUser] = useRefreshUserMutation();
   const [alert, setAlert] = useState(undefined);
   const [update, setUpdate] = useState(false);
+  const [install, setInstall] = useState(false);
+  const [deferredPrompt, setDeferredPrompt] = useState(null);
 
   // TODO SW forced to manually unregister and reload page, look into a smoother sw transition between old and new
   // TODO Look into implimenting mailer into Backend
@@ -34,6 +37,7 @@ function App() {
       .catch((err) => {
         console.error(err);
       });
+
   }, []);
 
   useEffect(() => {
@@ -50,16 +54,50 @@ function App() {
     // }
   }, [state.root, refreshUser]);
 
+  window.addEventListener('beforeinstallprompt', (e) => {
+    // Prevent the mini-infobar from appearing on mobile
+    e.preventDefault();
+    // Stash the event so it can be triggered later.
+    setDeferredPrompt(e);
+
+    console.log(deferredPrompt);
+    // Update UI notify the user they can install the PWA
+    // showInstallPromotion();
+    setInstall(true);
+    // Optionally, send analytics event that PWA install promo was shown.
+    console.log(`'beforeinstallprompt' event was fired.`);
+  });
+
+  window.addEventListener("appinstalled", () => {
+    setInstall(false);
+
+    setDeferredPrompt(null);
+
+    console.log("PWA installed");
+  });
+
+  const handleInstall = async () => {
+
+    setInstall(false);
+
+    deferredPrompt.prompt();
+
+    const { outcome } = await deferredPrompt.userChoice;
+
+    console.log(`User Selectec ${outcome}`);
+
+    setDeferredPrompt(null);
+  };
+
   return (
     <div className={`w-full min-h-[100vh] bg-slate-400 flex flex-col`}>
       <>
-        {state.root.status === "loading" ?
-          <Backdrop
-            open={state.root.status === "loading"}
-            className={`z-40`}
-          >
-            <CircularProgress />
-          </Backdrop> : null}
+        <Backdrop
+          open={state.root.status === "loading"}
+          className={`z-40`}
+        >
+          <CircularProgress />
+        </Backdrop>
         {state.user.status === "loggedIn" ? <Appbar /> : null}
         <Suspense fallback={
           <Box className={`flex-grow flex justify-center items-center`}>
@@ -68,6 +106,39 @@ function App() {
         }>
           <CustomAlert alert={alert} />
           <PromptForUpdate update={update} setUpdate={setUpdate} />
+          <>
+            <Snackbar
+              open={install}
+              message="Install Notes"
+              action={
+                <>
+                  <Button
+                    size="small"
+                    onClick={handleInstall}
+                    className={`text-white`}
+                  >
+                    Install
+                  </Button>
+                  <IconButton
+                    size="small"
+                    aria-label='close'
+                    color="inherit"
+                    onClick={() => {
+                      // promptForUpdate.resolve(false);
+                      setDeferredPrompt(null);
+                      setInstall(prev => !prev);
+                    }}
+                  >
+                    <CloseIcon />
+                  </IconButton>
+                </>
+              }
+              ContentProps={{
+                className: `bg-slate-500`
+              }}
+
+            />
+          </>
           <Container className={`flex-grow flex justify-center items-center`}>
             <Routes>
               <Route path="/" element={state.user.status === "loggedIn" ? <Landing /> : <SignIn />}>
