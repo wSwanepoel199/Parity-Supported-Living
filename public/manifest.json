@@ -5,7 +5,7 @@
     {
       "src": "PSLPineapple.ico",
       "sizes": "256x256",
-      "purpose": "maskable"
+      "purpose": "any maskable"
     },
     {
       "src": "PSLPineapple192.png",
@@ -28,7 +28,7 @@
       "sizes": "2258x1224"
     }
   ],
-  "start_url": ".",
+  "start_url": "/",
   "display": "standalone",
   "theme_color": "#3D3D3D",
   "background_color": "#000000"
