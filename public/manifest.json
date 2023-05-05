@@ -31,5 +31,8 @@
   "start_url": "/",
   "display": "standalone",
   "theme_color": "#3D3D3D",
-  "background_color": "#000000"
+  "background_color": "#000000",
+  "lang": "en",
+  "orientation": "portrait",
+  "categories": ["business", "utilities"]
 }
