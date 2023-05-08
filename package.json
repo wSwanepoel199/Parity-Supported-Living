@@ -82,7 +82,7 @@
     "postcss": "^8.4.19",
     "process": "^0.11.10",
     "react-dev-utils": "^12.0.1",
-    "react-scripts": "5.0.1",
+    "react-scripts": "^5.0.1",
     "robotstxt-webpack-plugin": "^8.0.0",
     "sitemap-webpack-plugin": "^1.1.1",
     "source-map-explorer": "^2.5.3",
