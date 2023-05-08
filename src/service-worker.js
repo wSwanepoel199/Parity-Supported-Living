@@ -28,7 +28,7 @@ precacheAndRoute(self.__WB_MANIFEST);
 const fileExtensionRegexp = new RegExp('/[^/?]+\\.[^/]+$');
 
 // Checks for Public_url in env, if its not present just assigns .
-const Public_url = process.env.PUBLIC_URL || '.';
+// const Public_url = process.env.PUBLIC_URL || '.';
 
 registerRoute(
   // Return false to exempt requests from being fulfilled by index.html.
@@ -48,7 +48,7 @@ registerRoute(
 
     return true;
   },
-  createHandlerBoundToURL(Public_url + '/index.html')
+  createHandlerBoundToURL(process.env.PUBLIC_URL + '/index.html')
 );
 
 // An example runtime caching route for requests that aren't handled by the
