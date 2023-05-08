@@ -68,7 +68,7 @@ registerRoute(
 
 registerRoute(
   ({ url }) => {
-    if (url.pathname.endsWith("manigest.json")) {
+    if (url.pathname.endsWith("manifest.json")) {
       return true;
     }
     return false;
