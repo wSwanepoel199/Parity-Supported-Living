@@ -49,7 +49,6 @@ registerRoute(
     return true;
   },
   createHandlerBoundToURL(process.env.PUBLIC_URL + '/index.html'),
-  createHandlerBoundToURL(process.env.PUBLIC_URL + './manifest.json')
 );
 
 // An example runtime caching route for requests that aren't handled by the
@@ -63,6 +62,21 @@ registerRoute(
       // Ensure that once this runtime cache reaches a maximum size the
       // least-recently used images are removed.
       new ExpirationPlugin({ maxEntries: 50 }),
+    ],
+  })
+);
+
+registerRoute(
+  ({ url }) => {
+    if (url.pathname.endsWith("manigest.json")) {
+      return true;
+    }
+    return false;
+  },
+  new StaleWhileRevalidate({
+    cacheName: 'manifest',
+    plugins: [
+      new ExpirationPlugin({ maxEntries: 1 }),
     ],
   })
 );
