@@ -54,39 +54,39 @@ function App() {
     // }
   }, [state.root, refreshUser]);
 
-  useEffect(() => {
-    window.addEventListener('beforeinstallprompt', (e) => {
-      // Prevent the mini-infobar from appearing on mobile
-      e.preventDefault();
-      // Stash the event so it can be triggered later.
-      setDeferredPrompt(e);
+  // useEffect(() => {
+  //   window.addEventListener('beforeinstallprompt', (e) => {
+  //     // Prevent the mini-infobar from appearing on mobile
+  //     e.preventDefault();
+  //     // Stash the event so it can be triggered later.
+  //     setDeferredPrompt(e);
 
-      console.log(deferredPrompt);
-      // Update UI notify the user they can install the PWA
-      // showInstallPromotion();
-      setInstall(true);
-      // Optionally, send analytics event that PWA install promo was shown.
-      console.log(`'beforeinstallprompt' event was fired.`);
-    });
+  //     console.log(deferredPrompt);
+  //     // Update UI notify the user they can install the PWA
+  //     // showInstallPromotion();
+  //     setInstall(true);
+  //     // Optionally, send analytics event that PWA install promo was shown.
+  //     console.log(`'beforeinstallprompt' event was fired.`);
+  //   });
 
-    window.addEventListener("appinstalled", () => {
-      setInstall(false);
+  //   window.addEventListener("appinstalled", () => {
+  //     setInstall(false);
 
-      setDeferredPrompt(null);
+  //     setDeferredPrompt(null);
 
-      console.log("PWA installed");
-    });
+  //     console.log("PWA installed");
+  //   });
 
-    return () => {
-      window.removeEventListener("beforeinstallprompt", () => {
-        console.log("removed before Install listiner");
-      });
+  //   return () => {
+  //     window.removeEventListener("beforeinstallprompt", () => {
+  //       console.log("removed before Install listiner");
+  //     });
 
-      window.removeEventListener("appinstalled", () => {
-        console.log("removed app Install listiner");
-      });
-    };
-  }, []);
+  //     window.removeEventListener("appinstalled", () => {
+  //       console.log("removed app Install listiner");
+  //     });
+  //   };
+  // }, []);
 
 
 
