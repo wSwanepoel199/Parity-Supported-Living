@@ -6,6 +6,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import { useRefreshUserMutation, } from './Redux/user/userApiSlice';
 import { Appbar, ProtectedRoute, CustomAlert, PromptForUpdate } from "./Components";
 import { SignIn, Landing, Posts, Users, Clients } from './Pages';
+import reactManifest from 'react-manifest';
 
 // inverstigate crashing when auth token expire
 // Datagrid resets each time update occurs, FIX
@@ -28,6 +29,7 @@ function App() {
   // TODO remove auth token from being saved locally inorder to encourage regular refreshing, or don't, just think about it, maybe save it for next version of app
 
   useEffect(() => {
+    process.env.DEVELOPMENT === "true" && reactManifest.update({ "short_name": "PSL Notes Dev" });
     window.updateAvailable
       .then(isAvailable => {
         if (isAvailable) {
