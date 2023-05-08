@@ -2,23 +2,21 @@ import { Box, Button, DialogActions, DialogContent, DialogTitle, FormControl, Fo
 import Grid from "@mui/material/Unstable_Grid2/";
 import CloseIcon from '@mui/icons-material/Close';
 import { format, formatISO, parseISO } from "date-fns";
-import { memo, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useAddPostMutation } from "../../../Redux/posts/postApiSlice";
 
 const CreatePost = ({ setOpenDialog, mobile }) => {
   const userState = useSelector(state => state.user);
   const clientState = useSelector(state => state.clients);
-  const [addPost, { isLoading }] = useAddPostMutation();
+  const [addPost] = useAddPostMutation();
   const [formData, setFormData] = useState({
     date: formatISO(new Date()),
     hours: 0,
     kilos: 0,
     clientId: "",
-    clientName: '',
     notes: "",
     carerId: userState.user.userId,
-    carerName: `${userState.user.firstName} ${userState.user?.lastName}`,
     private: false,
   });
   const [options, setOptions] = useState([]);
@@ -27,7 +25,7 @@ const CreatePost = ({ setOpenDialog, mobile }) => {
     if (clientState.clients.length > 0) setOptions(clientState.clients);
     // if (isLoading) setOpenDialog(prev => { return { ...prev, open: !prev.open, type: '' }; });
 
-  }, [isLoading, setOpenDialog, clientState.clients]);
+  }, [clientState.clients]);
 
   const handleInput = ({ value, name }) => {
     switch (name) {
@@ -55,7 +53,6 @@ const CreatePost = ({ setOpenDialog, mobile }) => {
           return {
             ...prev,
             [name]: value,
-            clientName: clientState.clients.find(client => client.clientId === value).name
           };
         });
         return;
@@ -80,6 +77,7 @@ const CreatePost = ({ setOpenDialog, mobile }) => {
 
   return (
     <Box component='form' onSubmit={(e) => handleSubmit(e)}>
+      {/* {console.log(formData)} */}
       <DialogTitle className={`flex justify-between items-center`}>
         <Typography variant="h6" component="p">
           New Note
@@ -120,23 +118,22 @@ const CreatePost = ({ setOpenDialog, mobile }) => {
             </FormControl>
           </Grid>
           <Grid sm={6} xs={12} className="flex justify-center">
-            {options ?
-              <FormControl variant="standard" size="small" fullWidth margin="dense">
-                <InputLabel htmlFor="clientInput">Client</InputLabel>
-                <Select
-                  id="clientInput"
-                  name='clientId'
-                  required
-                  value={formData.clientId}
-                  onChange={(e) => handleInput(e.target)}
-                >
-                  {options?.map((client, index) => {
-                    return (
-                      <MenuItem key={index} value={client.clientId}>{client.firstName} {client?.lastName}</MenuItem>
-                    );
-                  })}
-                </Select>
-              </FormControl> : null}
+            <FormControl variant="standard" size="small" fullWidth margin="dense">
+              <InputLabel htmlFor="clientInput">Client</InputLabel>
+              <Select
+                id="clientInput"
+                name='clientId'
+                required
+                value={formData.clientId}
+                onChange={(e) => handleInput(e.target)}
+              >
+                {options.map((client) => {
+                  return (
+                    <MenuItem key={client.id} value={client?.clientId}>{client?.firstName} {client?.lastName}</MenuItem>
+                  );
+                })}
+              </Select>
+            </FormControl>
           </Grid>
           <Grid sm={6} xs={12} className="flex justify-center">
             <FormControl size="small" fullWidth margin="dense">
@@ -200,4 +197,4 @@ const CreatePost = ({ setOpenDialog, mobile }) => {
   );
 };
 
-export default memo(CreatePost);
+export default CreatePost;

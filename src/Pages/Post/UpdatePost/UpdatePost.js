@@ -2,7 +2,7 @@ import { Box, Button, DialogActions, DialogContent, DialogTitle, FormControl, Fo
 import Grid from "@mui/material/Unstable_Grid2/";
 import CloseIcon from '@mui/icons-material/Close';
 import { format, formatISO, parseISO } from "date-fns";
-import { memo, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { useUpdatePostMutation } from "../../../Redux/posts/postApiSlice";
 
@@ -297,4 +297,4 @@ const UpdatePost = ({ setOpenDialog, data: post, mobile }) => {
   );
 };
 
-export default memo(UpdatePost);
+export default UpdatePost;

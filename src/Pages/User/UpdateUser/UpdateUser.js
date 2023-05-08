@@ -2,7 +2,7 @@ import { Box, Button, Checkbox, Chip, DialogActions, DialogContent, DialogTitle,
 import SearchIcon from "@mui/icons-material/Search";
 import CloseIcon from '@mui/icons-material/Close';
 import Grid from "@mui/material/Unstable_Grid2/";
-import { memo, useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useUpdateUserMutation } from "../../../Redux/user/userApiSlice";
 import { useSelector } from "react-redux";
 
@@ -241,4 +241,4 @@ const UpdateUser = ({ setOpenDialog, data: user, mobile }) => {
   );
 };
 
-export default memo(UpdateUser);
+export default UpdateUser;
