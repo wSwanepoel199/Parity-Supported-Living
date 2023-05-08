@@ -4,8 +4,7 @@
   "icons": [
     {
       "src": "PSLPineapple.ico",
-      "sizes": "256x256",
-      "purpose": "maskable"
+      "sizes": "256x256"
     },
     {
       "src": "PSLPineapple192.png",
@@ -15,7 +14,8 @@
     {
       "src": "PSLAppleTouch192.png",
       "type": "image/png",
-      "sizes": "192x192"
+      "sizes": "192x192",
+      "purpose": "any maskable"
     },
     {
       "src": "PSLPineapple512.png",
@@ -28,12 +28,11 @@
       "sizes": "2258x1224"
     }
   ],
-  "start_url": "./index.html",
+  "start_url": "/",
   "scope": "/",
   "display": "standalone",
   "theme_color": "#3D3D3D",
   "background_color": "#000000",
   "lang": "en",
-  "orientation": "portrait",
   "categories": ["business", "utilities"]
 }
