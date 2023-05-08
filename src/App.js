@@ -29,7 +29,7 @@ function App() {
   // TODO remove auth token from being saved locally inorder to encourage regular refreshing, or don't, just think about it, maybe save it for next version of app
 
   useEffect(() => {
-    process.env.DEVELOPMENT === "true" && reactManifest.update({ "short_name": "PSL Notes Dev" });
+    process.env.DEVELOPMENT === "true" && reactManifest.update({ "short_name": "PSL Notes Dev" }, "#manifest-placeholder");
     window.updateAvailable
       .then(isAvailable => {
         if (isAvailable) {
