@@ -45,7 +45,7 @@ npm run dev
 To build the application run
 
 ```bash
-npm run buildReact
+npm run build
 ```
 
 To start the production server using the built application run
@@ -53,36 +53,6 @@ To start the production server using the built application run
 ```bash
 npm run start
 ```
-
-### Custom Webpack
-
-Webpack dev and prod servers are setup to use https protocol, follow [mkcert]("https://github.com/FiloSottile/mkcert") instructions to install and generate the required key.pem and cert.pem in certs
-
-To start the dev server run
-
-```bash
-npm run devWP
-```
-
-To build the application run
-
-```bash
-npm run build
-```
-
-To start the built application run
-
-```bash
-npm run start
-```
-
-To build and start the application quickly you can run
-
-```bash
-npm run startProd
-```
-
-this will run the build and start scripts automatically.
 
 ## Usage
 
