@@ -2,7 +2,6 @@
 // register() is not called by default.
 
 import deferredPromise from "./Helpers/deferredPromise";
-import { promptForUpdate } from "./Components/PrompUpdateServiceWorker";
 
 // This lets the app load faster on subsequent visits in production, and gives
 // it offline capabilities. However, it also means that developers (and users)
@@ -25,6 +24,12 @@ const isLocalhost = Boolean(
 );
 
 export function register(config) {
+  // console.log({
+  //   "navigator": navigator,
+  //   "window": window,
+  //   "config": config,
+  //   "Public Url": process.env.PUBLIC_URL,
+  // });
   if (process.env.NODE_ENV === 'production' && 'serviceWorker' in navigator) {
     // if (process.env.NODE_ENV === 'development' && 'serviceWorker' in navigator) {
     // The URL constructor is available in all browsers that support SW.
@@ -83,28 +88,13 @@ function registerValidSW(swUrl, config) {
                 'tabs for this page are closed. See https://cra.link/PWA.'
               );
 
-              // update is available
-              window.updateAvailable.resolve(true);
-
               // Execute callback
               // if (config && config.onUpdate) {
               //   config.onUpdate(registration);
               // }
 
-              // checking prompt for updates
-              promptForUpdate.then(res => {
-                if (res) {
-                  navigator.serviceWorker.ready.then((registration) => {
-                    registration.unregister().then(() => {
-                      window.location.reload();
-                    });
-                  });
-                }
-              });
-              // navigator.serviceWorker.ready.then((registration) => {
-              //   console.log("triggering .update()", registration);
-              //   registration.update();
-              // });
+              // update is available
+              window.updateAvailable.resolve(true);
 
             } else {
               // At this point, everything has been precached.
@@ -116,44 +106,20 @@ function registerValidSW(swUrl, config) {
               window.updateAvailable.resolve(false);
 
               // Execute callback
-              // if (config && config.onSuccess) {
-              //   config.onSuccess(registration);
-              // }
+              if (config && config.onSuccess) {
+                config.onSuccess(registration);
+              }
             }
-            // newWorker.addEventListener('waiting', (event) => {
-            //   console.log("triggered");
-            //   showSkipWaitingPrompt(event);
-            // });
           };
           return;
         };
-        // const showSkipWaitingPrompt = async (event) => {
-
-        //   newWorker.addEventListener('controlling', () => {
-        //     window.location.reload();
-        //   });
-        //   console.log("before prompt try");
-        //   try {
-        //     console.log("attempting to update service worker??");
-        //     console.log("checking on import", await promptForUpdate);
-        //     console.log("after promise check");
-        //     const updateAccepted = await promptForUpdate;
-        //     console.log(updateAccepted);
-        //     if (updateAccepted) {
-        //       console.log("prompt accepted");
-        //       newWorker.messageSkipWaiting();
-        //     }
-        //   }
-        //   catch (err) {
-        //     console.log("sw update error", err);
-        //   }
-        // };
       };
-      navigator.serviceWorker.addEventListener('controllerchange', () => {
-        // This fires when the service worker controlling this page
-        // changes, eg a new worker has skipped waiting and become
-        // the new active worker.
-      });
+      // navigator.serviceWorker.addEventListener('controllerchange', () => {
+      //   // This fires when the service worker controlling this page
+      //   // changes, eg a new worker has skipped waiting and become
+      //   // the new active worker.
+      //   console.log("controller change over");
+      // });
     })
     .catch((error) => {
       console.error('Error during service worker registration:', error);

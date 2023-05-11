@@ -1,16 +1,32 @@
 import { Button, IconButton, Snackbar } from "@mui/material";
 import CloseIcon from '@mui/icons-material/Close';
-import deferredPromise from "../Helpers/deferredPromise";
-import { memo } from "react";
+import { memo, useEffect, useState } from "react";
 
-export const promptForUpdate = new deferredPromise();
+const PromptForSWUpdate = () => {
+  const [update, setUpdate] = useState(false);
 
-const PromptForUpdate = ({ update, setUpdate }) => {
+  useEffect(() => {
+    window.updateAvailable
+      .then(isAvailable => {
+        if (isAvailable) {
+          setUpdate(true);
+        }
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  }, []);
 
   const handleUpdate = () => {
     // sendMessage({ type: 'SKIP_WAITING' });
-    promptForUpdate.resolve(true);
+    // promptForUpdate.resolve(true);
     setUpdate(prev => !prev);
+    window.navigator.serviceWorker.ready.then((registration) => {
+      console.log("checking: ", registration);
+      registration.unregister().then(() => {
+        window.location.reload();
+      });
+    });
   };
 
   const action = (
@@ -27,7 +43,6 @@ const PromptForUpdate = ({ update, setUpdate }) => {
         aria-label='close'
         color="inherit"
         onClick={() => {
-          promptForUpdate.resolve(false);
           setUpdate(prev => !prev);
         }}
       >
@@ -51,4 +66,4 @@ const PromptForUpdate = ({ update, setUpdate }) => {
   );
 };
 
-export default memo(PromptForUpdate);
+export default memo(PromptForSWUpdate);

@@ -34,5 +34,11 @@
   "theme_color": "#3D3D3D",
   "background_color": "#000000",
   "lang": "en",
-  "categories": ["business", "utilities"]
+  "categories": ["business", "utilities"],
+  "related_applications": [
+    {
+      "platform": "webapp",
+      "url": "./manifest.json"
+    }
+  ]
 }

@@ -26,14 +26,14 @@ const Landing = () => {
   // useEffect(() => {
   //   console.log(skipQuery, skipUsers);
   // }, [skipQuery, skipUsers]);
-
+  // z-30
   return (
     <div className="w-full self-start pb-6">
       {/* <Appbar /> */}
       <Dialog
         fullScreen={fullScreen}
         open={userState.user?.resetPassword}
-        className={`z-30`}
+        className={``}
       >
         <PasswordReset />
       </Dialog>

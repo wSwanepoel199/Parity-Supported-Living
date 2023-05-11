@@ -32,13 +32,14 @@ const SignIn = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     loginUser(formData);
+    // navigate('/');
   };
 
-  useEffect(() => {
-    if (isSuccess) {
-      navigate('/');
-    }
-  }, [data, isSuccess, navigate]);
+  // useEffect(() => {
+  //   if (isSuccess) {
+  //     navigate('/');
+  //   }
+  // }, [data, isSuccess, navigate]);
 
   return (
     <Box component="form" className="w-full max-w-screen-md my-auto flex justify-center" onSubmit={(e) => handleSubmit(e)}>

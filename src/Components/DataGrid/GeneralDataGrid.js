@@ -144,13 +144,13 @@ const GeneralDataGrid = ({ intialTable, NewEntry, type, dialogOptions, optionPer
     });
     handleClose();
   };
-
+  // z-30
   return (
     <>
       <Dialog
         fullScreen={fullScreen}
         open={openDialog.open}
-        className={`z-30 max-w-full`}
+        className={` max-w-full`}
       >
         {
           openDialog.open

@@ -7,12 +7,12 @@ import { memo } from "react";
 const CustomAlert = ({ alert }) => {
   const rootState = useSelector(state => state.root);
   const dispatch = useDispatch();
-
+  // z-50
   return (
     <Collapse
       in={['error'].includes(rootState.status)}
       unmountOnExit
-      className={`fixed z-50 left-0 top-0 w-full`}
+      className={`fixed left-0 top-0 w-full`}
     >
       {alert ?
         <Alert
