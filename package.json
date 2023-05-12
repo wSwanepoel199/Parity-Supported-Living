@@ -9,7 +9,7 @@
     "build": "react-scripts build",
     "buildProd": "NODE_ENV=production webpack --mode=production",
     "buildDev": "NODE_ENV=development webpack --mode=development",
-    "start": "npx serve -s build",
+    "start": "npx serve",
     "serve": "node ./scripts/www",
     "eject": "react-scripts eject",
     "startProd": "npm run buildProd && npm run start",
