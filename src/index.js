@@ -6,7 +6,6 @@ import * as serviceWorkerRegistration from './serviceWorkerRegistration';
 import { Provider } from 'react-redux';
 import store from './Redux/store';
 import reportWebVitals from './reportWebVitals';
-import HttpsRedirect from 'react-https-redirect';
 
 import './index.css';
 import App from './App';
@@ -16,15 +15,13 @@ import App from './App';
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <HttpsRedirect >
-      <Provider store={store}>
-        <StyledEngineProvider injectFirst>
-          <BrowserRouter>
-            <App />
-          </BrowserRouter>
-        </StyledEngineProvider>
-      </Provider>
-    </HttpsRedirect>
+    <Provider store={store}>
+      <StyledEngineProvider injectFirst>
+        <BrowserRouter>
+          <App />
+        </BrowserRouter>
+      </StyledEngineProvider>
+    </Provider>
   </React.StrictMode>
 );
 
