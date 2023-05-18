@@ -3,33 +3,54 @@
 module.exports = {
   content: [
     "./src/**/*.{js,jsx,ts,tsx}",
-    './public/index.html',
   ],
   mode: 'jit',
   darkMode: 'class',
   theme: {
-    extend: {
+    fontFamily: {
+      display: ['Roboto', 'sans-serif'],
+      body: ['Roboto', 'sans-serif'],
     },
-    screens: {
-      xs: "0px",
-      sm: "576px",
-      "sm-max": { max: "576px" },
-      md: "768px",
-      "md-max": { max: "768px" },
-      lg: "992px",
-      "lg-max": { max: "992px" },
-      xl: "1200px",
-      "xl-max": { max: "1200px" },
-      "2xl": "1320px",
-      "2xl-max": { max: "1320px" },
-      "3xl": "1600px",
-      "3xl-max": { max: "1600px" },
-      "4xl": "1850px",
-      "4xl-max": { max: "1850px" },
+    extend: {
+      fontSize: {
+        14: '14px',
+      },
+      backgroundColor: {
+        'main-bg': '#FAFBFB',
+        'main-dark-bg': '#20232A',
+        'secondary-dark-bg': '#33373E',
+        'light-gray': '#F7F7F7',
+        'half-transparent': 'rgba(0, 0, 0, 0.5)',
+      },
+      borderWidth: {
+        1: '1px',
+      },
+      borderColor: {
+        color: 'rgba(0, 0, 0, 0.1)',
+      },
+      width: {
+        400: '400px',
+        760: '760px',
+        780: '780px',
+        800: '800px',
+        1000: '1000px',
+        1200: '1200px',
+        1400: '1400px',
+      },
+      height: {
+        80: '80px',
+      },
+      minHeight: {
+        590: '590px',
+      },
+      backgroundImage: {
+        'hero-pattern':
+          "url('https://i.ibb.co/MkvLDfb/Rectangle-4389.png')",
+      },
     },
   },
   plugins: [],
-  corePlugins: {
-    preflight: false
-  }
+  // corePlugins: {
+  //   preflight: false
+  // }
 };

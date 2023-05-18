@@ -1,27 +1,81 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { BrowserRouter } from 'react-router-dom';
-import { StyledEngineProvider } from '@mui/material';
 import * as serviceWorkerRegistration from './serviceWorkerRegistration';
-import { Provider } from 'react-redux';
-import store from './Redux/store';
 import reportWebVitals from './reportWebVitals';
 
 import './index.css';
 import App from './App';
 
+import '@fontsource/roboto/300.css';
+import '@fontsource/roboto/400.css';
+import '@fontsource/roboto/500.css';
+import '@fontsource/roboto/700.css';
+
+import {
+  createBrowserRouter,
+  createRoutesFromElements,
+  Outlet,
+  Route,
+  RouterProvider,
+} from 'react-router-dom';
+
+import {
+  Ecommerce,
+  Orders,
+  Employees,
+  Customers,
+  Kanban,
+  Editor,
+  Calendar,
+  ColorPicker,
+  Line,
+  Area,
+  Bar,
+  Pie,
+  Financial,
+  ColorMapping,
+  Pyramid,
+  Stacked
+} from './pages';
+
 // const App = lazy(() => import('./App'));
+
+const router = createBrowserRouter(
+  createRoutesFromElements(
+    <Route
+      path='/'
+      element={<App />}
+    >
+      <Route path="ecommerce" element={<Ecommerce />} />
+
+      {/* pages  */}
+      <Route path="orders" element={<Orders />} />
+      <Route path="employees" element={<Employees />} />
+      <Route path="customers" element={<Customers />} />
+
+      {/* apps  */}
+      <Route path="kanban" element={<Kanban />} />
+      <Route path="editor" element={<Editor />} />
+      <Route path="calendar" element={<Calendar />} />
+      <Route path="color-picker" element={<ColorPicker />} />
+
+      {/* charts  */}
+      <Route path="line" element={<Line />} />
+      <Route path="area" element={<Area />} />
+      <Route path="bar" element={<Bar />} />
+      <Route path="pie" element={<Pie />} />
+      <Route path="financial" element={<Financial />} />
+      <Route path="color-mapping" element={<ColorMapping />} />
+      <Route path="pyramid" element={<Pyramid />} />
+      <Route path="stacked" element={<Stacked />} />
+    </Route>
+  ),
+  { basename: "/" });
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <Provider store={store}>
-      <StyledEngineProvider injectFirst>
-        <BrowserRouter>
-          <App />
-        </BrowserRouter>
-      </StyledEngineProvider>
-    </Provider>
+    <RouterProvider router={router} />
   </React.StrictMode>
 );
 

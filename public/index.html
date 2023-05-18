@@ -36,7 +36,7 @@
     <!-- <link rel="preconnect" href="%REACT_APP_API_URL%" /> -->
     <title>Parity Supported Living</title>
   </head>
-  <body class="p-0 m-0 antialiased">
+  <body class="p-0 m-0 antialiased" id="body">
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
     <!--
@@ -49,5 +49,14 @@
       To begin the development, run `npm start` or `yarn start`.
       To create a production bundle, use `npm run build` or `yarn build`.
     -->
+    <script>
+      const syncClear = setInterval(() => {
+        const body = document.getElementById("body");
+        if (body.children.length > 3) {
+          body.children[3].setAttribute("hidden", "");
+          clearInterval(syncClear);
+        }
+      }, 100);
+    </script>
   </body>
 </html>

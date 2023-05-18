@@ -1,7 +1,7 @@
 // This optional code is used to register a service worker.
 // register() is not called by default.
 
-import deferredPromise from "./Helpers/deferredPromise";
+// import deferredPromise from "./Helpers/deferredPromise";
 
 // This lets the app load faster on subsequent visits in production, and gives
 // it offline capabilities. However, it also means that developers (and users)
@@ -64,7 +64,7 @@ export function register(config) {
   }
 }
 
-window.updateAvailable = new deferredPromise();
+// window.updateAvailable = new deferredPromise();
 
 function registerValidSW(swUrl, config) {
   // console.log("swUrl", swUrl);
@@ -89,12 +89,12 @@ function registerValidSW(swUrl, config) {
               );
 
               // Execute callback
-              // if (config && config.onUpdate) {
-              //   config.onUpdate(registration);
-              // }
+              if (config && config.onUpdate) {
+                config.onUpdate(registration);
+              }
 
               // update is available
-              window.updateAvailable.resolve(true);
+              // window.updateAvailable.resolve(true);
 
             } else {
               // At this point, everything has been precached.
@@ -103,7 +103,7 @@ function registerValidSW(swUrl, config) {
               console.log('Content is cached for offline use.');
 
               // no update is available
-              window.updateAvailable.resolve(false);
+              // window.updateAvailable.resolve(false);
 
               // Execute callback
               if (config && config.onSuccess) {
