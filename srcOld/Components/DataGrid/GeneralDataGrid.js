@@ -48,19 +48,19 @@ const GeneralDataGrid = ({ intialTable, NewEntry, type, dialogOptions, optionPer
                 <IconButton onClick={() => {
                   setSelectedRow(params.row.id);
                   setOpenDialog(prev => { return { ...prev, open: !prev.open, type: 'view', data: params.row }; });
-                }} className={`dark:text-white`}>
+                }} >
                   <VisibilityIcon />
                 </IconButton>
                 {permissions.edit ? <IconButton onClick={() => {
                   setSelectedRow(params.row.id);
                   setOpenDialog(prev => { return { ...prev, open: !prev.open, type: 'edit', data: params.row }; });
-                }} className={`dark:text-white`}>
+                }}>
                   <EditIcon />
                 </IconButton> : null}
                 {permissions.delete ? <IconButton onClick={() => {
                   setSelectedRow(params.row.id);
                   setOpenDialog(prev => { return { ...prev, open: !prev.open, type: 'delete', data: params.row }; });
-                }} className={`dark:text-white`}>
+                }}>
                   <DeleteIcon />
                 </IconButton> : null}
               </Box>
@@ -144,13 +144,13 @@ const GeneralDataGrid = ({ intialTable, NewEntry, type, dialogOptions, optionPer
     });
     handleClose();
   };
-
+  // z-30
   return (
     <>
       <Dialog
         fullScreen={fullScreen}
         open={openDialog.open}
-        className={`z-30 max-w-full`}
+        className={` max-w-full`}
       >
         {
           openDialog.open
@@ -212,39 +212,33 @@ const GeneralDataGrid = ({ intialTable, NewEntry, type, dialogOptions, optionPer
             },
           },
         }}
-        MenuListProps={{
-          className: 'dark:bg-slate-800'
-        }}
       >
         <MenuItem
-          onClick={() => openView(tableArray)} >
-          <ListItemIcon className={`dark:text-white`}>
+          onClick={() => openView(tableArray)}>
+          <ListItemIcon>
             <VisibilityIcon />
           </ListItemIcon>
-          <ListItemText className={`dark:text-white`}>
+          <ListItemText>
             View
           </ListItemText>
         </MenuItem>
-        {permissions.edit ? <MenuItem
-          onClick={() => openEdit(tableArray)}
-        >
-          <ListItemIcon className={`dark:text-white`}>
-            <EditIcon />
-          </ListItemIcon>
-          <ListItemText className={`dark:text-white`}>
-            Edit
-          </ListItemText>
-        </MenuItem> : null}
-        {permissions.delete ? <MenuItem
-          onClick={() => openDelete(tableArray)}
-        >
-          <ListItemIcon className={`dark:text-white`}>
-            <DeleteIcon />
-          </ListItemIcon>
-          <ListItemText className={`dark:text-white`}>
-            Delete
-          </ListItemText>
-        </MenuItem> : null}
+        {(permissions.edit || permissions.delete) ?
+          ['Edit', 'Delete'].map((option, index) => {
+            return (
+              <MenuItem
+                key={index}
+                onClick={option === "Edit" ?
+                  () => openEdit(tableArray) :
+                  () => openDelete(tableArray)}>
+                <ListItemIcon>
+                  {option === "Edit" ? <EditIcon /> : <DeleteIcon />}
+                </ListItemIcon>
+                <ListItemText>
+                  {option}
+                </ListItemText>
+              </MenuItem>
+            );
+          }) : null}
       </Menu>
     </>
   );

@@ -6,7 +6,6 @@ module.exports = {
     './build/*.html'
   ],
   mode: 'jit',
-  darkMode: 'class',
   theme: {
     extend: {
       keyframes: {

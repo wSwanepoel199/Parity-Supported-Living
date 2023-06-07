@@ -57,7 +57,7 @@ const Appbar = () => {
   };
 
   return (
-    <AppBar position="sticky" elevation={0} className={`bg-slate-500 z-10`}>
+    <AppBar position="sticky" elevation={0} className={`bg-slate-500 dark:bg-slate-700 z-10`}>
       {mounted.current ?
         <Container maxWidth="xl" >
           <Toolbar disableGutters className={`flex justify-between`}>
@@ -89,15 +89,18 @@ const Appbar = () => {
                 open={Boolean(anchorEl.nav)}
                 onClose={() => handleCloseMenu("nav")}
                 aria-label="nav menu button"
+                MenuListProps={{
+                  className: 'dark:bg-slate-800'
+                }}
               >
                 <MenuItem component={Link} to="/" href="/">
-                  <Typography textAlign="center">Notes</Typography>
+                  <Typography textAlign="center" className={`dark:text-white`}>Notes</Typography>
                 </MenuItem>
                 <MenuItem component={Link} to="/clients" href="/clients">
-                  <Typography textAlign="center">Clients</Typography>
+                  <Typography textAlign="center" className={`dark:text-white`}>Clients</Typography>
                 </MenuItem>
                 {["Admin", "Coordinator"].includes(userState.user.role) ? <MenuItem component={Link} to="/users" href="/users">
-                  <Typography textAlign="center">Users</Typography>
+                  <Typography textAlign="center" className={`dark:text-white`}>Users</Typography>
                 </MenuItem> : null}
               </Menu>
             </Box>
@@ -141,9 +144,12 @@ const Appbar = () => {
                 open={Boolean(anchorEl.user)}
                 onClose={() => handleCloseMenu("user")}
                 aria-label="user menu button"
+                MenuListProps={{
+                  className: 'dark:bg-slate-800'
+                }}
               >
                 <MenuItem onClick={() => logoutUser(userState.user.userId)}>
-                  <Typography textAlign="center">SignOut</Typography>
+                  <Typography textAlign="center" className={`dark:text-white`}>SignOut</Typography>
                 </MenuItem>
               </Menu>
             </Box>

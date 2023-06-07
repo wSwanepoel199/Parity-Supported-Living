@@ -32,13 +32,14 @@ const SignIn = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     loginUser(formData);
+    // navigate('/');
   };
 
-  useEffect(() => {
-    if (isSuccess) {
-      navigate('/notes');
-    }
-  }, [data, isSuccess, navigate]);
+  // useEffect(() => {
+  //   if (isSuccess) {
+  //     navigate('/');
+  //   }
+  // }, [data, isSuccess, navigate]);
 
   return (
     <Box component="form" className="w-full max-w-screen-md my-auto flex justify-center" onSubmit={(e) => handleSubmit(e)}>
@@ -49,12 +50,11 @@ const SignIn = () => {
         </Grid>
         <Grid sm={8} xs={12} className="flex justify-center">
           <FormControl variant="standard" className="w-full">
-            <InputLabel htmlFor="emailInput" className={`dark:text-white`}>Email</InputLabel>
+            <InputLabel htmlFor="emailInput">Email</InputLabel>
             <Input
               id="emailInput"
               name="email"
               type="email"
-              className={`dark:text-white`}
               value={formData.email}
               onChange={(e) => handleFormData(e)}
             />
@@ -62,17 +62,16 @@ const SignIn = () => {
         </Grid>
         <Grid sm={8} xs={12} className="flex justify-center">
           <FormControl variant="standard" className="w-full">
-            <InputLabel htmlFor="passwordInput" className={`dark:text-white`}>Password</InputLabel>
+            <InputLabel htmlFor="passwordInput">Password</InputLabel>
             <Input
               id="passwordInput"
               name="password"
               type={formData.showPassword ? "text" : 'password'}
               value={formData.password}
               onChange={(e) => handleFormData(e)}
-              className={`dark:text-white`}
               endAdornment={
                 <InputAdornment position="end">
-                  <IconButton onClick={() => setFormData(prev => { return { ...prev, showPassword: !prev.showPassword }; })} edge="end" aria-label="toggle password visibility" className={`dark:text-white`}>
+                  <IconButton onClick={() => setFormData(prev => { return { ...prev, showPassword: !prev.showPassword }; })} edge="end" aria-label="toggle password visibility">
                     {formData.showPassword ? <VisibilityOff /> : <Visibility />}
                   </IconButton>
                 </InputAdornment>

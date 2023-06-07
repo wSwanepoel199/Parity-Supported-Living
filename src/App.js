@@ -106,7 +106,7 @@ function App() {
   };
 
   return (
-    <div className={`w-full min-h-[100vh] bg-slate-400 flex flex-col`}>
+    <div className={`w-full min-h-[100vh] bg-slate-400 dark:bg-slate-600 flex flex-col`}>
       <>
         <Backdrop
           open={state.root.status === "loading"}
@@ -158,7 +158,7 @@ function App() {
           <Container className={`flex-grow flex justify-center items-center`}>
             <Routes>
               <Route path="/" element={state.user.status === "loggedIn" ? <Landing /> : <SignIn />}>
-                <Route index element={
+                <Route path="notes" element={
                   <Posts />
                 } />
                 <Route path="clients" element={
