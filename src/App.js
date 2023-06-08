@@ -1,15 +1,18 @@
 import React, { useEffect, useState, Suspense, memo } from 'react';
-import { Route, Routes } from 'react-router-dom';
+import { Await, Navigate, Outlet, Route, Routes, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { Backdrop, Box, Button, CircularProgress, Container, IconButton, Snackbar, } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { useRefreshUserMutation, } from './Redux/user/userApiSlice';
 import { Appbar, ProtectedRoute, CustomAlert, PromptForUpdate } from "./Components";
 import { SignIn, Landing, Posts, Users, Clients } from './Pages';
-import reactManifest from 'react-manifest';
 
 // inverstigate crashing when auth token expire
 // Datagrid resets each time update occurs, FIX
+
+import {
+  createRoutesFromElements
+} from 'react-router-dom';
 
 function App() {
   const state = useSelector(state => {
@@ -19,17 +22,24 @@ function App() {
     };
   });
   const [refreshUser] = useRefreshUserMutation();
+  const navigate = useNavigate();
   const [alert, setAlert] = useState(undefined);
   const [update, setUpdate] = useState(false);
   const [install, setInstall] = useState(false);
   const [deferredPrompt, setDeferredPrompt] = useState(null);
+  // const htmlElement = document.documentElement;
+  // localStorage.theme = document.getElementsByName("theme")[0].content;
+  // htmlElement.classList.add(localStorage.theme);
+  // const [themeChoice, setThemeChoice] = useState(localStorage.theme);
 
   // TODO SW forced to manually unregister and reload page, look into a smoother sw transition between old and new
   // TODO Look into implimenting mailer into Backend
   // TODO remove auth token from being saved locally inorder to encourage regular refreshing, or don't, just think about it, maybe save it for next version of app
 
   useEffect(() => {
-    process.env.DEVELOPMENT === "true" && reactManifest.update({ "short_name": "PSL Notes Dev" }, "#manifest-placeholder");
+    // process.env.DEVELOPMENT === "true" && reactManifest.update({ "short_name": "PSL Notes Dev" }, "#manifest-placeholder");
+    if (state.user.status !== "loggedIn") navigate('/signin');
+
     window.updateAvailable
       .then(isAvailable => {
         if (isAvailable) {
@@ -40,7 +50,7 @@ function App() {
         console.error(err);
       });
 
-  }, []);
+  }, [state.user, navigate]);
 
   useEffect(() => {
     if (['error'].includes(state.root.status) && state.root.status !== "loading") {
@@ -55,6 +65,15 @@ function App() {
     //   refreshUser();
     // }
   }, [state.root, refreshUser]);
+
+  // useEffect(() => {
+  //   if (htmlElement.classList.value !== localStorage.theme) {
+  //     htmlElement.classList.toggle("light");
+  //     htmlElement.classList.toggle("dark");
+  //   }
+  // }, [themeChoice]);
+
+  // console.log(window);
 
   // useEffect(() => {
   //   window.addEventListener('beforeinstallprompt', (e) => {
@@ -93,33 +112,29 @@ function App() {
 
 
   const handleInstall = async () => {
-
     setInstall(false);
-
     deferredPrompt.prompt();
-
     const { outcome } = await deferredPrompt.userChoice;
-
     console.log(`User Selectec ${outcome}`);
-
     setDeferredPrompt(null);
   };
 
   return (
-    <div className={`w-full min-h-[100vh] bg-slate-400 dark:bg-slate-600 flex flex-col`}>
+    <div className={`w-full min-h-[100dvh] bg-slate-400 dark:bg-slate-600 flex flex-col`}>
       <>
-        <Backdrop
+        {/* <Backdrop
           open={state.root.status === "loading"}
           className={`z-40`}
         >
           <CircularProgress />
-        </Backdrop>
-        {state.user.status === "loggedIn" ? <Appbar /> : null}
+        </Backdrop> */}
+        {/* {state.user.status === "loggedIn" ? <Appbar /> : null} */}
         <Suspense fallback={
-          <Box className={`flex-grow flex justify-center items-center`}>
+          <Box className={`flex-grow flex justify-center items-center z-40`}>
             <CircularProgress />
           </Box>
         }>
+          <Appbar />
           <CustomAlert alert={alert} />
           <PromptForUpdate update={update} setUpdate={setUpdate} />
           <>
@@ -155,22 +170,8 @@ function App() {
 
             />
           </>
-          <Container className={`flex-grow flex justify-center items-center`}>
-            <Routes>
-              <Route path="/" element={state.user.status === "loggedIn" ? <Landing /> : <SignIn />}>
-                <Route path="notes" element={
-                  <Posts />
-                } />
-                <Route path="clients" element={
-                  <Clients />
-                } />
-                <Route path="users" element={
-                  <ProtectedRoute>
-                    <Users />
-                  </ProtectedRoute>
-                } />
-              </Route>
-            </Routes>
+          <Container className={`flex flex-grow`}>
+            <Outlet />
           </Container>
         </Suspense>
         {/* {process.env.NODE_ENV === 'development' ? <Button onClick={refreshUser}>Refresh</Button> : null} */}
@@ -179,5 +180,43 @@ function App() {
   );
 }
 
+const router = createRoutesFromElements(
+  <Route
+    element={<App />}
+  >
+    <Route path="/" element={<Landing />} >
+      <Route path="signin" element={<SignIn />} />
+      <Route path="notes" element={
+        <Suspense fallback={
+          <Box className={`h-full flex-grow flex justify-center items-center z-40`}>
+            <CircularProgress />
+          </Box>
+        }>
+          <Posts />
+        </Suspense>
+      } />
+      <Route path="clients" element={
+        <Suspense fallback={
+          <Box className={`h-full flex-grow flex justify-center items-center z-40`}>
+            <CircularProgress />
+          </Box>
+        }>
+          <Clients />
+        </Suspense>
+      } />
+      <Route path="users" element={
+        <ProtectedRoute>
+          <Suspense fallback={
+            <Box className={`h-full flex-grow flex justify-center items-center z-40`}>
+              <CircularProgress />
+            </Box>
+          }>
+            <Users />
+          </Suspense>
+        </ProtectedRoute>
+      } />
+    </Route>
+  </Route>
+);
 
-export default memo(App);
+export default router;

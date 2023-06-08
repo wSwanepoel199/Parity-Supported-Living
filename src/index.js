@@ -1,25 +1,24 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import ReactDOM from 'react-dom/client';
-import { BrowserRouter } from 'react-router-dom';
-import { StyledEngineProvider } from '@mui/material';
+import { BrowserRouter, RouterProvider, createBrowserRouter } from 'react-router-dom';
+import { Box, CircularProgress, StyledEngineProvider } from '@mui/material';
 import * as serviceWorkerRegistration from './serviceWorkerRegistration';
 import { Provider } from 'react-redux';
 import store from './Redux/store';
 import reportWebVitals from './reportWebVitals';
 
 import './index.css';
-import App from './App';
+import router from './App';
 
 // const App = lazy(() => import('./App'));
+
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     <Provider store={store}>
       <StyledEngineProvider injectFirst>
-        <BrowserRouter>
-          <App />
-        </BrowserRouter>
+        <RouterProvider router={createBrowserRouter(router)} />
       </StyledEngineProvider>
     </Provider>
   </React.StrictMode>

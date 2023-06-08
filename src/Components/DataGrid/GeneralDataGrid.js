@@ -250,4 +250,4 @@ const GeneralDataGrid = ({ intialTable, NewEntry, type, dialogOptions, optionPer
   );
 };
 
-export default memo(GeneralDataGrid);
+export default GeneralDataGrid;

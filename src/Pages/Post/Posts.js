@@ -1,4 +1,4 @@
-import { Box, Button, Typography } from "@mui/material";
+import { Backdrop, Box, Button, CircularProgress, Typography } from "@mui/material";
 import AddIcon from '@mui/icons-material/Add';
 import PriorityHighIcon from '@mui/icons-material/PriorityHigh';
 import DoneIcon from '@mui/icons-material/Done';
@@ -148,7 +148,13 @@ const Posts = () => {
   }, [posts.posts]);
 
   return (
-    <div className="w-full h-full max-w-screen-lg mx-auto flex flex-col ">
+    <div className="w-full max-w-screen-lg mx-auto flex flex-col ">
+      <Backdrop
+        open={posts.status === "loading"}
+        className={`z-40`}
+      >
+        <CircularProgress />
+      </Backdrop>
       <Typography variant="h3" component="div" className={`py-5`}>Notes</Typography>
       <GeneralDataGrid
         intialTable={table}
@@ -194,4 +200,4 @@ const Posts = () => {
   );
 };
 
-export default memo(Posts);
+export default Posts;

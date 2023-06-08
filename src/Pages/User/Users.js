@@ -90,7 +90,7 @@ const Users = () => {
   }, [admin.users]);
 
   return (
-    <div className="w-full h-full max-w-screen-lg mx-auto flex flex-col ">
+    <div className="w-full max-w-screen-lg mx-auto flex flex-col ">
       <Typography variant="h3" component="div" className={`py-5`}>Users</Typography>
       <GeneralDataGrid
         intialTable={table}
@@ -135,4 +135,4 @@ const Users = () => {
   );
 };
 
-export default memo(Users);
+export default Users;

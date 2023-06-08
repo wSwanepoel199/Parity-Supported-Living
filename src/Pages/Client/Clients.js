@@ -128,7 +128,7 @@ const Clients = () => {
 
 
   return (
-    <div className="w-full h-full max-w-screen-lg mx-auto flex flex-col ">
+    <div className="w-full max-w-screen-lg mx-auto flex flex-col ">
       <Typography variant="h3" component="div" className={`py-5`}>Clients</Typography>
       <GeneralDataGrid
         intialTable={table}
@@ -173,4 +173,4 @@ const Clients = () => {
   );
 };
 
-export default memo(Clients);
+export default Clients;
