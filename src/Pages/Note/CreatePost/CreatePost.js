@@ -5,10 +5,13 @@ import { format, formatISO, parseISO } from "date-fns";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useAddPostMutation } from "../../../Redux/posts/postApiSlice";
+import { useNavigate, useOutletContext } from "react-router-dom";
 
-const CreatePost = ({ setOpenDialog, mobile }) => {
+const CreatePost = () => {
   const userState = useSelector(state => state.user);
   const clientState = useSelector(state => state.clients);
+  const [setOpenDialog, fullScreen] = useOutletContext();
+  const navigate = useNavigate();
   const [addPost] = useAddPostMutation();
   const [formData, setFormData] = useState({
     date: formatISO(new Date()),
@@ -72,6 +75,7 @@ const CreatePost = ({ setOpenDialog, mobile }) => {
     e.preventDefault();
     addPost(formData);
     setOpenDialog(prev => { return { ...prev, open: !prev.open, type: '' }; });
+    navigate('..');
   };
 
 
@@ -82,7 +86,10 @@ const CreatePost = ({ setOpenDialog, mobile }) => {
         <Typography variant="h6" component="p">
           New Note
         </Typography>
-        <IconButton onClick={() => setOpenDialog(prev => { return { ...prev, open: !prev.open, type: '', data: {} }; })}>
+        <IconButton onClick={() => {
+          setOpenDialog(prev => { return { ...prev, open: !prev.open, type: '', data: {} }; });
+          navigate('..');
+        }}>
           <CloseIcon />
         </IconButton>
       </DialogTitle>
@@ -184,12 +191,14 @@ const CreatePost = ({ setOpenDialog, mobile }) => {
 
         />
         <Box>
-          {!mobile &&
+          {!fullScreen &&
             <Button
-              onClick={() =>
+              onClick={() => {
                 setOpenDialog(prev => {
                   return { ...prev, open: !prev.open, type: '' };
-                })}>Cancel</Button>}
+                });
+                navigate('..');
+              }}>Cancel</Button>}
           <Button color="success" variant="contained" type="submit">Create</Button>
         </Box>
       </DialogActions>

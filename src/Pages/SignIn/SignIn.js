@@ -6,14 +6,16 @@ import LoginIcon from '@mui/icons-material/Login';
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import { useLoginUserMutation } from "../../Redux/user/userApiSlice";
+import { useSelector } from "react-redux";
 
 // const LoginIcon = lazy(() => import('@mui/icons-material/Login'));
 // const Visibility = lazy(() => import('@mui/icons-material/Visibility'));
 // const VisibilityOff = lazy(() => import('@mui/icons-material/VisibilityOff'));
 
 const SignIn = () => {
+  const userState = useSelector(state => state.user);
   const navigate = useNavigate();
-  const [loginUser, { data, isSuccess }] = useLoginUserMutation();
+  const [loginUser, { isSuccess }] = useLoginUserMutation();
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -35,10 +37,10 @@ const SignIn = () => {
   };
 
   useEffect(() => {
-    if (isSuccess) {
+    if (isSuccess && userState.status === "loggedIn") {
       navigate('/notes');
     }
-  }, [data, isSuccess, navigate]);
+  }, [userState.status, isSuccess, navigate]);
 
   return (
     <Box component="form" className={`max-w-screen-md w-full flex flex-col justify-center items-center mx-auto h-full`} onSubmit={(e) => handleSubmit(e)}>

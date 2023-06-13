@@ -5,7 +5,7 @@ import { Backdrop, Box, Button, CircularProgress, Container, IconButton, Snackba
 import CloseIcon from '@mui/icons-material/Close';
 import { useRefreshUserMutation, } from './Redux/user/userApiSlice';
 import { Appbar, ProtectedRoute, CustomAlert, PromptForUpdate } from "./Components";
-import { SignIn, Landing, Posts, Users, Clients } from './Pages';
+import { SignIn, Landing, Notes, Users, Clients } from './Pages';
 
 // inverstigate crashing when auth token expire
 // Datagrid resets each time update occurs, FIX
@@ -13,6 +13,7 @@ import { SignIn, Landing, Posts, Users, Clients } from './Pages';
 import {
   createRoutesFromElements
 } from 'react-router-dom';
+import CreatePost from './Pages/Note/CreatePost/CreatePost';
 
 function App() {
   const state = useSelector(state => {
@@ -38,7 +39,6 @@ function App() {
 
   useEffect(() => {
     // process.env.DEVELOPMENT === "true" && reactManifest.update({ "short_name": "PSL Notes Dev" }, "#manifest-placeholder");
-    if (state.user.status !== "loggedIn") navigate('/signin');
 
     window.updateAvailable
       .then(isAvailable => {
@@ -184,7 +184,14 @@ const router = createRoutesFromElements(
   <Route
     element={<App />}
   >
-    <Route path="/" element={<Landing />} >
+    <Route path="/" element={<Suspense fallback={
+      <Box className={`h-full flex-grow flex justify-center items-center z-40`}>
+        <CircularProgress />
+      </Box>
+    }>
+      <Landing />
+    </Suspense>
+    } >
       <Route path="signin" element={<SignIn />} />
       <Route path="notes" element={
         <Suspense fallback={
@@ -192,9 +199,11 @@ const router = createRoutesFromElements(
             <CircularProgress />
           </Box>
         }>
-          <Posts />
+          <Notes />
         </Suspense>
-      } />
+      } >
+        <Route path="new" element={<CreatePost />} />
+      </Route>
       <Route path="clients" element={
         <Suspense fallback={
           <Box className={`h-full flex-grow flex justify-center items-center z-40`}>

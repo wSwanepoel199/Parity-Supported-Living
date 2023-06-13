@@ -1,5 +1,6 @@
-import { Box, Dialog, IconButton, LinearProgress, ListItemIcon, ListItemText, Menu, MenuItem, useMediaQuery } from "@mui/material";
+import { Box, Button, Dialog, IconButton, LinearProgress, ListItemIcon, ListItemText, Menu, MenuItem, useMediaQuery } from "@mui/material";
 import { useTheme } from '@mui/material/styles';
+import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import VisibilityIcon from '@mui/icons-material/Visibility';
@@ -7,11 +8,12 @@ import { DataGrid } from "@mui/x-data-grid";
 import { memo, useMemo, useState } from "react";
 import Toolbar from "./Toolbar";
 import { useSelector } from "react-redux";
+import { Outlet, useNavigate } from "react-router-dom";
 
-const GeneralDataGrid = ({ intialTable, NewEntry, type, dialogOptions, optionPermissions, tableArray, columns, sorting }) => {
+const GeneralDataGrid = ({ intialTable, type, optionPermissions, tableArray, columns, sorting }) => {
   const rootState = useSelector(state => state.root);
 
-  const { Create, View, Update, Delete } = dialogOptions;
+  const navigate = useNavigate();
 
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
@@ -152,14 +154,15 @@ const GeneralDataGrid = ({ intialTable, NewEntry, type, dialogOptions, optionPer
         open={openDialog.open}
         className={`z-30 max-w-full`}
       >
-        {
+        {/* {
           openDialog.open
             ? (openDialog.type === "new" && <Create setOpenDialog={setOpenDialog} mobile={fullScreen} />)
             || (openDialog.type === "edit" && <Update setOpenDialog={setOpenDialog} data={openDialog.data} mobile={fullScreen} />)
             || (openDialog.type === "view" && <View setOpenDialog={setOpenDialog} data={openDialog.data} mobile={fullScreen} />)
             || (openDialog.type === "delete" && <Delete setOpenDialog={setOpenDialog} data={openDialog.data} mobile={fullScreen} />)
             : null
-        }
+        } */}
+        <Outlet />
       </Dialog>
       <DataGrid
         {...table}
@@ -181,7 +184,10 @@ const GeneralDataGrid = ({ intialTable, NewEntry, type, dialogOptions, optionPer
         }}
         componentsProps={{
           toolbar: {
-            children: (<NewEntry className={`${!permissions.create && "hidden"}`} onClick={() => setOpenDialog(prev => { return { ...prev, open: !prev.open, type: 'new' }; })} />),
+            // children: (<Button startIcon={<AddIcon />} className={`${!permissions.create && "hidden"}`} onClick={() => {
+            //   navigate('/notes/new');
+            //   setOpenDialog(prev => { return { ...prev, open: !prev.open, type: 'new' }; });
+            // }}>{buttonText}</Button>),
             type,
             csvOptions: { allColumns: true },
             clearSelect: setSelectedRow

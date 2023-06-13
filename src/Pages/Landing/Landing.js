@@ -30,7 +30,6 @@ const Landing = () => {
   // }, [skipQuery, skipUsers]);
 
   useEffect(() => {
-
     if (userState.status !== "loggedIn") navigate('/signin');
 
   }, [userState.status, navigate]);
