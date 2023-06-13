@@ -10,7 +10,7 @@ import Toolbar from "./Toolbar";
 import { useSelector } from "react-redux";
 import { Outlet, useNavigate } from "react-router-dom";
 
-const GeneralDataGrid = ({ intialTable, type, optionPermissions, tableArray, columns, sorting }) => {
+const GeneralDataGrid = ({ intialTable, NewEntry, type, optionPermissions, tableArray, columns, sorting }) => {
   const rootState = useSelector(state => state.root);
 
   const navigate = useNavigate();
@@ -184,10 +184,10 @@ const GeneralDataGrid = ({ intialTable, type, optionPermissions, tableArray, col
         }}
         componentsProps={{
           toolbar: {
-            // children: (<Button startIcon={<AddIcon />} className={`${!permissions.create && "hidden"}`} onClick={() => {
-            //   navigate('/notes/new');
-            //   setOpenDialog(prev => { return { ...prev, open: !prev.open, type: 'new' }; });
-            // }}>{buttonText}</Button>),
+            children: (<NewEntry startIcon={<AddIcon />} className={`${!permissions.create && "hidden"}`} onClick={() => {
+              navigate('/notes/new');
+              setOpenDialog(prev => { return { ...prev, open: !prev.open, type: 'new' }; });
+            }} />),
             type,
             csvOptions: { allColumns: true },
             clearSelect: setSelectedRow
