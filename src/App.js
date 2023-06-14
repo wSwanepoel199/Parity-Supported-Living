@@ -1,4 +1,4 @@
-import React, { useEffect, useState, Suspense, memo } from 'react';
+import React, { useEffect, useState, Suspense, memo, lazy } from 'react';
 import { Await, Navigate, Outlet, Route, Routes, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { Backdrop, Box, Button, CircularProgress, Container, IconButton, Snackbar, } from '@mui/material';
@@ -13,7 +13,10 @@ import { SignIn, Landing, Notes, Users, Clients } from './Pages';
 import {
   createRoutesFromElements
 } from 'react-router-dom';
-import CreatePost from './Pages/Note/CreatePost/CreatePost';
+
+const CreateNote = lazy(() => import('./Pages/Note/CreateNote/CreateNote'));
+const UpdateNote = lazy(() => import('./Pages/Note/UpdateNote/UpdateNote'));
+const ViewNote = lazy(() => import('./Pages/Note/ViewNote/ViewNote'));
 
 function App() {
   const state = useSelector(state => {
@@ -202,7 +205,42 @@ const router = createRoutesFromElements(
           <Notes />
         </Suspense>
       } >
-        <Route path="new" element={<CreatePost />} />
+        <Route path="new" element={
+          <Suspense fallback={
+            <Backdrop
+              open={true}
+              className={`z-40`}
+            >
+              <CircularProgress />
+            </Backdrop>
+          }>
+            <CreateNote />
+          </Suspense>
+        } />
+        <Route path="edit" element={
+          <Suspense fallback={
+            <Backdrop
+              open={true}
+              className={`z-40`}
+            >
+              <CircularProgress />
+            </Backdrop>
+          }>
+            <UpdateNote />
+          </Suspense>
+        } />
+        <Route path="view" element={
+          <Suspense fallback={
+            <Backdrop
+              open={true}
+              className={`z-40`}
+            >
+              <CircularProgress />
+            </Backdrop>
+          }>
+            <ViewNote />
+          </Suspense>
+        } />
       </Route>
       <Route path="clients" element={
         <Suspense fallback={

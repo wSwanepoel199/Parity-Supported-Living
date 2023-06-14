@@ -9,13 +9,9 @@ import DoneIcon from '@mui/icons-material/Done';
 import CloseIcon from '@mui/icons-material/Close';
 import { format, parseISO } from "date-fns";
 import { DataGrid } from "@mui/x-data-grid";
-import { memo, useMemo, useState } from "react";
+import { memo, useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
-// import CreatePost from "./CreatePost/CreatePost";
-// import UpdatePost from "./UpdatePost/UpdatePost";
-// import ViewPost from "./ViewPost/ViewPost";
-// import ConfirmDialog from "./ConfirmDialog/ConfirmDialog";
-import { Outlet, useNavigate } from "react-router-dom";
+import { Outlet, useLocation, useMatch, useNavigate } from "react-router-dom";
 
 
 import Toolbar from "../../Components/DataGrid/Toolbar";
@@ -29,6 +25,12 @@ const Notes = () => {
     };
   });
 
+  const theme = useTheme();
+  const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
+
+  const navigate = useNavigate();
+  const match = useMatch('/notes');
+
   const permissions = {
     create: user.status === 'loggedIn',
     edit: ["Admin", "Coordinator"].includes(user.user.role),
@@ -36,10 +38,10 @@ const Notes = () => {
     delete: ["Admin", "Coordinator"].includes(user.user.role),
   };
 
-  const theme = useTheme();
-  const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
 
-  const navigate = useNavigate();
+  // window.addEventListener("popstate", (e) => {
+  //   setOpenDialog(prev => { return { ...prev, open: !prev.open, type: '', data: {} }; });
+  // });
 
   const [table, setTable] = useState({
     columns: [
@@ -161,18 +163,21 @@ const Notes = () => {
             <IconButton onClick={() => {
               setSelectedRow(params.row.id);
               setOpenDialog(prev => { return { ...prev, open: !prev.open, type: 'view', data: params.row }; });
+              navigate('./view');
             }} className={`dark:text-white`}>
               <VisibilityIcon />
             </IconButton>
             {permissions.edit ? <IconButton onClick={() => {
               setSelectedRow(params.row.id);
               setOpenDialog(prev => { return { ...prev, open: !prev.open, type: 'edit', data: params.row }; });
+              navigate('./edit');
             }} className={`dark:text-white`}>
               <EditIcon />
             </IconButton> : null}
             {permissions.delete ? <IconButton onClick={() => {
               setSelectedRow(params.row.id);
               setOpenDialog(prev => { return { ...prev, open: !prev.open, type: 'delete', data: params.row }; });
+              navigate('./delete');
             }} className={`dark:text-white`}>
               <DeleteIcon />
             </IconButton> : null}
@@ -202,6 +207,18 @@ const Notes = () => {
     data: {}
   });
 
+
+  useEffect(() => {
+    if (match && openDialog.open) {
+      setOpenDialog(prev => {
+        return {
+          ...prev,
+          open: false
+        };
+      });
+    }
+  }, [match, openDialog.open]);
+
   const [selectedRow, setSelectedRow] = useState();
 
   const [contextMenu, setContextMenu] = useState(null);
@@ -227,6 +244,7 @@ const Notes = () => {
       }
       return row;
     });
+    navigate('/notes/view');
     handleClose();
   };
 
@@ -234,6 +252,7 @@ const Notes = () => {
     array.map((row) => {
       if (row.id === selectedRow) {
         setOpenDialog(prev => { return { ...prev, open: !prev.open, type: 'edit', data: row }; });
+        navigate('/notes/edit');
       }
       return row;
     });
@@ -244,6 +263,7 @@ const Notes = () => {
     array.map((row) => {
       if (row.id === selectedRow) {
         setOpenDialog(prev => { return { ...prev, open: !prev.open, type: 'delete', data: row }; });
+        navigate('/notes/delete');
       }
       return row;
     });
@@ -259,13 +279,7 @@ const Notes = () => {
       >
         <CircularProgress />
       </Backdrop>
-      <Dialog
-        fullScreen={fullScreen}
-        open={openDialog.open}
-        className={`z-30 max-w-full`}
-      >
-        <Outlet context={[setOpenDialog, fullScreen]} />
-      </Dialog>
+      <Outlet context={[openDialog, setOpenDialog, fullScreen]} />
       <Typography variant="h3" component="div" className={`py-5`}>Notes</Typography>
       <DataGrid
         {...table}
@@ -288,8 +302,8 @@ const Notes = () => {
         componentsProps={{
           toolbar: {
             children: (<Button startIcon={<AddIcon />} className={`${!permissions.create && "hidden"}`} onClick={() => {
-              navigate('/notes/new');
               setOpenDialog(prev => { return { ...prev, open: !prev.open, type: 'new' }; });
+              navigate('/notes/new');
             }}>New Note</Button>),
             type: "post",
             csvOptions: { allColumns: true },
