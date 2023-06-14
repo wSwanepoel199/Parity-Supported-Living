@@ -17,6 +17,7 @@ import {
 const CreateNote = lazy(() => import('./Pages/Note/CreateNote/CreateNote'));
 const UpdateNote = lazy(() => import('./Pages/Note/UpdateNote/UpdateNote'));
 const ViewNote = lazy(() => import('./Pages/Note/ViewNote/ViewNote'));
+const DeleteNote = lazy(() => import('./Pages/Note/ConfirmDialog/ConfirmDialog'));
 
 function App() {
   const state = useSelector(state => {
@@ -239,6 +240,18 @@ const router = createRoutesFromElements(
             </Backdrop>
           }>
             <ViewNote />
+          </Suspense>
+        } />
+        <Route path="delete" element={
+          <Suspense fallback={
+            <Backdrop
+              open={true}
+              className={`z-40`}
+            >
+              <CircularProgress />
+            </Backdrop>
+          }>
+            <DeleteNote />
           </Suspense>
         } />
       </Route>
