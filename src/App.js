@@ -14,10 +14,15 @@ import {
   createRoutesFromElements
 } from 'react-router-dom';
 
-const CreateNote = lazy(() => import('./Pages/Note/CreateNote/CreateNote'));
-const UpdateNote = lazy(() => import('./Pages/Note/UpdateNote/UpdateNote'));
-const ViewNote = lazy(() => import('./Pages/Note/ViewNote/ViewNote'));
-const DeleteNote = lazy(() => import('./Pages/Note/ConfirmDialog/ConfirmDialog'));
+import DeleteNote from './Pages/Note/DeleteNote/DeleteNote';
+import CreateNote from './Pages/Note/CreateNote/CreateNote';
+import UpdateNote from './Pages/Note/UpdateNote/UpdateNote';
+import ViewNote from './Pages/Note/ViewNote/ViewNote';
+
+// const CreateNote = lazy(() => import('./Pages/Note/CreateNote/CreateNote'));
+// const UpdateNote = lazy(() => import('./Pages/Note/UpdateNote/UpdateNote'));
+// const ViewNote = lazy(() => import('./Pages/Note/ViewNote/ViewNote'));
+// const DeleteNote = lazy(() => import('./Pages/Note/ConfirmDialog/ConfirmDialog'));
 
 function App() {
   const state = useSelector(state => {
@@ -216,27 +221,12 @@ const router = createRoutesFromElements(
         <Route
           path="new"
           element={
-            <Suspense fallback={
-              <Box className={`h-full flex-grow flex justify-center items-center z-40`}>
-                <CircularProgress />
-              </Box>
-            }>
-              <CreateNote />
-            </Suspense>
+            <CreateNote />
           } />
         <Route
           path="edit/:id"
           element={
-            <Suspense fallback={
-              <Backdrop
-                open={true}
-                className={`z-40`}
-              >
-                <CircularProgress />
-              </Backdrop>
-            }>
-              <UpdateNote />
-            </Suspense>
+            <UpdateNote />
           } />
         <Route
           path="view/:id"

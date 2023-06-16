@@ -7,7 +7,7 @@ import { format, parseISO } from "date-fns";
 import { memo, useState } from "react";
 import { useNavigate, useOutletContext } from "react-router-dom";
 
-const ViewPost = () => {
+const ViewNote = () => {
   const [openDialog, setOpenDialog, fullScreen] = useOutletContext();
   const post = openDialog.data;
   const navigate = useNavigate();
@@ -195,4 +195,4 @@ const ViewPost = () => {
   );
 };
 
-export default memo(ViewPost);
+export default memo(ViewNote);

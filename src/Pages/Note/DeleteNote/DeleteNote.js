@@ -5,7 +5,7 @@ import { useDeleteTargetPostMutation, } from "../../../Redux/admin/adminApiSlice
 import { useNavigate, useOutletContext } from "react-router-dom";
 
 
-const ConfirmDialog = () => {
+const DeleteNote = () => {
   const [openDialog, setOpenDialog, fullScreen] = useOutletContext();
   const navigate = useNavigate();
   const post = openDialog.data;
@@ -48,4 +48,4 @@ const ConfirmDialog = () => {
   );
 };
 
-export default memo(ConfirmDialog);
+export default memo(DeleteNote);

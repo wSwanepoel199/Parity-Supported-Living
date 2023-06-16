@@ -7,7 +7,7 @@ import { useSelector } from "react-redux";
 import { useGetPostQuery, useUpdatePostMutation } from "../../../Redux/posts/postApiSlice";
 import { useNavigate, useOutletContext, useParams } from "react-router-dom";
 
-const UpdatePost = () => {
+const UpdateNote = () => {
   const { client, admin, root } = useSelector(state => {
     return {
       client: state.clients,
@@ -318,4 +318,4 @@ const UpdatePost = () => {
   );
 };
 
-export default UpdatePost;
+export default UpdateNote;
