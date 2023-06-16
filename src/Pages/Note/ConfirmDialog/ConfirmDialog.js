@@ -28,29 +28,23 @@ const ConfirmDialog = () => {
   };
 
   return (
-    <Dialog
-      fullScreen={fullScreen}
-      open={openDialog.open}
-      className={`z-30 max-w-full`}
-    >
-      <Box>
-        <DialogTitle className={`flex justify-between items-center`}>
-          <Typography variant="h6" component="p">
-            Delete Note?
-          </Typography>
-          <IconButton onClick={() => handleExit()}>
-            <CloseIcon />
-          </IconButton>
-        </DialogTitle>
-        <DialogContent>
-          <DialogContentText>Are you sure you want to delete this case note?</DialogContentText>
-        </DialogContent>
-        <DialogActions sx={{ justifyContent: 'space-between' }}>
-          <Button color="error" variant="contained" onClick={handleDelete}>DELETE</Button>
-          <Button onClick={() => handleExit()}>Cancel</Button>
-        </DialogActions>
-      </Box>
-    </Dialog>
+    <Box>
+      <DialogTitle className={`flex justify-between items-center`}>
+        <Typography variant="h6" component="p">
+          Delete Note?
+        </Typography>
+        <IconButton onClick={() => handleExit()}>
+          <CloseIcon />
+        </IconButton>
+      </DialogTitle>
+      <DialogContent>
+        <DialogContentText>Are you sure you want to delete this case note?</DialogContentText>
+      </DialogContent>
+      <DialogActions sx={{ justifyContent: 'space-between' }}>
+        <Button color="error" variant="contained" onClick={handleDelete}>DELETE</Button>
+        <Button onClick={() => handleExit()}>Cancel</Button>
+      </DialogActions>
+    </Box>
   );
 };
 

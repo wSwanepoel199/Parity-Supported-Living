@@ -274,7 +274,13 @@ const Notes = () => {
       >
         <CircularProgress />
       </Backdrop>
-      <Outlet context={[openDialog, setOpenDialog, fullScreen]} />
+      <Dialog
+        fullScreen={fullScreen}
+        open={openDialog.open}
+        className={`z-30 max-w-full`}
+      >
+        <Outlet context={[openDialog, setOpenDialog, fullScreen]} />
+      </Dialog>
       <Typography variant="h3" component="div" className={`py-5`}>Notes</Typography>
       <DataGrid
         {...table}
