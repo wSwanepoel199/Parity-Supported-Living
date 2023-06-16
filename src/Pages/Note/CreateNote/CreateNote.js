@@ -77,15 +77,14 @@ const CreateNote = () => {
   };
 
   const handleExit = () => {
-    setOpenDialog(prev => { return { ...prev, open: !prev.open, type: '', data: {} }; });
+    setOpenDialog(prev => { return { ...prev, open: !prev.open, type: '' }; });
     navigate('..');
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     addPost(formData).then(res => {
-      setOpenDialog(prev => { return { ...prev, open: !prev.open, type: '' }; });
-      navigate('..');
+      handleExit();
     });
   };
 
@@ -109,7 +108,7 @@ const CreateNote = () => {
             <Typography variant="h6" component="p">
               New Note
             </Typography>
-            <IconButton onClick={() => handleExit}>
+            <IconButton onClick={() => handleExit()}>
               <CloseIcon />
             </IconButton>
           </DialogTitle>
@@ -213,7 +212,7 @@ const CreateNote = () => {
             <Box>
               {!fullScreen &&
                 <Button
-                  onClick={() => handleExit}>Cancel</Button>}
+                  onClick={() => handleExit()}>Cancel</Button>}
               <Button color="success" variant="contained" type="submit">Create</Button>
             </Box>
           </DialogActions>

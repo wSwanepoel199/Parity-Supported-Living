@@ -39,9 +39,9 @@ const Notes = () => {
   };
 
 
-  // window.addEventListener("popstate", (e) => {
-  //   setOpenDialog(prev => { return { ...prev, open: !prev.open, type: '', data: {} }; });
-  // });
+  window.addEventListener("popstate", (e) => {
+    setOpenDialog(prev => { return { ...prev, open: !prev.open, type: '', data: {} }; });
+  });
 
   const [table, setTable] = useState({
     columns: [

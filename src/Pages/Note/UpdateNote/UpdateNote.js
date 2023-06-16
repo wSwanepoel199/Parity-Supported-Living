@@ -130,8 +130,7 @@ const UpdatePost = () => {
       }
     });
     updatePost(parsedForm).then(res => {
-      setOpenDialog(prev => { return { ...prev, open: !prev.open, type: '' }; });
-      navigate('..');
+      handleExit();
     });
   };
 
@@ -165,7 +164,7 @@ const UpdatePost = () => {
             <Typography variant="h6" component="p">
               Edit Note
             </Typography>
-            <IconButton onClick={handleExit}>
+            <IconButton onClick={() => handleExit()}>
               <CloseIcon />
             </IconButton>
           </DialogTitle>
@@ -315,7 +314,7 @@ const UpdatePost = () => {
             <Box >
               {!fullScreen &&
                 <Button
-                  onClick={handleExit}>Cancel</Button>}
+                  onClick={() => handleExit()}>Cancel</Button>}
               <Button color="success" variant="contained" type="submit" disabled={formData.clientId === "" || formData.carerId === ""}>Update</Button>
             </Box>
           </DialogActions>
