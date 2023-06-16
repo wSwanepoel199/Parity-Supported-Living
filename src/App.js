@@ -217,12 +217,9 @@ const router = createRoutesFromElements(
           path="new"
           element={
             <Suspense fallback={
-              <Backdrop
-                open={true}
-                className={`z-40`}
-              >
+              <Box className={`h-full flex-grow flex justify-center items-center z-40`}>
                 <CircularProgress />
-              </Backdrop>
+              </Box>
             }>
               <CreateNote />
             </Suspense>
