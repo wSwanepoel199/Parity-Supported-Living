@@ -21,6 +21,20 @@ export const clientApiSlice = backendApi.injectEndpoints({
         }
       }
     }),
+    getClient: builder.query({
+      query: (clientId) => ({ url: '/clients/get/' + clientId, method: "get" }),
+      transformResponse: (response, meta, arg) => response.data.data,
+      async onQueryStarted(clientId, { queryFulfilled }) {
+        console.log(clientId);
+        try {
+          const { data } = await queryFulfilled;
+          return data;
+        }
+        catch (err) {
+          console.error(err);
+        }
+      }
+    }),
     createClient: builder.mutation({
       query: (newClient) => ({ url: '/clients/create', method: 'post', data: newClient }),
       async onQueryStarted(newClient, { queryFulfilled }) {
@@ -47,4 +61,4 @@ export const clientApiSlice = backendApi.injectEndpoints({
   })
 });
 
-export const { useGetAllClientsQuery, useCreateClientMutation, useRemoveClientMutation, useUpdateClientMutation } = clientApiSlice;
+export const { useGetAllClientsQuery, useGetClientQuery, useCreateClientMutation, useRemoveClientMutation, useUpdateClientMutation } = clientApiSlice;

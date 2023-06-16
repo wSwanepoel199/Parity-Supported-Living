@@ -7,6 +7,7 @@ import { forwardRef, memo, useMemo, useState } from "react";
 import PhoneInput from 'react-phone-input-2';
 import { useSelector } from "react-redux";
 import { useCreateClientMutation } from "../../../Redux/client/clientApiSlice";
+import { useNavigate, useOutletContext } from "react-router-dom";
 // import 'react-phone-input-2/lib/style.css';
 
 const MyCustomInput = forwardRef((props, ref) => {
@@ -41,10 +42,15 @@ const MyCustomHelperText = () => {
 const containsText = (user, searchText) =>
   user.toLowerCase().indexOf(searchText.toLowerCase()) > -1;
 
-const CreateClient = ({ setOpenDialog, mobile }) => {
+const CreateClient = () => {
   const adminState = useSelector(state => state.admin);
-  const [createClient] = useCreateClientMutation();
   const options = adminState.users;
+
+  const [openDialog, setOpenDialog, fullScreen] = useOutletContext();
+  const navigate = useNavigate();
+
+  const [createClient] = useCreateClientMutation();
+
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -110,10 +116,16 @@ const CreateClient = ({ setOpenDialog, mobile }) => {
     });
   };
 
+  const handleExit = () => {
+    setOpenDialog(prev => { return { ...prev, open: !prev.open, type: '' }; });
+    navigate('..');
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    createClient(formData);
-    setOpenDialog(prev => { return { ...prev, open: !prev.open, type: '' }; });
+    createClient(formData).then(() => {
+      handleExit();
+    });
   };
 
 
@@ -123,7 +135,7 @@ const CreateClient = ({ setOpenDialog, mobile }) => {
         <Typography variant="h6" component="p">
           New Client
         </Typography>
-        <IconButton onClick={() => setOpenDialog(prev => { return { ...prev, open: !prev.open, type: '', data: {} }; })}>
+        <IconButton onClick={() => handleExit()}>
           <CloseIcon />
         </IconButton>
       </DialogTitle>
@@ -316,16 +328,12 @@ const CreateClient = ({ setOpenDialog, mobile }) => {
         </Grid>
       </DialogContent>
       <DialogActions>
-        {!mobile &&
-          <Button
-            onClick={() =>
-              setOpenDialog(prev => {
-                return { ...prev, open: !prev.open, type: '' };
-              })}>Cancel</Button>}
+        {!fullScreen &&
+          <Button onClick={() => handleExit()}>Cancel</Button>}
         <Button color="success" variant="contained" type="submit">CREATE</Button>
       </DialogActions>
     </Box>
   );
 };
 
-export default memo(CreateClient);
+export default CreateClient;

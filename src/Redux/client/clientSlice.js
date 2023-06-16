@@ -1,5 +1,12 @@
 import { createSlice } from "@reduxjs/toolkit";
 
+
+const isPending = (action) => {
+  // console.log(action);
+  // console.log(action.meta?.arg.endpointName);
+  return action.type.endsWith('pending');
+};
+
 const initialState = {
   status: 'asleep',
   clients: []
@@ -12,7 +19,7 @@ export const clientSlice = createSlice({
     saveClients: (state, action) => {
       return {
         ...state,
-        status: 'fetced',
+        status: 'success',
         clients: action.payload
       };
     },
@@ -20,6 +27,20 @@ export const clientSlice = createSlice({
       return initialState;
     }
   },
+  extraReducers(builder) {
+    builder
+      .addMatcher(isPending, (state, action) => {
+        if (action.meta?.arg.endpointName.includes("Clients")) {
+          console.log(action.meta?.arg.endpointName);
+          return {
+            ...state,
+            status: 'loading'
+          };
+        } else {
+          return;
+        }
+      });
+  }
 });
 
 export const { saveClients, clearClientState } = clientSlice.actions;

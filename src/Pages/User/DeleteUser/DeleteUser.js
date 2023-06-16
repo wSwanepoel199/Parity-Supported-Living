@@ -1,14 +1,14 @@
 import { Box, Button, DialogActions, DialogContent, DialogContentText, DialogTitle, IconButton, Typography } from "@mui/material";
 import CloseIcon from '@mui/icons-material/Close';
 import { memo } from "react";
-import { useRemoveClientMutation } from "../../../Redux/client/clientApiSlice";
+import { useDeleteTargetUserMutation } from "../../../Redux/admin/adminApiSlice";
 
 
-const ConfirmDialog = ({ setOpenDialog, data: client }) => {
-  const [removeClient] = useRemoveClientMutation();
+const DeleteUser = ({ setOpenDialog, data: user }) => {
+  const [deleteTargetUser] = useDeleteTargetUserMutation();
 
   const handleDelete = () => {
-    removeClient({ clientId: client.clientId });
+    deleteTargetUser(user);
     setOpenDialog(prev => { return { ...prev, open: !prev.open, type: '' }; });
   };
 
@@ -16,14 +16,14 @@ const ConfirmDialog = ({ setOpenDialog, data: client }) => {
     <Box>
       <DialogTitle className={`flex justify-between items-center`}>
         <Typography variant="h6" component="p">
-          Delete {client.firstName}?
+          Delete {user.name}?
         </Typography>
         <IconButton onClick={() => setOpenDialog(prev => { return { ...prev, open: !prev.open, type: '', data: {} }; })}>
           <CloseIcon />
         </IconButton>
       </DialogTitle>
       <DialogContent>
-        <DialogContentText>Are you sure you want to delete {client.firstName}?</DialogContentText>
+        <DialogContentText>Are you sure you want to delete {user.name}?</DialogContentText>
       </DialogContent>
       <DialogActions sx={{ justifyContent: 'space-between' }}>
         <Button color="error" variant="contained" onClick={handleDelete}>DELETE</Button>
@@ -33,4 +33,4 @@ const ConfirmDialog = ({ setOpenDialog, data: client }) => {
   );
 };
 
-export default memo(ConfirmDialog);
+export default memo(DeleteUser);

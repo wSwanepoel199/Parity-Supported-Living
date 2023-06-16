@@ -1,28 +1,14 @@
-import React, { useEffect, useState, Suspense, memo, lazy } from 'react';
-import { Await, Navigate, Outlet, Route, Routes, useNavigate } from 'react-router-dom';
+import React, { useEffect, useState, Suspense, memo } from 'react';
+import { Outlet, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import { Backdrop, Box, Button, CircularProgress, Container, IconButton, Snackbar, } from '@mui/material';
+import { Box, Button, CircularProgress, Container, IconButton, Snackbar, } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { useRefreshUserMutation, } from './Redux/user/userApiSlice';
-import { Appbar, ProtectedRoute, CustomAlert, PromptForUpdate } from "./Components";
-import { SignIn, Landing, Notes, Users, Clients } from './Pages';
+import { Appbar, CustomAlert, PromptForUpdate } from "./Components";
+
 
 // inverstigate crashing when auth token expire
 // Datagrid resets each time update occurs, FIX
-
-import {
-  createRoutesFromElements
-} from 'react-router-dom';
-
-// import DeleteNote from './Pages/Note/DeleteNote/DeleteNote';
-// import CreateNote from './Pages/Note/CreateNote/CreateNote';
-// import UpdateNote from './Pages/Note/UpdateNote/UpdateNote';
-// import ViewNote from './Pages/Note/ViewNote/ViewNote';
-
-const CreateNote = lazy(() => import('./Pages/Note/CreateNote/CreateNote'));
-const UpdateNote = lazy(() => import('./Pages/Note/UpdateNote/UpdateNote'));
-const ViewNote = lazy(() => import('./Pages/Note/ViewNote/ViewNote'));
-const DeleteNote = lazy(() => import('./Pages/Note/DeleteNote/DeleteNote'));
 
 function App() {
   const state = useSelector(state => {
@@ -190,117 +176,5 @@ function App() {
   );
 }
 
-const router = createRoutesFromElements(
-  <Route
-    element={<App />}
-  >
-    <Route path="/" element={<Suspense fallback={
-      <Box className={`h-full flex-grow flex justify-center items-center z-40`}>
-        <CircularProgress />
-      </Box>
-    }>
-      <Landing />
-    </Suspense>
-    } >
-      <Route
-        path="signin"
-        element={<SignIn />}
 
-      />
-      <Route
-        path="notes"
-        element={
-          <Suspense fallback={
-            <Box className={`h-full flex-grow flex justify-center items-center z-40`}>
-              <CircularProgress />
-            </Box>
-          }>
-            <Notes />
-          </Suspense>
-        } >
-        <Route
-          path="new"
-          element={
-            <Suspense fallback={
-              <Backdrop
-                open={true}
-                className={`z-40`}
-              >
-                <CircularProgress />
-              </Backdrop>
-            }>
-              <CreateNote />
-            </Suspense>
-          } />
-        <Route
-          path="edit/:id"
-          element={
-            <Suspense fallback={
-              <Backdrop
-                open={true}
-                className={`z-40`}
-              >
-                <CircularProgress />
-              </Backdrop>
-            }>
-              <UpdateNote />
-            </Suspense>
-          } />
-        <Route
-          path="view/:id"
-          element={
-            <Suspense fallback={
-              <Backdrop
-                open={true}
-                className={`z-40`}
-              >
-                <CircularProgress />
-              </Backdrop>
-            }>
-              <ViewNote />
-            </Suspense>
-          } />
-        <Route
-          path="delete/:id"
-          element={
-            <Suspense fallback={
-              <Backdrop
-                open={true}
-                className={`z-40`}
-              >
-                <CircularProgress />
-              </Backdrop>
-            }>
-              <DeleteNote />
-            </Suspense>
-          } />
-      </Route>
-      <Route
-        path="clients"
-        element={
-          <Suspense fallback={
-            <Box className={`h-full flex-grow flex justify-center items-center z-40`}>
-              <CircularProgress />
-            </Box>
-          }>
-            <Clients />
-          </Suspense>
-        } />
-      <Route
-        path="users"
-        element={
-          <ProtectedRoute>
-            <Suspense fallback={
-              <Box className={`h-full flex-grow flex justify-center items-center z-40`}>
-                <CircularProgress />
-              </Box>
-            }>
-              <Users />
-            </Suspense>
-          </ProtectedRoute>
-        } />
-    </Route>
-  </Route>
-);
-
-export default router;
+export default memo(App);

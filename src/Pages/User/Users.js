@@ -6,7 +6,7 @@ import { GeneralDataGrid } from "../../Components";
 import CreateUser from "./CreateUser/CreateUser";
 import UpdateUser from "./UpdateUser/UpdateUser";
 import ViewUser from "./ViewUser/ViewUser";
-import ConfirmDialog from "./ConfirmDialog/ConfirmDialog";
+import DeleteUser from "./DeleteUser/DeleteUser";
 
 const Users = () => {
   // const adminState = useSelector(state => state.admin);
@@ -106,7 +106,7 @@ const Users = () => {
           Create: (props) => <CreateUser {...props} />,
           Update: (props) => <UpdateUser {...props} />,
           View: (props) => <ViewUser {...props} />,
-          Delete: (props) => <ConfirmDialog {...props} />,
+          Delete: (props) => <DeleteUser {...props} />,
         }}
         NewEntry={(props) => <Button startIcon={<AddIcon />} {...props}>
           New User

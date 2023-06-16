@@ -9,9 +9,9 @@ import DoneIcon from '@mui/icons-material/Done';
 import CloseIcon from '@mui/icons-material/Close';
 import { format, parseISO } from "date-fns";
 import { DataGrid } from "@mui/x-data-grid";
-import { memo, useEffect, useMemo, useState } from "react";
+import { memo, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
-import { Outlet, useLocation, useMatch, useNavigate } from "react-router-dom";
+import { Outlet, useMatch, useNavigate } from "react-router-dom";
 
 
 import Toolbar from "../../Components/DataGrid/Toolbar";
@@ -394,5 +394,5 @@ const Notes = () => {
   );
 };
 
-export default Notes;
+export default memo(Notes);
 

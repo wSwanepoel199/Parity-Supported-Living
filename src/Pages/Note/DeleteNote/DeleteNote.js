@@ -1,4 +1,4 @@
-import { Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, IconButton, Typography } from "@mui/material";
+import { Box, Button, DialogActions, DialogContent, DialogContentText, DialogTitle, IconButton, Typography } from "@mui/material";
 import CloseIcon from '@mui/icons-material/Close';
 import { memo } from "react";
 import { useDeleteTargetPostMutation, } from "../../../Redux/admin/adminApiSlice";
@@ -6,7 +6,7 @@ import { useNavigate, useOutletContext } from "react-router-dom";
 
 
 const DeleteNote = () => {
-  const [openDialog, setOpenDialog, fullScreen] = useOutletContext();
+  const [openDialog, setOpenDialog,] = useOutletContext();
   const navigate = useNavigate();
   const post = openDialog.data;
 

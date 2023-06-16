@@ -1,4 +1,4 @@
-import { Backdrop, Box, Button, CircularProgress, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, FormControlLabel, FormHelperText, IconButton, Input, InputLabel, MenuItem, OutlinedInput, Select, Switch, Typography } from "@mui/material";
+import { Backdrop, Box, Button, CircularProgress, DialogActions, DialogContent, DialogTitle, FormControl, FormControlLabel, FormHelperText, IconButton, Input, InputLabel, MenuItem, OutlinedInput, Select, Switch, Typography } from "@mui/material";
 import Grid from "@mui/material/Unstable_Grid2/";
 import CloseIcon from '@mui/icons-material/Close';
 import { format, formatISO, parseISO } from "date-fns";
@@ -117,7 +117,7 @@ const UpdateNote = () => {
   };
 
   const handleExit = () => {
-    setOpenDialog(prev => { return { ...prev, open: !prev.open, type: '', data: {} }; });
+    setOpenDialog(prev => { return { ...prev, open: false, type: '', data: {} }; });
     navigate('..');
   };
 
@@ -153,7 +153,6 @@ const UpdateNote = () => {
       >
         <CircularProgress />
       </Backdrop>
-      {console.log(formData)}
       <Box component='form' onSubmit={(e) => handleSubmit(e)}>
         <DialogTitle className={`flex justify-between items-center`}>
           <Typography variant="h6" component="p">

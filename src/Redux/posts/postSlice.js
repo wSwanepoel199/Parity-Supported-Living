@@ -18,7 +18,7 @@ export const postSlice = createSlice({
       return {
         ...state,
         posts: action.payload,
-        status: "successful"
+        status: "success"
       };
     },
     clearPostState: () => {

@@ -1,14 +1,15 @@
-import React, { Suspense } from 'react';
+import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { BrowserRouter, RouterProvider, createBrowserRouter } from 'react-router-dom';
-import { Backdrop, Box, CircularProgress, StyledEngineProvider } from '@mui/material';
+import { RouterProvider, createBrowserRouter } from 'react-router-dom';
+import { Backdrop, CircularProgress, StyledEngineProvider } from '@mui/material';
 import * as serviceWorkerRegistration from './serviceWorkerRegistration';
 import { Provider } from 'react-redux';
 import store from './Redux/store';
 import reportWebVitals from './reportWebVitals';
 
 import './index.css';
-import router from './App';
+import router from './router';
+
 
 // const App = lazy(() => import('./App'));
 

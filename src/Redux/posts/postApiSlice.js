@@ -27,7 +27,6 @@ export const postApiSlice = backendApi.injectEndpoints({
       async onQueryStarted(postId, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
-          console.log(data);
           return data;
         }
         catch (err) {

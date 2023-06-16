@@ -1,4 +1,4 @@
-import { Box, Button, Collapse, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, IconButton, InputLabel, Typography } from "@mui/material";
+import { Box, Button, Collapse, DialogActions, DialogContent, DialogTitle, FormControl, IconButton, InputLabel, Typography } from "@mui/material";
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import DoneIcon from '@mui/icons-material/Done';
 import CloseIcon from '@mui/icons-material/Close';
@@ -8,7 +8,7 @@ import { memo, useState } from "react";
 import { useNavigate, useOutletContext } from "react-router-dom";
 
 const ViewNote = () => {
-  const [openDialog, setOpenDialog, fullScreen] = useOutletContext();
+  const [openDialog, setOpenDialog] = useOutletContext();
   const post = openDialog.data;
   const navigate = useNavigate();
   const formData = JSON.parse(JSON.stringify(post).replace(/:null/gi, ":\"\""));
