@@ -394,5 +394,5 @@ const Notes = () => {
   );
 };
 
-export default memo(Notes);
+export default Notes;
 
