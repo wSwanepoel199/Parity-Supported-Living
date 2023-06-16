@@ -1,7 +1,7 @@
 import React, { Suspense } from 'react';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter, RouterProvider, createBrowserRouter } from 'react-router-dom';
-import { Box, CircularProgress, StyledEngineProvider } from '@mui/material';
+import { Backdrop, Box, CircularProgress, StyledEngineProvider } from '@mui/material';
 import * as serviceWorkerRegistration from './serviceWorkerRegistration';
 import { Provider } from 'react-redux';
 import store from './Redux/store';
@@ -18,7 +18,15 @@ root.render(
   <React.StrictMode>
     <Provider store={store}>
       <StyledEngineProvider injectFirst>
-        <RouterProvider router={createBrowserRouter(router)} />
+        <RouterProvider
+          router={createBrowserRouter(router)}
+          fallbackElement={<Backdrop
+            open={true}
+            className={`z-40`}
+          >
+            <CircularProgress />
+          </Backdrop>}
+        />
       </StyledEngineProvider>
     </Provider>
   </React.StrictMode>

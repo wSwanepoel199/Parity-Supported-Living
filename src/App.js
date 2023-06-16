@@ -23,7 +23,8 @@ function App() {
   const state = useSelector(state => {
     return {
       user: state.user,
-      root: state.root
+      root: state.root,
+      note: state.posts
     };
   });
   const [refreshUser] = useRefreshUserMutation();
@@ -196,85 +197,103 @@ const router = createRoutesFromElements(
       <Landing />
     </Suspense>
     } >
-      <Route path="signin" element={<SignIn />} />
-      <Route path="notes" element={
-        <Suspense fallback={
-          <Box className={`h-full flex-grow flex justify-center items-center z-40`}>
-            <CircularProgress />
-          </Box>
-        }>
-          <Notes />
-        </Suspense>
-      } >
-        <Route path="new" element={
-          <Suspense fallback={
-            <Backdrop
-              open={true}
-              className={`z-40`}
-            >
-              <CircularProgress />
-            </Backdrop>
-          }>
-            <CreateNote />
-          </Suspense>
-        } />
-        <Route path="edit" element={
-          <Suspense fallback={
-            <Backdrop
-              open={true}
-              className={`z-40`}
-            >
-              <CircularProgress />
-            </Backdrop>
-          }>
-            <UpdateNote />
-          </Suspense>
-        } />
-        <Route path="view" element={
-          <Suspense fallback={
-            <Backdrop
-              open={true}
-              className={`z-40`}
-            >
-              <CircularProgress />
-            </Backdrop>
-          }>
-            <ViewNote />
-          </Suspense>
-        } />
-        <Route path="delete" element={
-          <Suspense fallback={
-            <Backdrop
-              open={true}
-              className={`z-40`}
-            >
-              <CircularProgress />
-            </Backdrop>
-          }>
-            <DeleteNote />
-          </Suspense>
-        } />
-      </Route>
-      <Route path="clients" element={
-        <Suspense fallback={
-          <Box className={`h-full flex-grow flex justify-center items-center z-40`}>
-            <CircularProgress />
-          </Box>
-        }>
-          <Clients />
-        </Suspense>
-      } />
-      <Route path="users" element={
-        <ProtectedRoute>
+      <Route
+        path="signin"
+        element={<SignIn />}
+
+      />
+      <Route
+        path="notes"
+        element={
           <Suspense fallback={
             <Box className={`h-full flex-grow flex justify-center items-center z-40`}>
               <CircularProgress />
             </Box>
           }>
-            <Users />
+            <Notes />
           </Suspense>
-        </ProtectedRoute>
-      } />
+        } >
+        <Route
+          path="new"
+          element={
+            <Suspense fallback={
+              <Backdrop
+                open={true}
+                className={`z-40`}
+              >
+                <CircularProgress />
+              </Backdrop>
+            }>
+              <CreateNote />
+            </Suspense>
+          } />
+        <Route
+          path="edit/:id"
+          element={
+            <Suspense fallback={
+              <Backdrop
+                open={true}
+                className={`z-40`}
+              >
+                <CircularProgress />
+              </Backdrop>
+            }>
+              <UpdateNote />
+            </Suspense>
+          } />
+        <Route
+          path="view/:id"
+          element={
+            <Suspense fallback={
+              <Backdrop
+                open={true}
+                className={`z-40`}
+              >
+                <CircularProgress />
+              </Backdrop>
+            }>
+              <ViewNote />
+            </Suspense>
+          } />
+        <Route
+          path="delete/:id"
+          element={
+            <Suspense fallback={
+              <Backdrop
+                open={true}
+                className={`z-40`}
+              >
+                <CircularProgress />
+              </Backdrop>
+            }>
+              <DeleteNote />
+            </Suspense>
+          } />
+      </Route>
+      <Route
+        path="clients"
+        element={
+          <Suspense fallback={
+            <Box className={`h-full flex-grow flex justify-center items-center z-40`}>
+              <CircularProgress />
+            </Box>
+          }>
+            <Clients />
+          </Suspense>
+        } />
+      <Route
+        path="users"
+        element={
+          <ProtectedRoute>
+            <Suspense fallback={
+              <Box className={`h-full flex-grow flex justify-center items-center z-40`}>
+                <CircularProgress />
+              </Box>
+            }>
+              <Users />
+            </Suspense>
+          </ProtectedRoute>
+        } />
     </Route>
   </Route>
 );

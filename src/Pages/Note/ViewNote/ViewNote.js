@@ -18,6 +18,11 @@ const ViewPost = () => {
     notes: false
   });
 
+  const handleExit = () => {
+    setOpenDialog(prev => { return { ...prev, open: !prev.open, type: '', data: {} }; });
+    navigate('..');
+  };
+
 
   return (
     <Dialog
@@ -30,10 +35,7 @@ const ViewPost = () => {
           <Typography variant="h6" component="p">
             Viewing Note {post.id}
           </Typography>
-          <IconButton onClick={() => {
-            setOpenDialog(prev => { return { ...prev, open: !prev.open, type: '', data: {} }; });
-            navigate('..');
-          }}>
+          <IconButton onClick={handleExit}>
             <CloseIcon />
           </IconButton>
         </DialogTitle>
@@ -191,10 +193,7 @@ const ViewPost = () => {
             {post.private ? <DoneIcon /> : <CloseIcon />}
           </Box>
           <Box>
-            <Button onClick={() => {
-              setOpenDialog(prev => { return { ...prev, open: !prev.open, type: '', data: {} }; });
-              navigate('..');
-            }}>Close</Button>
+            <Button onClick={handleExit}>Close</Button>
           </Box>
         </DialogActions>
       </Box >

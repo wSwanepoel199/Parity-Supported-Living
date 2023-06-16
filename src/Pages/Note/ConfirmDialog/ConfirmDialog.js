@@ -16,10 +16,16 @@ const ConfirmDialog = () => {
   //   if (isLoading || isError) setOpenDialog(prev => { return { ...prev, open: !prev.open, type: '' }; });
   // }, [isLoading, isError, setOpenDialog]);
 
-  const handleDelete = () => {
-    deleteTargetPost(post);
-    setOpenDialog(prev => { return { ...prev, open: !prev.open, type: '' }; });
+  const handleExit = () => {
+    setOpenDialog(prev => { return { ...prev, open: !prev.open, type: '', data: {} }; });
     navigate('..');
+  };
+
+  const handleDelete = () => {
+    deleteTargetPost(post).then(res => {
+      setOpenDialog(prev => { return { ...prev, open: !prev.open, type: '' }; });
+      navigate('..');
+    });
   };
 
   return (
@@ -33,10 +39,7 @@ const ConfirmDialog = () => {
           <Typography variant="h6" component="p">
             Delete Note?
           </Typography>
-          <IconButton onClick={() => {
-            setOpenDialog(prev => { return { ...prev, open: !prev.open, type: '', data: {} }; });
-            navigate('..');
-          }}>
+          <IconButton onClick={handleExit}>
             <CloseIcon />
           </IconButton>
         </DialogTitle>
@@ -45,10 +48,7 @@ const ConfirmDialog = () => {
         </DialogContent>
         <DialogActions sx={{ justifyContent: 'space-between' }}>
           <Button color="error" variant="contained" onClick={handleDelete}>DELETE</Button>
-          <Button onClick={() => {
-            setOpenDialog(prev => { return { ...prev, open: !prev.open, type: '' }; });
-            navigate('..');
-          }}>Cancel</Button>
+          <Button onClick={handleExit}>Cancel</Button>
         </DialogActions>
       </Box>
     </Dialog>

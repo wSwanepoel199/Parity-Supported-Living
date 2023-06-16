@@ -92,7 +92,7 @@ const Notes = () => {
           } else if (row.clientName === "" && row.clientId !== "") {
             return <p className={`text-ellipsis overflow-hidden whitespace-nowrap max-w-full`}><PriorityHighIcon fontSize="small" color="warning" /> {`${row.client.firstName} ${row.client?.lastName}`}</p>;
           } else {
-            return <p className={`text-ellipsis overflow-hidden whitespace-nowrap max-w-full`}>{`${row.client.firstName} ${row.client?.lastName}`}</p>;
+            return <p className={`text-ellipsis overflow-hidden whitespace-nowrap max-w-full`}>{`${row.clientName}`}</p>;
           }
         },
         disableExport: true
@@ -115,7 +115,7 @@ const Notes = () => {
           } else if (row.carerName === "" && row.carerId !== "") {
             return <p className={`text-ellipsis overflow-hidden whitespace-nowrap max-w-full`}><PriorityHighIcon fontSize="small" color="warning" /> {`${row.carer.firstName} ${row.carer?.lastName}`}</p>;
           } else {
-            return <p className={`text-ellipsis overflow-hidden whitespace-nowrap max-w-full`}>{`${row.carer.firstName} ${row.carer?.lastName}`}</p>;
+            return <p className={`text-ellipsis overflow-hidden whitespace-nowrap max-w-full`}>{`${row.carerName}`}</p>;
           }
         },
         disableExport: true
@@ -163,21 +163,21 @@ const Notes = () => {
             <IconButton onClick={() => {
               setSelectedRow(params.row.id);
               setOpenDialog(prev => { return { ...prev, open: !prev.open, type: 'view', data: params.row }; });
-              navigate('./view');
+              navigate('./view/' + params.row.postId);
             }} className={`dark:text-white`}>
               <VisibilityIcon />
             </IconButton>
             {permissions.edit ? <IconButton onClick={() => {
               setSelectedRow(params.row.id);
               setOpenDialog(prev => { return { ...prev, open: !prev.open, type: 'edit', data: params.row }; });
-              navigate('./edit');
+              navigate('./edit/' + params.row.postId);
             }} className={`dark:text-white`}>
               <EditIcon />
             </IconButton> : null}
             {permissions.delete ? <IconButton onClick={() => {
               setSelectedRow(params.row.id);
               setOpenDialog(prev => { return { ...prev, open: !prev.open, type: 'delete', data: params.row }; });
-              navigate('./delete');
+              navigate('./delete/' + params.row.postId);
             }} className={`dark:text-white`}>
               <DeleteIcon />
             </IconButton> : null}
@@ -241,10 +241,10 @@ const Notes = () => {
     array.map((row) => {
       if (row.id === selectedRow) {
         setOpenDialog({ ...openDialog, open: !openDialog.open, type: 'view', data: row });
+        navigate('/notes/view/' + row.postId);
       }
       return row;
     });
-    navigate('/notes/view');
     handleClose();
   };
 
@@ -252,7 +252,7 @@ const Notes = () => {
     array.map((row) => {
       if (row.id === selectedRow) {
         setOpenDialog(prev => { return { ...prev, open: !prev.open, type: 'edit', data: row }; });
-        navigate('/notes/edit');
+        navigate('/notes/edit/' + row.postId);
       }
       return row;
     });
@@ -263,7 +263,7 @@ const Notes = () => {
     array.map((row) => {
       if (row.id === selectedRow) {
         setOpenDialog(prev => { return { ...prev, open: !prev.open, type: 'delete', data: row }; });
-        navigate('/notes/delete');
+        navigate('/notes/delete/' + row.postId);
       }
       return row;
     });
