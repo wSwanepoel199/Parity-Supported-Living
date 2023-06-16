@@ -212,7 +212,7 @@ const Notes = () => {
         };
       });
     }
-  }, [match, openDialog.open]);
+  }, [match]);
 
   const [selectedRow, setSelectedRow] = useState();
 
