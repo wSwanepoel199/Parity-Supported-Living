@@ -14,15 +14,15 @@ import {
   createRoutesFromElements
 } from 'react-router-dom';
 
-import DeleteNote from './Pages/Note/DeleteNote/DeleteNote';
-import CreateNote from './Pages/Note/CreateNote/CreateNote';
-import UpdateNote from './Pages/Note/UpdateNote/UpdateNote';
-import ViewNote from './Pages/Note/ViewNote/ViewNote';
+// import DeleteNote from './Pages/Note/DeleteNote/DeleteNote';
+// import CreateNote from './Pages/Note/CreateNote/CreateNote';
+// import UpdateNote from './Pages/Note/UpdateNote/UpdateNote';
+// import ViewNote from './Pages/Note/ViewNote/ViewNote';
 
-// const CreateNote = lazy(() => import('./Pages/Note/CreateNote/CreateNote'));
-// const UpdateNote = lazy(() => import('./Pages/Note/UpdateNote/UpdateNote'));
-// const ViewNote = lazy(() => import('./Pages/Note/ViewNote/ViewNote'));
-// const DeleteNote = lazy(() => import('./Pages/Note/ConfirmDialog/ConfirmDialog'));
+const CreateNote = lazy(() => import('./Pages/Note/CreateNote/CreateNote'));
+const UpdateNote = lazy(() => import('./Pages/Note/UpdateNote/UpdateNote'));
+const ViewNote = lazy(() => import('./Pages/Note/ViewNote/ViewNote'));
+const DeleteNote = lazy(() => import('./Pages/Note/DeleteNote/DeleteNote'));
 
 function App() {
   const state = useSelector(state => {
@@ -221,12 +221,30 @@ const router = createRoutesFromElements(
         <Route
           path="new"
           element={
-            <CreateNote />
+            <Suspense fallback={
+              <Backdrop
+                open={true}
+                className={`z-40`}
+              >
+                <CircularProgress />
+              </Backdrop>
+            }>
+              <CreateNote />
+            </Suspense>
           } />
         <Route
           path="edit/:id"
           element={
-            <UpdateNote />
+            <Suspense fallback={
+              <Backdrop
+                open={true}
+                className={`z-40`}
+              >
+                <CircularProgress />
+              </Backdrop>
+            }>
+              <UpdateNote />
+            </Suspense>
           } />
         <Route
           path="view/:id"

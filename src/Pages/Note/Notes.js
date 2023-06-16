@@ -268,7 +268,6 @@ const Notes = () => {
 
   return (
     <div className="w-full max-w-screen-lg mx-auto flex flex-col ">
-      {console.log(openDialog)}
       <Backdrop
         open={posts.status === "loading"}
         className={`z-40`}
