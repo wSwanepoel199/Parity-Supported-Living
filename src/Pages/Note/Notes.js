@@ -157,22 +157,22 @@ const Notes = () => {
           <Box className={`flex justify-center`}>
             <IconButton onClick={() => {
               setSelectedRow(params.row.id);
-              setOpenDialog(prev => { return { ...prev, open: true, type: 'view', data: params.row }; });
               navigate('./view/' + params.row.postId);
+              setOpenDialog(prev => { return { ...prev, open: true, type: 'view', data: params.row }; });
             }} className={`dark:text-white`}>
               <VisibilityIcon />
             </IconButton>
             {permissions.edit ? <IconButton onClick={() => {
               setSelectedRow(params.row.id);
-              setOpenDialog(prev => { return { ...prev, open: true, type: 'edit', data: params.row }; });
               navigate('./edit/' + params.row.postId);
+              setOpenDialog(prev => { return { ...prev, open: true, type: 'edit', data: params.row }; });
             }} className={`dark:text-white`}>
               <EditIcon />
             </IconButton> : null}
             {permissions.delete ? <IconButton onClick={() => {
               setSelectedRow(params.row.id);
-              setOpenDialog(prev => { return { ...prev, open: true, type: 'delete', data: params.row }; });
               navigate('./delete/' + params.row.postId);
+              setOpenDialog(prev => { return { ...prev, open: true, type: 'delete', data: params.row }; });
             }} className={`dark:text-white`}>
               <DeleteIcon />
             </IconButton> : null}
@@ -235,8 +235,8 @@ const Notes = () => {
   const openView = (array) => {
     array.map((row) => {
       if (row.id === selectedRow) {
-        setOpenDialog(prev => { return { ...prev, open: true, type: 'view', data: row }; });
         navigate('/notes/view/' + row.postId);
+        setOpenDialog(prev => { return { ...prev, open: true, type: 'view', data: row }; });
       }
       return row;
     });
@@ -246,8 +246,8 @@ const Notes = () => {
   const openEdit = (array) => {
     array.map((row) => {
       if (row.id === selectedRow) {
-        setOpenDialog(prev => { return { ...prev, open: true, type: 'edit', data: row }; });
         navigate('/notes/edit/' + row.postId);
+        setOpenDialog(prev => { return { ...prev, open: true, type: 'edit', data: row }; });
       }
       return row;
     });
@@ -257,8 +257,8 @@ const Notes = () => {
   const openDelete = (array) => {
     array.map((row) => {
       if (row.id === selectedRow) {
-        setOpenDialog(prev => { return { ...prev, open: true, type: 'delete', data: row }; });
         navigate('/notes/delete/' + row.postId);
+        setOpenDialog(prev => { return { ...prev, open: true, type: 'delete', data: row }; });
       }
       return row;
     });
@@ -304,8 +304,8 @@ const Notes = () => {
         componentsProps={{
           toolbar: {
             children: (<Button startIcon={<AddIcon />} className={`${!permissions.create && "hidden"}`} onClick={() => {
-              setOpenDialog(prev => { return { ...prev, open: true, type: 'new' }; });
               navigate('/notes/new');
+              setOpenDialog(prev => { return { ...prev, open: true, type: 'new' }; });
             }}>New Note</Button>),
             type: "post",
             csvOptions: { allColumns: true },
