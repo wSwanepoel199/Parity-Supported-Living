@@ -109,7 +109,7 @@ const CreateNote = () => {
             <Typography variant="h6" component="p">
               New Note
             </Typography>
-            <IconButton onClick={handleExit}>
+            <IconButton onClick={() => handleExit}>
               <CloseIcon />
             </IconButton>
           </DialogTitle>
@@ -213,7 +213,7 @@ const CreateNote = () => {
             <Box>
               {!fullScreen &&
                 <Button
-                  onClick={handleExit}>Cancel</Button>}
+                  onClick={() => handleExit}>Cancel</Button>}
               <Button color="success" variant="contained" type="submit">Create</Button>
             </Box>
           </DialogActions>
