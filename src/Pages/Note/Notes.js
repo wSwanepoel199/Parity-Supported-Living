@@ -9,7 +9,7 @@ import DoneIcon from '@mui/icons-material/Done';
 import CloseIcon from '@mui/icons-material/Close';
 import { format, parseISO } from "date-fns";
 import { DataGrid } from "@mui/x-data-grid";
-import { memo, useMemo, useState } from "react";
+import { Suspense, memo, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 import { Outlet, useMatch, useNavigate } from "react-router-dom";
 
@@ -274,13 +274,22 @@ const Notes = () => {
       >
         <CircularProgress />
       </Backdrop>
-      <Dialog
-        fullScreen={fullScreen}
-        open={openDialog.open}
-        className={`z-30 max-w-full`}
-      >
-        <Outlet context={[openDialog, setOpenDialog, fullScreen]} />
-      </Dialog>
+      <Suspense fallback={
+        <Backdrop
+          open={true}
+          className={`z-40`}
+        >
+          <CircularProgress />
+        </Backdrop>
+      }>
+        <Dialog
+          fullScreen={fullScreen}
+          open={openDialog.open}
+          className={`z-30 max-w-full`}
+        >
+          <Outlet context={[openDialog, setOpenDialog, fullScreen]} />
+        </Dialog>
+      </Suspense>
       <Typography variant="h3" component="div" className={`py-5`}>Notes</Typography>
       <DataGrid
         {...table}

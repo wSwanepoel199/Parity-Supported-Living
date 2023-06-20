@@ -72,16 +72,9 @@ const router = createRoutesFromElements(
         <Route
           path="new"
           element={
-            <Suspense fallback={
-              <Backdrop
-                open={true}
-                className={`z-40`}
-              >
-                <CircularProgress />
-              </Backdrop>
-            }>
-              <CreateNote />
-            </Suspense>
+
+            <CreateNote />
+
           } />
         <Route
           path="edit/:id"
