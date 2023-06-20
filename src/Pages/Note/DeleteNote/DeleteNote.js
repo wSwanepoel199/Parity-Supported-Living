@@ -41,8 +41,8 @@ const DeleteNote = () => {
         <DialogContentText>Are you sure you want to delete this case note?</DialogContentText>
       </DialogContent>
       <DialogActions sx={{ justifyContent: 'space-between' }}>
-        <Button color="error" variant="contained" onClick={handleDelete}>DELETE</Button>
         <Button onClick={() => handleExit()}>Cancel</Button>
+        <Button color="error" variant="contained" onClick={handleDelete}>DELETE</Button>
       </DialogActions>
     </Box>
   );

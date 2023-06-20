@@ -2,14 +2,25 @@ import { Box, Button, DialogActions, DialogContent, DialogContentText, DialogTit
 import CloseIcon from '@mui/icons-material/Close';
 import { memo } from "react";
 import { useDeleteTargetUserMutation } from "../../../Redux/admin/adminApiSlice";
+import { useNavigate, useOutletContext } from "react-router-dom";
 
 
-const DeleteUser = ({ setOpenDialog, data: user }) => {
+const DeleteUser = () => {
+  const [openDialog, setOpenDialog,] = useOutletContext();
+  const navigate = useNavigate();
+  const user = openDialog.data;
+
   const [deleteTargetUser] = useDeleteTargetUserMutation();
 
+  const handleExit = () => {
+    setOpenDialog(prev => { return { ...prev, open: !prev.open, type: '', data: {} }; });
+    navigate('..');
+  };
+
   const handleDelete = () => {
-    deleteTargetUser(user);
-    setOpenDialog(prev => { return { ...prev, open: !prev.open, type: '' }; });
+    deleteTargetUser(user).then(() => {
+      handleExit();
+    });
   };
 
   return (
@@ -18,7 +29,7 @@ const DeleteUser = ({ setOpenDialog, data: user }) => {
         <Typography variant="h6" component="p">
           Delete {user.name}?
         </Typography>
-        <IconButton onClick={() => setOpenDialog(prev => { return { ...prev, open: !prev.open, type: '', data: {} }; })}>
+        <IconButton onClick={() => handleExit()}>
           <CloseIcon />
         </IconButton>
       </DialogTitle>
@@ -26,8 +37,8 @@ const DeleteUser = ({ setOpenDialog, data: user }) => {
         <DialogContentText>Are you sure you want to delete {user.name}?</DialogContentText>
       </DialogContent>
       <DialogActions sx={{ justifyContent: 'space-between' }}>
+        <Button onClick={() => handleExit()}>Cancel</Button>
         <Button color="error" variant="contained" onClick={handleDelete}>DELETE</Button>
-        <Button onClick={() => setOpenDialog(prev => { return { ...prev, open: !prev.open, type: '' }; })}>Cancel</Button>
       </DialogActions>
     </Box>
   );

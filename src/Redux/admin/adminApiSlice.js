@@ -21,6 +21,20 @@ export const adminApiSlice = backendApi.injectEndpoints({
         }
       }
     }),
+    getUser: builder.query({
+      query: (userId) => ({ url: '/auth/get/' + userId, method: "get" }),
+      transformResponse: (response, meta, arg) => response.data.data,
+      async onQueryStarted(userId, { queryFulfilled }) {
+        console.log(userId);
+        try {
+          const { data } = await queryFulfilled;
+          return data;
+        }
+        catch (err) {
+          console.error(err);
+        }
+      }
+    }),
     deleteTargetUser: builder.mutation({
       query: (user) => ({ url: '/auth/delete', method: 'post', data: user }),
       invalidatesTags: (result, error, args) =>
@@ -34,4 +48,4 @@ export const adminApiSlice = backendApi.injectEndpoints({
   })
 });
 
-export const { useGetAllUsersQuery, useDeleteTargetUserMutation, useDeleteTargetPostMutation } = adminApiSlice;
+export const { useGetAllUsersQuery, useGetUserQuery, useDeleteTargetUserMutation, useDeleteTargetPostMutation } = adminApiSlice;

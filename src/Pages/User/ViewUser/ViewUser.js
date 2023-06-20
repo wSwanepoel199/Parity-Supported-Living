@@ -5,11 +5,16 @@ import CloseIcon from '@mui/icons-material/Close';
 import Grid from "@mui/material/Unstable_Grid2/";
 // import { format, parseISO } from "date-fns";
 import { memo, useState } from "react";
+import { useNavigate, useOutletContext } from "react-router-dom";
 // import { useSelector } from "react-redux";
 
-const ViewUser = ({ setOpenDialog, data: user }) => {
+const ViewUser = () => {
   // const userState = useSelector(state => state.user);
   // const adminState = useSelector(state => state.admin);
+  const [openDialog, setOpenDialog] = useOutletContext();
+  const user = openDialog.data;
+  const navigate = useNavigate();
+
   const formData = JSON.parse(JSON.stringify(user).replace(/:null/gi, ":\"\""));
   // const users = [...client.carers, ...(adminState.users ? adminState.users : [])];
   const [open, setOpen] = useState({
@@ -18,6 +23,10 @@ const ViewUser = ({ setOpenDialog, data: user }) => {
     notesDetails: false
   });
 
+  const handleExit = () => {
+    setOpenDialog(prev => { return { ...prev, open: !prev.open, type: '' }; });
+    navigate('..');
+  };
 
   return (
     <Box>
@@ -25,7 +34,7 @@ const ViewUser = ({ setOpenDialog, data: user }) => {
         <Typography variant="h6" component="p">
           Viewing {user.name}
         </Typography>
-        <IconButton onClick={() => setOpenDialog(prev => { return { ...prev, open: !prev.open, type: '', data: {} }; })}>
+        <IconButton onClick={() => handleExit()}>
           <CloseIcon />
         </IconButton>
       </DialogTitle>
@@ -205,7 +214,7 @@ const ViewUser = ({ setOpenDialog, data: user }) => {
       </DialogContent>
       <DialogActions sx={{ justifyContent: 'end', alignContent: 'space-between', alignItems: 'center', px: '20px' }}>
         <Box>
-          <Button onClick={() => setOpenDialog(prev => { return { ...prev, open: !prev.open, type: '', data: {} }; })}>Close</Button>
+          <Button onClick={() => handleExit()}>Close</Button>
         </Box>
       </DialogActions>
     </Box>

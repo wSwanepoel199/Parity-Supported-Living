@@ -4,11 +4,15 @@ import CloseIcon from '@mui/icons-material/Close';
 import Grid from "@mui/material/Unstable_Grid2/";
 // import { format, parseISO } from "date-fns";
 import { memo, useState } from "react";
+import { useNavigate, useOutletContext } from "react-router-dom";
 // import { useSelector } from "react-redux";
 
-const ViewClient = ({ setOpenDialog, data: client }) => {
+const ViewClient = () => {
   // const userState = useSelector(state => state.user);
   // const adminState = useSelector(state => state.admin);
+  const [openDialog, setOpenDialog] = useOutletContext();
+  const client = openDialog.data;
+  const navigate = useNavigate();
   const formData = JSON.parse(JSON.stringify(client).replace(/:null/gi, ":\"\""));
   // const users = [...client.carers, ...(adminState.users ? adminState.users : [])];
   const [open, setOpen] = useState({
@@ -17,6 +21,11 @@ const ViewClient = ({ setOpenDialog, data: client }) => {
     notesDetails: false
   });
 
+  const handleExit = () => {
+    setOpenDialog(prev => { return { ...prev, open: !prev.open, type: '' }; });
+    navigate('..');
+  };
+
 
   return (
     <Box>
@@ -24,7 +33,7 @@ const ViewClient = ({ setOpenDialog, data: client }) => {
         <Typography variant="h6" component="p">
           Viewing Client {client.firstName} {client?.lastName}
         </Typography>
-        <IconButton onClick={() => setOpenDialog(prev => { return { ...prev, open: !prev.open, type: '', data: {} }; })}>
+        <IconButton onClick={() => handleExit()}>
           <CloseIcon />
         </IconButton>
       </DialogTitle>
@@ -197,7 +206,7 @@ const ViewClient = ({ setOpenDialog, data: client }) => {
       </DialogContent>
       <DialogActions sx={{ justifyContent: 'end', alignContent: 'space-between', alignItems: 'center', px: '20px' }}>
         <Box>
-          <Button onClick={() => setOpenDialog(prev => { return { ...prev, open: !prev.open, type: '', data: {} }; })}>Close</Button>
+          <Button onClick={() => handleExit()}>Close</Button>
         </Box>
       </DialogActions>
     </Box>
