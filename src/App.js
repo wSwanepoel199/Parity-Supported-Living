@@ -8,7 +8,7 @@ import { Appbar, CustomAlert, PromptForUpdate } from "./Components";
 
 
 // inverstigate crashing when auth token expire
-// Datagrid resets each time update occurs, FIX
+// impliment getUser route to redux and backend, update clients and users to use the getX route over passing data directly between components
 
 function App() {
   const state = useSelector(state => {
