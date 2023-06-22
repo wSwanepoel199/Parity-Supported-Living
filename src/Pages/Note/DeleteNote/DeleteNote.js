@@ -1,16 +1,16 @@
-import { Box, Button, DialogActions, DialogContent, DialogContentText, DialogTitle, IconButton, Typography } from "@mui/material";
+import { Backdrop, Box, Button, CircularProgress, DialogActions, DialogContent, DialogContentText, DialogTitle, IconButton, Typography } from "@mui/material";
 import CloseIcon from '@mui/icons-material/Close';
 import { memo } from "react";
 import { useDeleteTargetPostMutation, } from "../../../Redux/admin/adminApiSlice";
-import { useNavigate, useOutletContext } from "react-router-dom";
+import { useNavigate, useOutletContext, useParams } from "react-router-dom";
 
 
 const DeleteNote = () => {
+  const params = useParams();
   const [openDialog, setOpenDialog,] = useOutletContext();
   const navigate = useNavigate();
-  const post = openDialog.data;
 
-  const [deleteTargetPost] = useDeleteTargetPostMutation();
+  const [deleteTargetPost, { isLoading }] = useDeleteTargetPostMutation();
 
   // useEffect(() => {
   //   if (isLoading || isError) setOpenDialog(prev => { return { ...prev, open: !prev.open, type: '' }; });
@@ -22,10 +22,21 @@ const DeleteNote = () => {
   };
 
   const handleDelete = () => {
-    deleteTargetPost(post).then(res => {
+    deleteTargetPost(params.id).then(res => {
       handleExit();
     });
   };
+
+  if (isLoading) {
+    return (
+      <Backdrop
+        open={true}
+        className={`z-40`}
+      >
+        <CircularProgress />
+      </Backdrop>
+    );
+  }
 
   return (
     <Box>
@@ -42,7 +53,7 @@ const DeleteNote = () => {
       </DialogContent>
       <DialogActions sx={{ justifyContent: 'space-between' }}>
         <Button onClick={() => handleExit()}>Cancel</Button>
-        <Button color="error" variant="contained" onClick={handleDelete}>DELETE</Button>
+        <Button color="error" variant="contained" onClick={() => handleDelete()}>DELETE</Button>
       </DialogActions>
     </Box>
   );

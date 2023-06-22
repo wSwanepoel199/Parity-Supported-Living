@@ -1,34 +1,69 @@
-import { Box, Button, Collapse, DialogActions, DialogContent, DialogTitle, FormControl, IconButton, InputLabel, Typography } from "@mui/material";
+import { Backdrop, Box, Button, CircularProgress, Collapse, DialogActions, DialogContent, DialogTitle, FormControl, IconButton, InputLabel, Typography } from "@mui/material";
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import DoneIcon from '@mui/icons-material/Done';
 import CloseIcon from '@mui/icons-material/Close';
 import Grid from "@mui/material/Unstable_Grid2/";
 import { format, parseISO } from "date-fns";
-import { memo, useState } from "react";
-import { useNavigate, useOutletContext } from "react-router-dom";
+import { memo, useEffect, useRef, useState } from "react";
+import { useNavigate, useOutletContext, useParams } from "react-router-dom";
+import { useGetPostQuery } from "../../../Redux/posts/postApiSlice";
 
 const ViewNote = () => {
+  const params = useParams();
+  const { data, isLoading, isFetching, isSuccess } = useGetPostQuery(params.id, { refetchOnMountOrArgChange: true });
+  const mounted = useRef();
   const [openDialog, setOpenDialog] = useOutletContext();
-  const post = openDialog.data;
+
   const navigate = useNavigate();
-  const formData = JSON.parse(JSON.stringify(post).replace(/:null/gi, ":\"\""));
+  // const formData = JSON.parse(JSON.stringify(data).replace(/:null/gi, ":\"\""));
+  const [formData, setFormData] = useState(data);
   const [open, setOpen] = useState({
     noteDetails: true,
     clientDetails: false,
     notes: false
   });
 
+  useEffect(() => {
+    if (isSuccess && !mounted.current) {
+      setFormData(prev => {
+        return {
+          ...prev,
+          ...JSON.parse(JSON.stringify(data).replace(/:null/gi, ":\"\""))
+        };
+      });
+      mounted.current = true;
+    }
+
+    return () => {
+      if (mounted.current) {
+        mounted.current = false;
+      }
+    };
+
+  }, [mounted, data, isSuccess]);
+
   const handleExit = () => {
     setOpenDialog(prev => { return { ...prev, open: !prev.open, type: '', data: {} }; });
     navigate('..');
   };
+
+  if (isLoading || isFetching || !mounted.current) {
+    return (
+      <Backdrop
+        open={true}
+        className={`z-40`}
+      >
+        <CircularProgress />
+      </Backdrop>
+    );
+  }
 
 
   return (
     <Box>
       <DialogTitle className={`flex justify-between items-center`}>
         <Typography variant="h6" component="p">
-          Viewing Note {post.id}
+          Viewing Note {data.id}
         </Typography>
         <IconButton onClick={() => handleExit()}>
           <CloseIcon />
@@ -185,7 +220,7 @@ const ViewNote = () => {
       <DialogActions sx={{ justifyContent: 'space-between', alignContent: 'space-between', alignItems: 'center', px: '20px' }}>
         <Box className={`flex justify-center content-center`}>
           <Typography className={`pr-1`}>Confidential: </Typography>
-          {post.private ? <DoneIcon /> : <CloseIcon />}
+          {data.private ? <DoneIcon /> : <CloseIcon />}
         </Box>
         <Box>
           <Button onClick={() => handleExit()}>Close</Button>

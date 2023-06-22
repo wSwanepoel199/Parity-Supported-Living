@@ -129,7 +129,7 @@ const Clients = () => {
           <Box className={`flex justify-center`}>
             <IconButton onClick={() => {
               setSelectedRow(params.row.id);
-              navigate('./view/' + params.row.clientIdId);
+              navigate('./view/' + params.row.clientId);
               setOpenDialog(prev => { return { ...prev, open: true, type: 'view', data: params.row }; });
             }} className={`dark:text-white`}>
               <VisibilityIcon />

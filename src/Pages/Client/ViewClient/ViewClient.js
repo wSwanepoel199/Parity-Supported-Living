@@ -1,37 +1,70 @@
-import { Box, Button, Collapse, DialogActions, DialogContent, DialogTitle, FormControl, IconButton, InputLabel, Stack, Typography } from "@mui/material";
+import { Backdrop, Box, Button, CircularProgress, Collapse, DialogActions, DialogContent, DialogTitle, FormControl, IconButton, InputLabel, Stack, Typography } from "@mui/material";
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import CloseIcon from '@mui/icons-material/Close';
 import Grid from "@mui/material/Unstable_Grid2/";
 // import { format, parseISO } from "date-fns";
-import { memo, useState } from "react";
-import { useNavigate, useOutletContext } from "react-router-dom";
+import { memo, useEffect, useRef, useState } from "react";
+import { useNavigate, useOutletContext, useParams } from "react-router-dom";
+import { useGetClientQuery } from "../../../Redux/client/clientApiSlice";
 // import { useSelector } from "react-redux";
 
 const ViewClient = () => {
   // const userState = useSelector(state => state.user);
   // const adminState = useSelector(state => state.admin);
+
+  const params = useParams();
+  const mounted = useRef();
+  const { data, isLoading, isFetching, isSuccess } = useGetClientQuery(params.id, { refetchOnMountOrArgChange: true });
   const [openDialog, setOpenDialog] = useOutletContext();
-  const client = openDialog.data;
   const navigate = useNavigate();
-  const formData = JSON.parse(JSON.stringify(client).replace(/:null/gi, ":\"\""));
+
+  const [formData, setFormData] = useState(data);
   // const users = [...client.carers, ...(adminState.users ? adminState.users : [])];
+
   const [open, setOpen] = useState({
     clientDetails: true,
     carersDetails: false,
     notesDetails: false
   });
 
+  useEffect(() => {
+    if (isSuccess && !mounted.current) {
+      setFormData(prev => {
+        return {
+          ...prev,
+          ...JSON.parse(JSON.stringify(data).replace(/:null/gi, ":\"\""))
+        };
+      });
+      mounted.current = true;
+    }
+
+    return () => {
+      if (mounted.current) mounted.current = false;
+    };
+  }, [mounted, data, isSuccess]);
+
   const handleExit = () => {
     setOpenDialog(prev => { return { ...prev, open: !prev.open, type: '' }; });
     navigate('..');
   };
+
+  if (isLoading || isFetching || !mounted.current) {
+    return (
+      <Backdrop
+        open={true}
+        className={`z-40`}
+      >
+        <CircularProgress />
+      </Backdrop>
+    );
+  }
 
 
   return (
     <Box>
       <DialogTitle className={`flex justify-between items-center`}>
         <Typography variant="h6" component="p">
-          Viewing Client {client.firstName} {client?.lastName}
+          Viewing Client {data?.firstName} {data?.lastName}
         </Typography>
         <IconButton onClick={() => handleExit()}>
           <CloseIcon />
