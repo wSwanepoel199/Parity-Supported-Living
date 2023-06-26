@@ -36,7 +36,7 @@ export const adminApiSlice = backendApi.injectEndpoints({
       }
     }),
     deleteTargetUser: builder.mutation({
-      query: (user) => ({ url: '/auth/delete', method: 'post', data: user }),
+      query: (user) => ({ url: '/auth/delete/' + user, method: 'get' }),
       invalidatesTags: (result, error, args) =>
         result ? [{ type: "user", id: "LIST" }] : error ? console.error(error) : null
     }),
