@@ -1,20 +1,18 @@
-import React, { memo, useEffect, useRef, useState } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Box, Button, Checkbox, Container, FormControl, FormControlLabel, FormGroup, IconButton, Input, InputAdornment, InputLabel, Typography, useFormControl, useMediaQuery } from "@mui/material";
+import { Box, Button, Checkbox, Container, FormControl, FormControlLabel, FormGroup, IconButton, Input, InputAdornment, InputLabel, Typography } from "@mui/material";
 import Grid from "@mui/material/Unstable_Grid2";
 import LoginIcon from '@mui/icons-material/Login';
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import { useLoginUserMutation } from "../../Redux/user/userApiSlice";
-import { useSelector } from "react-redux";
 
 // const LoginIcon = lazy(() => import('@mui/icons-material/Login'));
 // const Visibility = lazy(() => import('@mui/icons-material/Visibility'));
 // const VisibilityOff = lazy(() => import('@mui/icons-material/VisibilityOff'));
 
 const SignIn = () => {
-  const userState = useSelector(state => state.user);
   const navigate = useNavigate();
   const [loginUser, { isSuccess }] = useLoginUserMutation();
   const [focus, setFocus] = useState(undefined);
