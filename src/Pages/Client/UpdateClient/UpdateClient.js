@@ -81,7 +81,6 @@ const UpdateClient = () => {
       //     return prev;
       //   }
       // });
-      console.log(data);
       const { carers, ...selectedClient } = data;
       setFormData(prev => {
         const carersIds = carers.map(carer => carer.userId);
@@ -338,10 +337,11 @@ const UpdateClient = () => {
                       <Box
                         className={`flex flex-wrap gap-2`}
                       >
+                        {console.log(selected)}
                         {selected.map((value, index) => {
                           return (
                             <Box key={index}>
-                              <Chip label={options.find((user) => value === user.userId).name} />
+                              <Chip label={options.find((user) => value === user.userId)?.name} />
                             </Box>
                           );
                         })}

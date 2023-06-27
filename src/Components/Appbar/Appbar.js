@@ -50,7 +50,7 @@ const Appbar = () => {
   };
 
   return (
-    <AppBar position="sticky" elevation={0} className={`bg-slate-500 dark:bg-slate-700 z-10`}>
+    <AppBar position="sticky" elevation={0} className={`bg-transparent bg-gradient-to-b from-psl-secondary to-transparent z-10 dark:from-psl-secondary`}>
       <Container maxWidth="lg" name="appbar-container">
         <Toolbar disableGutters className={`flex justify-between`} name="appbar-segmentor">
           <Box className={`flex w-full justify-start ${userState.status === "loggedIn" ? "" : "hidden"}`} name="appbar-nav-menu">
@@ -102,7 +102,7 @@ const Appbar = () => {
                 variant="h5"
                 noWrap
                 component="a"
-                className={`flex text-inherit `}
+                className={`flex text-psl-primary dark:text-psl-secondary-text drop-shadow-md`}
               >
                 PARITY SUPPORTED LIVING
               </Typography> :
@@ -115,9 +115,22 @@ const Appbar = () => {
           </Box>
           <Box className={`flex w-full justify-end ${userState.status === "loggedIn" ? "" : "hidden"}`}>
             <Box className={`flex justify-center content-center text-center `}>
-              <Typography variant="body1" component="p" sx={{ display: { xs: 'none', md: 'flex' }, alignItems: 'center', mr: 1 }}>{userState.user.name}</Typography>
-              <IconButton size={smallScreen ? "small" : "large"} name="user" onClick={handleOpenMenu} className={``}>
-                {userState.status === "loggedIn" ? <Avatar alt="avatar icon" src={userState.icon ? userState.icon.icon : ''} className={`w-[${window.innerWidth / 10}px] h-[${window.innerWidth / 10}px] bg-white ring-1 ring-white`} /> : null}
+              <Typography
+                variant="body1"
+                component="p"
+                sx={{ display: { xs: 'none', md: 'flex' }, alignItems: 'center', mr: 1 }}
+                className={`drop-shadow-lg`}
+              >{userState.user.name}</Typography>
+              <IconButton
+                size={smallScreen ? "small" : "large"}
+                name="user"
+                onClick={handleOpenMenu}
+                className={``}>
+                {userState.status === "loggedIn" ?
+                  <Avatar
+                    alt="avatar icon"
+                    src={userState.icon ? userState.icon.icon : ''}
+                    className={`w-[${window.innerWidth / 10}px] h-[${window.innerWidth / 10}px] ring-1 ring-psl-secondary`} /> : null}
               </IconButton>
             </Box>
             <Menu

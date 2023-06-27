@@ -116,7 +116,7 @@ function App() {
   };
 
   return (
-    <div className={`w-full min-h-[100dvh] bg-slate-400 dark:bg-slate-600 flex flex-col`}>
+    <div className={`w-full min-h-[100dvh] bg-psl-active-text dark:bg-psl-primary flex flex-col`}>
       <>
         {/* <Backdrop
           open={state.root.status === "loading"}
