@@ -11,6 +11,7 @@ import { Outlet, useMatch, useNavigate } from "react-router-dom";
 
 
 import Toolbar from "../../Components/DataGrid/Toolbar";
+import { DataGridMenu, GeneralDataGrid } from '../../Components';
 
 const Users = () => {
   const { admin, user } = useSelector(state => {
@@ -222,8 +223,8 @@ const Users = () => {
       >
         <Outlet context={[openDialog, setOpenDialog, fullScreen]} />
       </Dialog>
-      <Typography variant="h3" component="div" className={`py-5`}>Users</Typography>
-      <DataGrid
+      <Typography variant="h3" component="div" className={`py-5 text-psl-primary dark:text-psl-active-text`}>Users</Typography>
+      {/* <DataGrid
         {...table}
         onPageSizeChange={(newPageSize) => setTable(prev => {
           return {
@@ -278,58 +279,41 @@ const Users = () => {
             ],
           }
         }}
-      />
-      <Menu
-        open={contextMenu !== null}
-        onClose={handleClose}
-        anchorReference="anchorPosition"
-        anchorPosition={
-          contextMenu !== null
-            ? { top: contextMenu.mouseY, left: contextMenu.mouseX }
-            : undefined
-        }
-        componentsProps={{
-          root: {
-            onContextMenu: (e) => {
-              e.preventDefault();
-              handleClose();
+      /> */}
+      <GeneralDataGrid
+        functions={{ setSelectedRow, handleContextMenu, setOpenDialog }}
+        variables={{
+          table, selectedRow, permissions,
+          initialState: {
+            columns: {
+              columnVisibilityModel: {
+                // Hides listed coloumns
+                id: false,
+                userId: false,
+                firstName: false,
+                lastName: false,
+                clients: false,
+              },
             },
+            sorting: {
+              sortModel: [
+                {
+                  field: 'id',
+                  sort: 'desc',
+                },
+              ],
+            }
           },
+          settings: {
+            type: 'user',
+            button: 'New User'
+          }
         }}
-        MenuListProps={{
-          className: 'dark:bg-slate-800'
-        }}
-      >
-        <MenuItem
-          onClick={() => openView(admin.users)} >
-          <ListItemIcon className={`dark:text-white`}>
-            <VisibilityIcon />
-          </ListItemIcon>
-          <ListItemText className={`dark:text-white`}>
-            View
-          </ListItemText>
-        </MenuItem>
-        {permissions.edit ? <MenuItem
-          onClick={() => openEdit(admin.users)}
-        >
-          <ListItemIcon className={`dark:text-white`}>
-            <EditIcon />
-          </ListItemIcon>
-          <ListItemText className={`dark:text-white`}>
-            Edit
-          </ListItemText>
-        </MenuItem> : null}
-        {permissions.delete ? <MenuItem
-          onClick={() => openDelete(admin.users)}
-        >
-          <ListItemIcon className={`dark:text-white`}>
-            <DeleteIcon />
-          </ListItemIcon>
-          <ListItemText className={`dark:text-white`}>
-            Delete
-          </ListItemText>
-        </MenuItem> : null}
-      </Menu>
+      />
+      <DataGridMenu
+        functions={{ handleClose, openView, openEdit, openDelete }}
+        variables={{ contextMenu, permissions, array: admin.users }}
+      />
     </div>
   );
 };

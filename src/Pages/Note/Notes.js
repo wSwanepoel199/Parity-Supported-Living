@@ -15,7 +15,7 @@ import { Outlet, useMatch, useNavigate } from "react-router-dom";
 
 
 import Toolbar from "../../Components/DataGrid/Toolbar";
-import { DataGridMenu } from '../../Components';
+import { DataGridMenu, GeneralDataGrid } from '../../Components';
 
 
 const Notes = () => {
@@ -185,11 +185,6 @@ const Notes = () => {
     rows: []
   });
 
-  const [paginationModel, setPaginationModel] = useState({
-    pageSize: 10,
-    page: 0
-  });
-
   useMemo(() => {
     if (posts.posts) {
       setTable(prev => {
@@ -295,99 +290,37 @@ const Notes = () => {
           <Outlet context={[openDialog, setOpenDialog, fullScreen]} />
         </Suspense>
       </Dialog>
-      <Typography variant="h3" component="div" className={`py-5 text-psl-primary-text dark:text-psl-active-text`}>Notes</Typography>
-      <DataGrid
-        {...table}
-        aria-label="notesDataGrid"
-        paginationModel={paginationModel}
-        onPaginationModelChange={setPaginationModel}
-        pageSizeOptions={[10, 20, 30]}
-        pagination
-        autoHeight
-        disableSelectionOnClick
-        hideFooterSelectedRowCount
-        selectionModel={selectedRow}
-        slots={{
-          toolbar: Toolbar,
-          loadingOverlay: LinearProgress,
-        }}
-        slotProps={{
-          toolbar: {
-            children: (
-              <Button
-                startIcon={<AddIcon />}
-                className={`${!permissions.create && "hidden"} text-psl-active-link`}
-                onClick={() => {
-                  navigate('/notes/new');
-                  setOpenDialog(prev => {
-                    return {
-                      ...prev,
-                      open: true,
-                      type: 'new'
-                    };
-                  });
-                }}>New Note</Button>),
-            type: "post",
-            csvOptions: { allColumns: true },
-            clearSelect: setSelectedRow
-          },
-          row: {
-            onContextMenu: fullScreen ? handleContextMenu : null,
-            style: fullScreen && { cursor: 'context-menu' },
-          },
-          pagination: {
-            // style: {
-            //   color: 
-            // },
-            className: 'text-psl-primary dark:text-psl-secondary-text',
-            SelectProps: {
-              classes: {
-                icon: 'text-psl-primary dark:text-psl-secondary-text'
+      <Typography variant="h3" component="div" className={`py-5 text-psl-primary dark:text-psl-active-text`}>Notes</Typography>
+      <GeneralDataGrid
+        functions={{ handleContextMenu, setSelectedRow, setOpenDialog }}
+        variables={{
+          table,
+          selectedRow,
+          permissions,
+          initialState: {
+            columns: {
+              columnVisibilityModel: {
+                // Hides listed coloumns
+                carerId: false,
+                clientId: false,
+                clientName: false,
+                carerName: false,
+                // options: !fullScreen,
+                private: ["Admin", "Coordinator"].includes(user.user.role) ? true : false
               },
-              MenuProps: {
-                PopoverClasses: {
-                  paper: 'bg-inherit'
-                },
-                MenuListProps: {
-                  classes: {
-                    root: 'text-psl-primary-text dark:text-psl-active-text'
-                  },
-                  className: 'dark:bg-psl-primary bg-psl-active-text'
-                }
-              }
-            }
-          }
-        }}
-        classes={{
-          columnSeparator: 'hidden',
-          columnHeader: 'border-0 border-x-[1px] border-solid first:border-l-0 last:border-r-0 border-psl-primary-text/40 dark:border-psl-secondary-text/40 max-h-8 px-2',
-          withBorderColor: 'border-psl-primary-text/30 dark:border-psl-secondary-text/30',
-          cell: 'text-psl-primary dark:text-psl-secondary-text',
-          columnHeaderTitleContainerContent: 'text-psl-primary dark:text-psl-secondary-text',
-          sortIcon: 'text-psl-primary dark:text-psl-secondary-text',
-          main: 'shadow-inner'
-        }}
-        className={`bg-psl-primary-text/20 dark:bg-psl-secondary-text/20 border-0 shadow-lg`}
-        loading={posts.status === "loading"}
-        initialState={{
-          columns: {
-            columnVisibilityModel: {
-              // Hides listed coloumns
-              carerId: false,
-              clientId: false,
-              clientName: false,
-              carerName: false,
-              // options: !fullScreen,
-              private: ["Admin", "Coordinator"].includes(user.user.role) ? true : false
             },
+            sorting: {
+              sortModel: [
+                {
+                  field: 'date',
+                  sort: 'desc',
+                },
+              ],
+            }
           },
-          sorting: {
-            sortModel: [
-              {
-                field: 'date',
-                sort: 'desc',
-              },
-            ],
+          settings: {
+            type: 'post',
+            button: 'New Note'
           }
         }}
       />
