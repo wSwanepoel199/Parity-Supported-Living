@@ -72,9 +72,16 @@ const router = createRoutesFromElements(
         <Route
           path="new"
           element={
-
-            <CreateNote />
-
+            <Suspense fallback={
+              <Backdrop
+                open={true}
+                className={`z-40`}
+              >
+                <CircularProgress />
+              </Backdrop>
+            }>
+              <CreateNote />
+            </Suspense>
           } />
         <Route
           path="edit/:id"
@@ -256,7 +263,7 @@ const router = createRoutesFromElements(
           } />
       </Route>
     </Route>
-  </Route>
+  </Route >
 );
 
 export default router;

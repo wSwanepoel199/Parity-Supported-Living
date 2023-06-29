@@ -15,6 +15,7 @@ import { Outlet, useMatch, useNavigate } from "react-router-dom";
 
 
 import Toolbar from "../../Components/DataGrid/Toolbar";
+import { DataGridMenu } from '../../Components';
 
 
 const Notes = () => {
@@ -159,21 +160,21 @@ const Notes = () => {
               setSelectedRow(params.row.id);
               navigate('./view/' + params.row.postId);
               setOpenDialog(prev => { return { ...prev, open: true, type: 'view', data: params.row }; });
-            }} className={`dark:text-white`}>
+            }} className={`text-psl-primary dark:text-psl-active-text`}>
               <VisibilityIcon />
             </IconButton>
             {permissions.edit ? <IconButton onClick={() => {
               setSelectedRow(params.row.id);
               navigate('./edit/' + params.row.postId);
               setOpenDialog(prev => { return { ...prev, open: true, type: 'edit', data: params.row }; });
-            }} className={`dark:text-white`}>
+            }} className={`text-psl-primary dark:text-psl-active-text`}>
               <EditIcon />
             </IconButton> : null}
             {permissions.delete ? <IconButton onClick={() => {
               setSelectedRow(params.row.id);
               navigate('./delete/' + params.row.postId);
               setOpenDialog(prev => { return { ...prev, open: true, type: 'delete', data: params.row }; });
-            }} className={`dark:text-white`}>
+            }} className={`text-psl-primary dark:text-psl-active-text`}>
               <DeleteIcon />
             </IconButton> : null}
           </Box>
@@ -181,8 +182,12 @@ const Notes = () => {
         disableExport: true
       }
     ],
-    rows: [],
+    rows: []
+  });
+
+  const [paginationModel, setPaginationModel] = useState({
     pageSize: 10,
+    page: 0
   });
 
   useMemo(() => {
@@ -235,7 +240,7 @@ const Notes = () => {
   const openView = (array) => {
     array.map((row) => {
       if (row.id === selectedRow) {
-        navigate('/notes/view/' + row.postId);
+        navigate('./view/' + row.postId);
         setOpenDialog(prev => { return { ...prev, open: true, type: 'view', data: row }; });
       }
       return row;
@@ -246,7 +251,7 @@ const Notes = () => {
   const openEdit = (array) => {
     array.map((row) => {
       if (row.id === selectedRow) {
-        navigate('/notes/edit/' + row.postId);
+        navigate('./edit/' + row.postId);
         setOpenDialog(prev => { return { ...prev, open: true, type: 'edit', data: row }; });
       }
       return row;
@@ -257,7 +262,7 @@ const Notes = () => {
   const openDelete = (array) => {
     array.map((row) => {
       if (row.id === selectedRow) {
-        navigate('/notes/delete/' + row.postId);
+        navigate('./delete/' + row.postId);
         setOpenDialog(prev => { return { ...prev, open: true, type: 'delete', data: row }; });
       }
       return row;
@@ -274,47 +279,54 @@ const Notes = () => {
       >
         <CircularProgress />
       </Backdrop>
-      <Suspense fallback={
-        <Backdrop
-          open={true}
-          className={`z-40`}
-        >
-          <CircularProgress />
-        </Backdrop>
-      }>
-        <Dialog
-          fullScreen={fullScreen}
-          open={openDialog.open}
-          className={`z-30 max-w-full`}
-        >
+      <Dialog
+        fullScreen={fullScreen}
+        open={openDialog.open}
+        className={`z-30 max-w-full`}
+      >
+        <Suspense fallback={
+          <Backdrop
+            open={true}
+            className={`z-40`}
+          >
+            <CircularProgress />
+          </Backdrop>
+        }>
           <Outlet context={[openDialog, setOpenDialog, fullScreen]} />
-        </Dialog>
-      </Suspense>
-      <Typography variant="h3" component="div" className={`py-5`}>Notes</Typography>
+        </Suspense>
+      </Dialog>
+      <Typography variant="h3" component="div" className={`py-5 text-psl-primary-text dark:text-psl-active-text`}>Notes</Typography>
       <DataGrid
         {...table}
-        onPageSizeChange={(newPageSize) => setTable(prev => {
-          return {
-            ...prev,
-            pageSize: newPageSize,
-          };
-        })}
-        rowsPerPageOptions={[10, 20, 30]}
+        aria-label="notesDataGrid"
+        paginationModel={paginationModel}
+        onPaginationModelChange={setPaginationModel}
+        pageSizeOptions={[10, 20, 30]}
         pagination
         autoHeight
         disableSelectionOnClick
         hideFooterSelectedRowCount
         selectionModel={selectedRow}
-        components={{
-          Toolbar: Toolbar,
-          LoadingOverlay: LinearProgress,
+        slots={{
+          toolbar: Toolbar,
+          loadingOverlay: LinearProgress,
         }}
-        componentsProps={{
+        slotProps={{
           toolbar: {
-            children: (<Button startIcon={<AddIcon />} className={`${!permissions.create && "hidden"}`} onClick={() => {
-              navigate('/notes/new');
-              setOpenDialog(prev => { return { ...prev, open: true, type: 'new' }; });
-            }}>New Note</Button>),
+            children: (
+              <Button
+                startIcon={<AddIcon />}
+                className={`${!permissions.create && "hidden"} text-psl-active-link`}
+                onClick={() => {
+                  navigate('/notes/new');
+                  setOpenDialog(prev => {
+                    return {
+                      ...prev,
+                      open: true,
+                      type: 'new'
+                    };
+                  });
+                }}>New Note</Button>),
             type: "post",
             csvOptions: { allColumns: true },
             clearSelect: setSelectedRow
@@ -323,9 +335,40 @@ const Notes = () => {
             onContextMenu: fullScreen ? handleContextMenu : null,
             style: fullScreen && { cursor: 'context-menu' },
           },
+          pagination: {
+            // style: {
+            //   color: 
+            // },
+            className: 'text-psl-primary dark:text-psl-secondary-text',
+            SelectProps: {
+              classes: {
+                icon: 'text-psl-primary dark:text-psl-secondary-text'
+              },
+              MenuProps: {
+                PopoverClasses: {
+                  paper: 'bg-inherit'
+                },
+                MenuListProps: {
+                  classes: {
+                    root: 'text-psl-primary-text dark:text-psl-active-text'
+                  },
+                  className: 'dark:bg-psl-primary bg-psl-active-text'
+                }
+              }
+            }
+          }
         }}
+        classes={{
+          columnSeparator: 'hidden',
+          columnHeader: 'border-0 border-x-[1px] border-solid first:border-l-0 last:border-r-0 border-psl-primary-text/40 dark:border-psl-secondary-text/40 max-h-8 px-2',
+          withBorderColor: 'border-psl-primary-text/30 dark:border-psl-secondary-text/30',
+          cell: 'text-psl-primary dark:text-psl-secondary-text',
+          columnHeaderTitleContainerContent: 'text-psl-primary dark:text-psl-secondary-text',
+          sortIcon: 'text-psl-primary dark:text-psl-secondary-text',
+          main: 'shadow-inner'
+        }}
+        className={`bg-psl-primary-text/20 dark:bg-psl-secondary-text/20 border-0 shadow-lg`}
         loading={posts.status === "loading"}
-        className="bg-slate-300"
         initialState={{
           columns: {
             columnVisibilityModel: {
@@ -348,57 +391,9 @@ const Notes = () => {
           }
         }}
       />
-      <Menu
-        open={contextMenu !== null}
-        onClose={handleClose}
-        anchorReference="anchorPosition"
-        anchorPosition={
-          contextMenu !== null
-            ? { top: contextMenu.mouseY, left: contextMenu.mouseX }
-            : undefined
-        }
-        componentsProps={{
-          root: {
-            onContextMenu: (e) => {
-              e.preventDefault();
-              handleClose();
-            },
-          },
-        }}
-        MenuListProps={{
-          className: 'dark:bg-slate-800'
-        }}
-      >
-        <MenuItem
-          onClick={() => openView(posts.posts)} >
-          <ListItemIcon className={`dark:text-white`}>
-            <VisibilityIcon />
-          </ListItemIcon>
-          <ListItemText className={`dark:text-white`}>
-            View
-          </ListItemText>
-        </MenuItem>
-        {permissions.edit ? <MenuItem
-          onClick={() => openEdit(posts.posts)}
-        >
-          <ListItemIcon className={`dark:text-white`}>
-            <EditIcon />
-          </ListItemIcon>
-          <ListItemText className={`dark:text-white`}>
-            Edit
-          </ListItemText>
-        </MenuItem> : null}
-        {permissions.delete ? <MenuItem
-          onClick={() => openDelete(posts.posts)}
-        >
-          <ListItemIcon className={`dark:text-white`}>
-            <DeleteIcon />
-          </ListItemIcon>
-          <ListItemText className={`dark:text-white`}>
-            Delete
-          </ListItemText>
-        </MenuItem> : null}
-      </Menu>
+      <DataGridMenu
+        functions={{ handleClose, openView, openEdit, openDelete }}
+        variables={{ contextMenu, permissions, array: posts.posts }} />
     </div>
   );
 };

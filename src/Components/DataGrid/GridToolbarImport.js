@@ -84,7 +84,12 @@ const GridToolbarImport = ({ type }) => {
 
   return (
     <>
-      <Button size="small" startIcon={<FileUploadOutlinedIcon />} onClick={handleUpload} color={upload.color}>
+      <Button
+        size="small"
+        startIcon={<FileUploadOutlinedIcon />}
+        onClick={handleUpload} color={upload.color}
+        className={`text-psl-active-link`}
+      >
         {upload.file ? `${upload.file.name}` : upload.text}
       </Button>
       <input

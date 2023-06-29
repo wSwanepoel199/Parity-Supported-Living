@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Box, Button, Checkbox, Container, FormControl, FormControlLabel, FormGroup, IconButton, Input, InputAdornment, InputLabel, Typography } from "@mui/material";
+import { Backdrop, Box, Button, Checkbox, CircularProgress, Container, FormControl, FormControlLabel, FormGroup, IconButton, Input, InputAdornment, InputLabel, Typography } from "@mui/material";
 import Grid from "@mui/material/Unstable_Grid2";
 import LoginIcon from '@mui/icons-material/Login';
 import Visibility from "@mui/icons-material/Visibility";
@@ -14,7 +14,7 @@ import { useLoginUserMutation } from "../../Redux/user/userApiSlice";
 
 const SignIn = () => {
   const navigate = useNavigate();
-  const [loginUser, { isSuccess }] = useLoginUserMutation();
+  const [loginUser, { isSuccess, isLoading }] = useLoginUserMutation();
   const [focus, setFocus] = useState(undefined);
   const [formData, setFormData] = useState({
     email: '',
@@ -42,10 +42,21 @@ const SignIn = () => {
       });
   };
 
+  if (isLoading) {
+    return (
+      <Backdrop
+        open={true}
+        className={`z-40`}
+      >
+        <CircularProgress />
+      </Backdrop>
+    );
+  }
+
   return (
     <Box component="form" className={`max-w-screen-md w-full flex flex-col justify-center items-center mx-auto h-full`} onSubmit={(e) => handleSubmit(e)}>
       <Container className={`flex justify-center`}>
-        <Grid container spacing={2} xs={10} sm={8} className=" flex flex-col justify-center content-center items-center rounded-md bg-gradient-to-b from-psl-active-text from-5% to-psl-secondary-text to-95% dark:from-psl-primary dark:from-5% dark:to-black">
+        <Grid container spacing={2} xs={10} sm={8} className=" flex flex-col justify-center content-center items-center rounded-md bg-gradient-to-b from-transparent from-5% to-psl-secondary-text dark:to-psl-primary-text shadow-md">
           <Grid sm={8} xs={12} className="flex flex-col justify-center content-center items-center">
             <LoginIcon fontSize="large" className="m-5 text-psl-primary dark:text-psl-secondary-text" />
             <Typography variant="h5" component="h1" className="text-psl-primary dark:text-psl-secondary-text">Sign In</Typography>
@@ -93,8 +104,8 @@ const SignIn = () => {
                   border-b-2
                   border-b-psl-primary/40
                   dark:border-b-psl-secondary-text/40
-                  hover:border-b-psl-primary
-                  hover:dark:border-b-psl-secondary-text
+                  hover:border-b-psl-active-link
+                  hover:dark:border-b-psl-active-link
                 `}`}
                 value={formData.email}
                 onChange={(e) => handleFormData(e)}
@@ -145,8 +156,8 @@ const SignIn = () => {
                   border-b-2
                   border-b-psl-primary/40
                   dark:border-b-psl-secondary-text/40
-                  hover:border-b-psl-primary
-                  hover:dark:border-b-psl-secondary-text
+                  hover:border-b-psl-active-link
+                  hover:dark:border-b-psl-active-link
                 `}`}
                 endAdornment={
                   <InputAdornment position="end">

@@ -149,21 +149,6 @@ const GeneralDataGrid = ({ intialTable, NewEntry, type, optionPermissions, table
 
   return (
     <>
-      <Dialog
-        fullScreen={fullScreen}
-        open={openDialog.open}
-        className={`z-30 max-w-full`}
-      >
-        {/* {
-          openDialog.open
-            ? (openDialog.type === "new" && <Create setOpenDialog={setOpenDialog} mobile={fullScreen} />)
-            || (openDialog.type === "edit" && <Update setOpenDialog={setOpenDialog} data={openDialog.data} mobile={fullScreen} />)
-            || (openDialog.type === "view" && <View setOpenDialog={setOpenDialog} data={openDialog.data} mobile={fullScreen} />)
-            || (openDialog.type === "delete" && <Delete setOpenDialog={setOpenDialog} data={openDialog.data} mobile={fullScreen} />)
-            : null
-        } */}
-        <Outlet />
-      </Dialog>
       <DataGrid
         {...table}
         onPageSizeChange={(newPageSize) => setTable(prev => {
@@ -201,57 +186,6 @@ const GeneralDataGrid = ({ intialTable, NewEntry, type, optionPermissions, table
         className="bg-slate-300"
         initialState={{ ...tableState }}
       />
-      <Menu
-        open={contextMenu !== null}
-        onClose={handleClose}
-        anchorReference="anchorPosition"
-        anchorPosition={
-          contextMenu !== null
-            ? { top: contextMenu.mouseY, left: contextMenu.mouseX }
-            : undefined
-        }
-        componentsProps={{
-          root: {
-            onContextMenu: (e) => {
-              e.preventDefault();
-              handleClose();
-            },
-          },
-        }}
-        MenuListProps={{
-          className: 'dark:bg-slate-800'
-        }}
-      >
-        <MenuItem
-          onClick={() => openView(tableArray)} >
-          <ListItemIcon className={`dark:text-white`}>
-            <VisibilityIcon />
-          </ListItemIcon>
-          <ListItemText className={`dark:text-white`}>
-            View
-          </ListItemText>
-        </MenuItem>
-        {permissions.edit ? <MenuItem
-          onClick={() => openEdit(tableArray)}
-        >
-          <ListItemIcon className={`dark:text-white`}>
-            <EditIcon />
-          </ListItemIcon>
-          <ListItemText className={`dark:text-white`}>
-            Edit
-          </ListItemText>
-        </MenuItem> : null}
-        {permissions.delete ? <MenuItem
-          onClick={() => openDelete(tableArray)}
-        >
-          <ListItemIcon className={`dark:text-white`}>
-            <DeleteIcon />
-          </ListItemIcon>
-          <ListItemText className={`dark:text-white`}>
-            Delete
-          </ListItemText>
-        </MenuItem> : null}
-      </Menu>
     </>
   );
 };

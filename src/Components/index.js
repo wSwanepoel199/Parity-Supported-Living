@@ -1,4 +1,5 @@
 import { lazy } from "react";
+import DataGridMenu from "./DataGridMenu/DataGridMenu";
 // import Appbar from "./Appbar/Appbar";
 const Appbar = lazy(() => import('./Appbar/Appbar'));
 // import PasswordReset from "./PasswordReset";
@@ -12,4 +13,4 @@ const PromptForUpdate = lazy(() => import('./PrompUpdateServiceWorker'));
 // import GeneralDataGrid from './DataGrid/GeneralDataGrid';
 const GeneralDataGrid = lazy(() => import('./DataGrid/GeneralDataGrid'));
 
-export { PasswordReset, ProtectedRoute, Appbar, GeneralDataGrid, CustomAlert, PromptForUpdate };
+export { PasswordReset, ProtectedRoute, Appbar, GeneralDataGrid, CustomAlert, PromptForUpdate, DataGridMenu };
