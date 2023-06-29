@@ -1,20 +1,11 @@
-import { Backdrop, Box, Button, CircularProgress, Dialog, IconButton, LinearProgress, ListItemIcon, ListItemText, Menu, MenuItem, Typography, useMediaQuery } from '@mui/material';
+import { Backdrop, Box, CircularProgress, Dialog, IconButton, Typography, useMediaQuery } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
-import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import VisibilityIcon from '@mui/icons-material/Visibility';
-// import PriorityHighIcon from '@mui/icons-material/PriorityHigh';
-// import DoneIcon from '@mui/icons-material/Done';
-// import CloseIcon from '@mui/icons-material/Close';
-// import { format, parseISO } from "date-fns";
-import { DataGrid } from "@mui/x-data-grid";
 import { memo, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 import { Outlet, useMatch, useNavigate } from "react-router-dom";
-
-
-import Toolbar from "../../Components/DataGrid/Toolbar";
 import { DataGridMenu, GeneralDataGrid } from '../../Components';
 
 const Clients = () => {
@@ -186,15 +177,13 @@ const Clients = () => {
 
 
   useMemo(() => {
-    if (match && openDialog.open) {
-      setOpenDialog(prev => {
-        return {
-          ...prev,
-          open: false
-        };
+    if (match && openDialog.open && !["new", "edit", "view", "delete"].includes(openDialog.type)) {
+      setOpenDialog({
+        ...openDialog,
+        open: !openDialog.open
       });
     }
-  }, [match]);
+  }, [match, openDialog]);
 
   const [selectedRow, setSelectedRow] = useState();
 
@@ -266,62 +255,6 @@ const Clients = () => {
         <Outlet context={[openDialog, setOpenDialog, fullScreen]} />
       </Dialog>
       <Typography variant="h3" component="div" className={`py-5 text-psl-primary dark:text-psl-active-text`}>Clients</Typography>
-      {/* <DataGrid
-        {...table}
-        onPageSizeChange={(newPageSize) => setTable(prev => {
-          return {
-            ...prev,
-            pageSize: newPageSize,
-          };
-        })}
-        rowsPerPageOptions={[10, 20, 30]}
-        pagination
-        autoHeight
-        disableSelectionOnClick
-        hideFooterSelectedRowCount
-        selectionModel={selectedRow}
-        components={{
-          Toolbar: Toolbar,
-          LoadingOverlay: LinearProgress,
-        }}
-        componentsProps={{
-          toolbar: {
-            children: (<Button startIcon={<AddIcon />} className={`${!permissions.create && "hidden"}`} onClick={() => {
-              navigate('./new');
-              setOpenDialog(prev => { return { ...prev, open: true, type: 'new' }; });
-            }}>New Client</Button>),
-            type: "client",
-            csvOptions: { allColumns: true },
-            clearSelect: setSelectedRow
-          },
-          row: {
-            onContextMenu: fullScreen ? handleContextMenu : null,
-            style: fullScreen && { cursor: 'context-menu' },
-          },
-        }}
-        loading={clients.status === "loading"}
-        className="bg-slate-300"
-        initialState={{
-          columns: {
-            columnVisibilityModel: {
-              // Hides listed coloumns
-              id: false,
-              clientId: false,
-              firstName: false,
-              lastName: false,
-              carers: false
-            },
-          },
-          sorting: {
-            sortModel: [
-              {
-                field: 'id',
-                sort: 'desc',
-              },
-            ],
-          }
-        }}
-      /> */}
       <GeneralDataGrid
         functions={{ setSelectedRow, handleContextMenu, setOpenDialog }}
         variables={{

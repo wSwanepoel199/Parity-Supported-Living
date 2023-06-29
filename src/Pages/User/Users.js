@@ -1,16 +1,12 @@
-import { Backdrop, Box, Button, CircularProgress, Dialog, IconButton, LinearProgress, ListItemIcon, ListItemText, Menu, MenuItem, Typography, useMediaQuery } from '@mui/material';
+import { Backdrop, Box, CircularProgress, Dialog, IconButton, Typography, useMediaQuery } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
-import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import VisibilityIcon from '@mui/icons-material/Visibility';
-import { DataGrid } from "@mui/x-data-grid";
 import { memo, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 import { Outlet, useMatch, useNavigate } from "react-router-dom";
 
-
-import Toolbar from "../../Components/DataGrid/Toolbar";
 import { DataGridMenu, GeneralDataGrid } from '../../Components';
 
 const Users = () => {
@@ -147,15 +143,13 @@ const Users = () => {
 
 
   useMemo(() => {
-    if (match && openDialog.open) {
-      setOpenDialog(prev => {
-        return {
-          ...prev,
-          open: false
-        };
+    if (match && openDialog.open && !["new", "edit", "view", "delete"].includes(openDialog.type)) {
+      setOpenDialog({
+        ...openDialog,
+        open: !openDialog.open
       });
     }
-  }, [match]);
+  }, [match, openDialog]);
 
   const [selectedRow, setSelectedRow] = useState();
 

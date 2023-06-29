@@ -66,7 +66,7 @@ const SignIn = () => {
               variant="standard"
               className="w-full"
               onFocus={(e) => {
-                setFocus(e);
+                if (e !== focus) setFocus(e);
                 document.activeElement.focus();
               }}
               onBlur={() => {
@@ -117,7 +117,7 @@ const SignIn = () => {
               variant="standard"
               className="w-full"
               onFocus={(e) => {
-                setFocus(e);
+                if (e !== focus) setFocus(e);
                 document.activeElement.focus();
               }}
               onBlur={() => {
