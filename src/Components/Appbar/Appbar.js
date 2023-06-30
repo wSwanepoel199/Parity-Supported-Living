@@ -2,7 +2,7 @@ import { AppBar, Avatar, Box, Container, IconButton, Menu, MenuItem, Toolbar, Ty
 import { useTheme } from '@mui/material/styles';
 import MenuIcon from '@mui/icons-material/Menu';
 import { useSelector } from "react-redux";
-import { memo, useEffect, useState } from "react";
+import { memo, useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useLogoutUserMutation } from "../../Redux/user/userApiSlice";
 import { selectUser } from "../../Redux/user/userSlice";
@@ -12,8 +12,12 @@ const Appbar = () => {
   const navigate = useNavigate();
   const [logoutUser] = useLogoutUserMutation();
 
+  const menu = useRef();
+
   const theme = useTheme();
   const smallScreen = useMediaQuery(theme.breakpoints.down('sm'));
+
+  const [hover, setHover] = useState(undefined);
 
   const [anchorEl, setAnchorEl] = useState({
     nav: null,
@@ -82,19 +86,78 @@ const Appbar = () => {
               open={Boolean(anchorEl.nav)}
               onClose={() => handleCloseMenu("nav")}
               aria-label="nav menu button"
+              PopoverClasses={{
+                paper: 'bg-inherit'
+              }}
               MenuListProps={{
-                className: 'dark:bg-slate-800'
+                className: 'bg-psl-secondary dark:bg-psl-primary',
+                onMouseLeave: () => handleCloseMenu('nav'),
               }}
             >
-              <MenuItem component={Link} to="/notes" href="/notes">
-                <Typography textAlign="center" className={`dark:text-white`}>Notes</Typography>
+              <MenuItem
+                component={Link}
+                to="/notes"
+                href="/notes"
+                id='notes'
+                onMouseEnter={(e) => {
+                  menu.current = e;
+                  setHover(e);
+                }}
+                onMouseLeave={() => {
+                  menu.current = null;
+                  setHover(undefined);
+                }}>
+                <Typography
+                  textAlign="center"
+                  className={`${hover?.target.id === 'notes' ? `
+                  text-psl-active-link`: `
+                  text-psl-primary 
+                  dark:text-psl-active-text
+                  `}`}>Notes</Typography>
               </MenuItem>
-              <MenuItem component={Link} to="/clients" href="/clients">
-                <Typography textAlign="center" className={`dark:text-white`}>Clients</Typography>
+              <MenuItem
+                component={Link}
+                to="/clients"
+                href="/clients"
+                id="clients"
+                onMouseEnter={(e) => {
+                  menu.current = e;
+                  setHover(e);
+                }}
+                onMouseLeave={() => {
+                  menu.current = null;
+                  setHover(undefined);
+                }}>
+                <Typography
+                  textAlign="center"
+                  className={`${hover?.target.id === 'clients' ? `
+                  text-psl-active-link`: `
+                  text-psl-primary 
+                  dark:text-psl-active-text
+                  `}`}>Clients</Typography>
               </MenuItem>
-              {["Admin", "Coordinator"].includes(user.user.role) ? <MenuItem component={Link} to="/users" href="/users">
-                <Typography textAlign="center" className={`dark:text-white`}>Users</Typography>
-              </MenuItem> : null}
+              {["Admin", "Coordinator"].includes(user.user.role) ?
+                <MenuItem
+                  component={Link}
+                  to="/users"
+                  href="/users"
+                  id="users"
+                  onMouseEnter={(e) => {
+                    menu.current = e;
+                    setHover(e);
+                  }}
+                  onMouseLeave={() => {
+                    menu.current = null;
+                    setHover(undefined);
+                  }}>
+                  <Typography
+                    textAlign="center"
+                    className={`${hover?.target.id === 'users' ? `
+                  text-psl-active-link`: `
+                  text-psl-primary 
+                  dark:text-psl-active-text
+                  `}`}>Users</Typography>
+                </MenuItem> : null}
             </Menu>
           </Box>
           <Box className={`flex w-full  justify-center items-center`} name="appbar-logo">
@@ -150,15 +213,35 @@ const Appbar = () => {
               open={Boolean(anchorEl.user)}
               onClose={() => handleCloseMenu("user")}
               aria-label="user menu button"
+              PopoverClasses={{
+                paper: 'bg-inherit'
+              }}
               MenuListProps={{
-                className: 'dark:bg-slate-800'
+                className: 'bg-psl-secondary dark:bg-psl-primary',
+                onMouseLeave: () => handleCloseMenu('user')
               }}
             >
-              <MenuItem onClick={() => {
-                handleCloseMenu('user');
-                logoutUser(user.user.userId);
-              }}>
-                <Typography textAlign="center" className={`dark:text-white`}>SignOut</Typography>
+              <MenuItem
+                id="signout"
+                onClick={() => {
+                  handleCloseMenu('user');
+                  logoutUser(user.user.userId);
+                }}
+                onMouseEnter={(e) => {
+                  menu.current = e;
+                  setHover(e);
+                }}
+                onMouseLeave={() => {
+                  menu.current = null;
+                  setHover(undefined);
+                }}>
+                <Typography
+                  textAlign="center"
+                  className={`${hover?.target.id === 'signout' ? `
+                  text-psl-active-link`: `
+                  text-psl-primary 
+                  dark:text-psl-active-text
+                  `}`}>SignOut</Typography>
               </MenuItem>
             </Menu>
           </Box>
