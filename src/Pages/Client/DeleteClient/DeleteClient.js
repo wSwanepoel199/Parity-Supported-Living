@@ -1,13 +1,13 @@
 import { Backdrop, Box, Button, CircularProgress, DialogActions, DialogContent, DialogContentText, DialogTitle, IconButton, Typography } from "@mui/material";
 import CloseIcon from '@mui/icons-material/Close';
 import { memo } from "react";
-import { useGetClientQuery, useRemoveClientMutation } from "../../../Redux/client/clientApiSlice";
+import { useRemoveClientMutation } from "../../../Redux/client/clientApiSlice";
 import { useNavigate, useOutletContext, useParams } from "react-router-dom";
 
 
 const DeleteClient = () => {
   const params = useParams();
-  const [openDialog, setOpenDialog,] = useOutletContext();
+  const { openDialog, setOpenDialog } = useOutletContext();
   const navigate = useNavigate();
 
   const [removeClient, { isLoading }] = useRemoveClientMutation();

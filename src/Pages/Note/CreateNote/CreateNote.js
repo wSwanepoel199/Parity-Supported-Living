@@ -6,16 +6,16 @@ import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useAddPostMutation } from "../../../Redux/posts/postApiSlice";
 import { useNavigate, useOutletContext } from "react-router-dom";
+import { selectUser } from "../../../Redux/user/userSlice";
+import { selectClients } from "../../../Redux/client/clientSlice";
+import { selectRoot } from "../../../Redux/root/rootSlice";
 
 const CreateNote = () => {
-  const { user, client, root } = useSelector(state => {
-    return {
-      user: state.user,
-      client: state.clients,
-      root: state.root
-    };
-  });
-  const [openDialog, setOpenDialog, fullScreen] = useOutletContext();
+  const user = useSelector(selectUser);
+  const client = useSelector(selectClients);
+  const root = useSelector(selectRoot);
+
+  const { setOpenDialog, fullScreen } = useOutletContext();
   const navigate = useNavigate();
   const [addPost] = useAddPostMutation();
   const [formData, setFormData] = useState({

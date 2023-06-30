@@ -34,7 +34,6 @@ const SignIn = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     loginUser(formData).then((res) => {
-      console.log(res);
       if (res.error?.status !== 400 || isSuccess) navigate('/notes');
     })
       .catch((err) => {

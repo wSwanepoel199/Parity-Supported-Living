@@ -11,15 +11,13 @@ import { Suspense, memo, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 import { Outlet, useMatch, useNavigate } from "react-router-dom";
 import { DataGridMenu, GeneralDataGrid } from '../../Components';
+import { selectPosts } from '../../Redux/posts/postSlice';
+import { selectUser } from '../../Redux/user/userSlice';
 
 
 const Notes = () => {
-  const { posts, user } = useSelector(state => {
-    return {
-      posts: state.posts,
-      user: state.user,
-    };
-  });
+  const posts = useSelector(selectPosts);
+  const user = useSelector(selectUser);
 
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
@@ -280,7 +278,7 @@ const Notes = () => {
             <CircularProgress />
           </Backdrop>
         }>
-          <Outlet context={[openDialog, setOpenDialog, fullScreen]} />
+          <Outlet context={{ openDialog, setOpenDialog, fullScreen }} />
         </Suspense>
       </Dialog>
       <Typography variant="h3" component="div" className={`py-5 text-psl-primary dark:text-psl-active-text`}>Notes</Typography>

@@ -7,18 +7,17 @@ import Toolbar from "./Toolbar";
 import { useSelector } from "react-redux";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { selectUsers } from "../../Redux/admin/adminSlice";
+import { selectPosts } from "../../Redux/posts/postSlice";
+import { selectClients } from "../../Redux/client/clientSlice";
 
 
 const GeneralDataGrid = ({ functions, variables }) => {
   const { setSelectedRow, handleContextMenu, setOpenDialog } = functions;
   const { table, selectedRow, permissions, initialState, settings } = variables;
-  const { admin, posts, clients } = useSelector(state => {
-    return {
-      admin: state.admin,
-      posts: state.posts,
-      clients: state.clients
-    };
-  });
+  const admin = useSelector(selectUsers);
+  const posts = useSelector(selectPosts);
+  const clients = useSelector(selectClients);
   const navigate = useNavigate();
 
   const theme = useTheme();

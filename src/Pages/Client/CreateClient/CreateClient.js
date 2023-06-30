@@ -8,6 +8,7 @@ import PhoneInput from 'react-phone-input-2';
 import { useSelector } from "react-redux";
 import { useCreateClientMutation } from "../../../Redux/client/clientApiSlice";
 import { useNavigate, useOutletContext } from "react-router-dom";
+import { selectUsers } from "../../../Redux/admin/adminSlice";
 // import 'react-phone-input-2/lib/style.css';
 
 const MyCustomInput = forwardRef((props, ref) => {
@@ -43,10 +44,10 @@ const containsText = (user, searchText) =>
   user.toLowerCase().indexOf(searchText.toLowerCase()) > -1;
 
 const CreateClient = () => {
-  const adminState = useSelector(state => state.admin);
-  const options = adminState.users;
+  const admin = useSelector(selectUsers);
+  const options = admin.users;
 
-  const [openDialog, setOpenDialog, fullScreen] = useOutletContext();
+  const { setOpenDialog, fullScreen } = useOutletContext();
   const navigate = useNavigate();
 
   const [createClient] = useCreateClientMutation();
@@ -336,4 +337,4 @@ const CreateClient = () => {
   );
 };
 
-export default CreateClient;
+export default memo(CreateClient);

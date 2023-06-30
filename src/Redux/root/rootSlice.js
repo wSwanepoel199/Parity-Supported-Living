@@ -88,3 +88,5 @@ export const rootSlice = createSlice({
 export const { storeError, clearMessage } = rootSlice.actions;
 
 export default rootSlice.reducer;
+
+export const selectRoot = state => state.root;

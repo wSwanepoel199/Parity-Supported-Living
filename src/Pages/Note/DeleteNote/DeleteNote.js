@@ -7,7 +7,7 @@ import { useNavigate, useOutletContext, useParams } from "react-router-dom";
 
 const DeleteNote = () => {
   const params = useParams();
-  const [openDialog, setOpenDialog,] = useOutletContext();
+  const { setOpenDialog } = useOutletContext();
   const navigate = useNavigate();
 
   const [deleteTargetPost, { isLoading }] = useDeleteTargetPostMutation();

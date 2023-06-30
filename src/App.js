@@ -5,19 +5,16 @@ import { Box, Button, CircularProgress, Container, IconButton, Snackbar, } from 
 import CloseIcon from '@mui/icons-material/Close';
 import { useRefreshUserMutation, } from './Redux/user/userApiSlice';
 import { Appbar, CustomAlert, PromptForUpdate } from "./Components";
+import { selectUser } from './Redux/user/userSlice';
+import { selectRoot } from './Redux/root/rootSlice';
 
 
 // inverstigate crashing when auth token expire
 // impliment getUser route to redux and backend, update clients and users to use the getX route over passing data directly between components
 
 function App() {
-  const state = useSelector(state => {
-    return {
-      user: state.user,
-      root: state.root,
-      note: state.posts
-    };
-  });
+  const user = useSelector(selectUser);
+  const root = useSelector(selectRoot);
   const [refreshUser] = useRefreshUserMutation();
   const navigate = useNavigate();
   const [alert, setAlert] = useState(undefined);
@@ -46,21 +43,21 @@ function App() {
         console.error(err);
       });
 
-  }, [state.user, navigate]);
+  }, [user, navigate]);
 
   useEffect(() => {
-    if (['error'].includes(state.root.status) && state.root.status !== "loading") {
+    if (['error'].includes(root.status) && root.status !== "loading") {
       setAlert(prev => {
         return {
           ...prev,
-          ...state.root
+          ...root
         };
       });
     }
     // if (['error'].includes(state.root.status) && state.root.msg.status === 403) {
     //   refreshUser();
     // }
-  }, [state.root, refreshUser]);
+  }, [root, refreshUser]);
 
   // useEffect(() => {
   //   if (htmlElement.classList.value !== localStorage.theme) {

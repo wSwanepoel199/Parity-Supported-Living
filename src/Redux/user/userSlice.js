@@ -71,3 +71,5 @@ export const userSlice = createSlice({
 export const { saveUser, removeUser, signOutUser, saveRefreshInterval, updateStatus } = userSlice.actions;
 
 export default userSlice.reducer;
+
+export const selectUser = state => state.user;

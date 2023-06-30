@@ -8,14 +8,12 @@ import { useSelector } from "react-redux";
 import { Outlet, useMatch, useNavigate } from "react-router-dom";
 
 import { DataGridMenu, GeneralDataGrid } from '../../Components';
+import { selectUsers } from '../../Redux/admin/adminSlice';
+import { selectUser } from '../../Redux/user/userSlice';
 
 const Users = () => {
-  const { admin, user } = useSelector(state => {
-    return {
-      admin: state.admin,
-      user: state.user
-    };
-  });
+  const admin = useSelector(selectUsers);
+  const user = useSelector(selectUser);
 
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
@@ -215,65 +213,9 @@ const Users = () => {
         open={openDialog.open}
         className={`z-30 max-w-full`}
       >
-        <Outlet context={[openDialog, setOpenDialog, fullScreen]} />
+        <Outlet context={{ openDialog, setOpenDialog, fullScreen }} />
       </Dialog>
       <Typography variant="h3" component="div" className={`py-5 text-psl-primary dark:text-psl-active-text`}>Users</Typography>
-      {/* <DataGrid
-        {...table}
-        onPageSizeChange={(newPageSize) => setTable(prev => {
-          return {
-            ...prev,
-            pageSize: newPageSize,
-          };
-        })}
-        rowsPerPageOptions={[10, 20, 30]}
-        pagination
-        autoHeight
-        disableSelectionOnClick
-        hideFooterSelectedRowCount
-        selectionModel={selectedRow}
-        components={{
-          Toolbar: Toolbar,
-          LoadingOverlay: LinearProgress,
-        }}
-        componentsProps={{
-          toolbar: {
-            children: (<Button startIcon={<AddIcon />} className={`${!permissions.create && "hidden"}`} onClick={() => {
-              navigate('./new');
-              setOpenDialog(prev => { return { ...prev, open: true, type: 'new' }; });
-            }}>New User</Button>),
-            type: "user",
-            csvOptions: { allColumns: true },
-            clearSelect: setSelectedRow
-          },
-          row: {
-            onContextMenu: fullScreen ? handleContextMenu : null,
-            style: fullScreen && { cursor: 'context-menu' },
-          },
-        }}
-        loading={admin.status === "loading"}
-        className="bg-slate-300"
-        initialState={{
-          columns: {
-            columnVisibilityModel: {
-              // Hides listed coloumns
-              id: false,
-              userId: false,
-              firstName: false,
-              lastName: false,
-              clients: false,
-            },
-          },
-          sorting: {
-            sortModel: [
-              {
-                field: 'id',
-                sort: 'desc',
-              },
-            ],
-          }
-        }}
-      /> */}
       <GeneralDataGrid
         functions={{ setSelectedRow, handleContextMenu, setOpenDialog }}
         variables={{

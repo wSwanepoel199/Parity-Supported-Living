@@ -4,9 +4,10 @@ import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import { memo, useState } from "react";
 import { useSelector } from "react-redux";
 import { useResetPassMutation } from "../Redux/user/userApiSlice";
+import { selectUser } from "../Redux/user/userSlice";
 
 const PasswordReset = () => {
-  const userState = useSelector(state => state.user);
+  const user = useSelector(selectUser);
   const [resetPass] = useResetPassMutation();
 
   const [formData, setFormData] = useState({
@@ -27,7 +28,7 @@ const PasswordReset = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     delete formData.showPassword;
-    resetPass({ password: formData.password, userId: userState.user.userId });
+    resetPass({ password: formData.password, userId: user.user.userId });
   };
 
   return (

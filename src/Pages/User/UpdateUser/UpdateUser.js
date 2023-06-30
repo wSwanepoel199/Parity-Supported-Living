@@ -7,19 +7,15 @@ import { useUpdateUserMutation } from "../../../Redux/user/userApiSlice";
 import { useSelector } from "react-redux";
 import { useNavigate, useOutletContext, useParams } from "react-router-dom";
 import { useGetUserQuery } from "../../../Redux/admin/adminApiSlice";
+import { selectClients } from "../../../Redux/client/clientSlice";
 
 const containsText = (user, searchText) =>
   user.toLowerCase().indexOf(searchText.toLowerCase()) > -1;
 
 const UpdateUser = () => {
-  const { root, clients } = useSelector(state => {
-    return {
-      root: state.root,
-      clients: state.clients
-    };
-  });
+  const clients = useSelector(selectClients);
 
-  const [openDialog, setOpenDialog, fullScreen] = useOutletContext();
+  const { setOpenDialog, fullScreen } = useOutletContext();
   const params = useParams();
   const navigate = useNavigate();
 

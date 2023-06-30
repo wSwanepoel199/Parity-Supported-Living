@@ -6,19 +6,19 @@ import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { useGetPostQuery, useUpdatePostMutation } from "../../../Redux/posts/postApiSlice";
 import { useNavigate, useOutletContext, useParams } from "react-router-dom";
+import { selectClients } from "../../../Redux/client/clientSlice";
+import { selectUsers } from "../../../Redux/admin/adminSlice";
+import { selectRoot } from "../../../Redux/root/rootSlice";
 
 const UpdateNote = () => {
-  const { client, admin, root } = useSelector(state => {
-    return {
-      client: state.clients,
-      admin: state.admin,
-      root: state.root
-    };
-  });
+  const client = useSelector(selectClients);
+  const admin = useSelector(selectUsers);
+  const root = useSelector(selectRoot);
+
   const params = useParams();
   const { data, isFetching, isLoading, isSuccess } = useGetPostQuery(params.id, { refetchOnMountOrArgChange: true });
   const mounted = useRef();
-  const [openDialog, setOpenDialog, fullScreen] = useOutletContext();
+  const { setOpenDialog, fullScreen } = useOutletContext();
   const navigate = useNavigate();
   const [updatePost] = useUpdatePostMutation();
   const [formData, setFormData] = useState(data);

@@ -12,7 +12,7 @@ const ViewNote = () => {
   const params = useParams();
   const { data, isLoading, isFetching, isSuccess } = useGetPostQuery(params.id, { refetchOnMountOrArgChange: true });
   const mounted = useRef();
-  const [openDialog, setOpenDialog] = useOutletContext();
+  const { setOpenDialog } = useOutletContext();
 
   const navigate = useNavigate();
   // const formData = JSON.parse(JSON.stringify(data).replace(/:null/gi, ":\"\""));

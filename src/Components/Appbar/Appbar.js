@@ -1,13 +1,14 @@
-import { AppBar, Avatar, Box, Button, Container, IconButton, Menu, MenuItem, Toolbar, Typography, useMediaQuery } from "@mui/material";
+import { AppBar, Avatar, Box, Container, IconButton, Menu, MenuItem, Toolbar, Typography, useMediaQuery } from "@mui/material";
 import { useTheme } from '@mui/material/styles';
 import MenuIcon from '@mui/icons-material/Menu';
 import { useSelector } from "react-redux";
 import { memo, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useLogoutUserMutation } from "../../Redux/user/userApiSlice";
+import { selectUser } from "../../Redux/user/userSlice";
 
 const Appbar = () => {
-  const userState = useSelector(state => state.user);
+  const user = useSelector(selectUser);
   const navigate = useNavigate();
   const [logoutUser] = useLogoutUserMutation();
 
@@ -29,7 +30,7 @@ const Appbar = () => {
         };
       });
     }
-  }, [userState, navigate]);
+  }, [user, navigate]);
 
   const handleOpenMenu = (event) => {
     setAnchorEl(prev => {
@@ -53,7 +54,7 @@ const Appbar = () => {
     <AppBar position="sticky" elevation={0} className={`bg-transparent bg-gradient-to-b from-psl-secondary to-transparent z-10 dark:from-psl-secondary`}>
       <Container maxWidth="lg" name="appbar-container">
         <Toolbar disableGutters className={`flex justify-between`} name="appbar-segmentor">
-          <Box className={`flex w-full justify-start ${userState.status === "loggedIn" ? "" : "hidden"}`} name="appbar-nav-menu">
+          <Box className={`flex w-full justify-start ${user.status === "loggedIn" ? "" : "hidden"}`} name="appbar-nav-menu">
             <IconButton
               size="large"
               name="nav"
@@ -91,7 +92,7 @@ const Appbar = () => {
               <MenuItem component={Link} to="/clients" href="/clients">
                 <Typography textAlign="center" className={`dark:text-white`}>Clients</Typography>
               </MenuItem>
-              {["Admin", "Coordinator"].includes(userState.user.role) ? <MenuItem component={Link} to="/users" href="/users">
+              {["Admin", "Coordinator"].includes(user.user.role) ? <MenuItem component={Link} to="/users" href="/users">
                 <Typography textAlign="center" className={`dark:text-white`}>Users</Typography>
               </MenuItem> : null}
             </Menu>
@@ -113,23 +114,23 @@ const Appbar = () => {
                 src={`${process.env.PUBLIC_URL}/PSLPineapple512.png`}
               />}
           </Box>
-          <Box className={`flex w-full justify-end ${userState.status === "loggedIn" ? "" : "hidden"}`}>
+          <Box className={`flex w-full justify-end ${user.status === "loggedIn" ? "" : "hidden"}`}>
             <Box className={`flex justify-center content-center text-center `}>
               <Typography
                 variant="body1"
                 component="p"
                 sx={{ display: { xs: 'none', md: 'flex' }, alignItems: 'center', mr: 1 }}
                 className={`drop-shadow-lg`}
-              >{userState.user.name}</Typography>
+              >{user.user.name}</Typography>
               <IconButton
                 size={smallScreen ? "small" : "large"}
                 name="user"
                 onClick={handleOpenMenu}
                 className={``}>
-                {userState.status === "loggedIn" ?
+                {user.status === "loggedIn" ?
                   <Avatar
                     alt="avatar icon"
-                    src={userState.icon ? userState.icon.icon : ''}
+                    src={user.icon ? user.icon.icon : ''}
                     className={`w-[${window.innerWidth / 10}px] h-[${window.innerWidth / 10}px] ring-1 ring-psl-secondary`} /> : null}
               </IconButton>
             </Box>
@@ -155,7 +156,7 @@ const Appbar = () => {
             >
               <MenuItem onClick={() => {
                 handleCloseMenu('user');
-                logoutUser(userState.user.userId);
+                logoutUser(user.user.userId);
               }}>
                 <Typography textAlign="center" className={`dark:text-white`}>SignOut</Typography>
               </MenuItem>

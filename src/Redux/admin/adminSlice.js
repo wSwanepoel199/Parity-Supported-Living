@@ -46,3 +46,5 @@ export const adminSlice = createSlice({
 export const { saveUsers, clearUsers } = adminSlice.actions;
 
 export default adminSlice.reducer;
+
+export const selectUsers = state => state.admin;

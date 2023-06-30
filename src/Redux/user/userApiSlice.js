@@ -1,4 +1,3 @@
-import { Navigate } from "react-router-dom";
 import { fetchStoredTokenLocal } from "../../Helpers/authToken";
 import { clearUsers } from "../admin/adminSlice";
 import { backendApi } from "../api/backendApi";

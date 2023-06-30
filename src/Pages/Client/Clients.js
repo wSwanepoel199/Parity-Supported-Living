@@ -7,15 +7,12 @@ import { memo, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 import { Outlet, useMatch, useNavigate } from "react-router-dom";
 import { DataGridMenu, GeneralDataGrid } from '../../Components';
+import { selectClients } from '../../Redux/client/clientSlice';
+import { selectUser } from '../../Redux/user/userSlice';
 
 const Clients = () => {
-  const { clients, user } = useSelector(state => {
-    return {
-      clients: state.clients,
-      user: state.user
-    };
-  });
-
+  const clients = useSelector(selectClients);
+  const user = useSelector(selectUser);
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
 
@@ -252,7 +249,7 @@ const Clients = () => {
         open={openDialog.open}
         className={`z-30 max-w-full`}
       >
-        <Outlet context={[openDialog, setOpenDialog, fullScreen]} />
+        <Outlet context={{ openDialog, setOpenDialog, fullScreen }} />
       </Dialog>
       <Typography variant="h3" component="div" className={`py-5 text-psl-primary dark:text-psl-active-text`}>Clients</Typography>
       <GeneralDataGrid

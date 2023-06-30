@@ -8,6 +8,8 @@ import PhoneInput from 'react-phone-input-2';
 import { useSelector } from "react-redux";
 import { useGetClientQuery, useUpdateClientMutation } from "../../../Redux/client/clientApiSlice";
 import { useNavigate, useOutletContext, useParams } from "react-router-dom";
+import { selectUsers } from "../../../Redux/admin/adminSlice";
+import { selectRoot } from "../../../Redux/root/rootSlice";
 // import 'react-phone-input-2/lib/style.css';
 
 const MyCustomInput = forwardRef((props, ref) => {
@@ -43,16 +45,12 @@ const containsText = (user, searchText) =>
   user.toLowerCase().indexOf(searchText.toLowerCase()) > -1;
 
 const UpdateClient = () => {
-  const { admin, root } = useSelector(state => {
-    return {
-      admin: state.admin,
-      root: state.root
-    };
-  });
+  const admin = useSelector(selectUsers);
+  const root = useSelector(selectRoot);
   const options = admin.users;
   const mounted = useRef();
 
-  const [openDialog, setOpenDialog, fullScreen] = useOutletContext();
+  const { setOpenDialog, fullScreen } = useOutletContext();
   const navigate = useNavigate();
   const params = useParams();
   const { data, isLoading, isFetching, isSuccess } = useGetClientQuery(params.id, { refetchOnMountOrArgChange: true });
@@ -412,4 +410,4 @@ const UpdateClient = () => {
   );
 };
 
-export default UpdateClient;
+export default memo(UpdateClient);

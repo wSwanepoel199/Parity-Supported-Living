@@ -7,7 +7,7 @@ import { useNavigate, useOutletContext, useParams } from "react-router-dom";
 
 const DeleteUser = () => {
   const params = useParams();
-  const [openDialog, setOpenDialog,] = useOutletContext();
+  const { openDialog, setOpenDialog } = useOutletContext();
   const navigate = useNavigate();
 
   const [deleteTargetUser, { isLoading }] = useDeleteTargetUserMutation();

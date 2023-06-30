@@ -3,17 +3,16 @@ import { Backdrop, Box, Button, CircularProgress, Collapse, DialogActions, Dialo
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import CloseIcon from '@mui/icons-material/Close';
 import Grid from "@mui/material/Unstable_Grid2/";
-// import { format, parseISO } from "date-fns";
 import { memo, useEffect, useRef, useState } from "react";
 import { useNavigate, useOutletContext, useParams } from "react-router-dom";
 import { useGetUserQuery } from "../../../Redux/admin/adminApiSlice";
-// import { useSelector } from "react-redux";
+
 
 const ViewUser = () => {
   const mounted = useRef();
   const params = useParams();
   const { data, isLoading, isFetching, isSuccess } = useGetUserQuery(params.id, { refetchOnMountOrArgChange: true });
-  const [openDialog, setOpenDialog] = useOutletContext();
+  const { setOpenDialog } = useOutletContext();
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState(data);
