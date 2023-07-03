@@ -8,13 +8,9 @@ import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import { useLoginUserMutation } from "../../Redux/user/userApiSlice";
 
-// const LoginIcon = lazy(() => import('@mui/icons-material/Login'));
-// const Visibility = lazy(() => import('@mui/icons-material/Visibility'));
-// const VisibilityOff = lazy(() => import('@mui/icons-material/VisibilityOff'));
-
 const SignIn = () => {
   const navigate = useNavigate();
-  const [loginUser, { isSuccess, isLoading, isError }] = useLoginUserMutation();
+  const [loginUser, { isLoading }] = useLoginUserMutation();
   const [focus, setFocus] = useState(undefined);
   const [formData, setFormData] = useState({
     email: '',
@@ -42,19 +38,14 @@ const SignIn = () => {
       });
   };
 
-  if (isLoading) {
-    return (
+  return (
+    <Box component="form" className={`max-w-screen-md w-full flex flex-col justify-center items-center mx-auto h-full`} onSubmit={(e) => handleSubmit(e)}>
       <Backdrop
-        open={true}
+        open={isLoading}
         className={`z-40`}
       >
         <CircularProgress />
       </Backdrop>
-    );
-  }
-
-  return (
-    <Box component="form" className={`max-w-screen-md w-full flex flex-col justify-center items-center mx-auto h-full`} onSubmit={(e) => handleSubmit(e)}>
       <Container className={`flex justify-center`}>
         <Grid container spacing={2} xs={10} sm={8} className=" flex flex-col justify-center content-center items-center rounded-md bg-gradient-to-b from-transparent from-5% to-psl-secondary-text dark:to-psl-primary-text shadow-md">
           <Grid sm={8} xs={12} className="flex flex-col justify-center content-center items-center">

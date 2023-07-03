@@ -8,12 +8,10 @@ import { useAddPostMutation } from "../../../Redux/posts/postApiSlice";
 import { useNavigate, useOutletContext } from "react-router-dom";
 import { selectUser } from "../../../Redux/user/userSlice";
 import { selectClients } from "../../../Redux/client/clientSlice";
-import { selectRoot } from "../../../Redux/root/rootSlice";
 
 const CreateNote = () => {
   const user = useSelector(selectUser);
   const client = useSelector(selectClients);
-  const root = useSelector(selectRoot);
 
   const { setOpenDialog, fullScreen } = useOutletContext();
   const navigate = useNavigate();

@@ -23,17 +23,6 @@ const DeleteUser = () => {
     });
   };
 
-  // if (isLoading) {
-  //   return (
-  //     <Backdrop
-  //       open={true}
-  //       className={`z-40`}
-  //     >
-  //       <CircularProgress />
-  //     </Backdrop>
-  //   );
-  // }
-
   return (
     <>
       <Backdrop

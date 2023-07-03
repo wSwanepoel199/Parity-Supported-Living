@@ -3,10 +3,8 @@ const path = require('path');
 const app = express();
 var os = require('os');
 // const https = require('https');
-const fs = require('fs');
 const handler = require('serve-handler');
 const http = require('http');
-const url = require('url');
 require('dotenv').config();
 
 const port = process.env.PORT || 3000;
