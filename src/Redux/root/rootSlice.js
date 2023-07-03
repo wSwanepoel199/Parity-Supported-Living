@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  status: 'asleep',
+  status: 'uninitiated',
   msg: undefined
 };
 
@@ -41,6 +41,7 @@ export const rootSlice = createSlice({
   extraReducers(builder) {
     builder
       .addMatcher(isPending, (state, action) => {
+        console.log("Request Args: ", action.meta?.arg);
         if (action.meta?.arg.endpointName === "refreshUser") {
           return {
             ...initialState

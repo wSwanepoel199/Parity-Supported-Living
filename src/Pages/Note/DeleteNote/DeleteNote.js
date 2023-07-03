@@ -27,35 +27,44 @@ const DeleteNote = () => {
     });
   };
 
-  if (isLoading) {
-    return (
+  // if (isLoading) {
+  //   return (
+  //     <Backdrop
+  //       open={true}
+  //       className={`z-40`}
+  //     >
+  //       <CircularProgress />
+  //     </Backdrop>
+  //   );
+  // }
+
+  return (
+    <>
       <Backdrop
-        open={true}
+        open={isLoading}
         className={`z-40`}
       >
         <CircularProgress />
       </Backdrop>
-    );
-  }
 
-  return (
-    <Box>
-      <DialogTitle className={`flex justify-between items-center`}>
-        <Typography variant="h6" component="p">
-          Delete Note?
-        </Typography>
-        <IconButton onClick={() => handleExit()}>
-          <CloseIcon />
-        </IconButton>
-      </DialogTitle>
-      <DialogContent>
-        <DialogContentText>Are you sure you want to delete this case note?</DialogContentText>
-      </DialogContent>
-      <DialogActions sx={{ justifyContent: 'space-between' }}>
-        <Button onClick={() => handleExit()}>Cancel</Button>
-        <Button color="error" variant="contained" onClick={() => handleDelete()}>DELETE</Button>
-      </DialogActions>
-    </Box>
+      <Box>
+        <DialogTitle className={`flex justify-between items-center`}>
+          <Typography variant="h6" component="p">
+            Delete Note?
+          </Typography>
+          <IconButton onClick={() => handleExit()}>
+            <CloseIcon />
+          </IconButton>
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText>Are you sure you want to delete this case note?</DialogContentText>
+        </DialogContent>
+        <DialogActions sx={{ justifyContent: 'space-between' }}>
+          <Button onClick={() => handleExit()}>Cancel</Button>
+          <Button color="error" variant="contained" onClick={() => handleDelete()}>DELETE</Button>
+        </DialogActions>
+      </Box>
+    </>
   );
 };
 

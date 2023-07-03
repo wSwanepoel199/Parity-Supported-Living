@@ -134,10 +134,14 @@ const Notes = () => {
         minWidth: 200,
         renderCell: (value) => {
           const splitAtLineBreak = value.row.notes.split(/\r?\n/);
-          const string = splitAtLineBreak.length >= 2 ? splitAtLineBreak[0] + "..." : splitAtLineBreak[0];
-          return (
-            <Box className={`text-ellipsis overflow-hidden whitespace-nowrap max-w-full`} >{string}</Box>
-          );
+          for (let i = 0; i <= splitAtLineBreak.length; i++) {
+            if (splitAtLineBreak[i]) {
+              const string = splitAtLineBreak[i] + "...";
+              return (
+                <Box className={`text-ellipsis overflow-hidden whitespace-nowrap max-w-full`} >{string}</Box>
+              );
+            }
+          }
         }
       },
       {

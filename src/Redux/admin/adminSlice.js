@@ -8,7 +8,7 @@ const isPending = (action) => {
 };
 
 const initialState = {
-  status: "sleeping",
+  status: "uninitiated",
   users: undefined,
 };
 
@@ -30,7 +30,8 @@ export const adminSlice = createSlice({
   extraReducers(builder) {
     builder
       .addMatcher(isPending, (state, action) => {
-        if (action.meta?.arg.endpointName.includes("Admin")) {
+        console.log("admin endpoint: ", action.meta?.arg.endpointName.includes("User"));
+        if (action.meta?.arg.endpointName.includes("Users")) {
           console.log(action.meta?.arg.endpointName);
           return {
             ...state,

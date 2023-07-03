@@ -13,13 +13,13 @@ const containsText = (user, searchText) =>
   user.toLowerCase().indexOf(searchText.toLowerCase()) > -1;
 
 const CreateUser = () => {
-  const root = useSelector(selectRoot);
+  // const root = useSelector(selectRoot);
   const clients = useSelector(selectClients);
 
   const { setOpenDialog, fullScreen } = useOutletContext();
   const navigate = useNavigate();
 
-  const [createUser] = useCreateUserMutation();
+  const [createUser, { isLoading }] = useCreateUserMutation();
 
   const [formData, setFormData] = useState({
     firstName: '',
@@ -68,7 +68,7 @@ const CreateUser = () => {
   return (
     <>
       <Backdrop
-        open={root.status === "loading"}
+        open={isLoading}
         className={`z-40`}
       >
         <CircularProgress />

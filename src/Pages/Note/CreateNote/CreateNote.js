@@ -17,7 +17,7 @@ const CreateNote = () => {
 
   const { setOpenDialog, fullScreen } = useOutletContext();
   const navigate = useNavigate();
-  const [addPost] = useAddPostMutation();
+  const [addPost, { isLoading }] = useAddPostMutation();
   const [formData, setFormData] = useState({
     date: formatISO(new Date()),
     hours: 0,
@@ -92,11 +92,12 @@ const CreateNote = () => {
   return (
     <>
       <Backdrop
-        open={root.status === "loading"}
+        open={isLoading}
         className={`z-40`}
       >
         <CircularProgress />
       </Backdrop>
+
       <Box component='form' onSubmit={(e) => handleSubmit(e)}>
         {/* {console.log(formData)} */}
         <DialogTitle className={`flex justify-between items-center`}>

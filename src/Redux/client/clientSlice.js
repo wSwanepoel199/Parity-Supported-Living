@@ -8,7 +8,7 @@ const isPending = (action) => {
 };
 
 const initialState = {
-  status: 'asleep',
+  status: 'uninitiated',
   clients: []
 };
 
@@ -30,6 +30,7 @@ export const clientSlice = createSlice({
   extraReducers(builder) {
     builder
       .addMatcher(isPending, (state, action) => {
+        console.log("Client Endpoint: ", action.meta?.arg.endpointName.includes("Clients"));
         if (action.meta?.arg.endpointName.includes("Clients")) {
           console.log(action.meta?.arg.endpointName);
           return {

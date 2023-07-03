@@ -134,25 +134,26 @@ const UpdateNote = () => {
     });
   };
 
-  if (isLoading || isFetching || !mounted.current) {
-    return (
-      <Backdrop
-        open={true}
-        className={`z-40`}
-      >
-        <CircularProgress />
-      </Backdrop>
-    );
-  }
+  // if (isLoading || isFetching || !mounted.current) {
+  //   return (
+  //     <Backdrop
+  //       open={true}
+  //       className={`z-40`}
+  //     >
+  //       <CircularProgress />
+  //     </Backdrop>
+  //   );
+  // }
 
   return (
     <>
       <Backdrop
-        open={root.status === "loading"}
+        open={isLoading || isFetching || !mounted.current}
         className={`z-40`}
       >
         <CircularProgress />
       </Backdrop>
+
       <Box component='form' onSubmit={(e) => handleSubmit(e)}>
         <DialogTitle className={`flex justify-between items-center`}>
           <Typography variant="h6" component="p">

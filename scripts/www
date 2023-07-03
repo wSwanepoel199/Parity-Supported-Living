@@ -22,9 +22,9 @@ const port = process.env.PORT || 3000;
 const redirectionFilter = function (req, res, next) {
   const date = new Date();
   const url = `${req.protocol}://${req.hostname}:${port}${req.url}`;
-
   if (req.get('X-Forwarded-Proto') === 'http') {
     const redirectTo = `https://${req.hostname}${req.url}`;
+    console.log(redirectTo);
     console.log(`${date} Redirecting ${url} --> ${redirectTo}`);
     res.redirect(301, redirectTo);
   } else {
@@ -65,13 +65,13 @@ app.get('*', function (req, res) {
 
 app.get("/*", (req, res) => handler(req, res));
 
-// var server = https.createServer(options, app);
+var server = http.createServer(app);
 // console.log(app);
 // const server = http.createServer((req, res) => {
 //   return handler(req, res);
 // });
 
-// server.listen(port, () => {
-//   console.log("Server is running on port: ", port);
-// });
+server.listen(port, () => {
+  console.log("Server is running on port: ", port);
+});
 
