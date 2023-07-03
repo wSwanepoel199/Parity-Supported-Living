@@ -7,7 +7,7 @@ import PriorityHighIcon from '@mui/icons-material/PriorityHigh';
 import DoneIcon from '@mui/icons-material/Done';
 import CloseIcon from '@mui/icons-material/Close';
 import { format, parseISO } from "date-fns";
-import { Suspense, memo, useMemo, useState } from "react";
+import { Suspense, memo, useEffect, useMemo, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { Outlet, useMatch, useNavigate } from "react-router-dom";
 import { DataGridMenu, GeneralDataGrid } from '../../Components';
@@ -18,6 +18,8 @@ import { selectUser } from '../../Redux/user/userSlice';
 const Notes = () => {
   const posts = useSelector(selectPosts);
   const user = useSelector(selectUser);
+
+  const mounted = useRef();
 
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
@@ -199,15 +201,24 @@ const Notes = () => {
     data: {}
   });
 
-
-  useMemo(() => {
-    if (match && openDialog.open && !["new", "edit", "view", "delete"].includes(openDialog.type)) {
-      setOpenDialog({
-        ...openDialog,
-        open: !openDialog.open
-      });
+  useEffect(() => {
+    if (!mounted.current && !["new", "edit", "view", "delete"].includes(openDialog.type)) {
+      if (!match && !openDialog.open) {
+        navigate('/notes', { replace: true });
+      }
+      if (match && openDialog.open) {
+        setOpenDialog({
+          ...openDialog,
+          open: !openDialog.open
+        });
+      }
+      mounted.current = true;
     }
-  }, [match, openDialog]);
+    return () => {
+      if (mounted.current) mounted.current = false;
+    };
+  }, [mounted, match, openDialog, navigate]);
+
 
   const [selectedRow, setSelectedRow] = useState();
 

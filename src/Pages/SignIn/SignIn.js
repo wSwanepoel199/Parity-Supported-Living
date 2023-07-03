@@ -14,7 +14,7 @@ import { useLoginUserMutation } from "../../Redux/user/userApiSlice";
 
 const SignIn = () => {
   const navigate = useNavigate();
-  const [loginUser, { isSuccess, isLoading }] = useLoginUserMutation();
+  const [loginUser, { isSuccess, isLoading, isError }] = useLoginUserMutation();
   const [focus, setFocus] = useState(undefined);
   const [formData, setFormData] = useState({
     email: '',
@@ -33,11 +33,12 @@ const SignIn = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    loginUser(formData).then((res) => {
-      if (res.error?.status !== 400 || isSuccess) navigate('/notes');
-    })
+    loginUser(formData)
+      .then((res) => {
+        if (!res.error) navigate('/notes');
+      })
       .catch((err) => {
-        console.error(err);
+        console.error('Signin Error: ', err);
       });
   };
 

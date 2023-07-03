@@ -3,7 +3,7 @@ import { useTheme } from '@mui/material/styles';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import VisibilityIcon from '@mui/icons-material/Visibility';
-import { memo, useMemo, useState } from "react";
+import { memo, useEffect, useMemo, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { Outlet, useMatch, useNavigate } from "react-router-dom";
 import { DataGridMenu, GeneralDataGrid } from '../../Components';
@@ -13,6 +13,9 @@ import { selectUser } from '../../Redux/user/userSlice';
 const Clients = () => {
   const clients = useSelector(selectClients);
   const user = useSelector(selectUser);
+
+  const mounted = useRef();
+
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
 
@@ -172,15 +175,24 @@ const Clients = () => {
     data: {}
   });
 
-
-  useMemo(() => {
-    if (match && openDialog.open && !["new", "edit", "view", "delete"].includes(openDialog.type)) {
-      setOpenDialog({
-        ...openDialog,
-        open: !openDialog.open
-      });
+  useEffect(() => {
+    if (!mounted.current && !["new", "edit", "view", "delete"].includes(openDialog.type)) {
+      if (!match && !openDialog.open) {
+        navigate('/clients', { replace: true });
+      }
+      if (match && openDialog.open) {
+        setOpenDialog({
+          ...openDialog,
+          open: !openDialog.open
+        });
+      }
+      mounted.current = true;
     }
-  }, [match, openDialog]);
+    return () => {
+      if (mounted.current) mounted.current = false;
+    };
+  }, [mounted, match, openDialog, navigate]);
+
 
   const [selectedRow, setSelectedRow] = useState();
 

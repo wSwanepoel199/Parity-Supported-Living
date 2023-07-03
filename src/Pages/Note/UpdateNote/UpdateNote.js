@@ -20,7 +20,7 @@ const UpdateNote = () => {
   const mounted = useRef();
   const { setOpenDialog, fullScreen } = useOutletContext();
   const navigate = useNavigate();
-  const [updatePost] = useUpdatePostMutation();
+  const [updatePost, { isLoading: updatingPost }] = useUpdatePostMutation();
   const [formData, setFormData] = useState(data);
   const [carerOptions, setCarerOptions] = useState([(data?.carer || "")]);
   const [clientOptions, setClientOptions] = useState([(data?.client || "")]);
@@ -58,9 +58,7 @@ const UpdateNote = () => {
     };
 
     return () => {
-      if (mounted.current) {
-        mounted.current = false;
-      }
+      if (mounted.current) mounted.current = false;
     };
   }, [mounted, client.clients, clientOptions, admin.users, carerOptions, data, isSuccess, isLoading]);
 
@@ -134,21 +132,21 @@ const UpdateNote = () => {
     });
   };
 
-  // if (isLoading || isFetching || !mounted.current) {
-  //   return (
-  //     <Backdrop
-  //       open={true}
-  //       className={`z-40`}
-  //     >
-  //       <CircularProgress />
-  //     </Backdrop>
-  //   );
-  // }
+  if (isLoading || isFetching || !mounted.current) {
+    return (
+      <Backdrop
+        open={true}
+        className={`z-40`}
+      >
+        <CircularProgress />
+      </Backdrop>
+    );
+  }
 
   return (
     <>
       <Backdrop
-        open={isLoading || isFetching || !mounted.current}
+        open={updatingPost}
         className={`z-40`}
       >
         <CircularProgress />
