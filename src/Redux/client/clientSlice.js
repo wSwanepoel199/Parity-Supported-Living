@@ -30,9 +30,9 @@ export const clientSlice = createSlice({
   extraReducers(builder) {
     builder
       .addMatcher(isPending, (state, action) => {
-        console.log("Client Endpoint: ", action.meta?.arg.endpointName.includes("Clients"));
+        // console.log("Client Endpoint: ", action.meta?.arg.endpointName.includes("Clients"));
         if (action.meta?.arg.endpointName.includes("Clients")) {
-          console.log(action.meta?.arg.endpointName);
+          // console.log(action.meta?.arg.endpointName);
           return {
             ...state,
             status: 'loading'

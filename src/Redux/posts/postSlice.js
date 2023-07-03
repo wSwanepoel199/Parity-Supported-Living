@@ -30,9 +30,9 @@ export const postSlice = createSlice({
   extraReducers(builder) {
     builder
       .addMatcher(isPending, (state, action) => {
-        console.log("Post Endpoint: ", action.meta?.arg.endpointName.includes("Posts"));
+        // console.log("Post Endpoint: ", action.meta?.arg.endpointName.includes("Posts"));
         if (action.meta?.arg.endpointName.includes("Posts")) {
-          console.log(action.meta?.arg.endpointName);
+          // console.log(action.meta?.arg.endpointName);
           return {
             ...state,
             status: 'loading'

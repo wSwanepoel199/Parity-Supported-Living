@@ -9,7 +9,6 @@ import { useSelector } from "react-redux";
 import { useGetClientQuery, useUpdateClientMutation } from "../../../Redux/client/clientApiSlice";
 import { useNavigate, useOutletContext, useParams } from "react-router-dom";
 import { selectUsers } from "../../../Redux/admin/adminSlice";
-import { selectRoot } from "../../../Redux/root/rootSlice";
 // import 'react-phone-input-2/lib/style.css';
 
 const MyCustomInput = forwardRef((props, ref) => {
@@ -46,7 +45,6 @@ const containsText = (user, searchText) =>
 
 const UpdateClient = () => {
   const admin = useSelector(selectUsers);
-  const root = useSelector(selectRoot);
   const options = admin.users;
   const mounted = useRef();
 
@@ -335,7 +333,6 @@ const UpdateClient = () => {
                       <Box
                         className={`flex flex-wrap gap-2`}
                       >
-                        {console.log(selected)}
                         {selected.map((value, index) => {
                           return (
                             <Box key={index}>

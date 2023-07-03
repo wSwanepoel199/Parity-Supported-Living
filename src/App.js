@@ -32,7 +32,6 @@ function App() {
 
   useEffect(() => {
     // process.env.DEVELOPMENT === "true" && reactManifest.update({ "short_name": "PSL Notes Dev" }, "#manifest-placeholder");
-
     window.updateAvailable
       .then(isAvailable => {
         if (isAvailable) {
@@ -42,6 +41,16 @@ function App() {
       .catch((err) => {
         console.error(err);
       });
+
+    window.addEventListener('popstate', () => {
+      if (user.status !== 'loggedIn') navigate('/signin');
+    });
+
+    return () => {
+      window.removeEventListener('popstate', () => {
+
+      });
+    };
 
   }, [user, navigate]);
 

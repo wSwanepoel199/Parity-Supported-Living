@@ -8,12 +8,10 @@ import { useGetPostQuery, useUpdatePostMutation } from "../../../Redux/posts/pos
 import { useNavigate, useOutletContext, useParams } from "react-router-dom";
 import { selectClients } from "../../../Redux/client/clientSlice";
 import { selectUsers } from "../../../Redux/admin/adminSlice";
-import { selectRoot } from "../../../Redux/root/rootSlice";
 
 const UpdateNote = () => {
   const client = useSelector(selectClients);
   const admin = useSelector(selectUsers);
-  const root = useSelector(selectRoot);
 
   const params = useParams();
   const { data, isFetching, isLoading, isSuccess } = useGetPostQuery(params.id, { refetchOnMountOrArgChange: true });
@@ -24,14 +22,6 @@ const UpdateNote = () => {
   const [formData, setFormData] = useState(data);
   const [carerOptions, setCarerOptions] = useState([(data?.carer || "")]);
   const [clientOptions, setClientOptions] = useState([(data?.client || "")]);
-
-  // useMemo(() => {
-  //   if (adminState.users && carerOptions.length === 1) setCarerOptions(() => adminState.users);
-  // }, [adminState.users, carerOptions]);
-
-  // useMemo(() => {
-  //   if (clientState.clients && clientOptions.length < 2) setClientOptions(() => clientState.clients);
-  // }, [clientState.clients, clientOptions]);
 
 
   useEffect(() => {

@@ -25,7 +25,7 @@ export const adminApiSlice = backendApi.injectEndpoints({
       query: (userId) => ({ url: '/auth/get/' + userId, method: "get" }),
       transformResponse: (response, meta, arg) => response.data.data,
       async onQueryStarted(userId, { queryFulfilled }) {
-        console.log(userId);
+        // console.log(userId);
         try {
           const { data } = await queryFulfilled;
           return data;

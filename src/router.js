@@ -10,7 +10,6 @@ import { Backdrop, Box, CircularProgress } from '@mui/material';
 import App from './App';
 import { ProtectedRoute } from './Components';
 import { SignIn, Landing, Notes, Users, Clients } from './Pages';
-import { selectUser } from './Redux/user/userSlice';
 
 // import CreateNote from './Pages/Note/CreateNote/CreateNote';
 // import UpdateNote from './Pages/Note/UpdateNote/UpdateNote';
@@ -46,12 +45,6 @@ const DeleteUser = lazy(() => import('./Pages/User/DeleteUser/DeleteUser'));
 const router = createRoutesFromElements(
   <Route
     element={<App />}
-    loader={async () => {
-      const user = selectUser;
-
-      console.log(user);
-      return user;
-    }}
   >
     <Route path="/" element={<Suspense fallback={
       <Box className={`h-full flex-grow flex justify-center items-center z-40`}>

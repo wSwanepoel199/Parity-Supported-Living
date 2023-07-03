@@ -30,9 +30,9 @@ export const adminSlice = createSlice({
   extraReducers(builder) {
     builder
       .addMatcher(isPending, (state, action) => {
-        console.log("admin endpoint: ", action.meta?.arg.endpointName.includes("User"));
-        if (action.meta?.arg.endpointName.includes("Users")) {
-          console.log(action.meta?.arg.endpointName);
+        // console.log("admin endpoint: ", action.meta?.arg.endpointName.includes("User"));
+        if (action.meta?.arg.endpointName.includes("User") || action.meta?.arg.endpointName.includes("Post")) {
+          // console.log(action.meta?.arg.endpointName);
           return {
             ...state,
             status: 'loading'

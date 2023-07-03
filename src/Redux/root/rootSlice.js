@@ -41,7 +41,7 @@ export const rootSlice = createSlice({
   extraReducers(builder) {
     builder
       .addMatcher(isPending, (state, action) => {
-        console.log("Request Args: ", action.meta?.arg);
+        // console.log("Request Args: ", action.meta?.arg);
         if (action.meta?.arg.endpointName === "refreshUser") {
           return {
             ...initialState

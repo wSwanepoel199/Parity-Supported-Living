@@ -6,14 +6,12 @@ import { useMemo, useState } from "react";
 import { useCreateUserMutation } from "../../../Redux/user/userApiSlice";
 import { useSelector } from "react-redux";
 import { useNavigate, useOutletContext } from "react-router-dom";
-import { selectRoot } from "../../../Redux/root/rootSlice";
 import { selectClients } from "../../../Redux/client/clientSlice";
 
 const containsText = (user, searchText) =>
   user.toLowerCase().indexOf(searchText.toLowerCase()) > -1;
 
 const CreateUser = () => {
-  // const root = useSelector(selectRoot);
   const clients = useSelector(selectClients);
 
   const { setOpenDialog, fullScreen } = useOutletContext();
