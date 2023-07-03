@@ -20,7 +20,7 @@ const UpdateNote = () => {
   const mounted = useRef();
   const { setOpenDialog, fullScreen } = useOutletContext();
   const navigate = useNavigate();
-  const [updatePost, { isLoading: updatingPost }] = useUpdatePostMutation();
+  const [updatePost, { isLoading: isUpdatingPost }] = useUpdatePostMutation();
   const [formData, setFormData] = useState(data);
   const [carerOptions, setCarerOptions] = useState([(data?.carer || "")]);
   const [clientOptions, setClientOptions] = useState([(data?.client || "")]);
@@ -146,7 +146,7 @@ const UpdateNote = () => {
   return (
     <>
       <Backdrop
-        open={updatingPost}
+        open={isUpdatingPost}
         className={`z-40`}
       >
         <CircularProgress />

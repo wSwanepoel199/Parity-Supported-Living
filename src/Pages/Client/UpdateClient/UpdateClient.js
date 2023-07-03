@@ -56,7 +56,7 @@ const UpdateClient = () => {
   const { data, isLoading, isFetching, isSuccess } = useGetClientQuery(params.id, { refetchOnMountOrArgChange: true });
 
 
-  const [updateClient] = useUpdateClientMutation();
+  const [updateClient, { isLoading: isUpdatingClient }] = useUpdateClientMutation();
   const [formData, setFormData] = useState(data);
 
   const [address, setAddress] = useState(data?.address.split(', ') || ["", "", "", ""]);
@@ -196,7 +196,7 @@ const UpdateClient = () => {
   return (
     <>
       <Backdrop
-        open={root.status === "loading"}
+        open={isUpdatingClient}
         className={`z-40`}
       >
         <CircularProgress />

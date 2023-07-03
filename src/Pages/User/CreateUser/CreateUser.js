@@ -19,7 +19,7 @@ const CreateUser = () => {
   const { setOpenDialog, fullScreen } = useOutletContext();
   const navigate = useNavigate();
 
-  const [createUser, { isLoading }] = useCreateUserMutation();
+  const [createUser, { isLoading: isCreatingUser }] = useCreateUserMutation();
 
   const [formData, setFormData] = useState({
     firstName: '',
@@ -68,7 +68,7 @@ const CreateUser = () => {
   return (
     <>
       <Backdrop
-        open={isLoading}
+        open={isCreatingUser}
         className={`z-40`}
       >
         <CircularProgress />

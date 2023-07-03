@@ -47,27 +47,20 @@ const ViewNote = () => {
     navigate('..');
   };
 
-  // if (isLoading || isFetching || !mounted.current) {
-  //   return (
-  //     <Backdrop
-  //       open={true}
-  //       className={`z-40`}
-  //     >
-  //       <CircularProgress />
-  //     </Backdrop>
-  //   );
-  // }
-
-
-  return (
-    <>
+  if (isLoading || isFetching || !mounted.current) {
+    return (
       <Backdrop
-        open={isLoading || isFetching || !mounted.current}
+        open={true}
         className={`z-40`}
       >
         <CircularProgress />
       </Backdrop>
+    );
+  }
 
+
+  return (
+    <>
       <Box>
         <DialogTitle className={`flex justify-between items-center`}>
           <Typography variant="h6" component="p">
