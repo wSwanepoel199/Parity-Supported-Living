@@ -28,6 +28,13 @@
       "sizes": "2258x1224"
     }
   ],
+  "related_applications": [
+    {
+      "platform": "webapp",
+      "url": "http://192.168.0.163:3000/manifest.json"
+    }
+  ],
+  "prefer_related_applications": true,
   "start_url": "/",
   "scope": "/",
   "display": "standalone",

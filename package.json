@@ -4,16 +4,11 @@
   "private": true,
   "scripts": {
     "dev": "react-scripts start",
-    "devWP": "npx webpack serve --mode='development'",
-    "test": "react-scripts test",
     "build": "react-scripts build",
-    "buildProd": "NODE_ENV=production webpack --mode=production",
-    "buildDev": "NODE_ENV=development webpack --mode=development",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
     "start": "node ./scripts/www",
     "serve": "npx serve -s build",
-    "eject": "react-scripts eject",
-    "startProd": "npm run buildProd && npm run start",
-    "startDev": "npm run buildDev && npm run start",
     "exportStats": "webpack --json > stats.json",
     "analyze": "source-map-explorer 'build/static/js/*.js'"
   },

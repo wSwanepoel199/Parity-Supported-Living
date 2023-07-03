@@ -1,10 +1,10 @@
 import React, { useEffect, useState, Suspense, memo } from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import { Box, Button, CircularProgress, Container, IconButton, Snackbar, } from '@mui/material';
+import { Box, Button, CircularProgress, Container, IconButton, LinearProgress, Snackbar, } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { useRefreshUserMutation, } from './Redux/user/userApiSlice';
-import { Appbar, CustomAlert, PromptForUpdate } from "./Components";
+import { Appbar, CustomAlert, Prompt } from "./Components";
 import { selectUser } from './Redux/user/userSlice';
 import { selectRoot } from './Redux/root/rootSlice';
 
@@ -18,7 +18,12 @@ function App() {
   const [refreshUser] = useRefreshUserMutation();
   const navigate = useNavigate();
   const [alert, setAlert] = useState(undefined);
-  const [update, setUpdate] = useState(false);
+  const [prompt, setPrompt] = useState({
+    type: '',
+    message: '',
+    status: false
+  });
+  const [installing, setInstalling] = useState(false);
   const [install, setInstall] = useState(false);
   const [deferredPrompt, setDeferredPrompt] = useState(null);
   // const htmlElement = document.documentElement;
@@ -30,18 +35,89 @@ function App() {
   // TODO Look into implimenting mailer into Backend
   // TODO remove auth token from being saved locally inorder to encourage regular refreshing, or don't, just think about it, maybe save it for next version of app
 
+
   useEffect(() => {
     // process.env.DEVELOPMENT === "true" && reactManifest.update({ "short_name": "PSL Notes Dev" }, "#manifest-placeholder");
-    window.updateAvailable
-      .then(isAvailable => {
-        if (isAvailable) {
-          setUpdate(true);
-        }
-      })
-      .catch((err) => {
-        console.error(err);
-      });
+    // console.log('navigator ', navigator);
 
+    const installable = async () => {
+      const relatedApps = await navigator.getInstalledRelatedApps();
+      const PWAisInstalled = relatedApps.length > 0;
+      console.log(PWAisInstalled, relatedApps);
+    };
+
+    const installing = async () => {
+      try {
+        setInstalling(true);
+        const installing = await window.installing;
+        setInstalling(installing);
+      }
+      catch (err) {
+        console.error(err);
+      }
+    };
+
+    const waiting = async () => {
+      try {
+        const waiting = await window.waiting;
+        if (waiting) setPrompt({
+          message: "Update Available",
+          status: waiting,
+          type: 'update'
+        });
+      }
+      catch (err) {
+        console.error(err);
+      }
+    };
+
+    installing();
+    waiting();
+    installable();
+
+
+    if (!localStorage.getItem('install')) {
+      window.addEventListener('beforeinstallprompt', (e) => {
+        // Prevent the mini-infobar from appearing on mobile
+        e.preventDefault();
+
+        // Update UI notify the user they can install the PWA
+        // showInstallPromotion();
+        setInstall({
+          message: 'Install Notes',
+          type: 'install',
+          status: true,
+        });
+        setDeferredPrompt(e);
+        // Optionally, send analytics event that PWA install promo was shown.
+        console.log(`'beforeinstallprompt' event was fired.`);
+      });
+    }
+
+    window.addEventListener("appinstalled", () => {
+      setInstall({
+        message: '',
+        type: '',
+        status: false
+      });
+      setDeferredPrompt(null);
+
+      console.log("PWA installed");
+    });
+
+    // return () => {
+    //   window.removeEventListener("beforeinstallprompt", () => {
+    //     console.log("removed before Install listiner");
+    //   });
+
+    //   window.removeEventListener("appinstalled", () => {
+    //     console.log("removed app Install listiner");
+    //   });
+    // };
+
+  }, []);
+
+  useEffect(() => {
     window.addEventListener('popstate', () => {
       if (user.status !== 'loggedIn') navigate('/signin');
     });
@@ -51,8 +127,7 @@ function App() {
 
       });
     };
-
-  }, [user, navigate]);
+  }, [user.status, navigate]);
 
   useEffect(() => {
     if (['error'].includes(root.status) && root.status !== "loading") {
@@ -77,53 +152,19 @@ function App() {
 
   // console.log(window);
 
-  // useEffect(() => {
-  //   window.addEventListener('beforeinstallprompt', (e) => {
-  //     // Prevent the mini-infobar from appearing on mobile
-  //     e.preventDefault();
-  //     // Stash the event so it can be triggered later.
-  //     setDeferredPrompt(e);
-
-  //     console.log(deferredPrompt);
-  //     // Update UI notify the user they can install the PWA
-  //     // showInstallPromotion();
-  //     setInstall(true);
-  //     // Optionally, send analytics event that PWA install promo was shown.
-  //     console.log(`'beforeinstallprompt' event was fired.`);
-  //   });
-
-  //   window.addEventListener("appinstalled", () => {
-  //     setInstall(false);
-
-  //     setDeferredPrompt(null);
-
-  //     console.log("PWA installed");
-  //   });
-
-  //   return () => {
-  //     window.removeEventListener("beforeinstallprompt", () => {
-  //       console.log("removed before Install listiner");
-  //     });
-
-  //     window.removeEventListener("appinstalled", () => {
-  //       console.log("removed app Install listiner");
-  //     });
-  //   };
-  // }, []);
-
-
-
-  const handleInstall = async () => {
-    setInstall(false);
-    deferredPrompt.prompt();
-    const { outcome } = await deferredPrompt.userChoice;
+  const handleInstall = async (e) => {
+    e.preventDefault();
+    prompt.open.prompt();
+    const { outcome } = await prompt.open.userChoice;
     console.log(`User Selectec ${outcome}`);
-    setDeferredPrompt(null);
   };
+
+
 
   return (
     <div className={`w-full min-h-[100dvh] bg-psl-active-text dark:bg-psl-primary flex flex-col`}>
       <>
+        {console.log(prompt)}
         {/* <Backdrop
           open={state.root.status === "loading"}
           className={`z-40`}
@@ -137,12 +178,16 @@ function App() {
           </Box>
         }>
           <Appbar />
+          {installing && <LinearProgress />}
           <CustomAlert alert={alert} />
-          <PromptForUpdate update={update} setUpdate={setUpdate} />
-          <>
+          {/* <PromptForUpdate update={update} setUpdate={setUpdate} /> */}
+          {prompt.type === 'update'
+            ? <Prompt message={prompt.message} type={'update'} open={prompt.status} close={setPrompt} />
+            : <Prompt message={install.message} type={'install'} open={deferredPrompt} close={setInstall} />}
+          {/* <>
             <Snackbar
               open={install}
-              message="Install Notes"
+              message={prompt.message}
               action={
                 <>
                   <Button
@@ -158,8 +203,14 @@ function App() {
                     color="inherit"
                     onClick={() => {
                       // promptForUpdate.resolve(false);
-                      setDeferredPrompt(null);
-                      setInstall(prev => !prev);
+                      setPrompt(prev => {
+                        return {
+                          ...prev,
+                          status: false
+                        };
+                      });
+                      setInstall(false);
+                      localStorage.setItem('rememberInstall', false);
                     }}
                   >
                     <CloseIcon />
@@ -171,7 +222,7 @@ function App() {
               }}
 
             />
-          </>
+          </> */}
           <Container className={`flex flex-grow`}>
             <Outlet />
           </Container>

@@ -2,7 +2,7 @@
 // register() is not called by default.
 
 import deferredPromise from "./Helpers/deferredPromise";
-import { promptForUpdate } from "./Components/PrompUpdateServiceWorker";
+import { promptForUpdate } from "./Components/Prompt/Prompt";
 
 // This lets the app load faster on subsequent visits in production, and gives
 // it offline capabilities. However, it also means that developers (and users)
@@ -59,7 +59,8 @@ export function register(config) {
   }
 }
 
-window.updateAvailable = new deferredPromise();
+window.waiting = new deferredPromise();
+window.installing = new deferredPromise();
 
 function registerValidSW(swUrl, config) {
   // console.log("swUrl", swUrl);
@@ -67,6 +68,9 @@ function registerValidSW(swUrl, config) {
     .register(swUrl)
     .then((registration) => {
       // console.log(registration);
+      console.log(registration);
+      if (!registration.installing) window.installing.resolve(false);
+      if (registration.waiting) window.waiting.resolve(true);
       registration.onupdatefound = () => {
         const newWorker = registration.installing || registration.waiting;
         if (newWorker == null) {
@@ -84,23 +88,13 @@ function registerValidSW(swUrl, config) {
               );
 
               // update is available
-              window.updateAvailable.resolve(true);
+              window.waiting.resolve(true);
+              window.installing.resolve(false);
 
               // Execute callback
               // if (config && config.onUpdate) {
               //   config.onUpdate(registration);
               // }
-
-              // checking prompt for updates
-              promptForUpdate.then(res => {
-                if (res) {
-                  navigator.serviceWorker.ready.then((registration) => {
-                    registration.unregister().then(() => {
-                      window.location.reload();
-                    });
-                  });
-                }
-              });
               // navigator.serviceWorker.ready.then((registration) => {
               //   console.log("triggering .update()", registration);
               //   registration.update();
@@ -113,7 +107,8 @@ function registerValidSW(swUrl, config) {
               console.log('Content is cached for offline use.');
 
               // no update is available
-              window.updateAvailable.resolve(false);
+              window.waiting.resolve(false);
+              window.installing.resolve(false);
 
               // Execute callback
               // if (config && config.onSuccess) {
@@ -149,6 +144,16 @@ function registerValidSW(swUrl, config) {
         //   }
         // };
       };
+      // checking prompt for updates
+      promptForUpdate.then(res => {
+        if (res) {
+          navigator.serviceWorker.ready.then((registration) => {
+            registration.unregister().then(() => {
+              window.location.reload();
+            });
+          });
+        }
+      });
       navigator.serviceWorker.addEventListener('controllerchange', () => {
         // This fires when the service worker controlling this page
         // changes, eg a new worker has skipped waiting and become
