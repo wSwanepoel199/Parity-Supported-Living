@@ -90,7 +90,7 @@ const UpdateNote = () => {
           return {
             ...prev,
             [name]: value,
-            clientName: client.clients.find(client => client.clientId === value).name
+            clientName: client.clients.find(client => client?.clientId === value).name
           };
         });
         return;
@@ -193,7 +193,7 @@ const UpdateNote = () => {
                   />
                 </FormControl>
               </Grid>
-              {(formData.client === "" && formData.clientId === "") ?
+              {(formData.client === "" && formData?.clientId === "") ?
                 <Grid sm={6} xs={12} className="flex justify-center">
                   <FormControl size="small" fullWidth margin="dense">
                     <InputLabel htmlFor="clientInput">Client's Name</InputLabel>
@@ -215,12 +215,12 @@ const UpdateNote = () => {
                     <Select
                       id="clientInput"
                       name='clientId'
-                      value={formData.clientId}
+                      value={formData?.clientId}
                       onChange={(e) => handleInput(e.target)}
                     >
                       {clientOptions.map((client, index) => {
                         return (
-                          <MenuItem key={index} value={client.clientId}>{client.firstName} {client?.lastName}</MenuItem>
+                          <MenuItem key={index} value={client?.clientId}>{client.firstName} {client?.lastName}</MenuItem>
                         );
                       })}
                     </Select>
@@ -310,7 +310,7 @@ const UpdateNote = () => {
             {!fullScreen &&
               <Button
                 onClick={() => handleExit()}>Cancel</Button>}
-            <Button color="success" variant="contained" type="submit" disabled={formData.clientId === "" || formData.carerId === ""}>Update</Button>
+            <Button color="success" variant="contained" type="submit" disabled={formData?.clientId === "" || formData?.carerId === ""}>Update</Button>
           </Box>
         </DialogActions>
       </Box>
