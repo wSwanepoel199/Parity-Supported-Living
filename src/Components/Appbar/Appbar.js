@@ -90,7 +90,7 @@ const Appbar = () => {
                 paper: 'bg-inherit'
               }}
               MenuListProps={{
-                className: 'bg-psl-secondary dark:bg-psl-primary',
+                className: 'bg-psl-secondary-text dark:bg-psl-primary',
                 onMouseLeave: () => handleCloseMenu('nav'),
               }}
             >
@@ -217,7 +217,7 @@ const Appbar = () => {
                 paper: 'bg-inherit'
               }}
               MenuListProps={{
-                className: 'bg-psl-secondary dark:bg-psl-primary',
+                className: 'bg-psl-secondary-text dark:bg-psl-primary',
                 onMouseLeave: () => handleCloseMenu('user')
               }}
             >

@@ -1,8 +1,9 @@
 import React, { useEffect, useState, Suspense, memo } from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import { Box, Button, CircularProgress, Container, IconButton, LinearProgress, Snackbar, } from '@mui/material';
-import CloseIcon from '@mui/icons-material/Close';
+import { Box, CircularProgress, Container, Fab, LinearProgress, useMediaQuery, useTheme, } from '@mui/material';
+import NightsStayIcon from '@mui/icons-material/NightsStay';
+import LightModeIcon from '@mui/icons-material/LightMode';
 import { useRefreshUserMutation, } from './Redux/user/userApiSlice';
 import { Appbar, CustomAlert, Prompt } from "./Components";
 import { selectUser } from './Redux/user/userSlice';
@@ -15,6 +16,10 @@ import { selectRoot } from './Redux/root/rootSlice';
 function App() {
   const user = useSelector(selectUser);
   const root = useSelector(selectRoot);
+
+  const theme = useTheme();
+  const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
+
   const [refreshUser] = useRefreshUserMutation();
   const navigate = useNavigate();
   const [alert, setAlert] = useState(undefined);
@@ -25,11 +30,19 @@ function App() {
   });
   const [installing, setInstalling] = useState(false);
   const [install, setInstall] = useState(false);
-  const [deferredPrompt, setDeferredPrompt] = useState(null);
-  // const htmlElement = document.documentElement;
-  // localStorage.theme = document.getElementsByName("theme")[0].content;
-  // htmlElement.classList.add(localStorage.theme);
-  // const [themeChoice, setThemeChoice] = useState(localStorage.theme);
+
+  const deviceTheme = useMediaQuery('(prefers-color-scheme: dark)');
+  const savedTheme = localStorage.getItem("theme");
+  const classTheme = document.body.className;
+  const themeIsDark = document.body.className === 'dark';
+  const [selectedTheme, setSelectedTheme] = useState(document.body.className);
+
+  if (!savedTheme) {
+    deviceTheme ? localStorage.setItem('theme', 'dark') : localStorage.setItem('theme', 'light');
+  }
+  if (savedTheme && savedTheme !== classTheme) {
+    document.body.className = savedTheme;
+  }
 
   // TODO SW forced to manually unregister and reload page, look into a smoother sw transition between old and new
   // TODO Look into implimenting mailer into Backend
@@ -39,12 +52,6 @@ function App() {
   useEffect(() => {
     // process.env.DEVELOPMENT === "true" && reactManifest.update({ "short_name": "PSL Notes Dev" }, "#manifest-placeholder");
     // console.log('navigator ', navigator);
-
-    const installable = async () => {
-      const relatedApps = await navigator.getInstalledRelatedApps();
-      const PWAisInstalled = relatedApps.length > 0;
-      console.log(PWAisInstalled, relatedApps);
-    };
 
     const installing = async () => {
       try {
@@ -73,10 +80,9 @@ function App() {
 
     installing();
     waiting();
-    installable();
 
 
-    if (!localStorage.getItem('install')) {
+    if (!sessionStorage.getItem('install')) {
       window.addEventListener('beforeinstallprompt', (e) => {
         // Prevent the mini-infobar from appearing on mobile
         e.preventDefault();
@@ -105,15 +111,15 @@ function App() {
       console.log("PWA installed");
     });
 
-    // return () => {
-    //   window.removeEventListener("beforeinstallprompt", () => {
-    //     console.log("removed before Install listiner");
-    //   });
+    return () => {
+      window.removeEventListener("beforeinstallprompt", () => {
+        console.log("removed before Install listiner");
+      });
 
-    //   window.removeEventListener("appinstalled", () => {
-    //     console.log("removed app Install listiner");
-    //   });
-    // };
+      window.removeEventListener("appinstalled", () => {
+        console.log("removed app Install listiner");
+      });
+    };
 
   }, []);
 
@@ -123,11 +129,13 @@ function App() {
     });
 
     return () => {
-      window.removeEventListener('popstate', () => {
-
-      });
+      window.removeEventListener('popstate', () => { });
     };
   }, [user.status, navigate]);
+
+  useEffect(() => {
+
+  }, []);
 
   useEffect(() => {
     if (['error'].includes(root.status) && root.status !== "loading") {
@@ -152,19 +160,16 @@ function App() {
 
   // console.log(window);
 
-  const handleInstall = async (e) => {
-    e.preventDefault();
-    prompt.open.prompt();
-    const { outcome } = await prompt.open.userChoice;
-    console.log(`User Selectec ${outcome}`);
+  const handleThemeChange = () => {
+    savedTheme === 'dark' ? localStorage.setItem("theme", 'light') : localStorage.setItem('theme', 'dark');
+    setSelectedTheme(localStorage.getItem('theme'));
+    document.body.className = selectedTheme;
   };
-
-
 
   return (
     <div className={`w-full min-h-[100dvh] bg-psl-active-text dark:bg-psl-primary flex flex-col`}>
       <>
-        {console.log(prompt)}
+        {console.log(deviceTheme, savedTheme, classTheme, themeIsDark)}
         {/* <Backdrop
           open={state.root.status === "loading"}
           className={`z-40`}
@@ -178,54 +183,24 @@ function App() {
           </Box>
         }>
           <Appbar />
-          {installing && <LinearProgress />}
+          {installing && <LinearProgress className={`bg-psl-primary-text dark:bg-psl-secondary`} classes={{ bar: 'bg-psl-secondary dark:bg-psl-active-link' }} />}
           <CustomAlert alert={alert} />
-          {/* <PromptForUpdate update={update} setUpdate={setUpdate} /> */}
-          {prompt.type === 'update'
-            ? <Prompt type={'update'} data={prompt} close={setPrompt} />
-            : <Prompt type={'install'} data={install} close={setInstall} />}
-          {/* <>
-            <Snackbar
-              open={install}
-              message={prompt.message}
-              action={
-                <>
-                  <Button
-                    size="small"
-                    onClick={handleInstall}
-                    className={`text-white`}
-                  >
-                    Install
-                  </Button>
-                  <IconButton
-                    size="small"
-                    aria-label='close'
-                    color="inherit"
-                    onClick={() => {
-                      // promptForUpdate.resolve(false);
-                      setPrompt(prev => {
-                        return {
-                          ...prev,
-                          status: false
-                        };
-                      });
-                      setInstall(false);
-                      localStorage.setItem('rememberInstall', false);
-                    }}
-                  >
-                    <CloseIcon />
-                  </IconButton>
-                </>
-              }
-              ContentProps={{
-                className: `bg-slate-500`
-              }}
 
-            />
-          </> */}
           <Container className={`flex flex-grow`}>
             <Outlet />
           </Container>
+          <Box className={`flex px-5 pb-4 justify-between`}>
+            {(prompt.status || install.status) ?
+              <div className={`flex`}>
+                <Prompt type={'install'} data={install} close={setInstall} />
+                <Prompt type={'update'} data={prompt} close={setPrompt} />
+              </div> : null}
+            <div className={`flex ml-auto p-1`}>
+              <Fab size={fullScreen ? 'small' : 'medium'} aria-label="theme toggle" className={`bg-psl-secondary-text dark:bg-psl-secondary `} onClick={() => { handleThemeChange(); }}>
+                {themeIsDark ? <NightsStayIcon className={`text-psl-secondary-text`} /> : <LightModeIcon className={`text-psl-primary`} />}
+              </Fab>
+            </div>
+          </Box>
         </Suspense>
         {/* {process.env.NODE_ENV === 'development' ? <Button onClick={refreshUser}>Refresh</Button> : null} */}
       </>
