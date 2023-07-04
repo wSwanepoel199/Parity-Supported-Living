@@ -5,18 +5,18 @@ import deferredPromise from '../../Helpers/deferredPromise';
 
 export const promptForUpdate = new deferredPromise();
 
-const Prompt = ({ message, type, open, close }) => {
+const Prompt = ({ type, data, close }) => {
 
   const handleAccept = async (type) => {
     switch (type) {
       case "install": {
-        open.prompt();
-        const { outcome } = await open.userChoice;
+        data.data.prompt();
+        const { outcome } = await data.data.userChoice;
         console.log(`User Selectec ${outcome}`);
         close(prev => {
           return {
             ...prev,
-            status: false
+            status: false,
           };
         });
         break;
@@ -44,7 +44,8 @@ const Prompt = ({ message, type, open, close }) => {
         close(prev => {
           return {
             ...prev,
-            status: false
+            status: false,
+            data: null
           };
         });
         break;
@@ -87,8 +88,8 @@ const Prompt = ({ message, type, open, close }) => {
   return (
     <>
       <Snackbar
-        open={Boolean(open)}
-        message={message}
+        open={Boolean(data.status)}
+        message={data.message}
         action={action}
         ContentProps={{
           className: `bg-slate-500`

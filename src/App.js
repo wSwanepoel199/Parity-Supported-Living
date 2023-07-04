@@ -87,8 +87,8 @@ function App() {
           message: 'Install Notes',
           type: 'install',
           status: true,
+          data: e
         });
-        setDeferredPrompt(e);
         // Optionally, send analytics event that PWA install promo was shown.
         console.log(`'beforeinstallprompt' event was fired.`);
       });
@@ -98,9 +98,9 @@ function App() {
       setInstall({
         message: '',
         type: '',
-        status: false
+        status: false,
+        data: null
       });
-      setDeferredPrompt(null);
 
       console.log("PWA installed");
     });
@@ -182,8 +182,8 @@ function App() {
           <CustomAlert alert={alert} />
           {/* <PromptForUpdate update={update} setUpdate={setUpdate} /> */}
           {prompt.type === 'update'
-            ? <Prompt message={prompt.message} type={'update'} open={prompt.status} close={setPrompt} />
-            : <Prompt message={install.message} type={'install'} open={deferredPrompt} close={setInstall} />}
+            ? <Prompt type={'update'} data={prompt} close={setPrompt} />
+            : <Prompt type={'install'} data={install} close={setInstall} />}
           {/* <>
             <Snackbar
               open={install}
