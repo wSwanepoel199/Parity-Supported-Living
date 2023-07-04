@@ -34,7 +34,6 @@ function App() {
   const deviceTheme = useMediaQuery('(prefers-color-scheme: dark)');
   const savedTheme = localStorage.getItem("theme");
   const classTheme = document.body.className;
-  const themeIsDark = document.body.className === 'dark';
   const [selectedTheme, setSelectedTheme] = useState(document.body.className);
 
   if (!savedTheme) {
@@ -169,14 +168,6 @@ function App() {
   return (
     <div className={`w-full min-h-[100dvh] bg-psl-active-text dark:bg-psl-primary flex flex-col`}>
       <>
-        {console.log(deviceTheme, savedTheme, classTheme, themeIsDark)}
-        {/* <Backdrop
-          open={state.root.status === "loading"}
-          className={`z-40`}
-        >
-          <CircularProgress />
-        </Backdrop> */}
-        {/* {state.user.status === "loggedIn" ? <Appbar /> : null} */}
         <Suspense fallback={
           <Box className={`flex-grow flex justify-center items-center z-40`}>
             <CircularProgress />
@@ -197,7 +188,7 @@ function App() {
               </div> : null}
             <div className={`flex ml-auto p-1`}>
               <Fab size={fullScreen ? 'small' : 'medium'} aria-label="theme toggle" className={`bg-psl-secondary-text dark:bg-psl-secondary `} onClick={() => { handleThemeChange(); }}>
-                {themeIsDark ? <NightsStayIcon className={`text-psl-secondary-text`} /> : <LightModeIcon className={`text-psl-primary`} />}
+                {selectedTheme === "dark" ? <NightsStayIcon className={`text-psl-secondary-text`} /> : <LightModeIcon className={`text-psl-primary`} />}
               </Fab>
             </div>
           </Box>
