@@ -96,20 +96,20 @@ const CreateNote = () => {
         <CircularProgress />
       </Backdrop>
 
-      <Box component='form' onSubmit={(e) => handleSubmit(e)}>
+      <Box component='form' onSubmit={(e) => handleSubmit(e)} className={`bg-psl-active-text dark:bg-psl-primary`}>
         {/* {console.log(formData)} */}
         <DialogTitle className={`flex justify-between items-center`}>
-          <Typography variant="h6" component="p">
+          <Typography variant="h6" component="p" className={`text-psl-primary dark:text-psl-active-text`}>
             New Note
           </Typography>
-          <IconButton onClick={() => handleExit()}>
-            <CloseIcon />
+          <IconButton onClick={() => handleExit()} >
+            <CloseIcon className={`text-psl-primary dark:text-psl-active-text`} />
           </IconButton>
         </DialogTitle>
         <DialogContent>
           <Grid container spacing={2} className="flex justify-center">
             <Grid xs={12} className=" border-b-2 border-b-gray-400 border-solid border-x-transparent border-t-transparent">
-              <Typography>Details</Typography>
+              <Typography className={`text-psl-primary dark:text-psl-secondary-text`}>Details</Typography>
             </Grid>
             <Grid sm={6} xs={12} className="flex justify-center">
               <FormControl size="small" fullWidth margin="dense">

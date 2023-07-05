@@ -287,6 +287,9 @@ const Notes = () => {
         fullScreen={fullScreen}
         open={openDialog.open}
         className={`z-30 max-w-full`}
+        classes={{
+          paper: 'bg-transparent'
+        }}
       >
         <Suspense fallback={
           <Backdrop

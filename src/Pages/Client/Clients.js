@@ -258,6 +258,9 @@ const Clients = () => {
         fullScreen={fullScreen}
         open={openDialog.open}
         className={`z-30 max-w-full`}
+        classes={{
+          paper: 'bg-transparent'
+        }}
       >
         <Outlet context={{ openDialog, setOpenDialog, fullScreen }} />
       </Dialog>
