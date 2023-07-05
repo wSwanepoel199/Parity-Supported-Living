@@ -4,7 +4,6 @@ import { useSelector } from 'react-redux';
 import { Box, CircularProgress, Container, Fab, LinearProgress, useMediaQuery, useTheme, } from '@mui/material';
 import NightsStayIcon from '@mui/icons-material/NightsStay';
 import LightModeIcon from '@mui/icons-material/LightMode';
-import { useRefreshUserMutation, } from './Redux/user/userApiSlice';
 import { Appbar, CustomAlert, Prompt } from "./Components";
 import { selectUser } from './Redux/user/userSlice';
 import { selectRoot } from './Redux/root/rootSlice';
@@ -20,30 +19,33 @@ function App() {
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
-  const [refreshUser] = useRefreshUserMutation();
   const navigate = useNavigate();
-  const [alert, setAlert] = useState(undefined);
-  const [prompt, setPrompt] = useState({
-    type: '',
+
+  const [installing, setInstalling] = useState(undefined);
+  const [waiting, setWaiting] = useState({
     message: '',
-    status: false
+    type: '',
+    status: false,
+    data: null
   });
-  const [installing, setInstalling] = useState(false);
-  const [install, setInstall] = useState(false);
+  const [install, setInstall] = useState({
+    message: '',
+    type: '',
+    status: false,
+    data: null
+  });
 
-  const deviceTheme = useMediaQuery('(prefers-color-scheme: dark)');
-  const savedTheme = localStorage.getItem("theme");
-  const classTheme = document.body.className;
-  const [selectedTheme, setSelectedTheme] = useState(document.body.className);
+  const deviceTheme = useMediaQuery('(prefers-color-scheme: dark)'); //true
+  const [darkMode, setDarkMode] = useState(deviceTheme); //true
+  const savedTheme = localStorage.getItem("theme"); //null
 
-  if (!savedTheme) {
-    deviceTheme ? localStorage.setItem('theme', 'dark') : localStorage.setItem('theme', 'light');
+  if (!savedTheme) { //(true && true) = true
+    localStorage.setItem('theme', darkMode ? 'dark' : 'light'); //theme = dark
   }
-  if (savedTheme && savedTheme !== classTheme) {
-    document.body.className = savedTheme;
+  if (savedTheme && savedTheme !== document.body.className) { //(true && true) = true
+    document.body.className = savedTheme; // dark
   }
 
-  // TODO SW forced to manually unregister and reload page, look into a smoother sw transition between old and new
   // TODO Look into implimenting mailer into Backend
   // TODO remove auth token from being saved locally inorder to encourage regular refreshing, or don't, just think about it, maybe save it for next version of app
 
@@ -52,9 +54,9 @@ function App() {
     // process.env.DEVELOPMENT === "true" && reactManifest.update({ "short_name": "PSL Notes Dev" }, "#manifest-placeholder");
     // console.log('navigator ', navigator);
 
-    const installing = async () => {
+    const sw_is_installing = async () => {
       try {
-        setInstalling(true);
+        setInstalling(process.env.NODE_ENV === "production");
         const installing = await window.installing;
         setInstalling(installing);
       }
@@ -63,10 +65,10 @@ function App() {
       }
     };
 
-    const waiting = async () => {
+    const sw_is_waiting = async () => {
       try {
         const waiting = await window.waiting;
-        if (waiting) setPrompt({
+        if (waiting) setWaiting({
           message: "Update Available",
           status: waiting,
           type: 'update'
@@ -77,28 +79,26 @@ function App() {
       }
     };
 
-    installing();
-    waiting();
+    sw_is_installing();
+    sw_is_waiting();
 
 
-    if (!sessionStorage.getItem('install')) {
-      window.addEventListener('beforeinstallprompt', (e) => {
-        // Prevent the mini-infobar from appearing on mobile
-        e.preventDefault();
+    // event listener to control pwa installation
+    window.addEventListener('beforeinstallprompt', (e) => {
+      // Prevent the mini-infobar from appearing on mobile
+      e.preventDefault();
 
-        // Update UI notify the user they can install the PWA
-        // showInstallPromotion();
-        setInstall({
-          message: 'Install Notes',
-          type: 'install',
-          status: true,
-          data: e
-        });
-        // Optionally, send analytics event that PWA install promo was shown.
-        console.log(`'beforeinstallprompt' event was fired.`);
+      // Update UI notify the user they can install the PWA
+      // showInstallPromotion();
+      setInstall({
+        message: 'Install Notes',
+        type: 'install',
+        status: true,
+        data: e
       });
-    }
+    });
 
+    // event listener to clear installation event
     window.addEventListener("appinstalled", () => {
       setInstall({
         message: '',
@@ -107,7 +107,6 @@ function App() {
         data: null
       });
 
-      console.log("PWA installed");
     });
 
     return () => {
@@ -132,37 +131,13 @@ function App() {
     };
   }, [user.status, navigate]);
 
-  useEffect(() => {
-
-  }, []);
-
-  useEffect(() => {
-    if (['error'].includes(root.status) && root.status !== "loading") {
-      setAlert(prev => {
-        return {
-          ...prev,
-          ...root
-        };
-      });
-    }
-    // if (['error'].includes(state.root.status) && state.root.msg.status === 403) {
-    //   refreshUser();
-    // }
-  }, [root, refreshUser]);
-
-  // useEffect(() => {
-  //   if (htmlElement.classList.value !== localStorage.theme) {
-  //     htmlElement.classList.toggle("light");
-  //     htmlElement.classList.toggle("dark");
-  //   }
-  // }, [themeChoice]);
 
   // console.log(window);
 
   const handleThemeChange = () => {
-    savedTheme === 'dark' ? localStorage.setItem("theme", 'light') : localStorage.setItem('theme', 'dark');
-    setSelectedTheme(localStorage.getItem('theme'));
-    document.body.className = selectedTheme;
+    darkMode ? localStorage.setItem('theme', 'light') : localStorage.setItem('theme', 'dark'); // theme = light
+    setDarkMode(!darkMode); //false
+    document.body.className = localStorage.getItem('theme'); // class = light
   };
 
   return (
@@ -175,20 +150,19 @@ function App() {
         }>
           <Appbar />
           {installing && <LinearProgress className={`bg-psl-primary-text dark:bg-psl-secondary`} classes={{ bar: 'bg-psl-secondary dark:bg-psl-active-link' }} />}
-          <CustomAlert alert={alert} />
+          <CustomAlert />
 
           <Container className={`flex flex-grow`}>
             <Outlet />
           </Container>
           <Box className={`flex px-5 pb-4 justify-between`}>
-            {(prompt.status || install.status) ?
-              <div className={`flex`}>
-                <Prompt type={'install'} data={install} close={setInstall} />
-                <Prompt type={'update'} data={prompt} close={setPrompt} />
-              </div> : null}
+            <div className={`flex`}>
+              <Prompt state={install} close={setInstall} />
+              <Prompt state={waiting} close={setWaiting} />
+            </div>
             <div className={`flex ml-auto p-1`}>
               <Fab size={fullScreen ? 'small' : 'medium'} aria-label="theme toggle" className={`bg-psl-secondary-text dark:bg-psl-secondary `} onClick={() => { handleThemeChange(); }}>
-                {selectedTheme === "dark" ? <NightsStayIcon className={`text-psl-secondary-text`} /> : <LightModeIcon className={`text-psl-primary`} />}
+                {darkMode ? <NightsStayIcon className={`text-psl-secondary-text`} /> : <LightModeIcon className={`text-psl-primary`} />}
               </Fab>
             </div>
           </Box>
