@@ -54,7 +54,7 @@ const Users = () => {
         field: 'name',
         headerName: 'Name',
         flex: 1,
-        minWidth: 100,
+        minWidth: 85,
         valueGetter: ({ row }) => { return `${row.firstName} ${row?.lastName}`; },
         disableExport: true
       },
@@ -62,14 +62,14 @@ const Users = () => {
         field: 'email',
         headerName: 'Email',
         flex: 1,
-        minWidth: 100,
+        minWidth: 85,
         renderCell: ({ value }) => <p className={`text-ellipsis overflow-hidden whitespace-nowrap max-w-full`}>{value}</p>,
       },
       {
         field: 'clientsName',
         headerName: 'Clients',
         disableExport: true,
-        flex: 1,
+        flex: 2,
         minWidth: 100,
         renderCell: (params) => {
           const clients = params.row.clients.map((clients) => `${clients.firstName} ${clients?.lastName}`).join(', ');

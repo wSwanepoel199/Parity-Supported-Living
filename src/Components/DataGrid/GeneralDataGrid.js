@@ -40,6 +40,7 @@ const GeneralDataGrid = ({ functions, variables }) => {
       autoHeight
       disableSelectionOnClick
       hideFooterSelectedRowCount
+      disableColumnMenu
       selectionModel={selectedRow}
       slots={{
         toolbar: Toolbar,

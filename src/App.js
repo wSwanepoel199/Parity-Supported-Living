@@ -6,7 +6,6 @@ import NightsStayIcon from '@mui/icons-material/NightsStay';
 import LightModeIcon from '@mui/icons-material/LightMode';
 import { Appbar, CustomAlert, Prompt } from "./Components";
 import { selectUser } from './Redux/user/userSlice';
-import { selectRoot } from './Redux/root/rootSlice';
 
 
 // inverstigate crashing when auth token expire
@@ -14,7 +13,6 @@ import { selectRoot } from './Redux/root/rootSlice';
 
 function App() {
   const user = useSelector(selectUser);
-  const root = useSelector(selectRoot);
 
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
@@ -151,7 +149,6 @@ function App() {
           <Appbar />
           {installing && <LinearProgress className={`bg-psl-primary-text dark:bg-psl-secondary`} classes={{ bar: 'bg-psl-secondary dark:bg-psl-active-link' }} />}
           <CustomAlert />
-
           <Container className={`flex flex-grow`}>
             <Outlet />
           </Container>

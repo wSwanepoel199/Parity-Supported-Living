@@ -37,8 +37,6 @@ const Clients = () => {
       },
       {
         field: 'clientId',
-        flex: 1,
-        minWidth: 100,
       },
       {
         field: 'firstName',
@@ -50,7 +48,7 @@ const Clients = () => {
         field: 'name',
         headerName: 'Name',
         flex: 1,
-        minWidth: 100,
+        minWidth: 85,
         valueGetter: ({ row }) => { return `${row.firstName} ${row?.lastName}`; },
         renderCell: ({ value }) => <Box className={`text-ellipsis overflow-hidden whitespace-nowrap max-w-full`}>{value}</Box>,
         disableExport: true
@@ -59,7 +57,7 @@ const Clients = () => {
         field: 'email',
         headerName: 'Email',
         flex: 1,
-        minWidth: 100,
+        minWidth: 85,
         renderCell: ({ value }) => <Box className={`text-ellipsis overflow-hidden whitespace-nowrap max-w-full`}>{value}</Box>
       },
       {
@@ -80,7 +78,7 @@ const Clients = () => {
         field: 'carersName',
         headerName: 'Carers',
         disableExport: true,
-        flex: 1,
+        flex: 2,
         minWidth: 100,
         renderCell: (params) => {
           const carers = params.row.carers.map((carer) => `${carer.firstName}`).join(', ');
@@ -94,7 +92,7 @@ const Clients = () => {
         headerName: 'Notes',
         disableColumnMenu: true,
         flex: 2,
-        minWidth: 100,
+        minWidth: 150,
         renderCell: (value) => {
           const splitAtLineBreak = value.row.notes.split(/\r?\n/);
           const string = splitAtLineBreak.length >= 2 ? splitAtLineBreak[0] + "..." : splitAtLineBreak[0];

@@ -68,14 +68,15 @@ const Notes = () => {
         valueFormatter: ({ value }) => `${value}`,
         renderCell: ({ value }) => value ? <p>{format(parseISO(value), 'dd/MM/yyyy')}</p> : null,
         flex: 1,
-        minWidth: 100,
+        minWidth: 80,
       },
       {
         field: 'client',
         headerName: 'Client',
         disableColumnMenu: true,
         flex: 1,
-        minWidth: 100,
+        minWidth: 85,
+        maxWidth: 150,
         renderCell: ({ row }) => {
           if (row.clientId === "") {
             return <p className={`text-ellipsis overflow-hidden whitespace-nowrap max-w-full`}>
@@ -97,7 +98,7 @@ const Notes = () => {
         headerName: 'Carer',
         disableColumnMenu: true,
         flex: 1,
-        minWidth: 100,
+        minWidth: 85,
         maxWidth: 150,
         renderCell: ({ row }) => {
           if (row.carerId === "") {
@@ -119,7 +120,9 @@ const Notes = () => {
         field: 'hours',
         headerName: 'Hours',
         disableColumnMenu: true,
-        width: 60
+        flex: 1,
+        minWidth: 85,
+        maxWidth: 85
       },
       {
         field: 'kilos',
