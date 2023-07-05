@@ -38,7 +38,7 @@
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
-  "theme_color": "#3D3D3D",
+  "theme_color": "#009368",
   "background_color": "#000000",
   "lang": "en",
   "categories": ["business", "utilities"]
