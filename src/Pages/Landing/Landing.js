@@ -44,6 +44,9 @@ const Landing = () => {
         fullScreen={fullScreen}
         open={Boolean(user.user?.resetPassword)}
         className={`z-30`}
+        classes={{
+          paper: 'bg-transparent'
+        }}
       >
         <PasswordReset />
       </Dialog>

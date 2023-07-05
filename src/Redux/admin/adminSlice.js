@@ -7,6 +7,10 @@ const isPending = (action) => {
   return action.type.endsWith('pending');
 };
 
+const isSuccess = (action) => {
+  return action.type.endsWith('fulfilled');
+};
+
 const initialState = {
   status: "uninitiated",
   users: undefined,
@@ -36,6 +40,17 @@ export const adminSlice = createSlice({
           return {
             ...state,
             status: 'loading'
+          };
+        } else {
+          return;
+        }
+      })
+      .addMatcher(isSuccess, (state, action) => {
+        if (action.meta?.arg.endpointName.includes("User") || action.meta?.arg.endpointName.includes("Post")) {
+          // console.log(action.meta?.arg.endpointName);
+          return {
+            ...state,
+            status: 'success'
           };
         } else {
           return;

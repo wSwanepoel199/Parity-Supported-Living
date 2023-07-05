@@ -178,7 +178,7 @@ const SignIn = () => {
             </FormControl>
           </Grid>
           <Grid sm={8} xs={12} className="flex justify-center">
-            <Button variant="contained" className="m-3 bg-transparent hover:bg-psl-active-link hover:to-psl-active-link bg-gradient-to-b from-transparent to-psl-secondary text-psl-primary dark:text-psl-secondary-text shadow-none hover:shadow-none" type="Submit">Sign In</Button>
+            <Button variant="contained" className="m-3 bg-transparent bg-gradient-to-b from-transparent to-psl-secondary-text dark:to-psl-secondary hover:bg-psl-active-link hover:to-psl-active-link hover:dark:to-psl-active-link hover:dark:text-psl-primary text-psl-primary dark:text-psl-secondary-text shadow-none hover:shadow-none" type="Submit">Sign In</Button>
           </Grid>
           <Grid sm={8} xs={12} className="flex justify-center">
             <FormGroup>
@@ -201,7 +201,7 @@ const SignIn = () => {
           </Grid>
         </Grid>
       </Container>
-    </Box >
+    </Box>
   );
 };
 
