@@ -152,7 +152,7 @@ function App() {
           <Container className={`flex flex-grow`}>
             <Outlet />
           </Container>
-          <Container className={`flex px-5 pb-4 justify-between z-0`}>
+          <Container className={`flex px-5 pb-2 justify-between z-0 `}>
             <div className={`flex`}>
               <Prompt state={install} close={setInstall} />
               <Prompt state={waiting} close={setWaiting} />
