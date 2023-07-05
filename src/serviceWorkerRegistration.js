@@ -68,7 +68,7 @@ function registerValidSW(swUrl, config) {
     .register(swUrl)
     .then((registration) => {
       // console.log(registration);
-      console.log(registration);
+      // console.log(registration);
       if (!registration.installing) window.installing.resolve(false);
       if (registration.waiting) window.waiting.resolve(true);
       registration.onupdatefound = () => {

@@ -152,7 +152,7 @@ function App() {
           <Container className={`flex flex-grow`}>
             <Outlet />
           </Container>
-          <Box className={`flex px-5 pb-4 justify-between`}>
+          <Container className={`flex px-5 pb-4 justify-between z-0`}>
             <div className={`flex`}>
               <Prompt state={install} close={setInstall} />
               <Prompt state={waiting} close={setWaiting} />
@@ -162,7 +162,7 @@ function App() {
                 {darkMode ? <NightsStayIcon className={`text-psl-secondary-text`} /> : <LightModeIcon className={`text-psl-primary`} />}
               </Fab>
             </div>
-          </Box>
+          </Container>
         </Suspense>
         {/* {process.env.NODE_ENV === 'development' ? <Button onClick={refreshUser}>Refresh</Button> : null} */}
       </>
