@@ -68,7 +68,7 @@ const Appbar = () => {
               onClick={handleOpenMenu}
               color="inherit"
             >
-              <MenuIcon fontSize={"inherit"} />
+              <MenuIcon fontSize={"inherit"} className={`text-psl-primary dark:text-psl-active-text`} />
             </IconButton>
             <Menu
               id="nav-menu-appbar"
@@ -183,7 +183,7 @@ const Appbar = () => {
                 variant="body1"
                 component="p"
                 sx={{ display: { xs: 'none', md: 'flex' }, alignItems: 'center', mr: 1 }}
-                className={`drop-shadow-lg`}
+                className={`drop-shadow-lg text-psl-primary dark:text-psl-active-text`}
               >{user.user.name}</Typography>
               <IconButton
                 size={smallScreen ? "small" : "large"}
@@ -194,7 +194,7 @@ const Appbar = () => {
                   <Avatar
                     alt="avatar icon"
                     src={user.icon ? user.icon.icon : ''}
-                    className={`w-[${window.innerWidth / 10}px] h-[${window.innerWidth / 10}px] ring-1 ring-psl-secondary`} /> : null}
+                    className={`w-[${window.innerWidth / 10}px] h-[${window.innerWidth / 10}px] ring-1 ring-psl-active-text dark:ring-psl-primary bg-psl-active-text dark:bg-psl-primary`} /> : null}
               </IconButton>
             </Box>
             <Menu
