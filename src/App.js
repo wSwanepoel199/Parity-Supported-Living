@@ -121,7 +121,7 @@ function App() {
 
   useEffect(() => {
     window.addEventListener('popstate', () => {
-      if (user.status !== 'loggedIn') navigate('/signin');
+      if (user.status !== 'loggedIn') navigate('/signin', { replace: true });
     });
 
     return () => {
