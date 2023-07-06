@@ -158,8 +158,8 @@ function App() {
               <Prompt state={waiting} close={setWaiting} />
             </div>
             <div className={`flex ml-auto p-1`}>
-              <Fab size={fullScreen ? 'small' : 'medium'} aria-label="theme toggle" className={`bg-psl-secondary-text dark:bg-psl-secondary `} onClick={() => { handleThemeChange(); }}>
-                {darkMode ? <NightsStayIcon className={`text-psl-secondary-text`} /> : <LightModeIcon className={`text-psl-primary`} />}
+              <Fab size={fullScreen ? 'small' : 'medium'} aria-label="theme toggle" className={`bg-psl-secondary-text text-psl-primary hover:text-psl-active-link dark:bg-psl-secondary dark:text-psl-active-text hover:dark:text-psl-active-link`} onClick={() => { handleThemeChange(); }}>
+                {darkMode ? <NightsStayIcon /> : <LightModeIcon />}
               </Fab>
             </div>
           </Container>

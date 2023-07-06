@@ -162,21 +162,21 @@ const Notes = () => {
               setSelectedRow(params.row.id);
               navigate('./view/' + params.row.postId);
               setOpenDialog(prev => { return { ...prev, open: true, type: 'view', data: params.row }; });
-            }} className={`text-psl-primary dark:text-psl-active-text`}>
+            }} className={`text-psl-primary dark:text-psl-active-text hover:text-psl-active-link hover:dark:text-psl-active-link`}>
               <VisibilityIcon />
             </IconButton>
             {permissions.edit ? <IconButton onClick={() => {
               setSelectedRow(params.row.id);
               navigate('./edit/' + params.row.postId);
               setOpenDialog(prev => { return { ...prev, open: true, type: 'edit', data: params.row }; });
-            }} className={`text-psl-primary dark:text-psl-active-text`}>
+            }} className={`text-psl-primary dark:text-psl-active-text hover:text-psl-active-link hover:dark:text-psl-active-link`}>
               <EditIcon />
             </IconButton> : null}
             {permissions.delete ? <IconButton onClick={() => {
               setSelectedRow(params.row.id);
               navigate('./delete/' + params.row.postId);
               setOpenDialog(prev => { return { ...prev, open: true, type: 'delete', data: params.row }; });
-            }} className={`text-psl-primary dark:text-psl-active-text`}>
+            }} className={`text-psl-primary dark:text-psl-active-text hover:text-psl-active-link hover:dark:text-psl-active-link`}>
               <DeleteIcon />
             </IconButton> : null}
           </Box>
