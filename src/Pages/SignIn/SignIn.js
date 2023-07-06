@@ -31,7 +31,7 @@ const SignIn = () => {
     e.preventDefault();
     loginUser(formData)
       .then((res) => {
-        if (!res.error) navigate('/notes');
+        if (!res.error) navigate('/notes', { replace: true });
       })
       .catch((err) => {
         console.error('Signin Error: ', err);

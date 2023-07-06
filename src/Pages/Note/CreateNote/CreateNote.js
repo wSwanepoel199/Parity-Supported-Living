@@ -13,11 +13,11 @@ const CreateNote = () => {
   const user = useSelector(selectUser);
   const client = useSelector(selectClients);
 
-  const { setOpenDialog, fullScreen } = useOutletContext();
+  const { setOpenDialog } = useOutletContext();
   const navigate = useNavigate();
   const [addPost, { isLoading }] = useAddPostMutation();
   const [formData, setFormData] = useState({
-    date: formatISO(new Date()),
+    date: '',
     hours: 0,
     kilos: 0,
     clientId: "",
@@ -38,10 +38,17 @@ const CreateNote = () => {
     switch (name) {
       case "date": {
         setFormData(prev => {
-          return {
-            ...prev,
-            [name]: formatISO(new Date(value))
-          };
+          if (value) {
+            return {
+              ...prev,
+              [name]: formatISO(new Date(value))
+            };
+          } else {
+            return {
+              ...prev,
+              [name]: ''
+            };
+          }
         });
         return;
       }
@@ -97,14 +104,14 @@ const CreateNote = () => {
         <CircularProgress />
       </Backdrop>
 
-      <Box component='form' onSubmit={(e) => handleSubmit(e)} className={`bg-psl-active-text dark:bg-psl-primary`}>
+      <Box component='form' onSubmit={(e) => handleSubmit(e)} className={`bg-psl-active-text dark:bg-psl-primary h-full`}>
         {/* {console.log(formData)} */}
         <DialogTitle className={`flex justify-between items-center`}>
           <Typography variant="h6" component="p" className={`text-psl-primary dark:text-psl-active-text`}>
             New Note
           </Typography>
           <IconButton onClick={() => handleExit()} >
-            <CloseIcon className={`text-psl-primary dark:text-psl-active-text`} />
+            <CloseIcon className={`text-psl-primary dark:text-psl-active-text hover:text-psl-active-link hover:dark:text-psl-active-link`} />
           </IconButton>
         </DialogTitle>
         <DialogContent>
@@ -112,7 +119,7 @@ const CreateNote = () => {
             <Grid xs={12} className=" border-b-2 border-b-gray-400 border-solid border-x-transparent border-t-transparent">
               <Typography className={`text-psl-primary dark:text-psl-secondary-text`}>Details</Typography>
             </Grid>
-            <Grid sm={6} xs={12} className="flex justify-center">
+            <Grid sm={6} xs={12} id="dateInput" className="flex justify-center">
               <FormControl
                 size="small"
                 fullWidth
@@ -142,7 +149,8 @@ const CreateNote = () => {
                   name="date"
                   type="date"
                   required
-                  value={format(parseISO(formData.date), 'yyyy-MM-dd')}
+                  onClick={(e) => e.target.showPicker()}
+                  value={formData.date ? format(parseISO(formData.date), 'yyyy-MM-dd') : ''}
                   onChange={(e) => handleInput(e.target)}
                   disableUnderline
                   className={`
@@ -166,7 +174,7 @@ const CreateNote = () => {
                 />
               </FormControl>
             </Grid>
-            <Grid sm={6} xs={12} className="flex justify-center">
+            <Grid sm={6} xs={12} id="timeInput" className="flex justify-center">
               <FormControl
                 size="small"
                 fullWidth
@@ -218,7 +226,7 @@ const CreateNote = () => {
                 />
               </FormControl>
             </Grid>
-            <Grid sm={6} xs={12} className="flex justify-center">
+            <Grid sm={6} xs={12} id="clientInput" className="flex justify-center">
               <FormControl
                 variant="standard"
                 size="small"
@@ -226,7 +234,6 @@ const CreateNote = () => {
                 margin="dense"
                 onFocus={(e) => {
                   if (e !== focus) setFocus(e);
-                  console.log(e);
                   document.activeElement.focus();
                 }}
                 onBlur={() => {
@@ -238,14 +245,13 @@ const CreateNote = () => {
                 <InputLabel
                   htmlFor="clientInput"
                   className={`
-                ${document.activeElement.name === "clientId" ? `
+                ${document.activeElement.id === "clientId" ? `
                   text-psl-active-link
                 `: `
                   text-psl-primary
                   dark:text-psl-secondary-text
                 `}`}
                 >Client</InputLabel>
-                {console.log(document.activeElement.name === "clientId", document.activeElement.name)}
                 <Select
                   id="clientInput"
                   name='clientId'
@@ -257,7 +263,7 @@ const CreateNote = () => {
                   text-psl-primary 
                   dark:text-psl-secondary-text
                   rounded-sm
-                  ${document.activeElement.name === "clientId" ? `
+                  ${document.activeElement.id === "clientId" ? `
                     border-b-psl-active-link
                     border-0 border-b-2
                     border-solid
@@ -271,24 +277,22 @@ const CreateNote = () => {
                     hover:dark:border-b-psl-active-link
                   `}`}
                   classes={{
-                    icon: `${document.activeElement.name === "clientId" ? `
+                    icon: `${document.activeElement.id === "clientId" ? `
                       text-psl-active-link
                     `: `
                       text-psl-primary
                       dark:text-psl-secondary-text
                     `}`
                   }}
-                  SelectDisplayProps={{
-                    name: 'clientId'
-                  }}
                   MenuProps={{
-                    name: 'clientId',
+                    disablePortal: true,
                     PopoverClasses: {
                       paper: 'bg-inherit',
-                      name: 'clientId'
+                    },
+                    PaperProps: {
+                      id: 'clientId'
                     },
                     MenuListProps: {
-                      name: 'clientId',
                       classes: {
                         root: 'text-psl-primary-text dark:text-psl-active-text'
                       },
@@ -298,15 +302,36 @@ const CreateNote = () => {
                 >
                   {options.map((client) => {
                     return (
-                      <MenuItem key={client.id} name="clientId" value={client?.clientId}>{client?.firstName} {client?.lastName}</MenuItem>
+                      <MenuItem key={client.id} value={client?.clientId}>{client?.firstName} {client?.lastName}</MenuItem>
                     );
                   })}
                 </Select>
               </FormControl>
             </Grid>
-            <Grid sm={6} xs={12} className="flex justify-center">
-              <FormControl size="small" fullWidth margin="dense">
-                <InputLabel htmlFor="distanceInput">Distance Traveled</InputLabel>
+            <Grid sm={6} xs={12} id="distanceInput" className="flex justify-center">
+              <FormControl
+                size="small"
+                fullWidth
+                margin="dense"
+                onFocus={(e) => {
+                  if (e !== focus) setFocus(e);
+                  document.activeElement.focus();
+                }}
+                onBlur={() => {
+                  setFocus(undefined);
+                  document.activeElement.blur();
+                }}
+              >
+                <InputLabel
+                  htmlFor="distanceInput"
+                  className={`
+                ${document.activeElement.name === "kilos" ? `
+                text-psl-active-link
+                `: `
+                text-psl-primary
+                dark:text-psl-secondary-text
+                `}`}
+                >Distance Traveled</InputLabel>
                 <Input
                   id="distanceInput"
                   name="kilos"
@@ -314,14 +339,45 @@ const CreateNote = () => {
                   required
                   value={formData.kilos}
                   onChange={(e) => handleInput(e.target)}
+                  disableUnderline
+                  className={`
+                text-psl-primary 
+                dark:text-psl-secondary-text
+                rounded-sm
+                ${document.activeElement.name === "kilos" ? `
+                  border-b-psl-active-link
+                  border-0 border-b-2
+                  border-solid
+                `: `
+                  border-0
+                  border-solid
+                  border-b-2
+                  border-b-psl-primary/40
+                  dark:border-b-psl-secondary-text/40
+                  hover:border-b-psl-active-link
+                  hover:dark:border-b-psl-active-link
+                `}`}
                 />
               </FormControl>
             </Grid>
-            <Grid xs={12} className=" border-b-2 border-b-gray-400 border-solid border-x-transparent border-t-transparent">
-              <Typography>Notes</Typography>
+            <Grid xs={12} className="border-b-2 border-b-gray-400 border-solid border-x-transparent border-t-transparent">
+              <Typography
+                className={`text-psl-primary dark:text-psl-secondary-text`}
+              >Notes</Typography>
             </Grid>
-            <Grid xs={12} className="flex justify-center">
-              <FormControl size="small" fullWidth margin="dense">
+            <Grid xs={12} id="notesInput" className="flex justify-center">
+              <FormControl
+                size="small"
+                fullWidth
+                margin="dense"
+                onFocus={(e) => {
+                  if (e !== focus) setFocus(e);
+                  document.activeElement.focus();
+                }}
+                onBlur={() => {
+                  setFocus(undefined);
+                  document.activeElement.blur();
+                }}>
                 <OutlinedInput
                   id="notesInput"
                   name="notes"
@@ -330,13 +386,33 @@ const CreateNote = () => {
                   minRows={4}
                   value={formData.notes}
                   onChange={(e) => handleInput(e.target)}
+                  className={`
+                text-psl-primary 
+                dark:text-psl-secondary-text
+                rounded-sm
+                ${document.activeElement.name === "notes" ? `
+                  border-psl-active-link
+                  border-2
+                  border-solid
+                `: `
+                  border-2
+                  border-solid
+                  border-psl-primary/40
+                  dark:border-psl-secondary-text/40
+                  hover:border-psl-active-link
+                  hover:dark:border-psl-active-link
+                `}`}
+                  classes={{
+                    notchedOutline: 'border-0'
+                  }}
                 />
               </FormControl>
             </Grid>
           </Grid>
         </DialogContent>
-        <DialogActions sx={{ justifyContent: 'space-between', alignContent: 'space-between' }}>
+        <DialogActions className={`justify-between content-between mx-2`}>
           <FormControlLabel
+            id="privateSwitch"
             control={
               <Switch
                 checked={formData.private}
@@ -347,16 +423,27 @@ const CreateNote = () => {
                   };
                 }
                 )}
-
+                inputProps={{
+                  name: 'private'
+                }}
+                classes={{
+                  checked: 'text-psl-active-link',
+                  track: `${formData.private && 'bg-psl-active-link'}`
+                }}
               />}
             label="Confidential"
-
+            componentsProps={{
+              typography: {
+                className: `text-psl-primary dark:text-psl-secondary-text`
+              }
+            }}
           />
           <Box>
-            {!fullScreen &&
-              <Button
-                onClick={() => handleExit()}>Cancel</Button>}
-            <Button color="success" variant="contained" type="submit">Create</Button>
+            <Button
+              variant="contained"
+              type="submit"
+              className={`bg-transparent bg-gradient-to-b from-transparent to-psl-secondary-text dark:to-psl-secondary hover:bg-psl-active-link hover:to-psl-active-link hover:dark:to-psl-active-link hover:dark:text-psl-primary text-psl-primary dark:text-psl-secondary-text shadow-none hover:shadow-none`}
+            >Create</Button>
           </Box>
         </DialogActions>
       </Box >
