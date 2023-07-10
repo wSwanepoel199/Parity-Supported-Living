@@ -69,7 +69,7 @@ function registerValidSW(swUrl, config) {
     .then((registration) => {
       // console.log(registration);
       // console.log(registration);
-      if (!registration.installing) window.installing.resolve(false);
+      if (!registration.current && !registration.installing) window.installing.resolve(false);
       if (registration.waiting) window.waiting.resolve(true);
       registration.onupdatefound = () => {
         const newWorker = registration.installing || registration.waiting;

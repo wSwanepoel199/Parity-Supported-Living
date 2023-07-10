@@ -22,6 +22,7 @@ const UpdateNote = () => {
   const [formData, setFormData] = useState(data);
   const [carerOptions, setCarerOptions] = useState([(data?.carer || "")]);
   const [clientOptions, setClientOptions] = useState([(data?.client || "")]);
+  const [focus, setFocus] = useState(undefined);
 
 
   useEffect(() => {
@@ -56,10 +57,17 @@ const UpdateNote = () => {
     switch (name) {
       case "date": {
         setFormData(prev => {
-          return {
-            ...prev,
-            [name]: formatISO(new Date(value))
-          };
+          if (value) {
+            return {
+              ...prev,
+              [name]: formatISO(new Date(value))
+            };
+          } else {
+            return {
+              ...prev,
+              [name]: ''
+            };
+          }
         });
         return;
       }
@@ -142,73 +150,203 @@ const UpdateNote = () => {
         <CircularProgress />
       </Backdrop>
 
-      <Box component='form' onSubmit={(e) => handleSubmit(e)}>
+      <Box component='form' onSubmit={(e) => handleSubmit(e)} className={`dialog-background  h-full`}>
         <DialogTitle className={`flex justify-between items-center`}>
-          <Typography variant="h6" component="p">
+          <Typography variant="h6" component="p" className={`txt-main`}>
             Edit Note
           </Typography>
           <IconButton onClick={() => handleExit()}>
-            <CloseIcon />
+            <CloseIcon className={`interact-main`} />
           </IconButton>
         </DialogTitle>
         {mounted.current ?
           <DialogContent>
             <Grid container spacing={2} className="flex justify-center">
               <Grid xs={12} className=" border-b-2 border-b-gray-400 border-solid border-x-transparent border-t-transparent">
-                <Typography>Details</Typography>
+                <Typography className={`txt-main`}>Details</Typography>
               </Grid>
-              <Grid sm={6} xs={12} className="flex justify-center">
-                <FormControl size="small" fullWidth margin="dense">
-                  <InputLabel shrink htmlFor="dateInput" >Support Date</InputLabel>
+              <Grid sm={6} xs={12} id="dateInput" className="flex justify-center">
+                <FormControl
+                  size="small"
+                  fullWidth
+                  margin="dense"
+                  onFocus={(e) => {
+                    if (e !== focus) setFocus(e);
+                    document.activeElement.focus();
+                  }}
+                  onBlur={() => {
+                    setFocus(undefined);
+                    document.activeElement.blur();
+                  }}
+                >
+                  <InputLabel
+                    shrink
+                    htmlFor="dateInput"
+                    className={`
+                  ${document.activeElement.name === "date" ? `
+                  text-psl-active-link
+                  `: `
+                  txt-secondary
+                  `}`}
+                  >Support Date</InputLabel>
                   <Input
                     id="dateInput"
                     name="date"
                     type="date"
-                    value={format(parseISO(formData.date), 'yyyy-MM-dd')}
+                    onClick={(e) => e.target.showPicker()}
+                    value={formData.date ? format(parseISO(formData.date), 'yyyy-MM-dd') : ''}
                     onChange={(e) => handleInput(e.target)}
+                    disableUnderline
+                    className={`
+                      txt-secondary
+                      dark:[color-scheme:dark]
+                      rounded-sm
+                    ${document.activeElement.name === "date" ? `
+                      mui-input-active
+                    `: `
+                      mui-input-inactive
+                    `}`}
                   />
                 </FormControl>
               </Grid>
-              <Grid sm={6} xs={12} className="flex justify-center">
-                <FormControl size="small" fullWidth margin="dense">
-                  <InputLabel htmlFor="timeInput">Support Duration</InputLabel>
+              <Grid sm={6} xs={12} id="timeInput" className="flex justify-center">
+                <FormControl
+                  size="small"
+                  fullWidth
+                  margin="dense"
+                  onFocus={(e) => {
+                    if (e !== focus) setFocus(e);
+                    document.activeElement.focus();
+                  }}
+                  onBlur={() => {
+                    setFocus(undefined);
+                    document.activeElement.blur();
+                  }}
+                >
+                  <InputLabel
+                    htmlFor="timeInput"
+                    className={`
+                      ${document.activeElement.name === "hours" ? `
+                      text-psl-active-link
+                      `: `
+                        txt-secondary
+                      `}
+                    `}
+                  >Support Duration</InputLabel>
                   <Input
                     id="timeInput"
                     name="hours"
                     type="number"
                     value={formData.hours}
                     onChange={(e) => handleInput(e.target)}
+                    disableUnderline
+                    className={`
+                      txt-secondary
+                      rounded-sm
+                      ${document.activeElement.name === "hours" ? `
+                        mui-input-active
+                      `: `
+                        mui-input-inactive
+                      `}
+                    `}
                   />
                 </FormControl>
               </Grid>
               {(formData.client === "" && formData?.clientId === "") ?
-                <Grid sm={6} xs={12} className="flex justify-center">
-                  <FormControl size="small" fullWidth margin="dense">
-                    <InputLabel htmlFor="clientInput">Client's Name</InputLabel>
+                <Grid sm={6} xs={12} id="clientDiabled" className="flex justify-center">
+                  <FormControl
+                    size="small"
+                    fullWidth
+                    margin="dense"
+                  >
+                    <InputLabel
+                      htmlFor="clientInput"
+                      className={`
+                        txt-secondary
+                      `}
+                    >Client's Name</InputLabel>
                     <Input
                       id="clientInput"
                       name="client"
                       type="text"
                       disabled
                       value={formData.clientName}
-                      onChange={(e) => handleInput(e.target)}
+                      className={`
+                        txt-secondary
+                      `}
+                      classes={{
+                        disabled: 'txt-inactive'
+                      }}
                     />
-                    <FormHelperText>Client Details lost, please select new Client from dropdown</FormHelperText>
+                    <FormHelperText className={`txt-secondary`}>Client Details lost, please select new Client from dropdown</FormHelperText>
                   </FormControl>
                 </Grid> : null}
-              <Grid sm={6} xs={12} className="flex justify-center">
+              <Grid sm={6} xs={12} id="clientInput" className="flex justify-center">
                 {clientOptions ?
-                  <FormControl variant="standard" size="small" fullWidth margin="dense">
-                    <InputLabel htmlFor="clientInput">Client's Name</InputLabel>
+                  <FormControl
+                    variant="standard"
+                    size="small"
+                    fullWidth
+                    margin="dense"
+                    onFocus={(e) => {
+                      if (e !== focus) setFocus(e);
+                      document.activeElement.focus();
+                    }}
+                    onBlur={() => {
+                      setFocus(undefined);
+                      document.activeElement.blur();
+                    }}
+                  >
+                    <InputLabel
+                      htmlFor="clientInput"
+                      className={`
+                        ${document.activeElement.id === "clientId" ? `
+                        text-psl-active-link
+                        `: `
+                          txt-secondary
+                        `}`}
+                    >Client's Name</InputLabel>
                     <Select
                       id="clientInput"
                       name='clientId'
                       value={formData?.clientId}
                       onChange={(e) => handleInput(e.target)}
+                      disableUnderline
+                      className={`
+                        txt-secondary
+                        rounded-sm
+                        ${document.activeElement.id === "clientId" ? `
+                          mui-input-active
+                        `: `
+                          mui-input-inactive
+                        `}
+                      `}
+                      classes={{
+                        icon: `${document.activeElement.id === "clientId" ? `
+                                text-psl-active-link
+                              `: `
+                                txt-secondary
+                              `}`
+                      }}
+                      MenuProps={{
+                        disablePortal: true,
+                        PopoverClasses: {
+                          paper: 'bg-inherit',
+                        },
+                        PaperProps: {
+                          id: 'clientId'
+                        },
+                        MenuListProps: {
+                          classes: {
+                            root: 'txt-main'
+                          },
+                          className: 'dialog-background'
+                        }
+                      }}
                     >
                       {clientOptions.map((client, index) => {
                         return (
-                          <MenuItem key={index} value={client?.clientId}>{client.firstName} {client?.lastName}</MenuItem>
+                          <MenuItem key={index} value={client?.clientId} className={`hover:text-psl-active-link`}>{client.firstName} {client?.lastName}</MenuItem>
                         );
                       })}
                     </Select>

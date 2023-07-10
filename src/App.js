@@ -47,7 +47,6 @@ function App() {
   // TODO Look into implimenting mailer into Backend
   // TODO remove auth token from being saved locally inorder to encourage regular refreshing, or don't, just think about it, maybe save it for next version of app
 
-
   useEffect(() => {
     // process.env.DEVELOPMENT === "true" && reactManifest.update({ "short_name": "PSL Notes Dev" }, "#manifest-placeholder");
     // console.log('navigator ', navigator);

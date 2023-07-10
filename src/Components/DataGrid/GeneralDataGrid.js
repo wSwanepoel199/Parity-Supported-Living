@@ -72,19 +72,23 @@ const GeneralDataGrid = ({ functions, variables }) => {
         },
         pagination: {
           className: 'text-psl-primary dark:text-psl-secondary-text',
+          classes: {
+            actions: 'hover:text-psl-active-link'
+          },
           SelectProps: {
             classes: {
               icon: 'text-psl-primary dark:text-psl-secondary-text'
             },
             MenuProps: {
+              disablePortal: true,
               PopoverClasses: {
                 paper: 'bg-inherit'
               },
               MenuListProps: {
                 classes: {
-                  root: 'text-psl-primary-text dark:text-psl-active-text'
+                  root: 'text-psl-primary dark:text-psl-active-text',
                 },
-                className: 'dark:bg-psl-primary bg-psl-active-text'
+                className: 'bg-psl-active-text dark:bg-psl-primary'
               }
             }
           }

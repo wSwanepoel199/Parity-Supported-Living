@@ -104,20 +104,20 @@ const CreateNote = () => {
         <CircularProgress />
       </Backdrop>
 
-      <Box component='form' onSubmit={(e) => handleSubmit(e)} className={`bg-psl-active-text dark:bg-psl-primary h-full`}>
+      <Box component='form' onSubmit={(e) => handleSubmit(e)} className={`dialog-background h-full`}>
         {/* {console.log(formData)} */}
         <DialogTitle className={`flex justify-between items-center`}>
-          <Typography variant="h6" component="p" className={`text-psl-primary dark:text-psl-active-text`}>
+          <Typography variant="h6" component="p" className={`txt-main`}>
             New Note
           </Typography>
           <IconButton onClick={() => handleExit()} >
-            <CloseIcon className={`text-psl-primary dark:text-psl-active-text hover:text-psl-active-link hover:dark:text-psl-active-link`} />
+            <CloseIcon className={`interact-main`} />
           </IconButton>
         </DialogTitle>
         <DialogContent>
           <Grid container spacing={2} className="flex justify-center">
             <Grid xs={12} className=" border-b-2 border-b-gray-400 border-solid border-x-transparent border-t-transparent">
-              <Typography className={`text-psl-primary dark:text-psl-secondary-text`}>Details</Typography>
+              <Typography className={`txt-main`}>Details</Typography>
             </Grid>
             <Grid sm={6} xs={12} id="dateInput" className="flex justify-center">
               <FormControl
@@ -140,8 +140,7 @@ const CreateNote = () => {
                   ${document.activeElement.name === "date" ? `
                   text-psl-active-link
                   `: `
-                  text-psl-primary
-                  dark:text-psl-secondary-text
+                  txt-secondary
                   `}`}
                 >Support Date</InputLabel>
                 <Input
@@ -154,23 +153,14 @@ const CreateNote = () => {
                   onChange={(e) => handleInput(e.target)}
                   disableUnderline
                   className={`
-                text-psl-primary
-                dark:text-psl-secondary-text
-                  dark:[color-scheme:dark]
-                rounded-sm
-                ${document.activeElement.name === "date" ? `
-                  border-b-psl-active-link
-                  border-0 border-b-2
-                  border-solid
-                `: `
-                  border-0
-                  border-solid
-                  border-b-2
-                  border-b-psl-primary/40
-                  dark:border-b-psl-secondary-text/40
-                  hover:border-b-psl-active-link
-                  hover:dark:border-b-psl-active-link
-                `}`}
+                    txt-secondary
+                    dark:[color-scheme:dark]
+                    rounded-sm
+                    ${document.activeElement.name === "date" ? `
+                      mui-input-active
+                    `: `
+                      mui-input-inactive
+                    `}`}
                 />
               </FormControl>
             </Grid>
@@ -207,22 +197,15 @@ const CreateNote = () => {
                   onChange={(e) => handleInput(e.target)}
                   disableUnderline
                   className={`
-                text-psl-primary 
-                dark:text-psl-secondary-text
-                rounded-sm
-                ${document.activeElement.name === "hours" ? `
-                  border-b-psl-active-link
-                  border-0 border-b-2
-                  border-solid
-                `: `
-                  border-0
-                  border-solid
-                  border-b-2
-                  border-b-psl-primary/40
-                  dark:border-b-psl-secondary-text/40
-                  hover:border-b-psl-active-link
-                  hover:dark:border-b-psl-active-link
-                `}`}
+                    txt-secondary
+                    dark:[color-scheme:dark]
+                    rounded-sm
+                    ${document.activeElement.name === "hours" ? `
+                      mui-input-active
+                    `: `
+                      mui-input-inactive
+                    `}
+                  `}
                 />
               </FormControl>
             </Grid>
@@ -248,8 +231,7 @@ const CreateNote = () => {
                 ${document.activeElement.id === "clientId" ? `
                   text-psl-active-link
                 `: `
-                  text-psl-primary
-                  dark:text-psl-secondary-text
+                  txt-secondary
                 `}`}
                 >Client</InputLabel>
                 <Select
@@ -260,28 +242,18 @@ const CreateNote = () => {
                   onChange={(e) => handleInput(e.target)}
                   disableUnderline
                   className={`
-                  text-psl-primary 
-                  dark:text-psl-secondary-text
+                  txt-secondary
                   rounded-sm
                   ${document.activeElement.id === "clientId" ? `
-                    border-b-psl-active-link
-                    border-0 border-b-2
-                    border-solid
+                    mui-input-active
                   `: `
-                    border-0
-                    border-solid
-                    border-b-2
-                    border-b-psl-primary/40
-                    dark:border-b-psl-secondary-text/40
-                    hover:border-b-psl-active-link
-                    hover:dark:border-b-psl-active-link
+                    mui-input-inactive
                   `}`}
                   classes={{
                     icon: `${document.activeElement.id === "clientId" ? `
                       text-psl-active-link
                     `: `
-                      text-psl-primary
-                      dark:text-psl-secondary-text
+                      txt-secondary
                     `}`
                   }}
                   MenuProps={{
@@ -294,15 +266,15 @@ const CreateNote = () => {
                     },
                     MenuListProps: {
                       classes: {
-                        root: 'text-psl-primary-text dark:text-psl-active-text'
+                        root: 'txt-main'
                       },
-                      className: 'dark:bg-psl-primary bg-psl-active-text'
+                      className: 'dialog-background'
                     }
                   }}
                 >
                   {options.map((client) => {
                     return (
-                      <MenuItem key={client.id} value={client?.clientId}>{client?.firstName} {client?.lastName}</MenuItem>
+                      <MenuItem key={client.id} value={client?.clientId} className={`hover:text-psl-active-link`}>{client?.firstName} {client?.lastName}</MenuItem>
                     );
                   })}
                 </Select>
