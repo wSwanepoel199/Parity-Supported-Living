@@ -204,21 +204,35 @@ const Notes = () => {
     data: {}
   });
 
+  // try to get popstate to allow for toggle dialog on and off cause its not being super functional and I wanna puke
+
   useEffect(() => {
-    if (!mounted.current && !["new", "edit", "view", "delete"].includes(openDialog.type)) {
-      if (!match && !openDialog.open) {
+
+    window.addEventListener('popstate', () => {
+      setOpenDialog({
+        ...openDialog,
+        open: !openDialog.open
+      });
+    });
+
+
+    if (!mounted.current && !["new", "edit", "view", "delete"].includes(openDialog?.type)) {
+      if (!match && !openDialog?.open) {
         navigate('/notes', { replace: true });
       }
-      if (match && openDialog.open) {
-        setOpenDialog({
-          ...openDialog,
-          open: !openDialog.open
+      if (match && openDialog?.open) {
+        setOpenDialog(prev => {
+          return {
+            ...prev,
+            open: !prev.open
+          };
         });
       }
       mounted.current = true;
     }
     return () => {
-      if (mounted.current) mounted.current = false;
+      mounted.current = false;
+      window.removeEventListener('popstate', () => { });
     };
   }, [mounted, match, openDialog, navigate]);
 
@@ -277,6 +291,7 @@ const Notes = () => {
 
   return (
     <div className="w-full max-w-screen-lg mx-auto flex flex-col ">
+      {console.log(openDialog)}
       <Backdrop
         open={posts.status === "loading"}
         className={`z-40`}
@@ -285,7 +300,7 @@ const Notes = () => {
       </Backdrop>
       <Dialog
         fullScreen={fullScreen}
-        open={openDialog.open}
+        open={openDialog?.open}
         className={`z-30 max-w-full`}
         disablePortal
         classes={{
