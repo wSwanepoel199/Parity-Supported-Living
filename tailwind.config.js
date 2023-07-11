@@ -33,7 +33,6 @@ module.exports = {
       const colors = flatten(theme("colors"));
       const utilities = Object.entries(colors).reduce((res, [key, value]) => Object.assign(res, {
         [`.${e(`text-fill-${key}`)}`]: {
-          '--tw-text-opacity': '1',
           '-webkit-text-fill-color': `${value}`,
         }
       }), {});

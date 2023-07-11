@@ -72,7 +72,9 @@ For easy user interface development and management [Material UI](https://mui.com
 
 ### Custom Tailwindcss Classes
 
-text-fill; a custom tailwindcss class has been implimented inorder to override Material UI's disbaled styling by allowing for the use of webkits text-fill function. The custom class is compatable with all tailwind's configured colours.
+#### text-fill
+
+A custom tailwindcss class has been implimented inorder to override Material UI's disbaled styling by allowing for the use of webkits text-fill function. The custom class is compatable with all tailwind's configured colours.
 
 ## Contributions
 

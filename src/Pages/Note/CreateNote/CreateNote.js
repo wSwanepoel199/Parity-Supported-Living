@@ -312,29 +312,13 @@ const CreateNote = () => {
                   value={formData.kilos}
                   onChange={(e) => handleInput(e.target)}
                   disableUnderline
-                  className={`
-                text-psl-primary 
-                dark:text-psl-secondary-text
-                rounded-sm
-                ${document.activeElement.name === "kilos" ? `
-                  border-b-psl-active-link
-                  border-0 border-b-2
-                  border-solid
-                `: `
-                  border-0
-                  border-solid
-                  border-b-2
-                  border-b-psl-primary/40
-                  dark:border-b-psl-secondary-text/40
-                  hover:border-b-psl-active-link
-                  hover:dark:border-b-psl-active-link
-                `}`}
+                  className={`txt-secondary rounded-sm ${document.activeElement.name === "kilos" ? `mui-input-active` : `mui-input-inactive`}`}
                 />
               </FormControl>
             </Grid>
             <Grid xs={12} className="border-b-2 border-b-gray-400 border-solid border-x-transparent border-t-transparent">
               <Typography
-                className={`text-psl-primary dark:text-psl-secondary-text`}
+                className={`txt-main`}
               >Notes</Typography>
             </Grid>
             <Grid xs={12} id="notesInput" className="flex justify-center">
