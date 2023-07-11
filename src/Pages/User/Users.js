@@ -230,6 +230,7 @@ const Users = () => {
         fullScreen={fullScreen}
         open={openDialog.open}
         className={`z-30 max-w-full`}
+        disablePortal
         classes={{
           paper: 'bg-transparent'
         }}

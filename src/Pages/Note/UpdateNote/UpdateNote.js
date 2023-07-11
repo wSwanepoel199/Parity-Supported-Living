@@ -275,7 +275,7 @@ const UpdateNote = () => {
                         txt-secondary
                       `}
                       classes={{
-                        disabled: 'txt-inactive'
+                        disabled: 'text-fill-psl-primary dark:text-fill-psl-secondary-text opacity-60'
                       }}
                     />
                     <FormHelperText className={`txt-secondary`}>Client Details lost, please select new Client from dropdown</FormHelperText>

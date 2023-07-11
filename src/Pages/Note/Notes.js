@@ -287,6 +287,7 @@ const Notes = () => {
         fullScreen={fullScreen}
         open={openDialog.open}
         className={`z-30 max-w-full`}
+        disablePortal
         classes={{
           paper: 'bg-transparent'
         }}
@@ -339,7 +340,7 @@ const Notes = () => {
       <DataGridMenu
         functions={{ handleClose, openView, openEdit, openDelete }}
         variables={{ contextMenu, permissions, array: posts.posts }} />
-    </div>
+    </div >
   );
 };
 

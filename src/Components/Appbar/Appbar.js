@@ -79,6 +79,7 @@ const Appbar = () => {
                 horizontal: 'left',
               }}
               keepMounted
+              disablePortal
               transformOrigin={{
                 vertical: 'top',
                 horizontal: 'left',
@@ -206,6 +207,7 @@ const Appbar = () => {
                 horizontal: 'right',
               }}
               keepMounted
+              disablePortal
               transformOrigin={{
                 vertical: 'top',
                 horizontal: 'right',

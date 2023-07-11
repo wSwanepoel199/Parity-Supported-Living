@@ -40,7 +40,7 @@ body {
 @tailwind components;
 @tailwind utilities;
 
-@layer base {
+@layer components {
   .txt-main {
     @apply text-psl-primary dark:text-psl-active-text;
   }
@@ -70,5 +70,8 @@ body {
   }
   .txt-inactive {
     @apply text-psl-primary/40 dark:text-psl-secondary-text/40;
+  }
+  .Mui-disabled {
+    @apply [-webkit-text-fill-color:#555555];
   }
 }

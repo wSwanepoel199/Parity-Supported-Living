@@ -1,10 +1,13 @@
 /** @type {import('tailwindcss').Config} */
+const plugin = require('tailwindcss/plugin');
+const flatten = require('flatten-tailwindcss-theme');
+
 module.exports = {
   content: [
     "./src/**/*.{js,jsx,ts,tsx}",
     './public/index.html'
   ],
-  important: true,
+  important: '#root',
   mode: 'jit',
   darkMode: 'class',
   theme: {
@@ -25,7 +28,18 @@ module.exports = {
       },
     },
   },
-  plugins: [],
+  plugins: [
+    plugin(({ addUtilities, theme, e, variants }) => {
+      const colors = flatten(theme("colors"));
+      const utilities = Object.entries(colors).reduce((res, [key, value]) => Object.assign(res, {
+        [`.${e(`text-fill-${key}`)}`]: {
+          '--tw-text-opacity': '1',
+          '-webkit-text-fill-color': `${value}`,
+        }
+      }), {});
+      addUtilities(utilities, variants('text-fill'));
+    }),
+  ],
   corePlugins: {
     preflight: false
   }
