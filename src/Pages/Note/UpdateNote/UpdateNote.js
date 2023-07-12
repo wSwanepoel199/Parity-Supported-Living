@@ -150,7 +150,7 @@ const UpdateNote = () => {
         <CircularProgress />
       </Backdrop>
 
-      <Box component='form' onSubmit={(e) => handleSubmit(e)} id="dialog" className={`  h-full`}>
+      <Box component='form' onSubmit={(e) => handleSubmit(e)} className={`h-full`}>
         <DialogTitle className={`flex justify-between items-center`}>
           <Typography variant="h6" component="p" className={`txt-main`}>
             Edit Note

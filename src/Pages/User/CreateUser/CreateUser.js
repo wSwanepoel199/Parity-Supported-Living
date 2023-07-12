@@ -14,7 +14,7 @@ const containsText = (user, searchText) =>
 const CreateUser = () => {
   const clients = useSelector(selectClients);
 
-  const { setOpenDialog, fullScreen } = useOutletContext();
+  const { setOpenDialog } = useOutletContext();
   const navigate = useNavigate();
 
   const [createUser, { isLoading: isCreatingUser }] = useCreateUserMutation();
@@ -227,10 +227,13 @@ const CreateUser = () => {
                       <Box
                         className={`flex flex-wrap gap-2`}
                       >
-                        {selected.map((value, index) => {
+                        {selected.map((value) => {
                           return (
-                            <Box key={index}>
-                              <Chip label={options.find((user) => value === user.clientId).name} />
+                            <Box key={value}>
+                              <Chip
+                                label={options.find((user) => value === user.clientId).name} classes={{
+                                  root: 'bg-psl-secondary'
+                                }} />
                             </Box>
                           );
                         })}
@@ -241,7 +244,7 @@ const CreateUser = () => {
                       className={`txt-secondary rounded-sm border-2 border-solid border-psl-primary/40 dark:border-psl-secondary-text/40 hover:border-psl-active-link hover:dark:border-psl-active-link`}
                       classes={{
                         notchedOutline: 'border-0',
-                        foucsed: 'border-psl-active-link dark:border-psl-active-link border-2 border-solid',
+                        // focused: 'border-psl-active-link dark:border-psl-active-link border-2 border-solid',
                       }}
                     />}
                     MenuProps={{
@@ -290,10 +293,16 @@ const CreateUser = () => {
                         }}
                       />
                     </ListSubheader>
-                    {displayedOptions?.map((client, index) => {
+                    {displayedOptions?.map((client) => {
                       return (
-                        <MenuItem key={index} value={client.clientId}>
-                          <Checkbox checked={formData.clients.indexOf(client.clientId) > -1} />
+                        <MenuItem key={client.clientId} value={client.clientId} className={`hover:text-psl-active-link`} classes={{ selected: 'text-psl-active-link' }}>
+                          <Checkbox
+                            checked={formData.clients.indexOf(client.clientId) > -1}
+                            classes={{
+                              colorPrimary: 'text-psl-secondary',
+                              checked: 'mui-checked',
+                            }}
+                          />
                           {client.firstName} {client?.lastName}</MenuItem>
                       );
                     })}
@@ -303,11 +312,7 @@ const CreateUser = () => {
           </Grid>
         </DialogContent>
         <DialogActions>
-          {!fullScreen &&
-            <Button
-              onClick={() =>
-                handleExit()}>Cancel</Button>}
-          <Button color="success" variant="contained" type="submit">CREATE</Button>
+          <Button variant="contained" type="submit" className={`bg-transparent bg-gradient-to-b from-transparent to-psl-secondary-text dark:to-psl-secondary hover:bg-psl-active-link hover:to-psl-active-link hover:dark:to-psl-active-link txt-secondary hover:dark:text-psl-primary shadow-none`}>CREATE</Button>
         </DialogActions>
       </Box>
     </>
