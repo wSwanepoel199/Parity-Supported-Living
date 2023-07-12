@@ -200,7 +200,7 @@ const ViewNote = () => {
               <Grid container>
                 <Grid xs={12} className="flex justify-center border-[1px] border-slate-300 border-solid mt-[11px] w-full p-3 m-2">
                   <FormControl size="small" fullWidth margin="dense" className="m-0 txt-secondary">
-                    <Typography id="notesInput" className={`m-2 txt-secondary`}>{formData.notes}</Typography>
+                    <Typography id="notesInput" className={`txt-secondary`}>{formData.notes}</Typography>
                   </FormControl>
                 </Grid>
               </Grid>

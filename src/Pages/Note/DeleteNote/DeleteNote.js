@@ -47,21 +47,20 @@ const DeleteNote = () => {
         <CircularProgress />
       </Backdrop>
 
-      <Box>
+      <Box className={`dialog-background h-full`}>
         <DialogTitle className={`flex justify-between items-center`}>
-          <Typography variant="h6" component="p">
+          <Typography variant="h6" component="p" className={`txt-main`}>
             Delete Note?
           </Typography>
           <IconButton onClick={() => handleExit()}>
-            <CloseIcon />
+            <CloseIcon className={`interact-main`} />
           </IconButton>
         </DialogTitle>
         <DialogContent>
-          <DialogContentText>Are you sure you want to delete this case note?</DialogContentText>
+          <DialogContentText className={`txt-secondary`}>Are you sure you want to delete this case note?</DialogContentText>
         </DialogContent>
-        <DialogActions sx={{ justifyContent: 'space-between' }}>
-          <Button onClick={() => handleExit()}>Cancel</Button>
-          <Button color="error" variant="contained" onClick={() => handleDelete()}>DELETE</Button>
+        <DialogActions sx={{ justifyContent: 'end' }}>
+          <Button variant="contained" onClick={() => handleDelete()} className={`bg-transparent bg-gradient-to-b from-transparent to-psl-secondary-text dark:to-psl-secondary hover:bg-psl-active-link hover:to-psl-active-link hover:dark:to-psl-active-link txt-secondary hover:dark:text-psl-primary shadow-none`}>DELETE</Button>
         </DialogActions>
       </Box>
     </>

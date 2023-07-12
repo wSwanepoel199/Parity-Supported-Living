@@ -232,7 +232,7 @@ const Users = () => {
         className={`z-30 max-w-full`}
         disablePortal
         classes={{
-          paper: 'bg-transparent'
+          paper: 'dialog-background'
         }}
       >
         <Outlet context={{ openDialog, setOpenDialog, fullScreen }} />

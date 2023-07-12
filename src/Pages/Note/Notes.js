@@ -204,14 +204,12 @@ const Notes = () => {
     data: {}
   });
 
-  // try to get popstate to allow for toggle dialog on and off cause its not being super functional and I wanna puke
-
   useEffect(() => {
 
     window.addEventListener('popstate', () => {
       setOpenDialog({
         ...openDialog,
-        open: !openDialog.open
+        open: false
       });
     });
 
@@ -258,8 +256,8 @@ const Notes = () => {
   const openView = (array) => {
     array.map((row) => {
       if (row.id === selectedRow) {
-        navigate('./view/' + row.postId);
         setOpenDialog(prev => { return { ...prev, open: true, type: 'view', data: row }; });
+        navigate('./view/' + row.postId);
       }
       return row;
     });
@@ -269,8 +267,8 @@ const Notes = () => {
   const openEdit = (array) => {
     array.map((row) => {
       if (row.id === selectedRow) {
-        navigate('./edit/' + row.postId);
         setOpenDialog(prev => { return { ...prev, open: true, type: 'edit', data: row }; });
+        navigate('./edit/' + row.postId);
       }
       return row;
     });
@@ -280,8 +278,8 @@ const Notes = () => {
   const openDelete = (array) => {
     array.map((row) => {
       if (row.id === selectedRow) {
-        navigate('./delete/' + row.postId);
         setOpenDialog(prev => { return { ...prev, open: true, type: 'delete', data: row }; });
+        navigate('./delete/' + row.postId);
       }
       return row;
     });
@@ -304,7 +302,7 @@ const Notes = () => {
         className={`z-30 max-w-full`}
         disablePortal
         classes={{
-          paper: 'bg-transparent'
+          paper: 'dialog-background'
         }}
       >
         <Suspense fallback={
@@ -334,7 +332,7 @@ const Notes = () => {
                 clientName: false,
                 carerName: false,
                 // options: !fullScreen,
-                private: ["Admin", "Coordinator"].includes(user.user.role) ? true : false
+                private: ["Admin", "Coordinator"].includes(user.user.role)
               },
             },
             sorting: {

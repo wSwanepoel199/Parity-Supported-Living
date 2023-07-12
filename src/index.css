@@ -47,12 +47,6 @@ body {
   .txt-secondary {
     @apply text-psl-primary dark:text-psl-secondary-text;
   }
-  .mui-input-active {
-    @apply border-b-psl-active-link 
-    border-0 
-    border-b-2 
-    border-solid;
-  }
   .mui-input-inactive {
     @apply border-0 
     border-solid 
@@ -70,5 +64,15 @@ body {
   }
   .txt-inactive {
     @apply text-psl-primary/40 dark:text-psl-secondary-text/40;
+  }
+}
+
+@layer utilities {
+  .mui-input-active {
+    @apply border-b-psl-active-link 
+    dark:border-b-psl-active-link 
+    border-0 
+    border-b-2 
+    border-solid;
   }
 }
