@@ -197,12 +197,10 @@ const UpdateNote = () => {
                     value={formData.date ? format(parseISO(formData.date), 'yyyy-MM-dd') : ''}
                     onChange={(e) => handleInput(e.target)}
                     disableUnderline
-                    className={
-                      `txt-secondary dark:[color-scheme:dark] rounded-sm ${document.activeElement.name === "date" ?
-                        `mui-input-active`
-                        :
-                        `mui-input-inactive`}`
-                    }
+                    className={`txt-secondary dark:[color-scheme:dark] rounded-sm mui-input-inactive`}
+                    classes={{
+                      focused: 'mui-input-active'
+                    }}
                   />
                 </FormControl>
               </Grid>
@@ -236,11 +234,10 @@ const UpdateNote = () => {
                     value={formData.hours}
                     onChange={(e) => handleInput(e.target)}
                     disableUnderline
-                    className={`txt-secondary rounded-sm ${document.activeElement.name === "hours" ?
-                      `mui-input-active`
-                      :
-                      `mui-input-inactive`}`
-                    }
+                    className={`txt-secondary dark:[color-scheme:dark] rounded-sm mui-input-inactive`}
+                    classes={{
+                      focused: 'mui-input-active'
+                    }}
                   />
                 </FormControl>
               </Grid>
@@ -276,22 +273,13 @@ const UpdateNote = () => {
                     size="small"
                     fullWidth
                     margin="dense"
-                    onFocus={(e) => {
-                      if (e !== focus) setFocus(e);
-                      document.activeElement.focus();
-                    }}
-                    onBlur={() => {
-                      setFocus(undefined);
-                      document.activeElement.blur();
-                    }}
                   >
                     <InputLabel
                       htmlFor="clientInput"
-                      className={`${document.activeElement.id === "clientId" ?
-                        `text-psl-active-link`
-                        :
-                        `txt-secondary`}`
-                      }
+                      className={`px-5 txt-secondary`}
+                      classes={{
+                        focused: 'text-psl-active-link'
+                      }}
                     >Client's Name</InputLabel>
                     <Select
                       id="clientInput"
@@ -299,16 +287,11 @@ const UpdateNote = () => {
                       value={formData?.clientId}
                       onChange={(e) => handleInput(e.target)}
                       disableUnderline
-                      className={`txt-secondary rounded-sm ${document.activeElement.id === "clientId" ?
-                        `mui-input-active`
-                        :
-                        `mui-input-inactive`}`
-                      }
+                      className={`txt-secondary rounded-sm mui-input-inactive`}
                       classes={{
-                        icon: `${document.activeElement.id === "clientId" ?
-                          `text-psl-active-link`
-                          :
-                          `txt-secondary`}`
+                        icon: `txt-secondary`,
+                        iconOpen: 'text-psl-active-link',
+                        focused: 'mui-input-active'
                       }}
                       MenuProps={{
                         disablePortal: true,
@@ -363,7 +346,10 @@ const UpdateNote = () => {
                     value={formData.kilos}
                     onChange={(e) => handleInput(e.target)}
                     disableUnderline
-                    className={`text-psl-primary dark:text-psl-secondary-text rounded-sm ${document.activeElement.name === "kilos" ? `mui-input-active` : `mui-input-inactive`}`}
+                    className={`txt-secondary dark:[color-scheme:dark] rounded-sm mui-input-inactive`}
+                    classes={{
+                      focused: 'mui-input-active'
+                    }}
                   />
                 </FormControl>
               </Grid>
@@ -404,7 +390,10 @@ const UpdateNote = () => {
                   >
                     <InputLabel
                       htmlFor="carerInput"
-                      className={`${document.activeElement.id === "carerId" ? `text-psl-active-link` : `txt-secondary`}`}
+                      className={`px-5 txt-secondary`}
+                      classes={{
+                        focused: 'text-psl-active-link'
+                      }}
                     >Carer</InputLabel>
                     <Select
                       id="carerInput"
@@ -412,14 +401,11 @@ const UpdateNote = () => {
                       value={formData.carerId}
                       onChange={(e) => handleInput(e.target)}
                       disableUnderline
-                      className={
-                        `txt-secondary rounded-sm ${document.activeElement.id === "carerId" ?
-                          `mui-input-active`
-                          :
-                          `mui-input-inactive`}`
-                      }
+                      className={`txt-secondary rounded-sm mui-input-inactive`}
                       classes={{
-                        icon: `${document.activeElement.id === "carerId" ? `text-psl-active-link` : `txt-secondary`}`
+                        icon: `txt-secondary`,
+                        iconOpen: 'text-psl-active-link',
+                        focused: 'mui-input-active'
                       }}
                       MenuProps={{
                         disablePortal: true,
@@ -431,7 +417,7 @@ const UpdateNote = () => {
                         },
                         MenuListProps: {
                           classes: {
-                            root: 'txt-main',
+                            root: 'txt-main'
                           },
                           className: 'dialog-background'
                         }
@@ -462,6 +448,7 @@ const UpdateNote = () => {
                     document.activeElement.blur();
                   }}
                 >
+                  {/* fix this some how??? */}
                   <OutlinedInput
                     id="notesInput"
                     name="notes"
@@ -470,11 +457,10 @@ const UpdateNote = () => {
                     minRows={4}
                     value={formData.notes}
                     onChange={(e) => handleInput(e.target)}
-                    className={`txt-secondary rounded-sm ${document.activeElement.name === "notes" ? `border-psl-active-link border-2 border-solid`
-                      :
-                      `border-2 border-solid border-psl-primary/40 dark:border-psl-secondary-text/40 hover:border-psl-active-link hover:dark:border-psl-active-link`}`}
+                    className={`txt-secondary rounded-sm  border-2 border-solid border-psl-primary/40 dark:border-psl-secondary-text/40 hover:border-psl-active-link hover:dark:border-psl-active-link`}
                     classes={{
-                      notchedOutline: 'border-0'
+                      notchedOutline: '',
+                      // focused: 'border-psl-active-link dark:border-psl-active-link border-2 border-solid',
                     }}
                   />
                 </FormControl>

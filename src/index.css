@@ -41,6 +41,9 @@ body {
 @tailwind utilities;
 
 @layer components {
+  .MuiOutlinedInput-root.Mui-focused {
+    @apply border-psl-active-link dark:border-psl-active-link border-2 border-solid;
+  }
   .txt-main {
     @apply text-psl-primary dark:text-psl-active-text;
   }
