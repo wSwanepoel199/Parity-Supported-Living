@@ -258,7 +258,7 @@ const UpdateUser = () => {
                             <Box key={value}>
                               <Chip
                                 label={options.find((user) => value === user.clientId).name} classes={{
-                                  root: 'bg-psl-secondary'
+                                  root: 'bg-psl-secondary shadow'
                                 }} />
                             </Box>
                           );
