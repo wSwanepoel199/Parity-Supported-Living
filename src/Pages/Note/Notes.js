@@ -7,7 +7,7 @@ import PriorityHighIcon from '@mui/icons-material/PriorityHigh';
 import DoneIcon from '@mui/icons-material/Done';
 import CloseIcon from '@mui/icons-material/Close';
 import { format, parseISO } from "date-fns";
-import { Suspense, memo, useEffect, useMemo, useRef, useState } from "react";
+import { Suspense, memo, useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 import { Outlet, redirect, useMatch, useNavigate } from "react-router-dom";
 import { DataGridMenu, GeneralDataGrid } from '../../Components';
@@ -18,8 +18,6 @@ import { selectUser } from '../../Redux/user/userSlice';
 const Notes = () => {
   const posts = useSelector(selectPosts);
   const user = useSelector(selectUser);
-
-  const mounted = useRef();
 
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
@@ -205,8 +203,8 @@ const Notes = () => {
   });
 
   useEffect(() => {
-
-    window.addEventListener('popstate', () => {
+    console.log(match);
+    if (match) window.addEventListener('popstate', () => {
       setOpenDialog(prev => {
         if (prev.open) return {
           ...prev,
@@ -220,7 +218,7 @@ const Notes = () => {
 
     if (!["new", "edit", "view", "delete"].includes(openDialog?.type)) {
       if (!match && !openDialog?.open) {
-        redirect('/notes');
+        redirect(match.pathname);
       }
       if (match && openDialog?.open) {
         setOpenDialog(prev => {
@@ -292,7 +290,6 @@ const Notes = () => {
 
   return (
     <div className="w-full max-w-screen-lg mx-auto flex flex-col ">
-      {console.log(openDialog)}
       <Backdrop
         open={posts.status === "loading"}
         className={`z-40`}

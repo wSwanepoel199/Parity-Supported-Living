@@ -3,9 +3,9 @@ import { useTheme } from '@mui/material/styles';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import VisibilityIcon from '@mui/icons-material/Visibility';
-import { memo, useEffect, useMemo, useRef, useState } from "react";
+import { Suspense, memo, useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
-import { Outlet, useMatch, useNavigate } from "react-router-dom";
+import { Outlet, redirect, useMatch, useNavigate } from "react-router-dom";
 import { DataGridMenu, GeneralDataGrid } from '../../Components';
 import { selectClients } from '../../Redux/client/clientSlice';
 import { selectUser } from '../../Redux/user/userSlice';
@@ -13,8 +13,6 @@ import { selectUser } from '../../Redux/user/userSlice';
 const Clients = () => {
   const clients = useSelector(selectClients);
   const user = useSelector(selectUser);
-
-  const mounted = useRef();
 
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
@@ -146,16 +144,6 @@ const Clients = () => {
     rows: [],
   });
 
-
-  // useMemo(() => {
-  //   setTable(prev => {
-  //     return {
-  //       ...prev,
-  //       rows: JSON.parse(JSON.stringify(clients.clients).replace(/:null/gi, ":\"\""))
-  //     };
-  //   });
-  // }, [clients.clients]);
-
   useMemo(() => {
     if (clients.clients) {
       setTable(prev => {
@@ -174,22 +162,37 @@ const Clients = () => {
   });
 
   useEffect(() => {
-    if (!mounted.current && !["new", "edit", "view", "delete"].includes(openDialog.type)) {
-      if (!match && !openDialog.open) {
-        navigate('/clients', { replace: true });
+    console.log(match);
+    if (match) window.addEventListener('popstate', () => {
+      setOpenDialog(prev => {
+        if (prev.open) return {
+          ...prev,
+          open: false,
+          type: ''
+        };
+        return prev;
+      });
+    });
+
+
+    if (!["new", "edit", "view", "delete"].includes(openDialog?.type)) {
+      if (!match && !openDialog?.open) {
+        redirect(match.pathname);
       }
-      if (match && openDialog.open) {
-        setOpenDialog({
-          ...openDialog,
-          open: !openDialog.open
+      if (match && openDialog?.open) {
+        setOpenDialog(prev => {
+          return {
+            ...prev,
+            open: !prev.open,
+            type: ''
+          };
         });
       }
-      mounted.current = true;
     }
     return () => {
-      if (mounted.current) mounted.current = false;
+      window.removeEventListener('popstate', () => { });
     };
-  }, [mounted, match, openDialog, navigate]);
+  }, [match, openDialog, navigate]);
 
 
   const [selectedRow, setSelectedRow] = useState();
@@ -256,20 +259,31 @@ const Clients = () => {
       </Backdrop>
       <Dialog
         fullScreen={fullScreen}
-        open={openDialog.open}
+        open={openDialog?.open}
         className={`z-30 max-w-full`}
         disablePortal
         classes={{
-          paper: 'bg-transparent'
+          paper: 'dialog-background'
         }}
       >
-        <Outlet context={{ openDialog, setOpenDialog, fullScreen }} />
+        <Suspense fallback={
+          <Backdrop
+            open={true}
+            className={`z-40`}
+          >
+            <CircularProgress />
+          </Backdrop>
+        }>
+          <Outlet context={{ openDialog, setOpenDialog, fullScreen }} />
+        </Suspense>
       </Dialog>
       <Typography variant="h3" component="div" className={`py-5 text-psl-primary dark:text-psl-active-text`}>Clients</Typography>
       <GeneralDataGrid
         functions={{ setSelectedRow, handleContextMenu, setOpenDialog }}
         variables={{
-          table, selectedRow, permissions,
+          table,
+          selectedRow,
+          permissions,
           initialState: {
             columns: {
               columnVisibilityModel: {

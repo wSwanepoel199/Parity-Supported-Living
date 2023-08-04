@@ -1,5 +1,5 @@
 import React, { useEffect, useState, Suspense, memo, useRef } from 'react';
-import { Outlet, redirect, useLocation, useNavigate } from 'react-router-dom';
+import { Outlet, redirect, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { Box, CircularProgress, Container, Fab, LinearProgress, useMediaQuery, useTheme, } from '@mui/material';
 import NightsStayIcon from '@mui/icons-material/NightsStay';
@@ -19,7 +19,6 @@ function App() {
   const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
   const navigate = useNavigate();
-  const location = useLocation();
 
   const [installing, setInstalling] = useState(undefined);
   const [waiting, setWaiting] = useState({
@@ -131,9 +130,9 @@ function App() {
         if (user.status !== 'loggedIn') {
           redirect('/signin');
         }
-        else if (user.status === 'loggedIn') {
-          navigate('/notes', { replace: true });
-        }
+        // else if (user.status === 'loggedIn') {
+        //   navigate('/notes', { replace: true });
+        // }
       });
     }
 

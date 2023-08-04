@@ -26,7 +26,6 @@ const CreateNote = () => {
     private: false,
   });
   const [options, setOptions] = useState([]);
-  const [focus, setFocus] = useState(undefined);
 
   useEffect(() => {
     if (client.clients.length > 0) setOptions(client.clients);

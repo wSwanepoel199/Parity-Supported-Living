@@ -32,12 +32,12 @@ const MyCustomHelperText = () => {
 
   const helperText = useMemo(() => {
     if (focused) {
-      return '04 1234 5678';
+      return '0412 345 678';
     }
     return "";
   }, [focused]);
 
-  return <FormHelperText>{helperText}</FormHelperText>;
+  return <FormHelperText className={`txt-secondary`}>{helperText}</FormHelperText>;
 };
 
 const containsText = (user, searchText) =>
@@ -47,7 +47,7 @@ const CreateClient = () => {
   const admin = useSelector(selectUsers);
   const options = admin.users;
 
-  const { setOpenDialog, fullScreen } = useOutletContext();
+  const { setOpenDialog } = useOutletContext();
   const navigate = useNavigate();
 
   const [createClient, { isLoading: isCreatingClient }] = useCreateClientMutation();
@@ -139,47 +139,78 @@ const CreateClient = () => {
         <CircularProgress />
       </Backdrop>
 
-      <Box component='form' onSubmit={(e) => handleSubmit(e)}>
+      <Box component='form' onSubmit={(e) => handleSubmit(e)} className={`dialog-background h-full`}>
         <DialogTitle className={`flex justify-between items-center`}>
-          <Typography variant="h6" component="p">
+          <Typography variant="h6" component="p" className={`txt-main`}>
             New Client
           </Typography>
           <IconButton onClick={() => handleExit()}>
-            <CloseIcon />
+            <CloseIcon className={`interact-main`} />
           </IconButton>
         </DialogTitle>
         <DialogContent >
-          <Grid container spacing={2} className="flex justify-center w-full">
+          <Grid container spacing={2} className="flex justify-center">
             <Grid xs={12} className=" border-b-2 border-b-gray-400 border-solid border-x-transparent border-t-transparent">
-              <Typography>Details</Typography>
+              <Typography className={`txt-main`}>Details</Typography>
             </Grid>
-            <Grid sm={6} xs={12} className="flex justify-center">
+            <Grid sm={6} xs={12} id="firstNameInput" className="flex justify-center">
               <FormControl size="small" fullWidth margin="dense">
-                <InputLabel shrink htmlFor="firstNameInput">First Name</InputLabel>
+                <InputLabel
+                  shrink
+                  htmlFor="firstNameInput"
+                  className={`txt-secondary`}
+                  classes={{
+                    focused: 'text-psl-active-link'
+                  }}
+                >First Name</InputLabel>
                 <Input
                   id="firstNameInput"
                   name="firstName"
                   type="text"
                   value={formData.firstName}
                   onChange={handleInput}
+                  disableUnderline
+                  className={`txt-secondary dark:[color-scheme:dark] rounded-sm mui-input-inactive`}
+                  classes={{
+                    focused: 'mui-input-active'
+                  }}
                 />
               </FormControl>
             </Grid>
-            <Grid sm={6} xs={12} className="flex justify-center">
+            <Grid sm={6} xs={12} id="lastNameInput" className="flex justify-center">
               <FormControl size="small" fullWidth margin="dense">
-                <InputLabel shrink htmlFor="lastNameInput">Last Name</InputLabel>
+                <InputLabel
+                  shrink
+                  htmlFor="lastNameInput"
+                  className={`txt-secondary`}
+                  classes={{
+                    focused: 'text-psl-active-link'
+                  }}
+                >Last Name</InputLabel>
                 <Input
                   id="lastNameInput"
                   name="lastName"
                   type="text"
                   value={formData.lastName}
                   onChange={handleInput}
+                  disableUnderline
+                  className={`txt-secondary dark:[color-scheme:dark] rounded-sm mui-input-inactive`}
+                  classes={{
+                    focused: 'mui-input-active'
+                  }}
                 />
               </FormControl>
             </Grid>
-            <Grid sm={6} xs={12} className="flex justify-center">
+            <Grid sm={6} xs={12} id="phoneInput" className="flex justify-center">
               <FormControl size="small" fullWidth margin="dense">
-                <InputLabel shrink htmlFor="phoneInput">Phone Number</InputLabel>
+                <InputLabel
+                  shrink
+                  htmlFor="phoneInput"
+                  className={`txt-secondary`}
+                  classes={{
+                    focused: 'text-psl-active-link'
+                  }}
+                >Phone Number</InputLabel>
                 <Input
                   id="phoneInput"
                   name="phoneNumber"
@@ -190,75 +221,140 @@ const CreateClient = () => {
                   }}
                   value={formData.phoneNumber}
                   onChange={(value, country, e, formattedValue) => handleInput(e)}
+                  disableUnderline
+                  className={`txt-secondary dark:[color-scheme:dark] rounded-sm mui-input-inactive`}
+                  classes={{
+                    focused: 'mui-input-active'
+                  }}
                 />
                 <MyCustomHelperText />
               </FormControl>
             </Grid>
-            <Grid sm={6} xs={12} className="flex justify-center">
+            <Grid sm={6} xs={12} id="emailInput" className="flex justify-center">
               <FormControl size="small" fullWidth margin="dense">
-                <InputLabel shrink htmlFor="emailInput">Email</InputLabel>
+                <InputLabel
+                  shrink
+                  htmlFor="emailInput"
+                  className={`txt-secondary`}
+                  classes={{
+                    focused: 'text-psl-active-link'
+                  }}
+                >Email</InputLabel>
                 <Input
                   id="emailInput"
                   name="email"
                   type="text"
                   value={formData.email}
                   onChange={handleInput}
+                  disableUnderline
+                  className={`txt-secondary dark:[color-scheme:dark] rounded-sm mui-input-inactive`}
+                  classes={{
+                    focused: 'mui-input-active'
+                  }}
                 />
               </FormControl>
             </Grid>
             <Grid xs={12} className="border-b-2 border-b-gray-400 border-solid border-x-transparent border-t-transparent">
-              <Typography>Address</Typography>
+              <Typography className={`txt-main`}>Address</Typography>
             </Grid>
             <Grid sm={6} xs={12} className="flex justify-center">
               <FormControl size="small" fullWidth margin="dense">
-                <InputLabel shrink htmlFor="addressInput">Street Address</InputLabel>
+                <InputLabel
+                  shrink
+                  htmlFor="addressInput"
+                  className={`txt-secondary`}
+                  classes={{
+                    focused: 'text-psl-active-link'
+                  }}
+                >Street Address</InputLabel>
                 <Input
                   id="addressInput"
                   name="addressStreet"
                   type="text"
                   value={address[0]}
                   onChange={handleInput}
+                  disableUnderline
+                  className={`txt-secondary dark:[color-scheme:dark] rounded-sm mui-input-inactive`}
+                  classes={{
+                    focused: 'mui-input-active'
+                  }}
                 />
               </FormControl>
             </Grid>
             <Grid sm={6} xs={12} className="flex justify-center">
               <FormControl size="small" fullWidth margin="dense">
-                <InputLabel shrink htmlFor="addressInput">City</InputLabel>
+                <InputLabel
+                  shrink
+                  htmlFor="addressInput"
+                  className={`txt-secondary`}
+                  classes={{
+                    focused: 'text-psl-active-link'
+                  }}
+                >City</InputLabel>
                 <Input
                   id="addressInput"
                   name="addressCity"
                   type="text"
                   value={address[1]}
                   onChange={handleInput}
+                  disableUnderline
+                  className={`txt-secondary dark:[color-scheme:dark] rounded-sm mui-input-inactive`}
+                  classes={{
+                    focused: 'mui-input-active'
+                  }}
                 />
               </FormControl>
             </Grid>
             <Grid sm={6} xs={12} className="flex justify-center">
               <FormControl size="small" fullWidth margin="dense">
-                <InputLabel shrink htmlFor="addressInput">State</InputLabel>
+                <InputLabel
+                  shrink
+                  htmlFor="addressInput"
+                  className={`txt-secondary`}
+                  classes={{
+                    focused: 'text-psl-active-link'
+                  }}
+                >State</InputLabel>
                 <Input
                   id="addressInput"
                   name="addressState"
                   type="text"
                   value={address[2]}
                   onChange={handleInput}
+                  disableUnderline
+                  className={`txt-secondary dark:[color-scheme:dark] rounded-sm mui-input-inactive`}
+                  classes={{
+                    focused: 'mui-input-active'
+                  }}
                 />
               </FormControl>
             </Grid>
             <Grid sm={6} xs={12} className="flex justify-center">
               <FormControl size="small" fullWidth margin="dense">
-                <InputLabel shrink htmlFor="addressInput">ZIP/postal codes</InputLabel>
+                <InputLabel
+                  shrink
+                  htmlFor="addressInput"
+                  className={`txt-secondary`}
+                  classes={{
+                    focused: 'text-psl-active-link'
+                  }}
+                >ZIP/postal codes</InputLabel>
                 <Input
                   id="addressInput"
                   name="addressZIP"
                   type="number"
                   value={address[3]}
                   onChange={handleInput}
+                  disableUnderline
+                  className={`txt-secondary dark:[color-scheme:dark] rounded-sm mui-input-inactive`}
+                  classes={{
+                    focused: 'mui-input-active'
+                  }}
                 />
               </FormControl>
             </Grid>
             <Grid xs={12} className="border-b-2 border-b-gray-400 border-solid border-x-transparent border-t-transparent">
-              <Typography>Carers</Typography>
+              <Typography className={`txt-main`}>Carers</Typography>
             </Grid>
             <Grid xs={12} className="flex justify-center">
               {options ?
@@ -267,7 +363,16 @@ const CreateClient = () => {
                     id="carerInput"
                     name='carersId'
                     multiple
-                    input={<OutlinedInput id="carersListInput" />}
+                    value={formData.carers}
+                    onChange={(e) => handleInput(e)}
+                    onClose={() => setSearchText("")}
+                    input={<OutlinedInput
+                      id="carersListInput"
+                      className={`txt-secondary rounded-sm border-2 border-solid border-psl-primary/40 dark:border-psl-secondary-text/40 hover:border-psl-active-link hover:dark:border-psl-active-link`}
+                      classes={{
+                        notchedOutline: 'border-0',
+                        // focused: 'border-psl-active-link dark:border-psl-active-link border-2 border-solid',
+                      }} />}
                     renderValue={(selected) => (
                       <Box
                         className={`flex flex-wrap gap-2`}
@@ -275,25 +380,45 @@ const CreateClient = () => {
                         {selected.map((value, index) => {
                           return (
                             <Box key={index}>
-                              <Chip label={options.find((user) => value === user.userId).name} />
+                              <Chip label={options.find((user) => value === user.userId).name} classes={{
+                                root: 'bg-psl-secondary'
+                              }} />
                             </Box>
                           );
                         })}
                       </Box>
                     )}
-                    MenuProps={{ autoFocus: false }}
-                    value={formData.carers}
-                    onChange={(e) => handleInput(e)}
-                    onClose={() => setSearchText("")}
+                    MenuProps={{
+                      autoFocus: false,
+                      disablePortal: true,
+                      PopoverClasses: {
+                        paper: 'bg-inherit',
+                      },
+                      PaperProps: {
+                        id: 'carerId'
+                      },
+                      MenuListProps: {
+                        classes: {
+                          root: 'txt-main'
+                        },
+                        className: 'dialog-background'
+                      }
+                    }}
+                    classes={{
+                      icon: `txt-secondary`,
+                      iconOpen: 'text-psl-active-link',
+                    }}
+
                   >
-                    <ListSubheader>
+                    <ListSubheader
+                      className='dialog-background'>
                       <Input
                         size="small"
                         autoFocus
                         fullWidth
                         startAdornment={
                           <InputAdornment position="start">
-                            <SearchIcon />
+                            <SearchIcon className={`txt-secondary`} />
                           </InputAdornment>
                         }
                         onChange={(e) => setSearchText(e.target.value)}
@@ -303,12 +428,20 @@ const CreateClient = () => {
                             e.stopPropagation();
                           }
                         }}
+                        disableUnderline
+                        className={`txt-secondary dark:[color-scheme:dark] rounded-sm mui-input-inactive`}
+                        classes={{
+                          focused: 'mui-input-active'
+                        }}
                       />
                     </ListSubheader>
-                    {displayedOptions?.map((user, index) => {
+                    {displayedOptions?.map((user) => {
                       return (
-                        <MenuItem key={index} value={user.userId}>
-                          <Checkbox checked={formData.carers.indexOf(user.userId) > -1} />
+                        <MenuItem key={user.userId} value={user.userId} className={`hover:text-psl-active-link`} classes={{ selected: 'text-psl-active-link' }}>
+                          <Checkbox checked={formData.carers.indexOf(user.userId) > -1} classes={{
+                            colorPrimary: 'text-psl-secondary',
+                            checked: 'mui-checked',
+                          }} />
                           {user.firstName} {user?.lastName}</MenuItem>
                       );
                     })}
@@ -316,7 +449,7 @@ const CreateClient = () => {
                 </FormControl> : null}
             </Grid>
             <Grid xs={12} className="border-b-2 border-b-gray-400 border-solid border-x-transparent border-t-transparent">
-              <Typography>Notes</Typography>
+              <Typography className={`txt-main`}>Notes</Typography>
             </Grid>
             <Grid xs={12} className="flex justify-center">
               <FormControl size="small" fullWidth margin="dense">
@@ -331,15 +464,22 @@ const CreateClient = () => {
                   minRows={4}
                   value={formData.notes}
                   onChange={handleInput}
+                  className={`txt-secondary rounded-sm  border-2 border-solid border-psl-primary/40 dark:border-psl-secondary-text/40 hover:border-psl-active-link hover:dark:border-psl-active-link focus-within:border-psl-active-link focus-within:dark:border-psl-active-link `}
+                  classes={{
+                    notchedOutline: 'border-0 ',
+                    focused: 'border-psl-active-link dark:border-psl-active-link border-2 border-solid',
+                  }}
                 />
               </FormControl>
             </Grid>
           </Grid>
         </DialogContent>
         <DialogActions>
-          {!fullScreen &&
-            <Button onClick={() => handleExit()}>Cancel</Button>}
-          <Button color="success" variant="contained" type="submit">CREATE</Button>
+          <Button
+            variant="contained"
+            type="submit"
+            className={`bg-transparent bg-gradient-to-b from-transparent to-psl-secondary-text dark:to-psl-secondary hover:bg-psl-active-link hover:to-psl-active-link hover:dark:to-psl-active-link hover:dark:text-psl-primary text-psl-primary dark:text-psl-secondary-text shadow-none hover:shadow-none`}
+          >Create</Button>
         </DialogActions>
       </Box>
     </>

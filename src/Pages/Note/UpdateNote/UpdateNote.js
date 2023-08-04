@@ -22,7 +22,6 @@ const UpdateNote = () => {
   const [formData, setFormData] = useState(data);
   const [carerOptions, setCarerOptions] = useState([(data?.carer || "")]);
   const [clientOptions, setClientOptions] = useState([(data?.client || "")]);
-  const [focus, setFocus] = useState(undefined);
 
 
   useEffect(() => {
@@ -169,25 +168,14 @@ const UpdateNote = () => {
                 <FormControl
                   size="small"
                   fullWidth
-                  margin="dense"
-                  onFocus={(e) => {
-                    if (e !== focus) setFocus(e);
-                    document.activeElement.focus();
-                  }}
-                  onBlur={() => {
-                    setFocus(undefined);
-                    document.activeElement.blur();
-                  }}
-                >
+                  margin="dense">
                   <InputLabel
                     shrink
                     htmlFor="dateInput"
-                    className={`
-                  ${document.activeElement.name === "date" ?
-                        `text-psl-active-link`
-                        :
-                        `txt-secondary`}`
-                    }
+                    className={`txt-secondary`}
+                    classes={{
+                      focused: 'text-psl-active-link'
+                    }}
                   >Support Date</InputLabel>
                   <Input
                     id="dateInput"
