@@ -9,7 +9,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import { format, parseISO } from "date-fns";
 import { Suspense, memo, useEffect, useMemo, useRef, useState } from "react";
 import { useSelector } from "react-redux";
-import { Outlet, useMatch, useNavigate } from "react-router-dom";
+import { Outlet, redirect, useMatch, useNavigate } from "react-router-dom";
 import { DataGridMenu, GeneralDataGrid } from '../../Components';
 import { selectPosts } from '../../Redux/posts/postSlice';
 import { selectUser } from '../../Redux/user/userSlice';
@@ -207,32 +207,35 @@ const Notes = () => {
   useEffect(() => {
 
     window.addEventListener('popstate', () => {
-      setOpenDialog({
-        ...openDialog,
-        open: false
+      setOpenDialog(prev => {
+        if (prev.open) return {
+          ...prev,
+          open: false,
+          type: ''
+        };
+        return prev;
       });
     });
 
 
-    if (!mounted.current && !["new", "edit", "view", "delete"].includes(openDialog?.type)) {
+    if (!["new", "edit", "view", "delete"].includes(openDialog?.type)) {
       if (!match && !openDialog?.open) {
-        navigate('/notes', { replace: true });
+        redirect('/notes');
       }
       if (match && openDialog?.open) {
         setOpenDialog(prev => {
           return {
             ...prev,
-            open: !prev.open
+            open: !prev.open,
+            type: ''
           };
         });
       }
-      mounted.current = true;
     }
     return () => {
-      mounted.current = false;
       window.removeEventListener('popstate', () => { });
     };
-  }, [mounted, match, openDialog, navigate]);
+  }, [match, openDialog, navigate]);
 
 
   const [selectedRow, setSelectedRow] = useState();

@@ -60,7 +60,7 @@ const DeleteNote = () => {
           <DialogContentText className={`txt-secondary`}>Are you sure you want to delete this case note?</DialogContentText>
         </DialogContent>
         <DialogActions sx={{ justifyContent: 'end' }}>
-          <Button variant="contained" onClick={() => handleDelete()} className={`bg-transparent bg-gradient-to-b from-transparent to-psl-secondary-text dark:to-psl-secondary hover:bg-psl-active-link hover:to-psl-active-link hover:dark:to-psl-active-link txt-secondary hover:dark:text-psl-primary shadow-none`}>DELETE</Button>
+          <Button variant="contained" onClick={() => handleDelete()} className={`bg-transparent bg-gradient-to-b from-transparent to-psl-secondary dark:to-psl-secondary hover:bg-psl-active-link hover:to-psl-active-link hover:dark:to-psl-active-link txt-secondary hover:dark:text-psl-primary shadow-none`}>DELETE</Button>
         </DialogActions>
       </Box>
     </>

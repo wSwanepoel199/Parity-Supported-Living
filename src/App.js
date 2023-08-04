@@ -1,5 +1,5 @@
-import React, { useEffect, useState, Suspense, memo } from 'react';
-import { Outlet, useNavigate } from 'react-router-dom';
+import React, { useEffect, useState, Suspense, memo, useRef } from 'react';
+import { Outlet, redirect, useLocation, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { Box, CircularProgress, Container, Fab, LinearProgress, useMediaQuery, useTheme, } from '@mui/material';
 import NightsStayIcon from '@mui/icons-material/NightsStay';
@@ -13,11 +13,13 @@ import { selectUser } from './Redux/user/userSlice';
 
 function App() {
   const user = useSelector(selectUser);
+  const mounted = useRef();
 
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
   const navigate = useNavigate();
+  const location = useLocation();
 
   const [installing, setInstalling] = useState(undefined);
   const [waiting, setWaiting] = useState({
@@ -119,14 +121,27 @@ function App() {
   }, []);
 
   useEffect(() => {
-    window.addEventListener('popstate', () => {
-      if (user.status !== 'loggedIn') navigate('/signin', { replace: true });
-    });
+    if (!mounted.current) {
+
+      mounted.current = true;
+    }
+
+    if (mounted.current) {
+      window.addEventListener('popstate', () => {
+        if (user.status !== 'loggedIn') {
+          redirect('/signin');
+        }
+        else if (user.status === 'loggedIn') {
+          navigate('/notes', { replace: true });
+        }
+      });
+    }
 
     return () => {
       window.removeEventListener('popstate', () => { });
+      if (mounted.current) mounted.current = false;
     };
-  }, [user.status, navigate]);
+  }, [mounted, user.status, navigate]);
 
 
   // console.log(window);

@@ -123,44 +123,28 @@ const CreateNote = () => {
               <FormControl
                 size="small"
                 fullWidth
-                margin="dense"
-                onFocus={(e) => {
-                  if (e !== focus) setFocus(e);
-                  document.activeElement.focus();
-                }}
-                onBlur={() => {
-                  setFocus(undefined);
-                  document.activeElement.blur();
-                }}
-              >
+                margin="dense">
                 <InputLabel
                   shrink
                   htmlFor="dateInput"
-                  className={`
-                  ${document.activeElement.name === "date" ? `
-                  text-psl-active-link
-                  `: `
-                  txt-secondary
-                  `}`}
+                  className={`txt-secondary`}
+                  classes={{
+                    focused: 'text-psl-active-link'
+                  }}
                 >Support Date</InputLabel>
                 <Input
                   id="dateInput"
                   name="date"
                   type="date"
                   required
-                  onClick={(e) => e.target.showPicker()}
+                  onClick={(e) => e.target?.showPicker()}
                   value={formData.date ? format(parseISO(formData.date), 'yyyy-MM-dd') : ''}
                   onChange={(e) => handleInput(e.target)}
                   disableUnderline
-                  className={`
-                    txt-secondary
-                    dark:[color-scheme:dark]
-                    rounded-sm
-                    ${document.activeElement.name === "date" ? `
-                      mui-input-active
-                    `: `
-                      mui-input-inactive
-                    `}`}
+                  className={`txt-secondary dark:[color-scheme:dark] rounded-sm mui-input-inactive`}
+                  classes={{
+                    focused: 'mui-input-active'
+                  }}
                 />
               </FormControl>
             </Grid>
@@ -168,25 +152,13 @@ const CreateNote = () => {
               <FormControl
                 size="small"
                 fullWidth
-                margin="dense"
-                onFocus={(e) => {
-                  if (e !== focus) setFocus(e);
-                  document.activeElement.focus();
-                }}
-                onBlur={() => {
-                  setFocus(undefined);
-                  document.activeElement.blur();
-                }}
-              >
+                margin="dense">
                 <InputLabel
                   htmlFor="timeInput"
-                  className={`
-                ${document.activeElement.name === "hours" ? `
-                text-psl-active-link
-                `: `
-                text-psl-primary
-                dark:text-psl-secondary-text
-                `}`}
+                  className={`text-psl-primary dark:text-psl-secondary-text`}
+                  classes={{
+                    focused: 'text-psl-active-link dark:text-psl-active-link'
+                  }}
                 >Support Duration</InputLabel>
                 <Input
                   id="timeInput"
@@ -196,16 +168,10 @@ const CreateNote = () => {
                   value={formData.hours}
                   onChange={(e) => handleInput(e.target)}
                   disableUnderline
-                  className={`
-                    txt-secondary
-                    dark:[color-scheme:dark]
-                    rounded-sm
-                    ${document.activeElement.name === "hours" ? `
-                      mui-input-active
-                    `: `
-                      mui-input-inactive
-                    `}
-                  `}
+                  className={`txt-secondary dark:[color-scheme:dark] rounded-sm mui-input-inactive`}
+                  classes={{
+                    focused: 'mui-input-active'
+                  }}
                 />
               </FormControl>
             </Grid>
@@ -214,25 +180,14 @@ const CreateNote = () => {
                 variant="standard"
                 size="small"
                 fullWidth
-                margin="dense"
-                onFocus={(e) => {
-                  if (e !== focus) setFocus(e);
-                  document.activeElement.focus();
-                }}
-                onBlur={() => {
-                  setFocus(undefined);
-                  document.activeElement.blur();
-                }}
-              >
-                {/* try and get select to respond to focus, god know show but just try please */}
+                margin="dense">
                 <InputLabel
                   htmlFor="clientInput"
-                  className={`
-                ${document.activeElement.id === "clientId" ? `
-                  text-psl-active-link
-                `: `
-                  txt-secondary
-                `}`}
+                  className={`txt-secondary transition-all delay-150 pl-0  duration-500`}
+                  classes={{
+                    focused: 'text-psl-active-link ',
+                    shrink: 'pl-5 scale-75 duration-500'
+                  }}
                 >Client</InputLabel>
                 <Select
                   id="clientInput"
@@ -241,20 +196,11 @@ const CreateNote = () => {
                   value={formData.clientId}
                   onChange={(e) => handleInput(e.target)}
                   disableUnderline
-                  className={`
-                  txt-secondary
-                  rounded-sm
-                  ${document.activeElement.id === "clientId" ? `
-                    mui-input-active
-                  `: `
-                    mui-input-inactive
-                  `}`}
+                  className={`txt-secondary rounded-sm mui-input-inactive`}
                   classes={{
-                    icon: `${document.activeElement.id === "clientId" ? `
-                      text-psl-active-link
-                    `: `
-                      txt-secondary
-                    `}`
+                    icon: `txt-secondary`,
+                    iconOpen: 'text-psl-active-link',
+                    focused: 'mui-input-active'
                   }}
                   MenuProps={{
                     disablePortal: true,
@@ -274,7 +220,7 @@ const CreateNote = () => {
                 >
                   {options.map((client) => {
                     return (
-                      <MenuItem key={client.id} value={client?.clientId} className={`hover:text-psl-active-link`}>{client?.firstName} {client?.lastName}</MenuItem>
+                      <MenuItem key={client.id} value={client?.clientId} className={`hover:text-psl-active-link`} classes={{ selected: 'text-psl-active-link' }}>{client?.firstName} {client?.lastName}</MenuItem>
                     );
                   })}
                 </Select>
@@ -284,25 +230,13 @@ const CreateNote = () => {
               <FormControl
                 size="small"
                 fullWidth
-                margin="dense"
-                onFocus={(e) => {
-                  if (e !== focus) setFocus(e);
-                  document.activeElement.focus();
-                }}
-                onBlur={() => {
-                  setFocus(undefined);
-                  document.activeElement.blur();
-                }}
-              >
+                margin="dense">
                 <InputLabel
                   htmlFor="distanceInput"
-                  className={`
-                ${document.activeElement.name === "kilos" ? `
-                text-psl-active-link
-                `: `
-                text-psl-primary
-                dark:text-psl-secondary-text
-                `}`}
+                  className={`txt-secondary`}
+                  classes={{
+                    focused: 'text-psl-active-link'
+                  }}
                 >Distance Traveled</InputLabel>
                 <Input
                   id="distanceInput"
@@ -312,7 +246,10 @@ const CreateNote = () => {
                   value={formData.kilos}
                   onChange={(e) => handleInput(e.target)}
                   disableUnderline
-                  className={`txt-secondary rounded-sm ${document.activeElement.name === "kilos" ? `mui-input-active` : `mui-input-inactive`}`}
+                  className={`txt-secondary dark:[color-scheme:dark] rounded-sm mui-input-inactive`}
+                  classes={{
+                    focused: 'mui-input-active'
+                  }}
                 />
               </FormControl>
             </Grid>
@@ -325,15 +262,7 @@ const CreateNote = () => {
               <FormControl
                 size="small"
                 fullWidth
-                margin="dense"
-                onFocus={(e) => {
-                  if (e !== focus) setFocus(e);
-                  document.activeElement.focus();
-                }}
-                onBlur={() => {
-                  setFocus(undefined);
-                  document.activeElement.blur();
-                }}>
+                margin="dense">
                 <OutlinedInput
                   id="notesInput"
                   name="notes"
@@ -342,24 +271,10 @@ const CreateNote = () => {
                   minRows={4}
                   value={formData.notes}
                   onChange={(e) => handleInput(e.target)}
-                  className={`
-                text-psl-primary 
-                dark:text-psl-secondary-text
-                rounded-sm
-                ${document.activeElement.name === "notes" ? `
-                  border-psl-active-link
-                  border-2
-                  border-solid
-                `: `
-                  border-2
-                  border-solid
-                  border-psl-primary/40
-                  dark:border-psl-secondary-text/40
-                  hover:border-psl-active-link
-                  hover:dark:border-psl-active-link
-                `}`}
+                  className={`txt-secondary rounded-sm  border-2 border-solid border-psl-primary/40 dark:border-psl-secondary-text/40 hover:border-psl-active-link hover:dark:border-psl-active-link focus-within:border-psl-active-link focus-within:dark:border-psl-active-link `}
                   classes={{
-                    notchedOutline: 'border-0'
+                    notchedOutline: 'border-0 ',
+                    focused: 'border-psl-active-link dark:border-psl-active-link border-2 border-solid',
                   }}
                 />
               </FormControl>
@@ -402,7 +317,7 @@ const CreateNote = () => {
             >Create</Button>
           </Box>
         </DialogActions>
-      </Box >
+      </Box>
     </>
   );
 };

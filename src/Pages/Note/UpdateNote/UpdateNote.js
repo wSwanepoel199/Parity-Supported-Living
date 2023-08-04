@@ -193,7 +193,7 @@ const UpdateNote = () => {
                     id="dateInput"
                     name="date"
                     type="date"
-                    onClick={(e) => e.target.showPicker()}
+                    onClick={(e) => e.target?.showPicker()}
                     value={formData.date ? format(parseISO(formData.date), 'yyyy-MM-dd') : ''}
                     onChange={(e) => handleInput(e.target)}
                     disableUnderline
@@ -208,16 +208,7 @@ const UpdateNote = () => {
                 <FormControl
                   size="small"
                   fullWidth
-                  margin="dense"
-                  onFocus={(e) => {
-                    if (e !== focus) setFocus(e);
-                    document.activeElement.focus();
-                  }}
-                  onBlur={() => {
-                    setFocus(undefined);
-                    document.activeElement.blur();
-                  }}
-                >
+                  margin="dense">
                   <InputLabel
                     htmlFor="timeInput"
                     className={
@@ -276,9 +267,10 @@ const UpdateNote = () => {
                   >
                     <InputLabel
                       htmlFor="clientInput"
-                      className={`px-5 txt-secondary`}
+                      className={`txt-secondary transition-all delay-150 pl-0  duration-500`}
                       classes={{
-                        focused: 'text-psl-active-link'
+                        focused: 'text-psl-active-link ',
+                        shrink: 'pl-5 scale-75 duration-500'
                       }}
                     >Client's Name</InputLabel>
                     <Select
@@ -321,23 +313,13 @@ const UpdateNote = () => {
                 <FormControl
                   size="small"
                   fullWidth
-                  margin="dense"
-                  onFocus={(e) => {
-                    if (e !== focus) setFocus(e);
-                    document.activeElement.focus();
-                  }}
-                  onBlur={() => {
-                    setFocus(undefined);
-                    document.activeElement.blur();
-                  }}
-                >
+                  margin="dense">
                   <InputLabel
                     htmlFor="distanceInput"
-                    className={`${document.activeElement.name === "kilos" ?
-                      `text-psl-active-link`
-                      :
-                      `txt-secondary`}`
-                    }
+                    className={`txt-secondary`}
+                    classes={{
+                      focused: 'text-psl-active-link'
+                    }}
                   >Distance Traveled</InputLabel>
                   <Input
                     id="distanceInput"
@@ -378,21 +360,13 @@ const UpdateNote = () => {
                     variant="standard"
                     size="small"
                     fullWidth
-                    margin="dense"
-                    onFocus={(e) => {
-                      if (e !== focus) setFocus(e);
-                      document.activeElement.focus();
-                    }}
-                    onBlur={() => {
-                      setFocus(undefined);
-                      document.activeElement.blur();
-                    }}
-                  >
+                    margin="dense">
                     <InputLabel
                       htmlFor="carerInput"
-                      className={`px-5 txt-secondary`}
+                      className={`txt-secondary transition-all delay-150 pl-0  duration-500`}
                       classes={{
-                        focused: 'text-psl-active-link'
+                        focused: 'text-psl-active-link ',
+                        shrink: 'pl-5 scale-75 duration-500'
                       }}
                     >Carer</InputLabel>
                     <Select
@@ -438,17 +412,7 @@ const UpdateNote = () => {
                 <FormControl
                   size="small"
                   fullWidth
-                  margin="dense"
-                  onFocus={(e) => {
-                    if (e !== focus) setFocus(e);
-                    document.activeElement.focus();
-                  }}
-                  onBlur={() => {
-                    setFocus(undefined);
-                    document.activeElement.blur();
-                  }}
-                >
-                  {/* fix this some how??? */}
+                  margin="dense">
                   <OutlinedInput
                     id="notesInput"
                     name="notes"
@@ -457,10 +421,10 @@ const UpdateNote = () => {
                     minRows={4}
                     value={formData.notes}
                     onChange={(e) => handleInput(e.target)}
-                    className={`txt-secondary rounded-sm  border-2 border-solid border-psl-primary/40 dark:border-psl-secondary-text/40 hover:border-psl-active-link hover:dark:border-psl-active-link`}
+                    className={`txt-secondary rounded-sm  border-2 border-solid border-psl-primary/40 dark:border-psl-secondary-text/40 hover:border-psl-active-link hover:dark:border-psl-active-link focus-within:border-psl-active-link focus-within:dark:border-psl-active-link `}
                     classes={{
-                      notchedOutline: '',
-                      // focused: 'border-psl-active-link dark:border-psl-active-link border-2 border-solid',
+                      notchedOutline: 'border-0 ',
+                      focused: 'border-psl-active-link dark:border-psl-active-link border-2 border-solid',
                     }}
                   />
                 </FormControl>
