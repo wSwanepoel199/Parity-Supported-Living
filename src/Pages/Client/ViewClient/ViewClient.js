@@ -84,7 +84,7 @@ const ViewClient = () => {
             in={open.clientDetails}
             className={`w-full max-w-[90%]`}
           >
-            <Grid container className={`border-[1px] border-slate-300 border-solid mt-[11px] p-3 m-2`}>
+            <Grid container className={`border-[1px] border-slate-300 border-solid mt-[11px] p-3 pb-0 m-2`}>
               <Grid sm={6} xs={12} className="flex justify-center">
                 <FormControl size="small" fullWidth margin="dense">
                   <InputLabel shrink htmlFor="clientName" className="txt-secondary">Name</InputLabel>
@@ -112,7 +112,7 @@ const ViewClient = () => {
               <Grid xs={12} className="flex justify-center">
                 <FormControl size="small" fullWidth margin="dense">
                   <InputLabel shrink htmlFor="notes" className="txt-secondary">Details</InputLabel>
-                  <Typography id="notes" className={`p-3 pb-0 txt-secondary`}>{formData.notes}</Typography>
+                  <Typography id="notes" className={`p-3 txt-secondary`}>{formData.notes}</Typography>
                 </FormControl>
               </Grid>
             </Grid>
