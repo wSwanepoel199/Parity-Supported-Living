@@ -37,8 +37,8 @@ const PasswordReset = () => {
   };
 
   return (
-    <Box className={`bg-psl-active-text dark:bg-psl-primary h-full flex flex-col justify-center p-2`}>
-      <Box component="form" onSubmit={(e) => handleSubmit(e)} className={`mx-auto px-10`}>
+    <Box className={`dialog-background h-full flex flex-col justify-center p-2 `}>
+      <Box component="form" onSubmit={(e) => handleSubmit(e)} className={`sm:px-10 `}>
         <DialogTitle className={`text-psl-primary dark:text-psl-active-text`}>Change Password</DialogTitle>
         <DialogContent>
           <DialogContentText className={`text-psl-primary-text dark:text-psl-secondary-text`}>
@@ -47,6 +47,7 @@ const PasswordReset = () => {
           <FormControl
             variant="standard"
             size="small"
+            fullWidth
             margin="dense"
             onFocus={(e) => {
               if (e !== focus) setFocus(e);

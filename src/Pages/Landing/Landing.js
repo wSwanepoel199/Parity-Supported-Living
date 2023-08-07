@@ -24,7 +24,7 @@ const Landing = () => {
   useGetPostsQuery(undefined, { skip: skipFetch, refetchOnMountOrArgChange: true });
 
   const theme = useTheme();
-  const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
+  const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
   // useEffect(() => {
   //   console.log(skipQuery, skipUsers);
@@ -43,7 +43,8 @@ const Landing = () => {
       <Dialog
         fullScreen={fullScreen}
         open={Boolean(user.user?.resetPassword)}
-        className={`z-30`}
+        disablePortal
+        className={`z-30 max-w-full`}
         classes={{
           paper: 'bg-transparent'
         }}

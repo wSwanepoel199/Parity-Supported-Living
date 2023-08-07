@@ -1,7 +1,7 @@
 import React, { useEffect, useState, Suspense, memo, useRef } from 'react';
 import { Outlet, redirect, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import { Box, CircularProgress, Container, Fab, LinearProgress, useMediaQuery, useTheme, } from '@mui/material';
+import { Box, CircularProgress, Container, Fab, LinearProgress, Tooltip, useMediaQuery, useTheme, } from '@mui/material';
 import NightsStayIcon from '@mui/icons-material/NightsStay';
 import LightModeIcon from '@mui/icons-material/LightMode';
 import { Appbar, CustomAlert, Prompt } from "./Components";
@@ -171,9 +171,11 @@ function App() {
               <Prompt state={waiting} close={setWaiting} />
             </div>
             <div className={`flex ml-auto p-1`}>
-              <Fab size={fullScreen ? 'small' : 'medium'} aria-label="theme toggle" className={`bg-psl-secondary-text text-psl-primary hover:text-psl-active-link dark:bg-psl-secondary dark:text-psl-active-text hover:dark:text-psl-active-link`} onClick={() => { handleThemeChange(); }}>
-                {darkMode ? <NightsStayIcon /> : <LightModeIcon />}
-              </Fab>
+              <Tooltip title={darkMode ? 'Toggle Light Mode' : 'Toggle Dark Mode'} placement="top" arrow classes={{ tooltip: 'text-base' }}>
+                <Fab size={fullScreen ? 'small' : 'medium'} aria-label="theme toggle" className={`bg-psl-secondary-text text-psl-primary hover:text-psl-active-link dark:bg-psl-secondary dark:text-psl-active-text hover:dark:text-psl-active-link`} onClick={() => { handleThemeChange(); }}>
+                  {darkMode ? <NightsStayIcon /> : <LightModeIcon />}
+                </Fab>
+              </Tooltip>
             </div>
           </Container>
         </Suspense>

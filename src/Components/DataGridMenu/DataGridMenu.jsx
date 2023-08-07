@@ -21,6 +21,7 @@ const DataGridMenu = ({ functions, variables }) => {
           ? { top: contextMenu.mouseY, left: contextMenu.mouseX }
           : undefined
       }
+      disablePortal
       slotProps={{
         root: {
           onContextMenu: (e) => {
