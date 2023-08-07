@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useMatch, useNavigate } from "react-router-dom";
 import { Backdrop, Box, Button, Checkbox, CircularProgress, Container, FormControl, FormControlLabel, FormGroup, IconButton, Input, InputAdornment, InputLabel, Typography } from "@mui/material";
 import Grid from "@mui/material/Unstable_Grid2";
 import LoginIcon from '@mui/icons-material/Login';
@@ -7,8 +7,11 @@ import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import { useLoginUserMutation } from "../../Redux/user/userApiSlice";
+import { selectUser } from "../../Redux/user/userSlice";
+import { useSelector } from "react-redux";
 
 const SignIn = () => {
+  const user = useSelector(selectUser);
   const navigate = useNavigate();
   const [loginUser, { isLoading }] = useLoginUserMutation();
   const [focus, setFocus] = useState(undefined);
@@ -18,6 +21,14 @@ const SignIn = () => {
     showPassword: false,
     rememberMe: false
   });
+
+  const match = useMatch('/signin');
+
+  useEffect(() => {
+    if (user.status === 'loggedIn' && match.pathname === "/signin") {
+      navigate('/notes');
+    }
+  }, [user.status, match, navigate]);
 
   const handleFormData = (e) => {
     const { value, name } = e.target;
@@ -31,7 +42,7 @@ const SignIn = () => {
     e.preventDefault();
     loginUser(formData)
       .then((res) => {
-        if (!res.error) navigate('/notes', { replace: true });
+        if (!res.error) navigate('/notes');
       })
       .catch((err) => {
         console.error('Signin Error: ', err);

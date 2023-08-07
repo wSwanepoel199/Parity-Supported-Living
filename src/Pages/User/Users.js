@@ -3,9 +3,9 @@ import { useTheme } from '@mui/material/styles';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import VisibilityIcon from '@mui/icons-material/Visibility';
-import { memo, useEffect, useMemo, useRef, useState } from "react";
+import { memo, useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
-import { Outlet, useMatch, useNavigate } from "react-router-dom";
+import { Outlet, redirect, useMatch, useNavigate } from "react-router-dom";
 
 import { DataGridMenu, GeneralDataGrid } from '../../Components';
 import { selectUsers } from '../../Redux/admin/adminSlice';
@@ -14,8 +14,6 @@ import { selectUser } from '../../Redux/user/userSlice';
 const Users = () => {
   const admin = useSelector(selectUsers);
   const user = useSelector(selectUser);
-
-  const mounted = useRef();
 
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
@@ -141,22 +139,36 @@ const Users = () => {
   });
 
   useEffect(() => {
-    if (!mounted.current && !["new", "edit", "view", "delete"].includes(openDialog.type)) {
-      if (!match && !openDialog.open) {
-        navigate('/users', { replace: true });
+    if (match) window.addEventListener('popstate', () => {
+      setOpenDialog(prev => {
+        if (prev.open) return {
+          ...prev,
+          open: false,
+          type: ''
+        };
+        return prev;
+      });
+    });
+
+
+    if (!["new", "edit", "view", "delete"].includes(openDialog?.type)) {
+      if (!match && !openDialog?.open) {
+        redirect(match?.pathname);
       }
-      if (match && openDialog.open) {
-        setOpenDialog({
-          ...openDialog,
-          open: !openDialog.open
+      if (match && openDialog?.open) {
+        setOpenDialog(prev => {
+          return {
+            ...prev,
+            open: !prev.open,
+            type: ''
+          };
         });
       }
-      mounted.current = true;
     }
     return () => {
-      if (mounted.current) mounted.current = false;
+      window.removeEventListener('popstate', () => { });
     };
-  }, [mounted, match, openDialog, navigate]);
+  }, [match, openDialog, navigate]);
 
   // useMemo(() => {
   //   if (match && openDialog.open && !["new", "edit", "view", "delete"].includes(openDialog.type)) {

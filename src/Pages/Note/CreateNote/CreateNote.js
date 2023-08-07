@@ -102,7 +102,7 @@ const CreateNote = () => {
       >
         <CircularProgress />
       </Backdrop>
-
+      {console.log(formData)}
       <Box component='form' onSubmit={(e) => handleSubmit(e)} className={`dialog-background h-full`}>
         {/* {console.log(formData)} */}
         <DialogTitle className={`flex justify-between items-center`}>

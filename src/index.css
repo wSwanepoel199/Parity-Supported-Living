@@ -82,3 +82,7 @@ body {
     @apply text-psl-active-link;
   }
 }
+
+.MuiCircularProgress-colorPrimary {
+  @apply text-psl-active-link;
+}

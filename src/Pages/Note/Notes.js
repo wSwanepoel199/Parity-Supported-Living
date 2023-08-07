@@ -37,10 +37,12 @@ const Notes = () => {
       {
         field: 'carerId',
         disableColumnMenu: true,
+        filterable: false
       },
       {
         field: 'clientId',
         disableColumnMenu: true,
+        filterable: false
       },
       {
         field: 'private',
@@ -48,6 +50,7 @@ const Notes = () => {
         disableColumnMenu: true,
         width: 65,
         sortable: false,
+        filterable: false,
         renderCell: ({ value }) => {
           return (
             <Box className={`w-full flex justify-center items-center flex-row`}>
@@ -63,8 +66,9 @@ const Notes = () => {
         field: 'date',
         headerName: 'Date',
         disableColumnMenu: true,
+        valueGetter: ({ row }) => { return format(parseISO(row.date), 'yyyy/MM/dd'); },
         valueFormatter: ({ value }) => `${value}`,
-        renderCell: ({ value }) => value ? <p>{format(parseISO(value), 'dd/MM/yyyy')}</p> : null,
+        // renderCell: ({ value }) => value ? <p>{format(parseISO(value), 'dd/MM/yyyy')}</p> : null,
         flex: 1,
         minWidth: 80,
       },
@@ -75,6 +79,9 @@ const Notes = () => {
         flex: 1,
         minWidth: 85,
         maxWidth: 150,
+        valueGetter: ({ row }) => {
+          return row.client?.firstName + ' ' + row.client?.lastName;
+        },
         renderCell: ({ row }) => {
           if (row.clientId === "") {
             return <p className={`text-ellipsis overflow-hidden whitespace-nowrap max-w-full`}>
@@ -90,6 +97,7 @@ const Notes = () => {
       {
         field: 'clientName',
         disableColumnMenu: true,
+        filterable: false,
       },
       {
         field: 'carer',
@@ -98,6 +106,9 @@ const Notes = () => {
         flex: 1,
         minWidth: 85,
         maxWidth: 150,
+        valueGetter: ({ row }) => {
+          return row.carer?.firstName + ' ' + row.carer?.lastName;
+        },
         renderCell: ({ row }) => {
           if (row.carerId === "") {
             return <p className={`text-ellipsis overflow-hidden whitespace-nowrap max-w-full`}>
@@ -113,6 +124,7 @@ const Notes = () => {
       {
         field: 'carerName',
         disableColumnMenu: true,
+        filterable: false,
       },
       {
         field: 'hours',
@@ -154,6 +166,7 @@ const Notes = () => {
         disableColumnMenu: true,
         disableColumnFilter: true,
         sortable: false,
+        filterable: false,
         renderCell: (params) => (
           <Box className={`flex justify-center`}>
             <IconButton onClick={() => {
@@ -203,7 +216,6 @@ const Notes = () => {
   });
 
   useEffect(() => {
-    console.log(match);
     if (match) window.addEventListener('popstate', () => {
       setOpenDialog(prev => {
         if (prev.open) return {
@@ -218,7 +230,7 @@ const Notes = () => {
 
     if (!["new", "edit", "view", "delete"].includes(openDialog?.type)) {
       if (!match && !openDialog?.open) {
-        redirect(match.pathname);
+        redirect(match?.pathname);
       }
       if (match && openDialog?.open) {
         setOpenDialog(prev => {

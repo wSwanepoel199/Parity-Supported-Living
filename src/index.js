@@ -25,7 +25,7 @@ root.render(
             open={true}
             className={`z-40`}
           >
-            <CircularProgress />
+            <CircularProgress className='text-psl-active-link' />
           </Backdrop>}
         />
       </StyledEngineProvider>

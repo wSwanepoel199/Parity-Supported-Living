@@ -32,21 +32,21 @@ const DeleteUser = () => {
         <CircularProgress />
       </Backdrop>
 
-      <Box>
+      <Box className={`dialog-background h-full`}>
         <DialogTitle className={`flex justify-between items-center`}>
-          <Typography variant="h6" component="p">
+          <Typography variant="h6" component="p" className={`txt-main`}>
             Delete {openDialog.data.name}?
           </Typography>
           <IconButton onClick={() => handleExit()}>
-            <CloseIcon />
+            <CloseIcon className={`interact-main`} />
           </IconButton>
         </DialogTitle>
         <DialogContent>
-          <DialogContentText>Are you sure you want to delete {openDialog.data.name}?</DialogContentText>
+          <DialogContentText className={`txt-secondary`}>Are you sure you want to delete {openDialog.data.name}?</DialogContentText>
         </DialogContent>
         <DialogActions sx={{ justifyContent: 'space-between' }}>
           <Button onClick={() => handleExit()}>Cancel</Button>
-          <Button color="error" variant="contained" onClick={handleDelete}>DELETE</Button>
+          <Button variant="contained" onClick={handleDelete} className={`bg-transparent bg-gradient-to-b from-transparent to-psl-secondary dark:to-psl-secondary hover:bg-psl-active-link hover:to-psl-active-link hover:dark:to-psl-active-link txt-secondary hover:dark:text-psl-primary shadow-none`}>DELETE</Button>
         </DialogActions>
       </Box>
     </>

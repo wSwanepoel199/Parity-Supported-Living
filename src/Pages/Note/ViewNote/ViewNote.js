@@ -96,7 +96,7 @@ const ViewNote = () => {
                 <Grid sm={6} xs={12} className="flex justify-center">
                   <FormControl size="small" fullWidth margin="dense">
                     <InputLabel shrink htmlFor="dateInput" className="txt-secondary">Support Date</InputLabel>
-                    <Typography id="dateInput" className={`p-3 txt-secondary`}>{format(parseISO(formData.date), 'yyyy-MM-dd')}</Typography>
+                    <Typography id="dateInput" className={`p-3 txt-secondary`}>{format(parseISO(formData.date), 'yyyy/MM/dd')}</Typography>
                   </FormControl>
                 </Grid>
                 <Grid sm={6} xs={12} className="flex justify-center">

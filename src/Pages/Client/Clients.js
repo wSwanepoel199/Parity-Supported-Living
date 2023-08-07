@@ -162,7 +162,6 @@ const Clients = () => {
   });
 
   useEffect(() => {
-    console.log(match);
     if (match) window.addEventListener('popstate', () => {
       setOpenDialog(prev => {
         if (prev.open) return {
@@ -177,7 +176,7 @@ const Clients = () => {
 
     if (!["new", "edit", "view", "delete"].includes(openDialog?.type)) {
       if (!match && !openDialog?.open) {
-        redirect(match.pathname);
+        redirect(match?.pathname);
       }
       if (match && openDialog?.open) {
         setOpenDialog(prev => {

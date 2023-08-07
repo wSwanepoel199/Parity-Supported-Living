@@ -1,6 +1,7 @@
 import { Button, LinearProgress, useMediaQuery } from "@mui/material";
 import { useTheme } from '@mui/material/styles';
 import AddIcon from '@mui/icons-material/Add';
+import ClearIcon from '@mui/icons-material/Clear';
 import { DataGrid } from "@mui/x-data-grid";
 
 import Toolbar from "./Toolbar";
@@ -10,7 +11,17 @@ import { useNavigate } from "react-router-dom";
 import { selectUsers } from "../../Redux/admin/adminSlice";
 import { selectPosts } from "../../Redux/posts/postSlice";
 import { selectClients } from "../../Redux/client/clientSlice";
+import DataGridFilter from "./DataGridPanel";
 
+const CustomLinearProgression = () => {
+  return (
+    <LinearProgress className={`bg-psl-primary-text dark:bg-psl-secondary`} classes={{ bar: 'bg-psl-secondary dark:bg-psl-active-link' }} />
+  );
+};
+
+const CustomClearIron = () => {
+  return <ClearIcon className="interact-main" />;
+};
 
 const GeneralDataGrid = ({ functions, variables }) => {
   const { setSelectedRow, handleContextMenu, setOpenDialog } = functions;
@@ -39,14 +50,24 @@ const GeneralDataGrid = ({ functions, variables }) => {
       pagination
       autoHeight
       disableSelectionOnClick
+      rowSelection={false}
       hideFooterSelectedRowCount
       disableColumnMenu
       selectionModel={selectedRow}
       slots={{
         toolbar: Toolbar,
-        loadingOverlay: LinearProgress,
+        loadingOverlay: CustomLinearProgression,
+        filterPanel: DataGridFilter,
+        filterPanelDeleteIcon: CustomClearIron
       }}
       slotProps={{
+        panel: {
+          disablePortal: true,
+          className: `bg-transparent`,
+        },
+        paper: {
+          className: 'bg-transparent'
+        },
         toolbar: {
           children: (
             <Button
@@ -106,6 +127,7 @@ const GeneralDataGrid = ({ functions, variables }) => {
       className={`bg-psl-primary-text/20 dark:bg-psl-secondary-text/20 border-0 shadow-lg`}
       loading={(posts.status || admin.status || clients.status) === "loading"}
       initialState={initialState}
+    // onFilterModelChange={(model) => console.log(model)}
     />
   );
 };
