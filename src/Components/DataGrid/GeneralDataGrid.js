@@ -1,7 +1,7 @@
 import { Button, LinearProgress, useMediaQuery } from "@mui/material";
 import { useTheme } from '@mui/material/styles';
 import AddIcon from '@mui/icons-material/Add';
-import ClearIcon from '@mui/icons-material/Clear';
+// import ClearIcon from '@mui/icons-material/Clear';
 import { DataGrid } from "@mui/x-data-grid";
 
 import Toolbar from "./Toolbar";
@@ -11,7 +11,7 @@ import { useNavigate } from "react-router-dom";
 import { selectUsers } from "../../Redux/admin/adminSlice";
 import { selectPosts } from "../../Redux/posts/postSlice";
 import { selectClients } from "../../Redux/client/clientSlice";
-import DataGridFilter from "./DataGridPanel";
+// import DataGridFilter from "./DataGridPanel";
 
 const CustomLinearProgression = () => {
   return (
@@ -19,9 +19,9 @@ const CustomLinearProgression = () => {
   );
 };
 
-const CustomClearIron = () => {
-  return <ClearIcon className="interact-main" />;
-};
+// const CustomClearIron = () => {
+//   return <ClearIcon className="interact-main" />;
+// };
 
 const GeneralDataGrid = ({ functions, variables }) => {
   const { setSelectedRow, handleContextMenu, setOpenDialog } = functions;
@@ -57,8 +57,8 @@ const GeneralDataGrid = ({ functions, variables }) => {
       slots={{
         toolbar: Toolbar,
         loadingOverlay: CustomLinearProgression,
-        filterPanel: DataGridFilter,
-        filterPanelDeleteIcon: CustomClearIron
+        // filterPanel: DataGridFilter,
+        // filterPanelDeleteIcon: CustomClearIron
       }}
       slotProps={{
         panel: {
