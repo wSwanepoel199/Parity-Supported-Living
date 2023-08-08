@@ -11,35 +11,35 @@ import App from './App';
 import { ProtectedRoute } from './Components';
 import { SignIn, Landing, Notes, Users, Clients } from './Pages';
 
-// import CreateNote from './Pages/Note/CreateNote/CreateNote';
-// import UpdateNote from './Pages/Note/UpdateNote/UpdateNote';
-// import ViewNote from './Pages/Note/ViewNote/ViewNote';
-// import DeleteNote from './Pages/Note/DeleteNote/DeleteNote';
+import CreateNote from './Pages/Note/CreateNote/CreateNote';
+import UpdateNote from './Pages/Note/UpdateNote/UpdateNote';
+import ViewNote from './Pages/Note/ViewNote/ViewNote';
+import DeleteNote from './Pages/Note/DeleteNote/DeleteNote';
 
-const CreateNote = lazy(() => import('./Pages/Note/CreateNote/CreateNote'));
-const UpdateNote = lazy(() => import('./Pages/Note/UpdateNote/UpdateNote'));
-const ViewNote = lazy(() => import('./Pages/Note/ViewNote/ViewNote'));
-const DeleteNote = lazy(() => import('./Pages/Note/DeleteNote/DeleteNote'));
+// const CreateNote = lazy(() => import('./Pages/Note/CreateNote/CreateNote'));
+// const UpdateNote = lazy(() => import('./Pages/Note/UpdateNote/UpdateNote'));
+// const ViewNote = lazy(() => import('./Pages/Note/ViewNote/ViewNote'));
+// const DeleteNote = lazy(() => import('./Pages/Note/DeleteNote/DeleteNote'));
 
-// import CreateClient from './Pages/Client/CreateClient/CreateClient';
-// import UpdateClient from './Pages/Client/UpdateClient/UpdateClient';
-// import ViewClient from './Pages/Client/ViewClient/ViewClient';
-// import DeleteClient from './Pages/Note/DeleteClient/DeleteClient';
+import CreateClient from './Pages/Client/CreateClient/CreateClient';
+import UpdateClient from './Pages/Client/UpdateClient/UpdateClient';
+import ViewClient from './Pages/Client/ViewClient/ViewClient';
+import DeleteClient from './Pages/Client/DeleteClient/DeleteClient';
 
-const CreateClient = lazy(() => import('./Pages/Client/CreateClient/CreateClient'));
-const UpdateClient = lazy(() => import('./Pages/Client/UpdateClient/UpdateClient'));
-const ViewClient = lazy(() => import('./Pages/Client/ViewClient/ViewClient'));
-const DeleteClient = lazy(() => import('./Pages/Client/DeleteClient/DeleteClient'));
+// const CreateClient = lazy(() => import('./Pages/Client/CreateClient/CreateClient'));
+// const UpdateClient = lazy(() => import('./Pages/Client/UpdateClient/UpdateClient'));
+// const ViewClient = lazy(() => import('./Pages/Client/ViewClient/ViewClient'));
+// const DeleteClient = lazy(() => import('./Pages/Client/DeleteClient/DeleteClient'));
 
-// import CreateUser from './Pages/User/CreateUser/CreateUser';
-// import UpdateUser from './Pages/User/UpdateUser/UpdateUser';
-// import ViewUser from './Pages/User/ViewUser/ViewUser';
-// import DeleteUser from './Pages/Note/DeleteUser/DeleteUser';
+import CreateUser from './Pages/User/CreateUser/CreateUser';
+import UpdateUser from './Pages/User/UpdateUser/UpdateUser';
+import ViewUser from './Pages/User/ViewUser/ViewUser';
+import DeleteUser from './Pages/User/DeleteUser/DeleteUser';
 
-const CreateUser = lazy(() => import('./Pages/User/CreateUser/CreateUser'));
-const UpdateUser = lazy(() => import('./Pages/User/UpdateUser/UpdateUser'));
-const ViewUser = lazy(() => import('./Pages/User/ViewUser/ViewUser'));
-const DeleteUser = lazy(() => import('./Pages/User/DeleteUser/DeleteUser'));
+// const CreateUser = lazy(() => import('./Pages/User/CreateUser/CreateUser'));
+// const UpdateUser = lazy(() => import('./Pages/User/UpdateUser/UpdateUser'));
+// const ViewUser = lazy(() => import('./Pages/User/ViewUser/ViewUser'));
+// const DeleteUser = lazy(() => import('./Pages/User/DeleteUser/DeleteUser'));
 
 
 const router = createRoutesFromElements(
