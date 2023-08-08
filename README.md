@@ -45,7 +45,7 @@ npm run dev
 To build the application run
 
 ```bash
-npm run buildReact
+npm run build
 ```
 
 To start the production server using the built application run
@@ -53,36 +53,6 @@ To start the production server using the built application run
 ```bash
 npm run start
 ```
-
-### Custom Webpack
-
-Webpack dev and prod servers are setup to use https protocol, follow [mkcert]("https://github.com/FiloSottile/mkcert") instructions to install and generate the required key.pem and cert.pem in certs
-
-To start the dev server run
-
-```bash
-npm run devWP
-```
-
-To build the application run
-
-```bash
-npm run build
-```
-
-To start the built application run
-
-```bash
-npm run start
-```
-
-To build and start the application quickly you can run
-
-```bash
-npm run startProd
-```
-
-this will run the build and start scripts automatically.
 
 ## Usage
 
@@ -94,9 +64,17 @@ If a user in an Admin or Coordinator they will also be able to edit and delete c
 
 ## Technologies Used
 
-For easy user interface development and management [Material UI](https://mui.com/) and its dependencies where used, including [Emotion](https://emotion.sh/docs/introduction). [Axios](https://axios-http.com/) is used for more control over backend API calls and [Redux Toolkit](https://redux-toolkit.js.org/) for application state management. [React-Router](https://reactrouter.com/en/main) is used for in application routing and [SheetJS](https://docs.sheetjs.com/) to allow for excel document processing to upload data to the backend. [React-Phone-Input-2](https://github.com/bl00mber/react-phone-input-2) is used for easier mobile inputs and [Date-FNS](https://date-fns.org/) is used to farmat ISO datetime values to more readable altenratives
+For easy user interface development and management [Material UI](https://mui.com/) and its dependencies where used, including [Emotion](https://emotion.sh/docs/introduction). [Axios](https://axios-http.com/) is used for more control over backend API calls and [Redux Toolkit](https://redux-toolkit.js.org/) for application state management. [React-Router](https://reactrouter.com/en/main) is used for in application routing and [SheetJS](https://docs.sheetjs.com/) to allow for excel document processing to upload data to the backend. [React-Phone-Input-2](https://github.com/bl00mber/react-phone-input-2) is used for easier mobile inputs and [Date-FNS](https://date-fns.org/) is used to farmat ISO datetime values to more readable altenratives. [Tailwindcss](https://tailwindcss.com/) is implimented for easy styling of various components inorder to override default styling provided by Material UI.
 
 [Workbox](https://developer.chrome.com/docs/workbox/) is used to create and maintain a service worker for offline use and to allow the application to be installed on mobile devices as a PWA. [Dotenv](https://github.com/motdotla/dotenv) and [Express](https://expressjs.com/) are used to run a script to serve the application and redirect any not http requests to https, as well as to convert any ".js" requests to the compressed ".js.gz" file.
+
+## Custom Features
+
+### Custom Tailwindcss Classes
+
+#### text-fill
+
+A custom tailwindcss class has been implimented inorder to override Material UI's disbaled styling by allowing for the use of webkits text-fill function. The custom class is compatable with all tailwind's configured colours.
 
 ## Contributions
 

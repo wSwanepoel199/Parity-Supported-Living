@@ -1,3 +1,8 @@
+body {
+  padding: 0px;
+  margin: 0px;
+}
+
 @tailwind base;
 
 /* :root {
@@ -34,3 +39,50 @@
 
 @tailwind components;
 @tailwind utilities;
+
+@layer components {
+  .MuiOutlinedInput-root.Mui-focused {
+    @apply border-psl-active-link dark:border-psl-active-link border-2 border-solid;
+  }
+  .txt-main {
+    @apply text-psl-primary dark:text-psl-active-text;
+  }
+  .txt-secondary {
+    @apply text-psl-primary dark:text-psl-secondary-text;
+  }
+  .mui-input-inactive {
+    @apply border-0 
+    border-solid 
+    border-b-2 
+    border-b-psl-primary/40 
+    dark:border-b-psl-secondary-text/40 
+    hover:border-b-psl-active-link 
+    hover:dark:border-b-psl-active-link;
+  }
+  .interact-main {
+    @apply text-psl-primary dark:text-psl-active-text hover:text-psl-active-link hover:dark:text-psl-active-link;
+  }
+  .dialog-background {
+    @apply bg-psl-active-text dark:bg-psl-primary;
+  }
+  .txt-inactive {
+    @apply text-psl-primary/40 dark:text-psl-secondary-text/40;
+  }
+}
+
+@layer utilities {
+  .mui-input-active {
+    @apply border-b-psl-active-link 
+    dark:border-b-psl-active-link 
+    border-0 
+    border-b-2 
+    border-solid;
+  }
+  .mui-checked {
+    @apply text-psl-active-link;
+  }
+}
+
+.MuiCircularProgress-colorPrimary {
+  @apply text-psl-active-link;
+}

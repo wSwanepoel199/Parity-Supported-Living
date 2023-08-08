@@ -1,22 +1,32 @@
-import { Box, Button, Typography, } from "@mui/material";
-import AddIcon from '@mui/icons-material/Add';
-import { memo, useMemo, useState } from "react";
+import { Backdrop, Box, CircularProgress, Dialog, IconButton, Typography, useMediaQuery } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import { memo, useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
-import { GeneralDataGrid } from "../../Components";
-import CreateUser from "./CreateUser/CreateUser";
-import UpdateUser from "./UpdateUser/UpdateUser";
-import ViewUser from "./ViewUser/ViewUser";
-import ConfirmDialog from "./ConfirmDialog/ConfirmDialog";
+import { Outlet, redirect, useMatch, useNavigate } from "react-router-dom";
+
+import { DataGridMenu, GeneralDataGrid } from '../../Components';
+import { selectUsers } from '../../Redux/admin/adminSlice';
+import { selectUser } from '../../Redux/user/userSlice';
 
 const Users = () => {
-  // const adminState = useSelector(state => state.admin);
-  // const userState = useSelector(state => state.user);
-  const { admin, user } = useSelector(state => {
-    return {
-      admin: state.admin,
-      user: state.user
-    };
-  });
+  const admin = useSelector(selectUsers);
+  const user = useSelector(selectUser);
+
+  const theme = useTheme();
+  const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
+
+  const navigate = useNavigate();
+  const match = useMatch('/users');
+
+  const permissions = {
+    create: ["Admin"].includes(user.user.role),
+    edit: ["Admin"].includes(user.user.role),
+    view: user.status === 'loggedIn',
+    delete: ["Admin"].includes(user.user.role),
+  };
 
   const [table, setTable] = useState({
     columns: [
@@ -42,7 +52,7 @@ const Users = () => {
         field: 'name',
         headerName: 'Name',
         flex: 1,
-        minWidth: 100,
+        minWidth: 85,
         valueGetter: ({ row }) => { return `${row.firstName} ${row?.lastName}`; },
         disableExport: true
       },
@@ -50,14 +60,14 @@ const Users = () => {
         field: 'email',
         headerName: 'Email',
         flex: 1,
-        minWidth: 100,
+        minWidth: 85,
         renderCell: ({ value }) => <p className={`text-ellipsis overflow-hidden whitespace-nowrap max-w-full`}>{value}</p>,
       },
       {
         field: 'clientsName',
         headerName: 'Clients',
         disableExport: true,
-        flex: 1,
+        flex: 2,
         minWidth: 100,
         renderCell: (params) => {
           const clients = params.row.clients.map((clients) => `${clients.firstName} ${clients?.lastName}`).join(', ');
@@ -73,9 +83,42 @@ const Users = () => {
           return params.value.map(client => client.clientId).join(", ");
         }
       },
+      {
+        field: 'options',
+        headerName: "Options",
+        width: permissions.edit ? 130 : 70,
+        disableColumnMenu: true,
+        disableColumnFilter: true,
+        sortable: false,
+        renderCell: (params) => (
+          <Box className={`flex justify-center`}>
+            <IconButton onClick={() => {
+              setSelectedRow(params.row.id);
+              navigate('./view/' + params.row.userId);
+              setOpenDialog(prev => { return { ...prev, open: true, type: 'view', data: params.row }; });
+            }} className={`dark:text-white`}>
+              <VisibilityIcon />
+            </IconButton>
+            {permissions.edit ? <IconButton onClick={() => {
+              setSelectedRow(params.row.id);
+              navigate('./edit/' + params.row.userId);
+              setOpenDialog(prev => { return { ...prev, open: true, type: 'edit', data: params.row }; });
+            }} className={`dark:text-white`}>
+              <EditIcon />
+            </IconButton> : null}
+            {permissions.delete ? <IconButton onClick={() => {
+              setSelectedRow(params.row.id);
+              navigate('./delete/' + params.row.userId);
+              setOpenDialog(prev => { return { ...prev, open: true, type: 'delete', data: params.row }; });
+            }} className={`dark:text-white`}>
+              <DeleteIcon />
+            </IconButton> : null}
+          </Box>
+        ),
+        disableExport: true
+      }
     ],
     rows: [],
-    pageSize: 10
   });
 
   useMemo(() => {
@@ -89,47 +132,157 @@ const Users = () => {
     }
   }, [admin.users]);
 
+  const [openDialog, setOpenDialog] = useState({
+    open: false,
+    type: '',
+    data: {}
+  });
+
+  useEffect(() => {
+    if (match) window.addEventListener('popstate', () => {
+      setOpenDialog(prev => {
+        if (prev.open) return {
+          ...prev,
+          open: false,
+          type: ''
+        };
+        return prev;
+      });
+    });
+
+
+    if (!["new", "edit", "view", "delete"].includes(openDialog?.type)) {
+      if (!match && !openDialog?.open) {
+        redirect(match?.pathname);
+      }
+      if (match && openDialog?.open) {
+        setOpenDialog(prev => {
+          return {
+            ...prev,
+            open: !prev.open,
+            type: ''
+          };
+        });
+      }
+    }
+    return () => {
+      window.removeEventListener('popstate', () => { });
+    };
+  }, [match, openDialog, navigate]);
+
+  // useMemo(() => {
+  //   if (match && openDialog.open && !["new", "edit", "view", "delete"].includes(openDialog.type)) {
+  //     setOpenDialog({
+  //       ...openDialog,
+  //       open: !openDialog.open
+  //     });
+  //   }
+  // }, [match, openDialog]);
+
+  const [selectedRow, setSelectedRow] = useState();
+
+  const [contextMenu, setContextMenu] = useState(null);
+
+  const handleContextMenu = (event) => {
+    event.preventDefault();
+    setSelectedRow(Number(event.currentTarget.getAttribute('data-id')));
+    setContextMenu(
+      contextMenu === null
+        ? { mouseX: event.clientX - 2, mouseY: event.clientY - 4 }
+        : null
+    );
+  };
+
+  const handleClose = () => {
+    setContextMenu(null);
+  };
+
+  const openView = (array) => {
+    array.map((row) => {
+      if (row.id === selectedRow) {
+        navigate('./view/' + row.userId);
+        setOpenDialog(prev => { return { ...prev, open: true, type: 'view', data: row }; });
+      }
+      return row;
+    });
+    handleClose();
+  };
+
+  const openEdit = (array) => {
+    array.map((row) => {
+      if (row.id === selectedRow) {
+        navigate('./edit/' + row.userId);
+        setOpenDialog(prev => { return { ...prev, open: true, type: 'edit', data: row }; });
+      }
+      return row;
+    });
+    handleClose();
+  };
+
+  const openDelete = (array) => {
+    array.map((row) => {
+      if (row.id === selectedRow) {
+        navigate('./delete/' + row.userId);
+        setOpenDialog(prev => { return { ...prev, open: true, type: 'delete', data: row }; });
+      }
+      return row;
+    });
+    handleClose();
+  };
+
   return (
-    <div className="w-full h-full max-w-screen-lg mx-auto flex flex-col ">
-      <Typography variant="h3" component="div" className={`py-5`}>Users</Typography>
+    <div className="w-full max-w-screen-lg mx-auto flex flex-col ">
+      <Backdrop
+        open={admin.status === "loading"}
+        className={`z-40`}
+      >
+        <CircularProgress />
+      </Backdrop>
+      <Dialog
+        fullScreen={fullScreen}
+        open={openDialog.open}
+        className={`z-30 max-w-full`}
+        disablePortal
+        classes={{
+          paper: 'dialog-background'
+        }}
+      >
+        <Outlet context={{ openDialog, setOpenDialog, fullScreen }} />
+      </Dialog>
+      <Typography variant="h3" component="div" className={`py-5 text-psl-primary dark:text-psl-active-text`}>Users</Typography>
       <GeneralDataGrid
-        intialTable={table}
-        type="user"
-        optionPermissions={{
-          create: ["Admin"].includes(user.user.role),
-          edit: ["Admin"].includes(user.user.role),
-          view: user.status === 'loggedIn',
-          delete: ["Admin"].includes(user.user.role),
-        }}
-        tableArray={admin.users}
-        dialogOptions={{
-          Create: (props) => <CreateUser {...props} />,
-          Update: (props) => <UpdateUser {...props} />,
-          View: (props) => <ViewUser {...props} />,
-          Delete: (props) => <ConfirmDialog {...props} />,
-        }}
-        NewEntry={(props) => <Button startIcon={<AddIcon />} {...props}>
-          New User
-        </Button>
-        }
-        columns={{
-          columnVisibilityModel: {
-            // Hides listed coloumns
-            id: false,
-            userId: false,
-            firstName: false,
-            lastName: false,
-            clients: false,
-          },
-        }}
-        sorting={{
-          sortModel: [
-            {
-              field: 'id',
-              sort: 'desc',
+        functions={{ setSelectedRow, handleContextMenu, setOpenDialog }}
+        variables={{
+          table, selectedRow, permissions,
+          initialState: {
+            columns: {
+              columnVisibilityModel: {
+                // Hides listed coloumns
+                id: false,
+                userId: false,
+                firstName: false,
+                lastName: false,
+                clients: false,
+              },
             },
-          ],
+            sorting: {
+              sortModel: [
+                {
+                  field: 'id',
+                  sort: 'desc',
+                },
+              ],
+            }
+          },
+          settings: {
+            type: 'user',
+            button: 'New User'
+          }
         }}
+      />
+      <DataGridMenu
+        functions={{ handleClose, openView, openEdit, openDelete }}
+        variables={{ contextMenu, permissions, array: admin.users }}
       />
     </div>
   );

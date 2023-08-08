@@ -1,26 +1,57 @@
 const express = require('express');
 const path = require('path');
 const app = express();
-const port = process.env.PORT || 3000;
+var os = require('os');
 // const https = require('https');
-// const fs = require('fs');
+const handler = require('serve-handler');
+const http = require('http');
 require('dotenv').config();
 
+const port = process.env.PORT || 3000;
+
+app.enable(`trust proxy`);
 
 // var options = {
 //   key: fs.readFileSync(__dirname + '/..' + process.env.SSL_KEY_FILE),
 //   cert: fs.readFileSync(__dirname + '/..' + process.env.SSL_CRT_FILE)
 // };
 
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+// app.use(express.json());
+// app.use(express.urlencoded({ extended: true }));
+
+const getNetworkAddress = () => {
+  for (const interfaceDetails of Object.values(os.networkInterfaces())) {
+    if (!interfaceDetails) continue;
+
+    for (const details of interfaceDetails) {
+      const { address, family, internal } = details;
+
+      if (family === 'IPv4' && !internal) return address;
+    }
+  }
+};
+
+const registerCloseListener = (fn) => {
+  let run = false;
+
+  const wrapper = () => {
+    if (!run) {
+      run = true;
+      fn();
+    }
+  };
+
+  process.on('SIGINT', wrapper);
+  process.on('SIGTERM', wrapper);
+  process.on('exit', wrapper);
+};
 
 const redirectionFilter = function (req, res, next) {
   const date = new Date();
   const url = `${req.protocol}://${req.hostname}:${port}${req.url}`;
-
   if (req.get('X-Forwarded-Proto') === 'http') {
     const redirectTo = `https://${req.hostname}${req.url}`;
+    console.log(redirectTo);
     console.log(`${date} Redirecting ${url} --> ${redirectTo}`);
     res.redirect(301, redirectTo);
   } else {
@@ -28,18 +59,18 @@ const redirectionFilter = function (req, res, next) {
   }
 };
 
-app.get('/*', redirectionFilter);
+app.use('/*', redirectionFilter);
 
-// allows express to serve ziped files
-app.get('*.js', function (req, res, next) {
-  if (req.url === "/service-worker.js") {
-    next();
-  } else {
-    req.url = req.url + '.gz';
-    res.set('Content-Encoding', 'gzip');
-    next();
-  }
-});
+// // allows express to serve ziped files
+// app.get('*.js', function (req, res, next) {
+//   if (req.url === "/service-worker.js") {
+//     next();
+//   } else {
+//     req.url = req.url + '.gz';
+//     res.set('Content-Encoding', 'gzip');
+//     next();
+//   }
+// });
 // app.get('*.ico', function (req, res, next) {
 //     req.url = req.url + '.gz';
 //     res.set('Content-Encoding', 'gzip');
@@ -59,8 +90,51 @@ app.get('*', function (req, res) {
   res.sendFile(path.join(__dirname, '..', 'build/index.html'));
 });
 
-// var server = https.createServer(options, app);
+app.get("/*", (req, res) => handler(req, res));
 
-app.listen(port, () => {
+var server = http.createServer(app);
+// console.log(app);
+// const server = http.createServer((req, res) => {
+//   return handler(req, res);
+// });
+
+const getServerDetails = () => {
+  // Make sure to close the server once the process ends.
+  registerCloseListener(() => server.close());
+
+  // Once the server has started, get the address the server is running on
+  // and return it.
+  const details = server.address();
+  let local;
+  let network;
+  const previous = port;
+  if (typeof details === 'string') {
+    local = details;
+  } else if (typeof details === 'object' && details.port) {
+    // According to https://www.ietf.org/rfc/rfc2732.txt, IPv6 addresses
+    // should be surrounded by square brackets (only the address, not the
+    // port).
+    let address;
+    if (details.address === '::') address = 'localhost';
+    else if (details.family === 'IPv6') address = `[${details.address}]`;
+    else address = details.address;
+    const ip = getNetworkAddress();
+
+    // const protocol = useSsl ? 'https' : 'http';
+    const protocol = process.env.NODE_ENV === 'production' ? 'https' : 'http';
+    local = `${protocol}://${address}:${details.port}`;
+    network = ip ? `${protocol}://${ip}:${details.port}` : undefined;
+  }
+
+  return {
+    local,
+    network,
+    previous,
+  };
+};
+
+server.listen(port, () => {
+  console.log(getServerDetails());
   console.log("Server is running on port: ", port);
 });
+

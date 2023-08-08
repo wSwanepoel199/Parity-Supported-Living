@@ -21,6 +21,19 @@ export const postApiSlice = backendApi.injectEndpoints({
         }
       }
     }),
+    getPost: builder.query({
+      query: (postId) => ({ url: '/posts/get/' + postId, method: 'get' }),
+      transformResponse: (response, meta, arg) => response.data.data,
+      async onQueryStarted(postId, { dispatch, queryFulfilled }) {
+        try {
+          const { data } = await queryFulfilled;
+          return data;
+        }
+        catch (err) {
+          console.error(err);
+        }
+      }
+    }),
     addPost: builder.mutation({
       query: (newPost) => ({ url: '/posts/create', method: 'post', data: newPost }),
       async onQueryStarted(newPost, { queryFulfilled }) {
@@ -42,4 +55,4 @@ export const postApiSlice = backendApi.injectEndpoints({
   })
 });
 
-export const { useGetPostsQuery, useAddPostMutation, useUpdatePostMutation } = postApiSlice;
+export const { useGetPostsQuery, useGetPostQuery, useAddPostMutation, useUpdatePostMutation } = postApiSlice;

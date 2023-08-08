@@ -1,13 +1,14 @@
 import { memo } from "react";
 import { useSelector } from "react-redux";
 import { Navigate } from "react-router-dom";
+import { selectUser } from "../Redux/user/userSlice";
 
 const ProtectedRoute = ({ children }) => {
-  const userState = useSelector(state => state.user);
+  const user = useSelector(selectUser);
 
   return (
     <>
-      {(userState.status === "loggedIn" && ["Admin", "Coordinator"].includes(userState.user.role)) ? children : <Navigate to='/' replace />}
+      {(user.status === "loggedIn" && ["Admin", "Coordinator"].includes(user.user.role)) ? children : <Navigate to='..' replace />}
     </>
   );
 };

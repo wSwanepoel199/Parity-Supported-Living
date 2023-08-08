@@ -3,107 +3,160 @@ import { useTheme } from '@mui/material/styles';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import VisibilityIcon from '@mui/icons-material/Visibility';
+import PriorityHighIcon from '@mui/icons-material/PriorityHigh';
+import DoneIcon from '@mui/icons-material/Done';
+import CloseIcon from '@mui/icons-material/Close';
+import { format, parseISO } from "date-fns";
 import { Suspense, memo, useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 import { Outlet, redirect, useMatch, useNavigate } from "react-router-dom";
 import { DataGridMenu, GeneralDataGrid } from '../../Components';
-import { selectClients } from '../../Redux/client/clientSlice';
+import { selectPosts } from '../../Redux/posts/postSlice';
 import { selectUser } from '../../Redux/user/userSlice';
 
-const Clients = () => {
-  const clients = useSelector(selectClients);
+
+const Notes = () => {
+  const posts = useSelector(selectPosts);
   const user = useSelector(selectUser);
 
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
 
   const navigate = useNavigate();
-  const match = useMatch('/clients');
+  const match = useMatch('/notes');
 
   const permissions = {
-    create: ["Admin"].includes(user.user.role),
-    edit: ["Admin"].includes(user.user.role),
+    create: user.status === 'loggedIn',
+    edit: ["Admin", "Coordinator"].includes(user.user.role),
     view: user.status === 'loggedIn',
-    delete: ["Admin"].includes(user.user.role),
+    delete: ["Admin", "Coordinator"].includes(user.user.role),
   };
 
   const [table, setTable] = useState({
     columns: [
       {
-        field: 'id',
-        disableExport: true
+        field: 'carerId',
+        disableColumnMenu: true,
+        filterable: false
       },
       {
         field: 'clientId',
+        disableColumnMenu: true,
+        filterable: false
       },
       {
-        field: 'firstName',
+        field: 'private',
+        headerName: 'Private',
+        disableColumnMenu: true,
+        width: 65,
+        sortable: false,
+        filterable: false,
+        renderCell: ({ value }) => {
+          return (
+            <Box className={`w-full flex justify-center items-center flex-row`}>
+              {value ? <DoneIcon /> : <CloseIcon />}
+            </Box>
+          );
+        },
+        valueFormatter: ({ value }) => {
+          return value;
+        }
       },
       {
-        field: 'lastName',
+        field: 'date',
+        headerName: 'Date',
+        disableColumnMenu: true,
+        valueGetter: ({ row }) => { return format(parseISO(row.date), 'yyyy/MM/dd'); },
+        valueFormatter: ({ value }) => `${value}`,
+        // renderCell: ({ value }) => value ? <p>{format(parseISO(value), 'dd/MM/yyyy')}</p> : null,
+        flex: 1,
+        minWidth: 80,
       },
       {
-        field: 'name',
-        headerName: 'Name',
+        field: 'client',
+        headerName: 'Client',
+        disableColumnMenu: true,
         flex: 1,
         minWidth: 85,
-        valueGetter: ({ row }) => { return `${row.firstName} ${row?.lastName}`; },
-        renderCell: ({ value }) => <Box className={`text-ellipsis overflow-hidden whitespace-nowrap max-w-full`}>{value}</Box>,
+        maxWidth: 150,
+        valueGetter: ({ row }) => {
+          return row.client?.firstName + ' ' + row.client?.lastName;
+        },
+        renderCell: ({ row }) => {
+          if (row.clientId === "") {
+            return <p className={`text-ellipsis overflow-hidden whitespace-nowrap max-w-full`}>
+              <PriorityHighIcon fontSize="small" color="error" /> {row.clientName}</p>;
+          } else if (row.clientName === "" && row.clientId !== "") {
+            return <p className={`text-ellipsis overflow-hidden whitespace-nowrap max-w-full`}><PriorityHighIcon fontSize="small" color="warning" /> {`${row.client.firstName} ${row.client?.lastName}`}</p>;
+          } else {
+            return <p className={`text-ellipsis overflow-hidden whitespace-nowrap max-w-full`}>{`${row.clientName}`}</p>;
+          }
+        },
         disableExport: true
       },
       {
-        field: 'email',
-        headerName: 'Email',
+        field: 'clientName',
+        disableColumnMenu: true,
+        filterable: false,
+      },
+      {
+        field: 'carer',
+        headerName: 'Carer',
+        disableColumnMenu: true,
         flex: 1,
         minWidth: 85,
-        renderCell: ({ value }) => <Box className={`text-ellipsis overflow-hidden whitespace-nowrap max-w-full`}>{value}</Box>
-      },
-      {
-        field: 'phoneNumber',
-        headerName: 'Number',
-        flex: 1,
-        minWidth: 100,
-        renderCell: ({ value }) => <Box className={`text-ellipsis overflow-hidden whitespace-nowrap max-w-full`}>{value}</Box>
-      },
-      {
-        field: 'address',
-        headerName: 'Address',
-        flex: 1,
-        minWidth: 100,
-        renderCell: ({ value }) => <Box className={`text-ellipsis overflow-hidden whitespace-nowrap max-w-full`}>{value}</Box>
-      },
-      {
-        field: 'carersName',
-        headerName: 'Carers',
-        disableExport: true,
-        flex: 2,
-        minWidth: 100,
-        renderCell: (params) => {
-          const carers = params.row.carers.map((carer) => `${carer.firstName}`).join(', ');
-          return <Box className={`text-ellipsis overflow-hidden whitespace-nowrap max-w-full`}>
-            {carers}
-          </Box>;
+        maxWidth: 150,
+        valueGetter: ({ row }) => {
+          return row.carer?.firstName + ' ' + row.carer?.lastName;
         },
+        renderCell: ({ row }) => {
+          if (row.carerId === "") {
+            return <p className={`text-ellipsis overflow-hidden whitespace-nowrap max-w-full`}>
+              <PriorityHighIcon fontSize="small" color="error" /> {row.carerName}</p>;
+          } else if (row.carerName === "" && row.carerId !== "") {
+            return <p className={`text-ellipsis overflow-hidden whitespace-nowrap max-w-full`}><PriorityHighIcon fontSize="small" color="warning" /> {`${row.carer.firstName} ${row.carer?.lastName}`}</p>;
+          } else {
+            return <p className={`text-ellipsis overflow-hidden whitespace-nowrap max-w-full`}>{`${row.carerName}`}</p>;
+          }
+        },
+        disableExport: true
+      },
+      {
+        field: 'carerName',
+        disableColumnMenu: true,
+        filterable: false,
+      },
+      {
+        field: 'hours',
+        headerName: 'Hours',
+        disableColumnMenu: true,
+        flex: 1,
+        minWidth: 85,
+        maxWidth: 85
+      },
+      {
+        field: 'kilos',
+        headerName: 'Distance(KM)',
+        disableColumnMenu: true,
+        flex: 1,
+        minWidth: 110,
       },
       {
         field: 'notes',
         headerName: 'Notes',
         disableColumnMenu: true,
-        flex: 2,
-        minWidth: 150,
+        flex: 3,
+        minWidth: 200,
         renderCell: (value) => {
           const splitAtLineBreak = value.row.notes.split(/\r?\n/);
-          const string = splitAtLineBreak.length >= 2 ? splitAtLineBreak[0] + "..." : splitAtLineBreak[0];
-          return (
-            <Box className={`text-ellipsis overflow-hidden whitespace-nowrap max-w-full`} >{string}</Box>
-          );
-        }
-      },
-      {
-        field: 'carers',
-        disableColumnMenu: true,
-        valueFormatter: (params) => {
-          return params.value.map(carer => carer.userId).join(', ');
+          for (let i = 0; i <= splitAtLineBreak.length; i++) {
+            if (splitAtLineBreak[i]) {
+              const string = splitAtLineBreak[i] + "...";
+              return (
+                <Box className={`text-ellipsis overflow-hidden whitespace-nowrap max-w-full`} >{string}</Box>
+              );
+            }
+          }
         }
       },
       {
@@ -113,27 +166,28 @@ const Clients = () => {
         disableColumnMenu: true,
         disableColumnFilter: true,
         sortable: false,
+        filterable: false,
         renderCell: (params) => (
           <Box className={`flex justify-center`}>
             <IconButton onClick={() => {
               setSelectedRow(params.row.id);
-              navigate('./view/' + params.row.clientId);
+              navigate('./view/' + params.row.postId);
               setOpenDialog(prev => { return { ...prev, open: true, type: 'view', data: params.row }; });
-            }} className={`dark:text-white`}>
+            }} className={`text-psl-primary dark:text-psl-active-text hover:text-psl-active-link hover:dark:text-psl-active-link`}>
               <VisibilityIcon />
             </IconButton>
             {permissions.edit ? <IconButton onClick={() => {
               setSelectedRow(params.row.id);
-              navigate('./edit/' + params.row.clientId);
+              navigate('./edit/' + params.row.postId);
               setOpenDialog(prev => { return { ...prev, open: true, type: 'edit', data: params.row }; });
-            }} className={`dark:text-white`}>
+            }} className={`text-psl-primary dark:text-psl-active-text hover:text-psl-active-link hover:dark:text-psl-active-link`}>
               <EditIcon />
             </IconButton> : null}
             {permissions.delete ? <IconButton onClick={() => {
               setSelectedRow(params.row.id);
-              navigate('./delete/' + params.row.clientId);
+              navigate('./delete/' + params.row.postId);
               setOpenDialog(prev => { return { ...prev, open: true, type: 'delete', data: params.row }; });
-            }} className={`dark:text-white`}>
+            }} className={`text-psl-primary dark:text-psl-active-text hover:text-psl-active-link hover:dark:text-psl-active-link`}>
               <DeleteIcon />
             </IconButton> : null}
           </Box>
@@ -141,19 +195,19 @@ const Clients = () => {
         disableExport: true
       }
     ],
-    rows: [],
+    rows: []
   });
 
   useMemo(() => {
-    if (clients.clients) {
+    if (posts.posts) {
       setTable(prev => {
         return {
           ...prev,
-          rows: JSON.parse(JSON.stringify(clients.clients).replace(/:null/gi, ":\"\""))
+          rows: JSON.parse(JSON.stringify(posts.posts).replace(/:null/gi, ":\"\""))
         };
       });
     }
-  }, [clients.clients]);
+  }, [posts.posts]);
 
   const [openDialog, setOpenDialog] = useState({
     open: false,
@@ -215,9 +269,8 @@ const Clients = () => {
   const openView = (array) => {
     array.map((row) => {
       if (row.id === selectedRow) {
-        console.log(row);
-        navigate('./view/' + row.clientId);
         setOpenDialog(prev => { return { ...prev, open: true, type: 'view', data: row }; });
+        navigate('./view/' + row.postId);
       }
       return row;
     });
@@ -227,8 +280,8 @@ const Clients = () => {
   const openEdit = (array) => {
     array.map((row) => {
       if (row.id === selectedRow) {
-        navigate('./edit/' + row.clientId);
         setOpenDialog(prev => { return { ...prev, open: true, type: 'edit', data: row }; });
+        navigate('./edit/' + row.postId);
       }
       return row;
     });
@@ -238,8 +291,8 @@ const Clients = () => {
   const openDelete = (array) => {
     array.map((row) => {
       if (row.id === selectedRow) {
-        navigate('./delete/' + row.clientId);
         setOpenDialog(prev => { return { ...prev, open: true, type: 'delete', data: row }; });
+        navigate('./delete/' + row.postId);
       }
       return row;
     });
@@ -250,9 +303,8 @@ const Clients = () => {
   return (
     <div className="w-full max-w-screen-lg mx-auto flex flex-col ">
       <Backdrop
-        open={clients.status === "loading"}
+        open={posts.status === "loading"}
         className={`z-40`}
-        name="clientBackdrop"
       >
         <CircularProgress />
       </Backdrop>
@@ -276,9 +328,9 @@ const Clients = () => {
           <Outlet context={{ openDialog, setOpenDialog, fullScreen }} />
         </Suspense>
       </Dialog>
-      <Typography variant="h3" component="div" className={`py-5 text-psl-primary dark:text-psl-active-text`}>Clients</Typography>
+      <Typography variant="h3" component="div" className={`py-5 text-psl-primary dark:text-psl-active-text`}>Notes</Typography>
       <GeneralDataGrid
-        functions={{ setSelectedRow, handleContextMenu, setOpenDialog }}
+        functions={{ handleContextMenu, setSelectedRow, setOpenDialog }}
         variables={{
           table,
           selectedRow,
@@ -287,35 +339,35 @@ const Clients = () => {
             columns: {
               columnVisibilityModel: {
                 // Hides listed coloumns
-                id: false,
+                carerId: false,
                 clientId: false,
-                firstName: false,
-                lastName: false,
-                carers: false
+                clientName: false,
+                carerName: false,
+                // options: !fullScreen,
+                private: ["Admin", "Coordinator"].includes(user.user.role)
               },
             },
             sorting: {
               sortModel: [
                 {
-                  field: 'id',
+                  field: 'date',
                   sort: 'desc',
                 },
               ],
             }
           },
           settings: {
-            type: 'client',
-            button: 'New Client'
+            type: 'post',
+            button: 'New Note'
           }
         }}
       />
       <DataGridMenu
         functions={{ handleClose, openView, openEdit, openDelete }}
-        variables={{ contextMenu, permissions, array: clients.clients }}
-      />
-    </div>
+        variables={{ contextMenu, permissions, array: posts.posts }} />
+    </div >
   );
 };
 
-export default memo(Clients);
+export default memo(Notes);
 

@@ -28,7 +28,7 @@ precacheAndRoute(self.__WB_MANIFEST);
 const fileExtensionRegexp = new RegExp('/[^/?]+\\.[^/]+$');
 
 // Checks for Public_url in env, if its not present just assigns .
-const Public_url = process.env.PUBLIC_URL || '.';
+// const Public_url = process.env.PUBLIC_URL || '.';
 
 registerRoute(
   // Return false to exempt requests from being fulfilled by index.html.
@@ -48,7 +48,7 @@ registerRoute(
 
     return true;
   },
-  createHandlerBoundToURL(Public_url + '/index.html')
+  createHandlerBoundToURL(process.env.PUBLIC_URL + '/index.html'),
 );
 
 // An example runtime caching route for requests that aren't handled by the
@@ -62,6 +62,21 @@ registerRoute(
       // Ensure that once this runtime cache reaches a maximum size the
       // least-recently used images are removed.
       new ExpirationPlugin({ maxEntries: 50 }),
+    ],
+  })
+);
+
+registerRoute(
+  ({ url }) => {
+    if (url.pathname.endsWith("manifest.json")) {
+      return true;
+    }
+    return false;
+  },
+  new StaleWhileRevalidate({
+    cacheName: 'manifest',
+    plugins: [
+      new ExpirationPlugin({ maxEntries: 1 }),
     ],
   })
 );

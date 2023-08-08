@@ -1,247 +1,135 @@
-import { Box, Dialog, IconButton, LinearProgress, ListItemIcon, ListItemText, Menu, MenuItem, useMediaQuery } from "@mui/material";
+import { Button, LinearProgress, useMediaQuery } from "@mui/material";
 import { useTheme } from '@mui/material/styles';
-import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/Delete';
-import VisibilityIcon from '@mui/icons-material/Visibility';
+import AddIcon from '@mui/icons-material/Add';
+// import ClearIcon from '@mui/icons-material/Clear';
 import { DataGrid } from "@mui/x-data-grid";
-import { memo, useMemo, useState } from "react";
+
 import Toolbar from "./Toolbar";
 import { useSelector } from "react-redux";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { selectUsers } from "../../Redux/admin/adminSlice";
+import { selectPosts } from "../../Redux/posts/postSlice";
+import { selectClients } from "../../Redux/client/clientSlice";
+// import DataGridFilter from "./DataGridPanel";
 
-const GeneralDataGrid = ({ intialTable, NewEntry, type, dialogOptions, optionPermissions, tableArray, columns, sorting }) => {
-  const rootState = useSelector(state => state.root);
+const CustomLinearProgression = () => {
+  return (
+    <LinearProgress className={`bg-psl-primary-text dark:bg-psl-secondary`} classes={{ bar: 'bg-psl-secondary dark:bg-psl-active-link' }} />
+  );
+};
 
-  const { Create, View, Update, Delete } = dialogOptions;
+// const CustomClearIron = () => {
+//   return <ClearIcon className="interact-main" />;
+// };
+
+const GeneralDataGrid = ({ functions, variables }) => {
+  const { setSelectedRow, handleContextMenu, setOpenDialog } = functions;
+  const { table, selectedRow, permissions, initialState, settings } = variables;
+  const admin = useSelector(selectUsers);
+  const posts = useSelector(selectPosts);
+  const clients = useSelector(selectClients);
+  const navigate = useNavigate();
 
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
 
-  const [table, setTable] = useState({
-    columns: [],
-    rows: [],
-    pageSize: 10
+
+  const [paginationModel, setPaginationModel] = useState({
+    pageSize: 10,
+    page: 0
   });
-
-  const [permissions, setPermissions] = useState({
-    create: false,
-    edit: false,
-    view: false,
-    delete: false,
-  });
-
-  useMemo(() => {
-    setTable((prev) => {
-      if (intialTable?.columns?.length > 0) return {
-        ...prev,
-        ...intialTable,
-        columns: [
-          ...intialTable.columns,
-          {
-            field: 'options',
-            headerName: "Options",
-            width: permissions.edit ? 130 : 70,
-            disableColumnMenu: true,
-            disableColumnFilter: true,
-            sortable: false,
-            renderCell: (params) => (
-              <Box className={`flex justify-center`}>
-                <IconButton onClick={() => {
-                  setSelectedRow(params.row.id);
-                  setOpenDialog(prev => { return { ...prev, open: !prev.open, type: 'view', data: params.row }; });
-                }} >
-                  <VisibilityIcon />
-                </IconButton>
-                {permissions.edit ? <IconButton onClick={() => {
-                  setSelectedRow(params.row.id);
-                  setOpenDialog(prev => { return { ...prev, open: !prev.open, type: 'edit', data: params.row }; });
-                }}>
-                  <EditIcon />
-                </IconButton> : null}
-                {permissions.delete ? <IconButton onClick={() => {
-                  setSelectedRow(params.row.id);
-                  setOpenDialog(prev => { return { ...prev, open: !prev.open, type: 'delete', data: params.row }; });
-                }}>
-                  <DeleteIcon />
-                </IconButton> : null}
-              </Box>
-            ),
-            disableExport: true
-          }]
-      };
-    });
-  }, [intialTable, permissions]);
-
-  useMemo(() => {
-    setPermissions(optionPermissions);
-  }, [optionPermissions]);
-
-  const [tableState, setTableState] = useState({});
-
-  useMemo(() => {
-    setTableState(prev => {
-      return {
-        ...prev,
-        columns,
-        sorting
-      };
-    });
-  }, [columns, sorting]);
-
-  const [openDialog, setOpenDialog] = useState({
-    open: false,
-    type: '',
-    data: {}
-  });
-
-  // const handleDialog = (type, row) => {
-  //   setOpenDialog({ ...openDialog, open: !openDialog.open, type: type, data: row });
-  // };
-
-  const [selectedRow, setSelectedRow] = useState();
-
-  const [contextMenu, setContextMenu] = useState(null);
-
-  const handleContextMenu = (event) => {
-    event.preventDefault();
-    setSelectedRow(Number(event.currentTarget.getAttribute('data-id')));
-    setContextMenu(
-      contextMenu === null
-        ? { mouseX: event.clientX - 2, mouseY: event.clientY - 4 }
-        : null
-    );
-  };
-
-  const handleClose = () => {
-    setContextMenu(null);
-  };
-
-  const openView = (array) => {
-    array.map((row) => {
-      if (row.id === selectedRow) {
-        setOpenDialog({ ...openDialog, open: !openDialog.open, type: 'view', data: row });
-      }
-      return row;
-    });
-    handleClose();
-  };
-
-  const openEdit = (array) => {
-    array.map((row) => {
-      if (row.id === selectedRow) {
-        setOpenDialog(prev => { return { ...prev, open: !prev.open, type: 'edit', data: row }; });
-      }
-      return row;
-    });
-    handleClose();
-  };
-
-  const openDelete = (array) => {
-    array.map((row) => {
-      if (row.id === selectedRow) {
-        setOpenDialog(prev => { return { ...prev, open: !prev.open, type: 'delete', data: row }; });
-      }
-      return row;
-    });
-    handleClose();
-  };
 
   return (
-    <>
-      <Dialog
-        fullScreen={fullScreen}
-        open={openDialog.open}
-        className={`z-30 max-w-full`}
-      >
-        {
-          openDialog.open
-            ? (openDialog.type === "new" && <Create setOpenDialog={setOpenDialog} mobile={fullScreen} />)
-            || (openDialog.type === "edit" && <Update setOpenDialog={setOpenDialog} data={openDialog.data} mobile={fullScreen} />)
-            || (openDialog.type === "view" && <View setOpenDialog={setOpenDialog} data={openDialog.data} mobile={fullScreen} />)
-            || (openDialog.type === "delete" && <Delete setOpenDialog={setOpenDialog} data={openDialog.data} mobile={fullScreen} />)
-            : null
-        }
-      </Dialog>
-      <DataGrid
-        {...table}
-        onPageSizeChange={(newPageSize) => setTable(prev => {
-          return {
-            ...prev,
-            pageSize: newPageSize,
-          };
-        })}
-        rowsPerPageOptions={[10, 20, 30]}
-        pagination
-        autoHeight
-        disableSelectionOnClick
-        hideFooterSelectedRowCount
-        selectionModel={selectedRow}
-        components={{
-          Toolbar: Toolbar,
-          LoadingOverlay: LinearProgress,
-        }}
-        componentsProps={{
-          toolbar: {
-            children: (<NewEntry className={`${!permissions.create && "hidden"}`} onClick={() => setOpenDialog(prev => { return { ...prev, open: !prev.open, type: 'new' }; })} />),
-            type,
-            csvOptions: { allColumns: true },
-            clearSelect: setSelectedRow
+    <DataGrid
+      {...table}
+      aria-label="notesDataGrid"
+      paginationModel={paginationModel}
+      onPaginationModelChange={setPaginationModel}
+      pageSizeOptions={[10, 20, 30]}
+      pagination
+      autoHeight
+      disableSelectionOnClick
+      rowSelection={false}
+      hideFooterSelectedRowCount
+      disableColumnMenu
+      selectionModel={selectedRow}
+      slots={{
+        toolbar: Toolbar,
+        loadingOverlay: CustomLinearProgression,
+        // filterPanel: DataGridFilter,
+        // filterPanelDeleteIcon: CustomClearIron
+      }}
+      slotProps={{
+        panel: {
+          disablePortal: true,
+          className: `bg-transparent`,
+        },
+        paper: {
+          className: 'bg-transparent'
+        },
+        toolbar: {
+          children: (
+            <Button
+              startIcon={<AddIcon />}
+              className={`${!permissions.create && "hidden"} text-psl-active-link`}
+              onClick={() => {
+                navigate('./new');
+                setOpenDialog(prev => {
+                  return {
+                    ...prev,
+                    open: true,
+                    type: 'new'
+                  };
+                });
+              }}>{settings.button}</Button>),
+          type: settings.type,
+          csvOptions: { allColumns: true },
+          clearSelect: setSelectedRow
+        },
+        row: {
+          onContextMenu: fullScreen ? handleContextMenu : null,
+          style: fullScreen && { cursor: 'context-menu' },
+        },
+        pagination: {
+          className: 'text-psl-primary dark:text-psl-secondary-text',
+          classes: {
+            actions: 'hover:text-psl-active-link'
           },
-          row: {
-            onContextMenu: fullScreen ? handleContextMenu : null,
-            style: fullScreen && { cursor: 'context-menu' },
-          },
-        }}
-        loading={rootState.status === "loading"}
-        className="bg-slate-300"
-        initialState={{ ...tableState }}
-      />
-      <Menu
-        open={contextMenu !== null}
-        onClose={handleClose}
-        anchorReference="anchorPosition"
-        anchorPosition={
-          contextMenu !== null
-            ? { top: contextMenu.mouseY, left: contextMenu.mouseX }
-            : undefined
-        }
-        componentsProps={{
-          root: {
-            onContextMenu: (e) => {
-              e.preventDefault();
-              handleClose();
+          SelectProps: {
+            classes: {
+              icon: 'text-psl-primary dark:text-psl-secondary-text'
             },
-          },
-        }}
-      >
-        <MenuItem
-          onClick={() => openView(tableArray)}>
-          <ListItemIcon>
-            <VisibilityIcon />
-          </ListItemIcon>
-          <ListItemText>
-            View
-          </ListItemText>
-        </MenuItem>
-        {(permissions.edit || permissions.delete) ?
-          ['Edit', 'Delete'].map((option, index) => {
-            return (
-              <MenuItem
-                key={index}
-                onClick={option === "Edit" ?
-                  () => openEdit(tableArray) :
-                  () => openDelete(tableArray)}>
-                <ListItemIcon>
-                  {option === "Edit" ? <EditIcon /> : <DeleteIcon />}
-                </ListItemIcon>
-                <ListItemText>
-                  {option}
-                </ListItemText>
-              </MenuItem>
-            );
-          }) : null}
-      </Menu>
-    </>
+            MenuProps: {
+              disablePortal: true,
+              PopoverClasses: {
+                paper: 'bg-inherit'
+              },
+              MenuListProps: {
+                classes: {
+                  root: 'text-psl-primary dark:text-psl-active-text',
+                },
+                className: 'bg-psl-active-text dark:bg-psl-primary'
+              }
+            }
+          }
+        }
+      }}
+      classes={{
+        columnSeparator: 'hidden',
+        columnHeader: 'border-0 border-x-[1px] border-solid first:border-l-0 last:border-r-0 border-psl-primary-text/40 dark:border-psl-secondary-text/40 max-h-8 px-2',
+        withBorderColor: 'border-psl-primary-text/30 dark:border-psl-secondary-text/30',
+        cell: 'text-psl-primary dark:text-psl-secondary-text',
+        columnHeaderTitleContainerContent: 'text-psl-primary dark:text-psl-secondary-text',
+        sortIcon: 'text-psl-primary dark:text-psl-secondary-text',
+        main: 'shadow-inner'
+      }}
+      className={`bg-psl-primary-text/20 dark:bg-psl-secondary-text/20 border-0 shadow-lg`}
+      loading={(posts.status || admin.status || clients.status) === "loading"}
+      initialState={initialState}
+    // onFilterModelChange={(model) => console.log(model)}
+    />
   );
 };
 
-export default memo(GeneralDataGrid);
+export default GeneralDataGrid;

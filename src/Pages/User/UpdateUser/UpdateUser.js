@@ -1,27 +1,30 @@
-import { Box, Button, Checkbox, Chip, DialogActions, DialogContent, DialogTitle, FormControl, FormControlLabel, IconButton, Input, InputAdornment, InputLabel, ListSubheader, MenuItem, OutlinedInput, Select, Switch, Typography, } from "@mui/material";
+import { Backdrop, Box, Button, Checkbox, Chip, CircularProgress, DialogActions, DialogContent, DialogTitle, FormControl, FormControlLabel, IconButton, Input, InputAdornment, InputLabel, ListSubheader, MenuItem, OutlinedInput, Select, Switch, Typography, } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import CloseIcon from '@mui/icons-material/Close';
 import Grid from "@mui/material/Unstable_Grid2/";
-import { memo, useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useUpdateUserMutation } from "../../../Redux/user/userApiSlice";
 import { useSelector } from "react-redux";
+import { useNavigate, useOutletContext, useParams } from "react-router-dom";
+import { useGetUserQuery } from "../../../Redux/admin/adminApiSlice";
+import { selectClients } from "../../../Redux/client/clientSlice";
 
 const containsText = (user, searchText) =>
   user.toLowerCase().indexOf(searchText.toLowerCase()) > -1;
 
-const UpdateUser = ({ setOpenDialog, data: user, mobile }) => {
-  const clientState = useSelector(state => state.clients);
-  const [updateUser] = useUpdateUserMutation();
-  const mounted = useRef();
-  const [formData, setFormData] = useState({
-    showPassword: false,
-    resetPassword: true,
-    email: '',
-    lastName: '',
-    firstName: '',
-    role: '',
-    clients: [],
+const UpdateUser = () => {
+  const clients = useSelector(selectClients);
+
+  const { setOpenDialog } = useOutletContext();
+  const params = useParams();
+  const navigate = useNavigate();
+
+  const { data, isLoading, isFetching, isSuccess } = useGetUserQuery(params.id, {
+    refetchOnMountOrArgChange: true
   });
+  const [updateUser, { isLoading: isUpdatingUser }] = useUpdateUserMutation();
+  const mounted = useRef();
+  const [formData, setFormData] = useState(data);
 
 
   const [searchText, setSearchText] = useState("");
@@ -33,30 +36,29 @@ const UpdateUser = ({ setOpenDialog, data: user, mobile }) => {
     [options, searchText]
   );
 
-  useMemo(() => {
-    const { clients, ...selectedUser } = user;
-    setFormData(prev => {
-      const clientIds = clients.map(client => client.clientId);
-      return {
-        ...prev,
-        ...JSON.parse(JSON.stringify(selectedUser).replace(/:null/gi, ":\"\"")),
-        clients: [
-          ...clientIds
-        ]
-      };
-    });
-    if (clients) setOptions(clients);
-  }, [user]);
-
   useEffect(() => {
-    if (!mounted.current) {
+    if (isSuccess && !mounted.current) {
+      const { clients, ...selectedUser } = data;
+      setFormData(prev => {
+        const clientIds = clients.map(client => client.clientId);
+        return {
+          ...prev,
+          ...JSON.parse(JSON.stringify(selectedUser).replace(/:null/gi, ":\"\"")),
+          clients: [
+            ...clientIds
+          ]
+        };
+      });
+      if (clients) setOptions(clients);
       mounted.current = true;
     }
-    if (clientState.clients.length > 0) setOptions(clientState.clients);
+    if (clients.clients.length > 0) setOptions(clients.clients);
     return () => {
-      mounted.current = false;
+      if (mounted.current) {
+        mounted.current = false;
+      }
     };
-  }, [mounted, setOpenDialog, clientState.clients]);
+  }, [mounted, data, isSuccess, clients.clients]);
 
   const handleInput = (e) => {
     const { value, name } = e.target;
@@ -68,34 +70,64 @@ const UpdateUser = ({ setOpenDialog, data: user, mobile }) => {
     });
   };
 
+  const handleExit = () => {
+    setOpenDialog(prev => { return { ...prev, open: !prev.open, type: '' }; });
+    navigate('..');
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     delete formData.showPassword;
-    delete formData.name;
-    updateUser(formData);
-    setOpenDialog(prev => { return { ...prev, open: !prev.open, type: '' }; });
+    delete formData?.name;
+    updateUser(formData).then(() => {
+      handleExit();
+    });
   };
 
+  if (isLoading || isFetching || !mounted.current) {
+    return (
+      <Backdrop
+        open={true}
+        className={`z-40`}
+      >
+        <CircularProgress />
+      </Backdrop>
+    );
+  }
 
   return (
-    <Box component='form' onSubmit={(e) => handleSubmit(e)}>
-      <DialogTitle className={`flex justify-between items-center`}>
-        <Typography variant="h6" component="p">
-          Edit {user.name}
-        </Typography>
-        <IconButton onClick={() => setOpenDialog(prev => { return { ...prev, open: !prev.open, type: '', data: {} }; })}>
-          <CloseIcon />
-        </IconButton>
-      </DialogTitle>
-      {mounted.current ?
+    <>
+      <Backdrop
+        open={isUpdatingUser}
+        className={`z-40`}
+      >
+        <CircularProgress />
+      </Backdrop>
+
+      <Box component='form' onSubmit={(e) => handleSubmit(e)} className={`h-full`}>
+        <DialogTitle className={`flex justify-between items-center`}>
+          <Typography variant="h6" component="p" className={`txt-main`}>
+            Edit {formData?.firstName} {formData?.lastName}
+          </Typography>
+          <IconButton onClick={() => handleExit()}>
+            <CloseIcon className={`interact-main`} />
+          </IconButton>
+        </DialogTitle>
         <DialogContent>
           <Grid container spacing={2} className="flex justify-center w-full">
             <Grid xs={12} className=" border-b-2 border-b-gray-400 border-solid border-x-transparent border-t-transparent">
-              <Typography>Details</Typography>
+              <Typography className={`txt-main`}>Details</Typography>
             </Grid>
-            <Grid sm={6} xs={12} className="flex justify-center">
+            <Grid sm={6} xs={12} id="firstNameInput" className="flex justify-center">
               <FormControl size="small" fullWidth margin="dense">
-                <InputLabel shrink htmlFor="firstNameInput">First Name</InputLabel>
+                <InputLabel
+                  shrink
+                  htmlFor="firstNameInput"
+                  className={`txt-secondary`}
+                  classes={{
+                    focused: 'text-psl-active-link'
+                  }}
+                >First Name</InputLabel>
                 <Input
                   id="firstNameInput"
                   name="firstName"
@@ -103,12 +135,23 @@ const UpdateUser = ({ setOpenDialog, data: user, mobile }) => {
                   required
                   value={formData.firstName}
                   onChange={handleInput}
+                  disableUnderline
+                  className={`txt-secondary dark:[color-scheme:dark] rounded-sm mui-input-inactive`}
+                  classes={{
+                    focused: 'mui-input-active'
+                  }}
                 />
               </FormControl>
             </Grid>
-            <Grid sm={6} xs={12} className="flex justify-center">
+            <Grid sm={6} xs={12} id="lastNameInput" className="flex justify-center">
               <FormControl size="small" fullWidth margin="dense">
-                <InputLabel shrink htmlFor="lastNameInput">Last Name</InputLabel>
+                <InputLabel
+                  shrink
+                  htmlFor="lastNameInput"
+                  className={`txt-secondary`}
+                  classes={{
+                    focused: 'text-psl-active-link'
+                  }}>Last Name</InputLabel>
                 <Input
                   id="lastNameInput"
                   name="lastName"
@@ -116,29 +159,68 @@ const UpdateUser = ({ setOpenDialog, data: user, mobile }) => {
                   required
                   value={formData.lastName}
                   onChange={handleInput}
+                  disableUnderline
+                  className={`txt-secondary dark:[color-scheme:dark] rounded-sm mui-input-inactive`}
+                  classes={{
+                    focused: 'mui-input-active'
+                  }}
                 />
               </FormControl>
             </Grid>
-            <Grid sm={6} xs={12} className="flex justify-center">
+            <Grid sm={6} xs={12} id="roleInput" className="flex justify-center">
               {["Admin", "Carer", "Coordinator"].includes(formData.role) ?
                 <FormControl variant="standard" size="small" fullWidth margin="dense">
-                  <InputLabel shrink htmlFor="roleInput" className={`px-5`}>Role</InputLabel>
+                  <InputLabel
+                    shrink
+                    htmlFor="roleInput"
+                    className={`px-5 txt-secondary`}
+                    classes={{
+                      focused: 'text-psl-active-link'
+                    }}>Role</InputLabel>
                   <Select
                     id="roleInput"
                     name='role'
                     required
                     value={formData.role}
                     onChange={handleInput}
+                    disableUnderline
+                    className={`txt-secondary rounded-sm mui-input-inactive`}
+                    classes={{
+                      icon: `txt-secondary`,
+                      iconOpen: 'text-psl-active-link',
+                      focused: 'mui-input-active'
+                    }}
+                    MenuProps={{
+                      disablePortal: true,
+                      PopoverClasses: {
+                        paper: 'bg-inherit',
+                      },
+                      PaperProps: {
+                        id: 'clientId'
+                      },
+                      MenuListProps: {
+                        classes: {
+                          root: 'txt-main'
+                        },
+                        className: 'dialog-background'
+                      }
+                    }}
                   >
-                    <MenuItem value={"Admin"}>Admin</MenuItem>
-                    <MenuItem value={"Carer"}>Carer</MenuItem>
-                    <MenuItem value={"Coordinator"}>Coordinator</MenuItem>
+                    <MenuItem className={`hover:text-psl-active-link`} classes={{ selected: 'text-psl-active-link' }} value={"Admin"}>Admin</MenuItem>
+                    <MenuItem className={`hover:text-psl-active-link`} classes={{ selected: 'text-psl-active-link' }} value={"Carer"}>Carer</MenuItem>
+                    <MenuItem className={`hover:text-psl-active-link`} classes={{ selected: 'text-psl-active-link' }} value={"Coordinator"}>Coordinator</MenuItem>
                   </Select>
                 </FormControl> : null}
             </Grid>
-            <Grid sm={6} xs={12} className="flex justify-center">
+            <Grid sm={6} xs={12} id="emailInput" className="flex justify-center">
               <FormControl size="small" fullWidth margin="dense">
-                <InputLabel shrink htmlFor="emailInput">Email</InputLabel>
+                <InputLabel
+                  shrink
+                  htmlFor="emailInput"
+                  className={`px-5 txt-secondary`}
+                  classes={{
+                    focused: 'text-psl-active-link'
+                  }}>Email</InputLabel>
                 <Input
                   id="emailInput"
                   name="email"
@@ -146,46 +228,81 @@ const UpdateUser = ({ setOpenDialog, data: user, mobile }) => {
                   required
                   value={formData.email}
                   onChange={handleInput}
+                  disableUnderline
+                  className={`txt-secondary dark:[color-scheme:dark] rounded-sm mui-input-inactive`}
+                  classes={{
+                    focused: 'mui-input-active'
+                  }}
                 />
               </FormControl>
             </Grid>
             <Grid xs={12} className=" border-b-2 border-b-gray-400 border-solid border-x-transparent border-t-transparent">
-              <Typography>Clients</Typography>
+              <Typography className="txt-main">Clients</Typography>
             </Grid>
-            <Grid xs={12} className="flex justify-center">
+            <Grid xs={12} id="clientsInput" className="flex justify-center">
               {options ?
                 <FormControl variant="standard" size="small" fullWidth margin="dense">
                   <Select
                     id="clientsInput"
                     name='clients'
                     multiple
-                    input={<OutlinedInput id="clientsListInput" />}
+                    value={formData.clients}
+                    onChange={(e) => handleInput(e)}
+                    onClose={() => setSearchText("")}
                     renderValue={(selected) => (
                       <Box
                         className={`flex flex-wrap gap-2`}
                       >
-                        {selected.map((value, index) => {
+                        {selected.map((value) => {
                           return (
-                            <Box key={index}>
-                              <Chip label={options.find((user) => value === user.clientId).name} />
+                            <Box key={value}>
+                              <Chip
+                                label={options.find((user) => value === user.clientId).name} classes={{
+                                  root: 'bg-psl-secondary shadow'
+                                }} />
                             </Box>
                           );
                         })}
                       </Box>
                     )}
-                    MenuProps={{ autoFocus: false }}
-                    value={formData.clients}
-                    onChange={(e) => handleInput(e)}
-                    onClose={() => setSearchText("")}
+                    input={<OutlinedInput
+                      id="clientsListInput"
+                      className={`txt-secondary rounded-sm border-2 border-solid border-psl-primary/40 dark:border-psl-secondary-text/40 hover:border-psl-active-link hover:dark:border-psl-active-link`}
+                      classes={{
+                        notchedOutline: 'border-0',
+                        // focused: 'border-psl-active-link dark:border-psl-active-link border-2 border-solid',
+                      }}
+                    />}
+                    MenuProps={{
+                      autoFocus: false,
+                      disablePortal: true,
+                      PopoverClasses: {
+                        paper: 'bg-inherit',
+                      },
+                      PaperProps: {
+                        id: 'clientId'
+                      },
+                      MenuListProps: {
+                        classes: {
+                          root: 'txt-main'
+                        },
+                        className: 'dialog-background'
+                      }
+                    }}
+                    classes={{
+                      icon: `txt-secondary`,
+                      iconOpen: 'text-psl-active-link',
+                    }}
                   >
-                    <ListSubheader>
+                    <ListSubheader
+                      className='dialog-background'>
                       <Input
                         size="small"
                         autoFocus
                         fullWidth
                         startAdornment={
                           <InputAdornment position="start">
-                            <SearchIcon />
+                            <SearchIcon className={`txt-secondary`} />
                           </InputAdornment>
                         }
                         onChange={(e) => setSearchText(e.target.value)}
@@ -195,12 +312,23 @@ const UpdateUser = ({ setOpenDialog, data: user, mobile }) => {
                             e.stopPropagation();
                           }
                         }}
+                        disableUnderline
+                        className={`txt-secondary dark:[color-scheme:dark] rounded-sm mui-input-inactive`}
+                        classes={{
+                          focused: 'mui-input-active'
+                        }}
                       />
                     </ListSubheader>
-                    {displayedOptions?.map((client, index) => {
+                    {displayedOptions?.map((client) => {
                       return (
-                        <MenuItem key={index} value={client.clientId}>
-                          <Checkbox checked={formData.clients.indexOf(client.clientId) > -1} />
+                        <MenuItem key={client.clientId} value={client.clientId} className={`hover:text-psl-active-link`} classes={{ selected: 'text-psl-active-link' }}>
+                          <Checkbox
+                            checked={formData.clients.indexOf(client.clientId) > -1}
+                            classes={{
+                              colorPrimary: 'text-psl-secondary',
+                              checked: 'mui-checked',
+                            }}
+                          />
                           {client.firstName} {client?.lastName}</MenuItem>
                       );
                     })}
@@ -209,36 +337,44 @@ const UpdateUser = ({ setOpenDialog, data: user, mobile }) => {
             </Grid>
           </Grid>
         </DialogContent>
-        : null}
-      <DialogActions sx={{ justifyContent: 'space-between', alignContent: 'space-between' }}>
-        <FormControlLabel
-          control={
-            <Switch
-              checked={formData.resetPassword}
-              onChange={() => setFormData(prev => {
-                return {
-                  ...prev,
-                  resetPassword: !prev.resetPassword
-                };
+        <DialogActions className={`justify-between content-between mx-2`}>
+          <FormControlLabel
+            id="passResetSwitch"
+            control={
+              <Switch
+                checked={formData.resetPassword}
+                onChange={() => setFormData(prev => {
+                  return {
+                    ...prev,
+                    resetPassword: !prev.resetPassword
+                  };
+                }
+                )}
+                inputProps={{
+                  name: 'resetSwitch'
+                }}
+                classes={{
+                  checked: 'text-psl-active-link',
+                  track: `${formData.resetPassword && 'bg-psl-active-link'}`
+                }}
+              />}
+            label="Toggle Password Reset"
+            componentsProps={{
+              typography: {
+                className: `txt-secondary`
               }
-              )}
-
-            />}
-          label="Toggle Password Reset"
-
-        />
-        <Box >
-          {!mobile &&
+            }}
+          />
+          <Box >
             <Button
-              onClick={() =>
-                setOpenDialog(prev => {
-                  return { ...prev, open: !prev.open, type: '' };
-                })}>Cancel</Button>}
-          <Button color="success" variant="contained" type="submit">UPDATE</Button>
-        </Box>
-      </DialogActions>
-    </Box>
+              variant="contained"
+              type="submit"
+              className={`bg-transparent bg-gradient-to-b from-transparent to-psl-secondary-text dark:to-psl-secondary hover:bg-psl-active-link hover:to-psl-active-link hover:dark:to-psl-active-link hover:dark:text-psl-primary text-psl-primary dark:text-psl-secondary-text shadow-none hover:shadow-none`}>UPDATE</Button>
+          </Box>
+        </DialogActions>
+      </Box>
+    </>
   );
 };
 
-export default memo(UpdateUser);
+export default UpdateUser;

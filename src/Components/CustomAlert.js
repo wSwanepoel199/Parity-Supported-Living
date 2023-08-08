@@ -1,16 +1,32 @@
 import { Collapse, Alert, IconButton, AlertTitle } from "@mui/material";
 import CloseIcon from '@mui/icons-material/Close';
 import { useDispatch, useSelector } from "react-redux";
-import { clearMessage } from "../Redux/root/rootSlice";
-import { memo } from "react";
+import { clearMessage, selectRoot } from "../Redux/root/rootSlice";
+import { memo, useEffect, useState } from "react";
 
-const CustomAlert = ({ alert }) => {
-  const rootState = useSelector(state => state.root);
+const CustomAlert = () => {
+  const root = useSelector(selectRoot);
   const dispatch = useDispatch();
+
+  const [alert, setAlert] = useState(undefined);
+
+  useEffect(() => {
+    if (['error'].includes(root.status) && root.status !== "loading") {
+      setAlert(prev => {
+        return {
+          ...prev,
+          ...root
+        };
+      });
+    }
+    // if (['error'].includes(state.root.status) && state.root.msg.status === 403) {
+    //   refreshUser();
+    // }
+  }, [root]);
 
   return (
     <Collapse
-      in={['error'].includes(rootState.status)}
+      in={['error'].includes(root.status)}
       unmountOnExit
       className={`fixed z-50 left-0 top-0 w-full`}
     >
