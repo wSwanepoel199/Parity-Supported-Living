@@ -11,7 +11,7 @@ import { useNavigate } from "react-router-dom";
 import { selectUsers } from "../../Redux/admin/adminSlice";
 import { selectPosts } from "../../Redux/posts/postSlice";
 import { selectClients } from "../../Redux/client/clientSlice";
-import DataGridFilter from "./DataGridPanel";
+import DataGridFilter from "./DataGridFilter";
 
 const CustomLinearProgression = () => {
   return (
@@ -19,7 +19,7 @@ const CustomLinearProgression = () => {
   );
 };
 
-const CustomClearIron = () => {
+const CustomClearIcon = () => {
   return <ClearIcon className="interact-main" />;
 };
 
@@ -39,6 +39,7 @@ const GeneralDataGrid = ({ functions, variables }) => {
     pageSize: 10,
     page: 0
   });
+  const [filterButtonEl, setFilterButtonEl] = useState(null);
 
   return (
     <DataGrid
@@ -57,16 +58,22 @@ const GeneralDataGrid = ({ functions, variables }) => {
       slots={{
         toolbar: Toolbar,
         loadingOverlay: CustomLinearProgression,
-        filterPanel: DataGridFilter,
-        filterPanelDeleteIcon: CustomClearIron
+        // filterPanel: DataGridFilter,
+        // filterPanelDeleteIcon: CustomClearIcon
       }}
       slotProps={{
         panel: {
           disablePortal: true,
-          className: `bg-transparent`,
+          anchorEl: filterButtonEl,
+          classes: {
+            paper: 'bg-red-500'
+          }
         },
-        paper: {
-          className: 'bg-transparent'
+        filterPanel: {
+          filterFormProps: {
+            deleteIconProps: {
+            }
+          }
         },
         toolbar: {
           children: (
@@ -85,7 +92,8 @@ const GeneralDataGrid = ({ functions, variables }) => {
               }}>{settings.button}</Button>),
           type: settings.type,
           csvOptions: { allColumns: true },
-          clearSelect: setSelectedRow
+          clearSelect: setSelectedRow,
+          setFilterButtonEl
         },
         row: {
           onContextMenu: fullScreen ? handleContextMenu : null,

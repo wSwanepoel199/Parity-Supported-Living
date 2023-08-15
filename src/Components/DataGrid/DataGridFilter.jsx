@@ -1,22 +1,13 @@
-import { GridPanelContent, GridPanelFooter, GridPanelHeader, GridPanelWrapper } from '@mui/x-data-grid';
+import { GridPanelContent, GridPanelFooter, GridPanelHeader, GridPanelWrapper, GridFilterPanel } from '@mui/x-data-grid';
 import React from 'react';
 
 const DataGridFilter = () => {
   return (
-    <GridPanelWrapper
-      slotProps={{
-
-      }}>
-      <GridPanelHeader>
-
-      </GridPanelHeader>
-      <GridPanelContent>
+    <GridFilterPanel >
+      <GridPanelContent className='flex flex-wrap'>
 
       </GridPanelContent>
-      <GridPanelFooter>
-
-      </GridPanelFooter>
-    </GridPanelWrapper>
+    </GridFilterPanel>
   );
 };
 
