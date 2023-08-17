@@ -7,7 +7,7 @@ module.exports = {
     "./src/**/*.{js,jsx,ts,tsx}",
     './public/index.html'
   ],
-  important: '#root',
+  important: '#body',
   mode: 'jit',
   darkMode: 'class',
   theme: {

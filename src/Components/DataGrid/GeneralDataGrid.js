@@ -1,17 +1,15 @@
 import { Button, LinearProgress, useMediaQuery } from "@mui/material";
 import { useTheme } from '@mui/material/styles';
 import AddIcon from '@mui/icons-material/Add';
-import ClearIcon from '@mui/icons-material/Clear';
-import { DataGrid } from "@mui/x-data-grid";
-
+import { DataGrid, getGridStringOperators } from "@mui/x-data-grid";
 import Toolbar from "./Toolbar";
 import { useSelector } from "react-redux";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { selectUsers } from "../../Redux/admin/adminSlice";
 import { selectPosts } from "../../Redux/posts/postSlice";
 import { selectClients } from "../../Redux/client/clientSlice";
-import DataGridFilter from "./DataGridFilter";
+import { CustomDataGridPanel } from "./DataGridPanel";
 
 const CustomLinearProgression = () => {
   return (
@@ -19,9 +17,6 @@ const CustomLinearProgression = () => {
   );
 };
 
-const CustomClearIcon = () => {
-  return <ClearIcon className="interact-main" />;
-};
 
 const GeneralDataGrid = ({ functions, variables }) => {
   const { setSelectedRow, handleContextMenu, setOpenDialog } = functions;
@@ -41,9 +36,33 @@ const GeneralDataGrid = ({ functions, variables }) => {
   });
   const [filterButtonEl, setFilterButtonEl] = useState(null);
 
+
+  const columns = useMemo(() => table.columns.map((col) => {
+    switch (col?.field) {
+      case "details": {
+        return {
+          ...col,
+          filterOperators: getGridStringOperators().filter(
+            (operator) => operator.value === 'isEmpty' || operator.value === 'isNotEmpty'
+          ),
+        };
+      }
+      default: {
+        return {
+          ...col,
+          filterOperators: getGridStringOperators().filter(
+            (operator) => operator.value === 'contains' || operator.value === 'isEmpty' || operator.value === 'isNotEmpty'
+          ),
+        };
+      }
+    }
+
+  }), [table.columns]);
+
   return (
     <DataGrid
       {...table}
+      columns={columns}
       aria-label="notesDataGrid"
       paginationModel={paginationModel}
       onPaginationModelChange={setPaginationModel}
@@ -58,22 +77,75 @@ const GeneralDataGrid = ({ functions, variables }) => {
       slots={{
         toolbar: Toolbar,
         loadingOverlay: CustomLinearProgression,
-        // filterPanel: DataGridFilter,
-        // filterPanelDeleteIcon: CustomClearIcon
+        panel: CustomDataGridPanel,
       }}
       slotProps={{
         panel: {
           disablePortal: true,
           anchorEl: filterButtonEl,
-          classes: {
-            paper: 'bg-red-500'
-          }
         },
         filterPanel: {
           filterFormProps: {
-            deleteIconProps: {
+            className: 'flex-wrap',
+            valueInputProps: {
+              InputComponentProps: {
+                InputLabelProps: {
+                  shrink: true,
+                  className: `txt-secondary`,
+                  classes: {
+                    focused: 'text-psl-active-link'
+                  }
+                },
+                InputProps: {
+                  disableUnderline: true,
+                  className: `txt-secondary dark:[color-scheme:dark] rounded-sm mui-input-inactive`,
+                  classes: {
+                    focused: 'mui-input-active'
+                  }
+                }
+              }
             }
           }
+        },
+        baseInputLabel: {
+          className: `txt-secondary`,
+          classes: {
+            focused: 'text-psl-active-link ',
+          }
+        },
+        baseIconButton: {
+          className: 'interact-main '
+        },
+        baseSelect: {
+          disableUnderline: true,
+          native: false,
+          multiple: false,
+          className: `txt-secondary rounded-sm mui-input-inactive`,
+          classes: {
+            icon: `txt-secondary`,
+            iconOpen: 'text-psl-active-link',
+            focused: 'mui-input-active',
+          },
+          MenuProps: {
+            PopoverClasses: {
+              paper: 'bg-inherit',
+            },
+            MenuListProps: {
+              classes: {
+                root: 'txt-main'
+              },
+              className: 'dialog-background'
+            }
+          }
+        },
+        baseSelectOption: {
+          className: `hover:text-psl-active-link`,
+          classes: {
+            selected: 'text-psl-active-link'
+          }
+        },
+        InputComponentProps: {
+
         },
         toolbar: {
           children: (
@@ -130,7 +202,8 @@ const GeneralDataGrid = ({ functions, variables }) => {
         cell: 'text-psl-primary dark:text-psl-secondary-text',
         columnHeaderTitleContainerContent: 'text-psl-primary dark:text-psl-secondary-text',
         sortIcon: 'text-psl-primary dark:text-psl-secondary-text',
-        main: 'shadow-inner'
+        main: 'shadow-inner',
+        menuList: 'dialog-background'
       }}
       className={`bg-psl-primary-text/20 dark:bg-psl-secondary-text/20 border-0 shadow-lg`}
       loading={(posts.status || admin.status || clients.status) === "loading"}
