@@ -144,9 +144,6 @@ const GeneralDataGrid = ({ functions, variables }) => {
             selected: 'text-psl-active-link'
           }
         },
-        InputComponentProps: {
-
-        },
         toolbar: {
           children: (
             <Button
@@ -203,7 +200,6 @@ const GeneralDataGrid = ({ functions, variables }) => {
         columnHeaderTitleContainerContent: 'text-psl-primary dark:text-psl-secondary-text',
         sortIcon: 'text-psl-primary dark:text-psl-secondary-text',
         main: 'shadow-inner',
-        menuList: 'dialog-background'
       }}
       className={`bg-psl-primary-text/20 dark:bg-psl-secondary-text/20 border-0 shadow-lg`}
       loading={(posts.status || admin.status || clients.status) === "loading"}
