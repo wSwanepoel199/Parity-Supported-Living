@@ -36,8 +36,8 @@ function App() {
   });
 
   const deviceTheme = useMediaQuery('(prefers-color-scheme: dark)'); //true
-  const [darkMode, setDarkMode] = useState(deviceTheme); //true
   const savedTheme = localStorage.getItem("theme"); //null
+  const [darkMode, setDarkMode] = useState(deviceTheme || savedTheme === 'dark'); //true
 
   if (!savedTheme) { //(true && true) = true
     localStorage.setItem('theme', darkMode ? 'dark' : 'light'); //theme = dark
@@ -110,11 +110,11 @@ function App() {
 
     return () => {
       window.removeEventListener("beforeinstallprompt", () => {
-        console.log("removed before Install listiner");
+        // console.log("removed before Install listiner");
       });
 
       window.removeEventListener("appinstalled", () => {
-        console.log("removed app Install listiner");
+        // console.log("removed app Install listiner");
       });
     };
 
@@ -158,7 +158,7 @@ function App() {
           </Box>
         }>
           <Appbar />
-          {installing && <LinearProgress className={`bg-psl-primary-text dark:bg-psl-secondary`} classes={{ bar: 'bg-psl-secondary dark:bg-psl-active-link' }} />}
+          {installing && <LinearProgress className={`bg-psl-secondary-text dark:bg-psl-secondary`} classes={{ bar: 'bg-psl-active-link' }} />}
           <CustomAlert />
           <Container className={`flex flex-grow`}>
             <Outlet />

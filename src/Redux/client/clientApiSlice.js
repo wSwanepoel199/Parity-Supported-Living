@@ -25,7 +25,6 @@ export const clientApiSlice = backendApi.injectEndpoints({
       query: (clientId) => ({ url: '/clients/get/' + clientId, method: "get" }),
       transformResponse: (response, meta, arg) => response.data.data,
       async onQueryStarted(clientId, { queryFulfilled }) {
-        console.log(clientId);
         try {
           const { data } = await queryFulfilled;
           return data;

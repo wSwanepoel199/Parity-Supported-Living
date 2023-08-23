@@ -63,13 +63,11 @@ window.waiting = new deferredPromise();
 window.installing = new deferredPromise();
 
 function registerValidSW(swUrl, config) {
-  // console.log("swUrl", swUrl);
   navigator.serviceWorker
     .register(swUrl)
     .then((registration) => {
       // console.log(registration);
-      // console.log(registration);
-      if (!registration.current && !registration.installing) window.installing.resolve(false);
+      if (registration.active && !registration.installing) window.installing.resolve(false);
       if (registration.waiting) window.waiting.resolve(true);
       registration.onupdatefound = () => {
         const newWorker = registration.installing || registration.waiting;

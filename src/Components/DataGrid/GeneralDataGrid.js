@@ -13,7 +13,7 @@ import { CustomDataGridPanel } from "./DataGridPanel";
 
 const CustomLinearProgression = () => {
   return (
-    <LinearProgress className={`bg-psl-primary-text dark:bg-psl-secondary`} classes={{ bar: 'bg-psl-secondary dark:bg-psl-active-link' }} />
+    <LinearProgress className={`bg-psl-primary-text dark:bg-psl-secondary`} classes={{ bar: 'bg-psl-active-link' }} />
   );
 };
 

@@ -17,7 +17,7 @@ const Prompt = ({ state, close }) => {
       case "install": {
         data.prompt();
         const { outcome } = await data.userChoice;
-        console.log(`User Selectec ${outcome}`);
+        console.log(`User Selectected ${outcome}`);
         close(prev => {
           return {
             ...prev,
