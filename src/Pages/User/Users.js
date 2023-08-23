@@ -32,28 +32,41 @@ const Users = () => {
     columns: [
       {
         field: 'id',
-        disableExport: true
+        disableExport: true,
+        filterable: false,
       },
       {
         field: 'userId',
+        filterable: false,
       },
       {
         field: 'role',
         headerName: 'Role',
         width: 95,
+        valueGetter: ({ row }) => {
+          return row.role || null;
+        },
       },
       {
         field: 'firstName',
+        valueGetter: ({ row }) => {
+          return row.firstName || null;
+        },
       },
       {
         field: 'lastName',
+        valueGetter: ({ row }) => {
+          return row.lastName || null;
+        },
       },
       {
         field: 'name',
         headerName: 'Name',
         flex: 1,
         minWidth: 85,
-        valueGetter: ({ row }) => { return `${row.firstName} ${row?.lastName}`; },
+        valueGetter: ({ row }) => {
+          return row.name || null;
+        },
         disableExport: true
       },
       {
@@ -61,6 +74,9 @@ const Users = () => {
         headerName: 'Email',
         flex: 1,
         minWidth: 85,
+        valueGetter: ({ row }) => {
+          return row.email || null;
+        },
         renderCell: ({ value }) => <p className={`text-ellipsis overflow-hidden whitespace-nowrap max-w-full`}>{value}</p>,
       },
       {
@@ -69,6 +85,10 @@ const Users = () => {
         disableExport: true,
         flex: 2,
         minWidth: 100,
+        valueGetter: ({ row }) => {
+          const clients = row.clients.map((clients) => `${clients.firstName} ${clients?.lastName}`).join(', ');
+          return clients || null;
+        },
         renderCell: (params) => {
           const clients = params.row.clients.map((clients) => `${clients.firstName} ${clients?.lastName}`).join(', ');
           return <Box className={`text-ellipsis overflow-hidden whitespace-nowrap max-w-full`}>
@@ -79,6 +99,7 @@ const Users = () => {
       {
         field: 'clients',
         disableColumnMenu: true,
+        filterable: false,
         valueFormatter: (params) => {
           return params.value.map(client => client.clientId).join(", ");
         }
@@ -90,6 +111,7 @@ const Users = () => {
         disableColumnMenu: true,
         disableColumnFilter: true,
         sortable: false,
+        filterable: false,
         renderCell: (params) => (
           <Box className={`flex justify-center`}>
             <IconButton onClick={() => {

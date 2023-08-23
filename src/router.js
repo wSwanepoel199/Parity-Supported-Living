@@ -4,7 +4,7 @@ import {
   createRoutesFromElements
 } from 'react-router-dom';
 
-import { Suspense, lazy } from 'react';
+import { Suspense } from 'react';
 import { Backdrop, Box, CircularProgress } from '@mui/material';
 
 import App from './App';
@@ -263,7 +263,7 @@ const router = createRoutesFromElements(
           } />
       </Route>
     </Route>
-  </Route >
+  </Route>
 );
 
 export default router;

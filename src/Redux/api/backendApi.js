@@ -12,13 +12,16 @@ import { removeUser, saveUser } from "../user/userSlice";
 // "http://192.168.56.101:5000"
 
 const baseAxiosQuery = axiosBaseQuery({
-  baseUrl: process.env.REACT_APP_API_URL
+  baseUrl: process.env.REACT_APP_API_URL,
 });
 
 async function axiosBaseQueryWithReauth(arg, api) {
   let result = await baseAxiosQuery(arg, api);
   if (result.error && result.error.data.message?.trigger === "auth") {
-    const refreshResult = await baseAxiosQuery({ url: '/refresh', method: 'get' });
+    const refreshResult = await baseAxiosQuery({
+      url: "/refresh",
+      method: "get",
+    });
     if (refreshResult.data) {
       const { data } = refreshResult;
       if (fetchStoredTokenLocal()) {
@@ -31,7 +34,8 @@ async function axiosBaseQueryWithReauth(arg, api) {
     } else {
       if (api.getState().posts.posts) await api.dispatch(clearPostState());
       if (api.getState().admin.users) await api.dispatch(clearUsers());
-      if (api.getState().clients.clients) await api.dispatch(clearClientState());
+      if (api.getState().clients.clients)
+        await api.dispatch(clearClientState());
       api.dispatch(removeUser());
     }
   }
@@ -39,19 +43,19 @@ async function axiosBaseQueryWithReauth(arg, api) {
 }
 
 export const backendApi = createApi({
-  reducerPath: 'backendApi',
+  reducerPath: "backendApi",
   baseQuery: axiosBaseQueryWithReauth,
-  tagTypes: ['post', 'user', 'client', 'Index'],
+  tagTypes: ["post", "user", "client", "Index"],
   endpoints: (builder) => ({
     checkToken: builder.query({
-      query: () => ({ url: '/auth/checkToken', method: 'get' })
+      query: () => ({ url: "/auth/checkToken", method: "get" }),
     }),
     uploadFile: builder.mutation({
       query: (upload) => ({
-        url: '/files/upload',
-        method: 'post',
+        url: "/files/upload",
+        method: "post",
         data: upload.data,
-        params: { type: upload.type }
+        params: { type: upload.type },
       }),
       async onQueryStarted(file, { dispatch, queryFulfilled }) {
         try {
@@ -61,9 +65,13 @@ export const backendApi = createApi({
         }
       },
       invalidatesTags: (result, error, args) =>
-        result ? [{ type: 'user' }, { type: 'post' }, { type: 'client' }] : error ? console.error(error) : null
-    })
-  })
+        result
+          ? [{ type: "user" }, { type: "post" }, { type: "client" }]
+          : error
+          ? console.error(error)
+          : null,
+    }),
+  }),
 });
 
 export const { useCheckTokenQuery, useUploadFileMutation } = backendApi;

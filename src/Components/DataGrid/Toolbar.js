@@ -6,21 +6,17 @@ import { useSelector } from "react-redux";
 import GridToolbarImport from "./GridToolbarImport";
 import { selectUser } from "../../Redux/user/userSlice";
 
-const Toolbar = ({ children, type, csvOptions, clearSelect }) => {
+const Toolbar = ({ children, type, csvOptions, clearSelect, setFilterButtonEl }) => {
   const user = useSelector(selectUser);
 
   return (
     <GridToolbarContainer className="flex justify-between w-full bg-gradient-to-b from-psl-active-text dark:from-psl-primary to-transparent">
       <Box className={`flex flex-wrap justify-start`}>
         {/* <GridToolbarColumnsButton/> */}
-        {/* <GridToolbarFilterButton
+        <GridToolbarFilterButton
           className={`text-psl-active-link`}
-          slotProps={{
-            paper: {
-              className: 'bg-transparent'
-            }
-          }}
-        /> */}
+          ref={setFilterButtonEl}
+        />
         <GridToolbarDensitySelector className={`text-psl-active-link`} />
         <Box >
           {user.user.role === "Admin" ?
