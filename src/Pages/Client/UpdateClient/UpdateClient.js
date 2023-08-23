@@ -540,7 +540,7 @@ const UpdateClient = () => {
             variant="contained"
             type="submit"
             className={`bg-transparent bg-gradient-to-b from-transparent to-psl-secondary-text dark:to-psl-secondary hover:bg-psl-active-link hover:to-psl-active-link hover:dark:to-psl-active-link hover:dark:text-psl-primary text-psl-primary dark:text-psl-secondary-text shadow-none hover:shadow-none`}
-          >Create</Button>
+          >Update</Button>
         </DialogActions>
       </Box>
     </>

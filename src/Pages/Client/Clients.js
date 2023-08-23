@@ -31,23 +31,34 @@ const Clients = () => {
     columns: [
       {
         field: 'id',
-        disableExport: true
+        disableExport: true,
+        filterable: false,
       },
       {
         field: 'clientId',
+        sortable: false,
+        filterable: false,
       },
       {
         field: 'firstName',
+        valueGetter: ({ row }) => {
+          return row.firstName || null;
+        },
       },
       {
         field: 'lastName',
+        valueGetter: ({ row }) => {
+          return row.lastName || null;
+        },
       },
       {
         field: 'name',
         headerName: 'Name',
         flex: 1,
         minWidth: 85,
-        valueGetter: ({ row }) => { return `${row.firstName} ${row?.lastName}`; },
+        valueGetter: ({ row }) => {
+          return row.name || null;
+        },
         renderCell: ({ value }) => <Box className={`text-ellipsis overflow-hidden whitespace-nowrap max-w-full`}>{value}</Box>,
         disableExport: true
       },
@@ -56,6 +67,9 @@ const Clients = () => {
         headerName: 'Email',
         flex: 1,
         minWidth: 85,
+        valueGetter: ({ row }) => {
+          return row.email || null;
+        },
         renderCell: ({ value }) => <Box className={`text-ellipsis overflow-hidden whitespace-nowrap max-w-full`}>{value}</Box>
       },
       {
@@ -63,6 +77,9 @@ const Clients = () => {
         headerName: 'Number',
         flex: 1,
         minWidth: 100,
+        valueGetter: ({ row }) => {
+          return row.phoneNumber || null;
+        },
         renderCell: ({ value }) => <Box className={`text-ellipsis overflow-hidden whitespace-nowrap max-w-full`}>{value}</Box>
       },
       {
@@ -70,6 +87,9 @@ const Clients = () => {
         headerName: 'Address',
         flex: 1,
         minWidth: 100,
+        valueGetter: ({ row }) => {
+          return row.address || null;
+        },
         renderCell: ({ value }) => <Box className={`text-ellipsis overflow-hidden whitespace-nowrap max-w-full`}>{value}</Box>
       },
       {
@@ -78,6 +98,10 @@ const Clients = () => {
         disableExport: true,
         flex: 2,
         minWidth: 100,
+        valueGetter: ({ row }) => {
+          const carers = row.carers.map((carer) => `${carer.firstName}`).join(', ');
+          return carers || null;
+        },
         renderCell: (params) => {
           const carers = params.row.carers.map((carer) => `${carer.firstName}`).join(', ');
           return <Box className={`text-ellipsis overflow-hidden whitespace-nowrap max-w-full`}>
@@ -91,6 +115,9 @@ const Clients = () => {
         disableColumnMenu: true,
         flex: 2,
         minWidth: 150,
+        valueGetter: ({ row }) => {
+          return row.notes || null;
+        },
         renderCell: (value) => {
           const splitAtLineBreak = value.row.notes.split(/\r?\n/);
           const string = splitAtLineBreak.length >= 2 ? splitAtLineBreak[0] + "..." : splitAtLineBreak[0];
@@ -102,6 +129,8 @@ const Clients = () => {
       {
         field: 'carers',
         disableColumnMenu: true,
+        sortable: false,
+        filterable: false,
         valueFormatter: (params) => {
           return params.value.map(carer => carer.userId).join(', ');
         }
@@ -113,6 +142,7 @@ const Clients = () => {
         disableColumnMenu: true,
         disableColumnFilter: true,
         sortable: false,
+        filterable: false,
         renderCell: (params) => (
           <Box className={`flex justify-center`}>
             <IconButton onClick={() => {

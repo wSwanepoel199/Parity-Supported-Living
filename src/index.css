@@ -83,6 +83,18 @@ body {
   }
 }
 
+.css-1ps6pg7-MuiPaper-root {
+  @apply bg-psl-active-text dark:bg-psl-primary;
+}
+
+.css-kk1bwy-MuiButtonBase-root-MuiMenuItem-root {
+  @apply text-psl-primary dark:text-psl-active-text hover:text-psl-active-link hover:dark:text-psl-active-link;
+}
+
+.css-cveggr-MuiListItemIcon-root {
+  @apply text-psl-primary dark:text-psl-active-text peer-hover:text-psl-active-link peer-hover:dark:text-psl-active-link;
+}
+
 .MuiCircularProgress-colorPrimary {
   @apply text-psl-active-link;
 }

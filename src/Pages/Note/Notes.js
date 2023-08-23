@@ -80,7 +80,9 @@ const Notes = () => {
         minWidth: 85,
         maxWidth: 150,
         valueGetter: ({ row }) => {
-          return row.client?.firstName + ' ' + row.client?.lastName;
+          if (row.client && row.clientName) return row.clientName;
+          if (row.client || row.clientName) return row.clientName || row.client?.firstName + '' + row.client?.lastName;
+          return null;
         },
         renderCell: ({ row }) => {
           if (row.clientId === "") {
@@ -107,7 +109,12 @@ const Notes = () => {
         minWidth: 85,
         maxWidth: 150,
         valueGetter: ({ row }) => {
-          return row.carer?.firstName + ' ' + row.carer?.lastName;
+          // if (row.carer && row.carerName) return row.carerName;
+          // return null;
+
+          if (row.carer && row.carerName) return row.carerName;
+          if (row.carer || row.carerName) return row.carerName || row.carer?.firstName + '' + row.carer?.lastName;
+          return null;
         },
         renderCell: ({ row }) => {
           if (row.carerId === "") {
@@ -158,6 +165,15 @@ const Notes = () => {
             }
           }
         }
+      },
+      {
+        field: 'details',
+        headerName: 'Missing Details',
+        disableExport: true,
+        valueGetter: ({ row }) => {
+          if (row.carerId && row.clientId) return "Green";
+          return null;
+        },
       },
       {
         field: 'options',
@@ -343,6 +359,7 @@ const Notes = () => {
                 clientId: false,
                 clientName: false,
                 carerName: false,
+                details: false,
                 // options: !fullScreen,
                 private: ["Admin", "Coordinator"].includes(user.user.role)
               },
