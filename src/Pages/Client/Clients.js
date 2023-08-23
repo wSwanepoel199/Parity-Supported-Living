@@ -245,7 +245,7 @@ const Clients = () => {
   const openView = (array) => {
     array.map((row) => {
       if (row.id === selectedRow) {
-        console.log(row);
+        // console.log(row);
         navigate('./view/' + row.clientId);
         setOpenDialog(prev => { return { ...prev, open: true, type: 'view', data: row }; });
       }
