@@ -7,10 +7,6 @@ import LightModeIcon from '@mui/icons-material/LightMode';
 import { Appbar, CustomAlert, Prompt } from "./Components";
 import { selectUser } from './Redux/user/userSlice';
 
-
-// inverstigate crashing when auth token expire
-// impliment getUser route to redux and backend, update clients and users to use the getX route over passing data directly between components
-
 function App() {
   const user = useSelector(selectUser);
   const mounted = useRef();
@@ -47,7 +43,6 @@ function App() {
   }
 
   // TODO Look into implimenting mailer into Backend
-  // TODO remove auth token from being saved locally inorder to encourage regular refreshing, or don't, just think about it, maybe save it for next version of app
 
   useEffect(() => {
     // process.env.DEVELOPMENT === "true" && reactManifest.update({ "short_name": "PSL Notes Dev" }, "#manifest-placeholder");
