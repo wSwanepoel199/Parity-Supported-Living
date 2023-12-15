@@ -78,9 +78,8 @@ const Appbar = () => {
           name="appbar-segmentor"
         >
           <Box
-            className={`flex w-full justify-start ${
-              user.status === "loggedIn" ? "" : "hidden"
-            }`}
+            className={`flex w-full justify-start ${user.status === "loggedIn" ? "" : "hidden"
+              }`}
             name="appbar-nav-menu"
           >
             <IconButton
@@ -138,15 +137,14 @@ const Appbar = () => {
               >
                 <Typography
                   textAlign="center"
-                  className={`${
-                    hover?.target.id === "notes"
-                      ? `
+                  className={`${hover?.target.id === "notes"
+                    ? `
                   text-psl-active-link`
-                      : `
+                    : `
                   text-psl-primary 
                   dark:text-psl-active-text
                   `
-                  }`}
+                    }`}
                 >
                   Notes
                 </Typography>
@@ -167,15 +165,14 @@ const Appbar = () => {
               >
                 <Typography
                   textAlign="center"
-                  className={`${
-                    hover?.target.id === "clients"
-                      ? `
+                  className={`${hover?.target.id === "clients"
+                    ? `
                   text-psl-active-link`
-                      : `
+                    : `
                   text-psl-primary 
                   dark:text-psl-active-text
                   `
-                  }`}
+                    }`}
                 >
                   Clients
                 </Typography>
@@ -197,15 +194,14 @@ const Appbar = () => {
                 >
                   <Typography
                     textAlign="center"
-                    className={`${
-                      hover?.target.id === "users"
-                        ? `
+                    className={`${hover?.target.id === "users"
+                      ? `
                   text-psl-active-link`
-                        : `
+                      : `
                   text-psl-primary 
                   dark:text-psl-active-text
                   `
-                    }`}
+                      }`}
                   >
                     Users
                   </Typography>
@@ -229,18 +225,16 @@ const Appbar = () => {
             ) : (
               <Box
                 component={`img`}
-                className={`object-contain  ${
-                  smallScreen ? "h-[52px] w-[52px]" : "h-[60px] w-[60px]"
-                } rounded-[4px]`}
+                className={`object-contain  ${smallScreen ? "h-[52px] w-[52px]" : "h-[60px] w-[60px]"
+                  } rounded-[4px]`}
                 alt="Parity Supported Living"
-                src={`${process.env.PUBLIC_URL}/PSLPineapple512.png`}
+                src={`${process.env.REACT_APP_PUBLIC_URL}/PSLPineapple512.png`}
               />
             )}
           </Box>
           <Box
-            className={`flex w-full justify-end ${
-              user.status === "loggedIn" ? "" : "hidden"
-            }`}
+            className={`flex w-full justify-end ${user.status === "loggedIn" ? "" : "hidden"
+              }`}
           >
             <Box className={`flex justify-center content-center text-center `}>
               <Typography
@@ -265,9 +259,8 @@ const Appbar = () => {
                   <Avatar
                     alt="avatar icon"
                     src={user.icon ? user.icon.icon : ""}
-                    className={`w-[${window.innerWidth / 10}px] h-[${
-                      window.innerWidth / 10
-                    }px] ring-1 ring-psl-active-text dark:ring-psl-primary bg-psl-active-text dark:bg-psl-primary`}
+                    className={`w-[${window.innerWidth / 10}px] h-[${window.innerWidth / 10
+                      }px] ring-1 ring-psl-active-text dark:ring-psl-primary bg-psl-active-text dark:bg-psl-primary`}
                   />
                 ) : null}
               </IconButton>
@@ -314,15 +307,14 @@ const Appbar = () => {
               >
                 <Typography
                   textAlign="center"
-                  className={`${
-                    hover?.target.id === "signout"
-                      ? `
+                  className={`${hover?.target.id === "signout"
+                    ? `
                   text-psl-active-link`
-                      : `
+                    : `
                   text-psl-primary 
                   dark:text-psl-active-text
                   `
-                  }`}
+                    }`}
                 >
                   SignOut
                 </Typography>

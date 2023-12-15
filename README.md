@@ -28,8 +28,7 @@ Once the .env file is created open in and define the following values
 
 ```text
 REACT_APP_API_URL: the url for your backend
-PUBLIC_PATH: the default path for all application assets
-PUBLIC_URL: the default publicly available url.
+REACT_APP_PUBLIC_URL: the default publicly available url
 ```
 
 Once these values have been defined in your .env you can follow either the Default React or Custom Webpack paths to start the application.

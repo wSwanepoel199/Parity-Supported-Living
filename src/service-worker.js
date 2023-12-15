@@ -48,7 +48,7 @@ registerRoute(
 
     return true;
   },
-  createHandlerBoundToURL(process.env.PUBLIC_URL + '/index.html'),
+  createHandlerBoundToURL(process.env.REACT_APP_PUBLIC_URL + '/index.html'),
 );
 
 // An example runtime caching route for requests that aren't handled by the
@@ -105,6 +105,17 @@ self.addEventListener('message', async (event) => {
   //   console.log("skip waiting through message");
   //   self.messageSkipWaiting();
   // }
+});
+
+self.addEventListener('fetch', event => {
+  console.log("INTERCEPTED");
+  console.log(event);
+  // console.log(event.request);
+
+  if (event.request.url.startsWith('http://172.26.145.104:5000')) {
+    event.respondWith(new Response("No Go Buddy"));
+  }
+  console.log(event);
 });
 
 // Any other custom service worker logic can go here.
