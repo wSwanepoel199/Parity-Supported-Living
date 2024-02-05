@@ -24,8 +24,6 @@ const isLocalhost = Boolean(
   window.location.hostname.match(/^127(?:\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}$/)
 );
 
-const UA = navigator.userAgent;
-
 export function register(config) {
   if (process.env.NODE_ENV === 'production' && 'serviceWorker' in navigator) {
     // if (process.env.NODE_ENV === 'development' && 'serviceWorker' in navigator) {
@@ -68,6 +66,7 @@ function registerValidSW(swUrl, config) {
   navigator.serviceWorker
     .register(swUrl)
     .then((registration) => {
+      const UA = navigator.userAgent;
       // console.log(registration);
       if (UA.match(/iPhone|iPad|iPod/)) {
         console.log('Safari!!!!');
