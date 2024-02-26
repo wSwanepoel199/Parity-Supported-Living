@@ -67,7 +67,14 @@ function registerValidSW(swUrl, config) {
   navigator.serviceWorker
     .register(swUrl)
     .then((registration) => {
+      const UA = navigator.userAgent;
       // console.log(registration);
+      if (UA.match(/iPhone|iPad|iPod/)) {
+        console.log('Safari!!!!');
+        if (registration.waiting) {
+          window.waiting.resolve(true);
+        }
+      }
       if (registration.active && !registration.installing) window.installing.resolve(false);
       if (registration.waiting) window.waiting.resolve(true);
       registration.onupdatefound = () => {
