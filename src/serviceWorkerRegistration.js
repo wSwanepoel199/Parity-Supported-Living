@@ -38,8 +38,9 @@ export function register(config) {
     }
 
     window.addEventListener('load', () => {
-      console.log(process.env);
-      const swUrl = `${process.env.REACT_APP_PUBLIC_URL}/service-worker.js`;
+      // console.log(process.env);
+      const swUrl = `${publicUrl.origin}/service-worker.js`;
+      // console.log(swUrl);
       if (isLocalhost) {
         // This is running on localhost. Let's check if a service worker still exists or not.
         checkValidServiceWorker(swUrl, config);
@@ -68,7 +69,6 @@ function registerValidSW(swUrl, config) {
     .register(swUrl)
     .then((registration) => {
       const UA = navigator.userAgent;
-      // console.log(registration);
       if (UA.match(/iPhone|iPad|iPod/)) {
         console.log('Safari!!!!');
         if (registration.waiting) {
