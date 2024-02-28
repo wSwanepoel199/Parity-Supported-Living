@@ -72,7 +72,7 @@ const UpdateUser = () => {
 
   const handleExit = () => {
     setOpenDialog(prev => { return { ...prev, open: !prev.open, type: '' }; });
-    navigate('..');
+    navigate('..', { replace: true });
   };
 
   const handleSubmit = (e) => {

@@ -35,6 +35,7 @@ import CreateUser from './Pages/User/CreateUser/CreateUser';
 import UpdateUser from './Pages/User/UpdateUser/UpdateUser';
 import ViewUser from './Pages/User/ViewUser/ViewUser';
 import DeleteUser from './Pages/User/DeleteUser/DeleteUser';
+import NoteTypeSelection from './Pages/NoteTypeSelection/NoteTypeSelection';
 
 // const CreateUser = lazy(() => import('./Pages/User/CreateUser/CreateUser'));
 // const UpdateUser = lazy(() => import('./Pages/User/UpdateUser/UpdateUser'));
@@ -54,6 +55,13 @@ const router = createRoutesFromElements(
       <Landing />
     </Suspense>
     } >
+      <Route
+        // path="select-note-type"
+        index={true}
+        element={
+          <NoteTypeSelection />
+        }
+      />
       <Route
         path="signin"
         element={<SignIn />}

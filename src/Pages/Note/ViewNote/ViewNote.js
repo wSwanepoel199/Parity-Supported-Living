@@ -27,6 +27,11 @@ const ViewNote = () => {
     notes: false
   });
 
+  const handleExit = () => {
+    setOpenDialog(prev => { return { ...prev, open: !prev.open, type: '', data: {} }; });
+    navigate('..', { replace: true });
+  };
+
   useEffect(() => {
     if (isSuccess && !mounted.current) {
       setFormData(prev => {
@@ -39,17 +44,12 @@ const ViewNote = () => {
     }
 
     return () => {
-      if (mounted.current) {
-        mounted.current = false;
-      }
+      if (mounted.current) mounted.current = false;
     };
 
   }, [mounted, data, isSuccess]);
 
-  const handleExit = () => {
-    setOpenDialog(prev => { return { ...prev, open: !prev.open, type: '', data: {} }; });
-    navigate('..');
-  };
+
 
   if (isLoading || isFetching || !mounted.current) {
     return (

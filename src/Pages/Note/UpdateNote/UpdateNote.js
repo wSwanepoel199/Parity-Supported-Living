@@ -113,7 +113,7 @@ const UpdateNote = () => {
 
   const handleExit = () => {
     setOpenDialog(prev => { return { ...prev, open: false, type: '', data: {} }; });
-    navigate('..');
+    navigate('..', { replace: true });
   };
 
   const handleSubmit = (e) => {

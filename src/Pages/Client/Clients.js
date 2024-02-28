@@ -5,7 +5,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import { Suspense, memo, useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
-import { Outlet, redirect, useMatch, useNavigate } from "react-router-dom";
+import { Outlet, useMatch, useNavigate } from "react-router-dom";
 import { DataGridMenu, GeneralDataGrid } from '../../Components';
 import { selectClients } from '../../Redux/client/clientSlice';
 import { selectUser } from '../../Redux/user/userSlice';
@@ -206,7 +206,7 @@ const Clients = () => {
 
     if (!["new", "edit", "view", "delete"].includes(openDialog?.type)) {
       if (!match && !openDialog?.open) {
-        redirect(match?.pathname);
+        navigate('.', { replace: true });
       }
       if (match && openDialog?.open) {
         setOpenDialog(prev => {

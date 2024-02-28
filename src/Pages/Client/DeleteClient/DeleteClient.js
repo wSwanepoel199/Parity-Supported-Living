@@ -14,7 +14,7 @@ const DeleteClient = () => {
 
   const handleExit = () => {
     setOpenDialog(prev => { return { ...prev, open: !prev.open, type: '', data: {} }; });
-    navigate('..');
+    navigate('..', { replace: true });
   };
 
   const handleDelete = () => {
