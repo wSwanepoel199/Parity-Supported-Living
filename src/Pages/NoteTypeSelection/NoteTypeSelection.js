@@ -1,6 +1,7 @@
 import { Typography } from '@mui/material';
 import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import { AddHomeOutlined, DomainOutlined } from '@mui/icons-material';
 
 const NoteTypeSelection = () => {
 
@@ -8,14 +9,27 @@ const NoteTypeSelection = () => {
 
 
   return (
-    <div className={`h-full flex justify-around items-center`}>
-      <div className={`text-white `}>
-        <Typography onClick={() => {
+    <div className={`h-full flex justify-evenly items-center`}>
+      <div
+        className={`text-white flex flex-col justify-center items-center rounded border-2 border-red-300 border-solid p-4`}
+        onClick={() => {
           navigate('notes');
-        }}>Community Notes</Typography>
+        }}
+      >
+        <DomainOutlined className={`w-full h-10 p-1`} />
+        <Typography >Community Notes</Typography>
         {/* <Link to="community-notes">Community Notes</Link> */}
       </div>
-      <div className={`text-white`}><Link to="sil-notes">SIL Notes</Link></div>
+      <div
+        className={`text-white flex flex-col justify-center items-center rounded border-2 border-red-300 border-solid p-4`}
+        onClick={() => {
+          navigate('sil-notes');
+        }}>
+        <AddHomeOutlined className={`w-full h-10 p-1`} />
+        <Typography >
+          SIL Notes
+        </Typography>
+      </div>
     </div>
   );
 };
