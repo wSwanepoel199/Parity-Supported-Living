@@ -169,7 +169,7 @@ const Appbar = () => {
                   `
                     }`}
                 >
-                  Notes
+                  Community Notes
                 </Typography>
               </MenuItem>
               <MenuItem
