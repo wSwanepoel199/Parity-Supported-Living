@@ -346,7 +346,7 @@ const Notes = () => {
           <Outlet context={{ openDialog, setOpenDialog, fullScreen }} />
         </Suspense>
       </Dialog>
-      <Typography variant="h3" component="div" className={`py-5 text-psl-primary dark:text-psl-active-text`}>Notes</Typography>
+      <Typography variant="h3" component="div" className={`py-5 text-psl-primary dark:text-psl-active-text`}>Community Notes</Typography>
       <GeneralDataGrid
         functions={{ handleContextMenu, setSelectedRow, setOpenDialog }}
         variables={{
