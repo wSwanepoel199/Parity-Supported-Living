@@ -29,6 +29,7 @@ const Appbar = () => {
   const smallScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
   const [hover, setHover] = useState(undefined);
+  const [timeoutId, setTimeoutId] = useState();
 
   const [anchorEl, setAnchorEl] = useState({
     nav: null,
@@ -118,7 +119,15 @@ const Appbar = () => {
               }}
               MenuListProps={{
                 className: "bg-psl-secondary-text dark:bg-psl-primary",
-                onMouseLeave: () => handleCloseMenu("nav"),
+                onMouseLeave: () => {
+                  const timer = setTimeout(() => {
+                    handleCloseMenu("nav");
+                  }, 1000);
+                  setTimeoutId(timer);
+                },
+                onMouseEnter: () => {
+                  if (timeoutId) clearTimeout(timeoutId);
+                }
               }}
             >
               <MenuItem
@@ -310,7 +319,15 @@ const Appbar = () => {
               }}
               MenuListProps={{
                 className: "bg-psl-secondary-text dark:bg-psl-primary",
-                onMouseLeave: () => handleCloseMenu("user"),
+                onMouseLeave: () => {
+                  const timer = setTimeout(() => {
+                    handleCloseMenu("user");
+                  }, 1000);
+                  setTimeoutId(timer);
+                },
+                onMouseEnter: () => {
+                  if (timeoutId) clearTimeout(timeoutId);
+                }
               }}
             >
               <MenuItem
