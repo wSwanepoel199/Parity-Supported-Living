@@ -123,6 +123,29 @@ const Appbar = () => {
             >
               <MenuItem
                 component={Link}
+                to="/"
+                href="/"
+                id="home"
+                onMouseEnter={(e) => {
+                  menu.current = e;
+                  setHover(e);
+                }}
+                onMouseLeave={() => {
+                  menu.current = null;
+                  setHover(undefined);
+                }}
+              >
+                <Typography
+                  textAlign="center"
+                  className={`${hover?.target.id === "home"
+                    ? `text-psl-active-link`
+                    : `text-psl-primary dark:text-psl-active-text`}`}
+                >
+                  Home
+                </Typography>
+              </MenuItem>
+              <MenuItem
+                component={Link}
                 to="/notes"
                 href="/notes"
                 id="notes"
