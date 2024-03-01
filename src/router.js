@@ -35,13 +35,14 @@ import CreateUser from './Pages/User/CreateUser/CreateUser';
 import UpdateUser from './Pages/User/UpdateUser/UpdateUser';
 import ViewUser from './Pages/User/ViewUser/ViewUser';
 import DeleteUser from './Pages/User/DeleteUser/DeleteUser';
-import NoteTypeSelection from './Pages/NoteTypeSelection/NoteTypeSelection';
 
 // const CreateUser = lazy(() => import('./Pages/User/CreateUser/CreateUser'));
 // const UpdateUser = lazy(() => import('./Pages/User/UpdateUser/UpdateUser'));
 // const ViewUser = lazy(() => import('./Pages/User/ViewUser/ViewUser'));
 // const DeleteUser = lazy(() => import('./Pages/User/DeleteUser/DeleteUser'));
 
+import NoteTypeSelection from './Pages/NoteTypeSelection/NoteTypeSelection';
+import SilNotes from './Pages/SilNotes/SilNotes';
 
 const router = createRoutesFromElements(
   <Route
@@ -67,6 +68,20 @@ const router = createRoutesFromElements(
         element={<SignIn />}
 
       />
+      <Route
+        path='sil-notes'
+        element={
+          <Suspense fallback={
+            <Box className={`h-full flex-grow flex justify-center items-center z-40`}>
+              <CircularProgress />
+            </Box>
+          }>
+            <SilNotes />
+          </Suspense>
+        }
+      >
+
+      </Route>
       <Route path="notes" //Routing system implimented, need to convert view and delete to use routes, need to impliment dark mode styling
         element={
           <Suspense fallback={
