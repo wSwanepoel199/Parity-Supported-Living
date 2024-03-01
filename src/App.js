@@ -124,7 +124,7 @@ function App() {
     if (mounted.current) {
       window.addEventListener('popstate', () => {
         if (user.status !== 'loggedIn') {
-          redirect('/signin');
+          navigate('/signin', { replace: true });
         }
       });
     }

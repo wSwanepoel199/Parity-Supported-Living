@@ -32,7 +32,7 @@ const Landing = () => {
 
   useEffect(() => {
     if (user.status !== "loggedIn") {
-      navigate('/signin');
+      navigate('/signin', { replace: true });
     }
 
   }, [user.status, navigate]);

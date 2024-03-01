@@ -183,6 +183,34 @@ const Appbar = () => {
               </MenuItem>
               <MenuItem
                 component={Link}
+                to="/sil-notes"
+                href="/sil-notes"
+                id="sil-notes"
+                onMouseEnter={(e) => {
+                  menu.current = e;
+                  setHover(e);
+                }}
+                onMouseLeave={() => {
+                  menu.current = null;
+                  setHover(undefined);
+                }}
+              >
+                <Typography
+                  textAlign="center"
+                  className={`${hover?.target.id === "sil-notes"
+                    ? `
+                  text-psl-active-link`
+                    : `
+                  text-psl-primary 
+                  dark:text-psl-active-text
+                  `
+                    }`}
+                >
+                  SIL Notes
+                </Typography>
+              </MenuItem>
+              <MenuItem
+                component={Link}
                 to="/clients"
                 href="/clients"
                 id="clients"
