@@ -1,5 +1,5 @@
 import React, { useEffect, useState, Suspense, memo, useRef } from 'react';
-import { Outlet, redirect, useMatch, useNavigate } from 'react-router-dom';
+import { Outlet, useMatch, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { Box, CircularProgress, Container, Fab, LinearProgress, Tooltip, useMediaQuery, useTheme, } from '@mui/material';
 import NightsStayIcon from '@mui/icons-material/NightsStay';
