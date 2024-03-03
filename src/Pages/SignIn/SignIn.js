@@ -26,7 +26,7 @@ const SignIn = () => {
 
   useEffect(() => {
     if (user.status === 'loggedIn' && match.pathname === "/signin") {
-      navigate('/');
+      navigate('/', { replace: true });
     }
   }, [user.status, match, navigate]);
 
@@ -42,7 +42,7 @@ const SignIn = () => {
     e.preventDefault();
     loginUser(formData)
       .then((res) => {
-        if (!res.error) navigate('/');
+        if (!res.error) navigate('/', { replace: true });
       })
       .catch((err) => {
         console.error('Signin Error: ', err);

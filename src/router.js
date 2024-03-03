@@ -56,13 +56,13 @@ const router = createRoutesFromElements(
       <Landing />
     </Suspense>
     } >
-      {/* <Route
+      <Route
         // path="select-note-type"
         index={true}
         element={
           <NoteTypeSelection />
         }
-      /> */}
+      />
       <Route
         path="signin"
         element={<SignIn />}
