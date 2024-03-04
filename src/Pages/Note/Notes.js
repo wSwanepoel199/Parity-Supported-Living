@@ -9,7 +9,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import { format, parseISO } from "date-fns";
 import { Suspense, memo, useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
-import { Outlet, useMatch, useNavigate } from "react-router-dom";
+import { Outlet, redirect, useMatch, useNavigate } from "react-router-dom";
 import { DataGridMenu, GeneralDataGrid } from '../../Components';
 import { selectPosts } from '../../Redux/posts/postSlice';
 import { selectUser } from '../../Redux/user/userSlice';
@@ -233,7 +233,7 @@ const Notes = () => {
 
   useEffect(() => {
     if (match) window.addEventListener('popstate', (e) => {
-      // e.preventDefault();
+      e.preventDefault();
       setOpenDialog(prev => {
         if (prev.open) return {
           ...prev,
@@ -248,7 +248,8 @@ const Notes = () => {
 
     if (!["new", "edit", "view", "delete"].includes(openDialog?.type)) {
       if (!match && !openDialog?.open) {
-        navigate('.', { replace: true });
+        // navigate('.');
+        // redirect('..');
       }
       if (match && openDialog?.open) {
         setOpenDialog(prev => {
