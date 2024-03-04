@@ -25,7 +25,7 @@ const SignIn = () => {
   const match = useMatch('/signin');
 
   useEffect(() => {
-    if (user.status === 'loggedIn' && match.pathname === "/signin") {
+    if (user.status === 'loggedIn' && match) {
       navigate('/', { replace: true });
     }
   }, [user.status, match, navigate]);

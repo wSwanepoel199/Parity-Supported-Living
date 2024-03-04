@@ -9,7 +9,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import { format, parseISO } from "date-fns";
 import { Suspense, memo, useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
-import { Outlet, redirect, useMatch, useNavigate } from "react-router-dom";
+import { Outlet, useMatch, useNavigate } from "react-router-dom";
 import { DataGridMenu, GeneralDataGrid } from '../../Components';
 import { selectPosts } from '../../Redux/posts/postSlice';
 import { selectUser } from '../../Redux/user/userSlice';

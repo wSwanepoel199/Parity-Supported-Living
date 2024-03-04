@@ -1,7 +1,7 @@
 import { Container, Typography } from '@mui/material';
 import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { AddHomeOutlined, DomainOutlined } from '@mui/icons-material';
+import { DomainOutlined, HomeOutlined } from '@mui/icons-material';
 
 const NoteTypeSelection = () => {
 
@@ -45,7 +45,7 @@ const NoteTypeSelection = () => {
       >
         <div className={`h-full flex flex-col justify-center items-center rounded-md bg-gradient-to-b from-transparent from-5% to-psl-secondary-text dark:to-psl-primary-text shadow-md`}>
 
-          <AddHomeOutlined className={`w-full h-1/4 p-2`} />
+          <HomeOutlined className={`w-full h-1/4 p-2`} />
           <Typography >
             SIL Notes
           </Typography>
