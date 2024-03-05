@@ -130,7 +130,7 @@ const Appbar = () => {
                 }
               }}
             >
-              <MenuItem
+              {/* <MenuItem
                 component={Link}
                 to="/"
                 href="/"
@@ -152,7 +152,7 @@ const Appbar = () => {
                 >
                   Home
                 </Typography>
-              </MenuItem>
+              </MenuItem> */}
               <MenuItem
                 component={Link}
                 to="/notes"
@@ -181,7 +181,7 @@ const Appbar = () => {
                   Community Notes
                 </Typography>
               </MenuItem>
-              <MenuItem
+              {/* <MenuItem
                 component={Link}
                 to="/sil-notes"
                 href="/sil-notes"
@@ -208,7 +208,7 @@ const Appbar = () => {
                 >
                   SIL Notes
                 </Typography>
-              </MenuItem>
+              </MenuItem> */}
               <MenuItem
                 component={Link}
                 to="/clients"
