@@ -81,6 +81,10 @@ body {
   .mui-checked {
     @apply text-psl-active-link;
   }
+
+  /* .css-kk1bwy-MuiButtonBase-root-MuiMenuItem-root.Mui-selecte {
+    @apply bg-psl-primary/10 hover:bg-psl-primary/20 dark:bg-psl-secondary-text/10 hover:dark:bg-psl-secondary-text/20;
+  } */
 }
 
 .css-1ps6pg7-MuiPaper-root {

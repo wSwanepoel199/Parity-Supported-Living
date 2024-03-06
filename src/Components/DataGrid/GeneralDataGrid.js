@@ -103,28 +103,24 @@ const GeneralDataGrid = ({ functions, variables }) => {
         filterPanel: {
           filterFormProps: {
             className: 'flex-wrap',
-            valueInputProps: {
-              InputComponentProps: {
-                InputLabelProps: {
-                  shrink: true,
-                  className: `txt-secondary`,
-                  classes: {
-                    focused: 'text-psl-active-link'
-                  }
-                },
-                InputProps: {
-                  disableUnderline: true,
-                  className: `txt-secondary dark:[color-scheme:dark] rounded-sm mui-input-inactive`,
-                  classes: {
-                    focused: 'mui-input-active'
-                  }
-                }
-              }
-            }
+
           }
         },
         baseTextField: {
-          className: 'hidden'
+          InputLabelProps: {
+            shrink: true,
+            className: `txt-secondary`,
+            classes: {
+              focused: 'text-psl-active-link'
+            }
+          },
+          InputProps: {
+            disableUnderline: true,
+            className: `txt-secondary dark:[color-scheme:dark] rounded-sm mui-input-inactive`,
+            classes: {
+              focused: 'mui-input-active'
+            }
+          }
         },
         baseSwitch: {
           className: 'bg-psl-main',
@@ -169,7 +165,7 @@ const GeneralDataGrid = ({ functions, variables }) => {
         baseSelectOption: {
           className: `hover:text-psl-active-link`,
           classes: {
-            selected: 'text-psl-active-link'
+            selected: 'text-psl-active-link bg-psl-active-link/10'
           }
         },
         toolbar: {

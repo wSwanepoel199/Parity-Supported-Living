@@ -1,5 +1,5 @@
 import { Box } from "@mui/material";
-import { GridToolbarColumnsButton, GridToolbarContainer, GridToolbarDensitySelector, GridToolbarExport, GridToolbarFilterButton } from "@mui/x-data-grid";
+import { GridToolbarColumnsButton, GridToolbarContainer, GridToolbarExport, GridToolbarFilterButton } from "@mui/x-data-grid";
 import { memo } from "react";
 import { useSelector } from "react-redux";
 
@@ -23,7 +23,7 @@ const Toolbar = ({ children, type, csvOptions, clearSelect, setFilterButtonEl })
         <GridToolbarFilterButton
           className={`text-psl-active-link`}
         />
-        <GridToolbarDensitySelector className={`text-psl-active-link`} />
+        {/* <GridToolbarDensitySelector className={`text-psl-active-link`} /> */}
         <Box >
           {user.user.role === "Admin" ?
             <GridToolbarExport
