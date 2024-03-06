@@ -64,7 +64,6 @@ const GeneralDataGrid = ({ functions, variables }) => {
       .filter((column) => !hiddenFields?.includes(column.field))
       .map((column) => column.field);
   };
-  console.log(DataGrid.type.render);
   return (
     <DataGrid
       {...table}
@@ -82,7 +81,7 @@ const GeneralDataGrid = ({ functions, variables }) => {
       selectionModel={selectedRow}
       onColumnVisibilityModelChange={(e) => {
         // console.log(e);
-        localStorage.setItem("columnVisibility", JSON.stringify(e));
+        localStorage.setItem(`${settings.type}ColumnVisibility`, JSON.stringify(e));
       }}
       slots={{
         toolbar: Toolbar,

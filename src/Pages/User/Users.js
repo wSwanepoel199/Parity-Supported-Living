@@ -38,6 +38,7 @@ const Users = () => {
       {
         field: 'userId',
         filterable: false,
+        flex: 1,
       },
       {
         field: 'role',
@@ -98,8 +99,10 @@ const Users = () => {
       },
       {
         field: 'clients',
+        headerName: 'clientId',
         disableColumnMenu: true,
         filterable: false,
+        flex: 1,
         valueFormatter: (params) => {
           return params.value.map(client => client.clientId).join(", ");
         }
@@ -252,6 +255,22 @@ const Users = () => {
     handleClose();
   };
 
+  const hiddenFields = ["id", "firstName", "lastName", "options"];
+
+  const columnVisibility = () => {
+    const userSettings = JSON.parse(localStorage.getItem('userColumnVisibility'));
+    const defaultSettings = {
+      // Hides listed coloumns
+      id: false,
+      userId: false,
+      firstName: false,
+      lastName: false,
+      clients: false,
+    };
+    console.log(userSettings, defaultSettings);
+    return userSettings || defaultSettings;
+  };
+
   return (
     <div className="w-full max-w-screen-lg mx-auto flex flex-col ">
       <Backdrop
@@ -278,14 +297,7 @@ const Users = () => {
           table, selectedRow, permissions,
           initialState: {
             columns: {
-              columnVisibilityModel: {
-                // Hides listed coloumns
-                id: false,
-                userId: false,
-                firstName: false,
-                lastName: false,
-                clients: false,
-              },
+              columnVisibilityModel: columnVisibility()
             },
             sorting: {
               sortModel: [
@@ -299,7 +311,8 @@ const Users = () => {
           settings: {
             type: 'user',
             button: 'New User'
-          }
+          },
+          hiddenFields
         }}
       />
       <DataGridMenu

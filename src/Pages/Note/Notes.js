@@ -316,10 +316,10 @@ const Notes = () => {
     handleClose();
   };
 
-  const hiddenFields = [!["Admin", "Coordinator"].includes(user.user.role) && 'private', 'carerId', 'clientId', "clientName", "carerName", "details", "options"];
+  const hiddenFields = ["clientName", "carerName", "details", "options", !["Admin", "Coordinator"]?.includes(user.user.role) && ['private', 'carerId', 'clientId']];
 
   const columnVisibility = () => {
-    const userSettings = JSON.parse(localStorage.getItem('columnVisibility'));
+    const userSettings = JSON.parse(localStorage.getItem('postColumnVisibility'));
     const defaultSettings = {
       // Hides listed coloumns
       carerId: false,
@@ -330,7 +330,6 @@ const Notes = () => {
       // options: !fullScreen,
       private: ["Admin", "Coordinator"].includes(user.user.role)
     };
-    console.log(userSettings, defaultSettings);
     return userSettings || defaultSettings;
   };
 

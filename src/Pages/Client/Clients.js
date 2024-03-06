@@ -128,6 +128,7 @@ const Clients = () => {
       },
       {
         field: 'carers',
+        headerName: 'userIds',
         disableColumnMenu: true,
         sortable: false,
         filterable: false,
@@ -276,6 +277,22 @@ const Clients = () => {
     handleClose();
   };
 
+  const hiddenFields = ["id", "firstName", "lastName", "options", !["Admin", "Coordinator"]?.includes(user.user.role) && ["clientId", "carers"]];
+
+  const columnVisibility = () => {
+    const userSettings = JSON.parse(localStorage.getItem('clientColumnVisibility'));
+    const defaultSettings = {
+      // Hides listed coloumns
+      id: false,
+      clientId: false,
+      firstName: false,
+      lastName: false,
+      carers: false
+    };
+    console.log(userSettings, defaultSettings);
+    return userSettings || defaultSettings;
+  };
+
 
   return (
     <div className="w-full max-w-screen-lg mx-auto flex flex-col ">
@@ -315,14 +332,7 @@ const Clients = () => {
           permissions,
           initialState: {
             columns: {
-              columnVisibilityModel: {
-                // Hides listed coloumns
-                id: false,
-                clientId: false,
-                firstName: false,
-                lastName: false,
-                carers: false
-              },
+              columnVisibilityModel: columnVisibility()
             },
             sorting: {
               sortModel: [
@@ -336,7 +346,8 @@ const Clients = () => {
           settings: {
             type: 'client',
             button: 'New Client'
-          }
+          },
+          hiddenFields
         }}
       />
       <DataGridMenu
