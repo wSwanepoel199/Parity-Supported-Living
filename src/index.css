@@ -102,3 +102,11 @@ body {
 /* .material-symbols-outlined {
   font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24;
 } */
+
+/* .MuiDataGrid-panelHeader {
+  @apply bg-red-500;
+} */
+/* 
+.MuiFormLabel-root {
+  @apply text-psl-primary dark:text-psl-active-text focus:text-psl-active-link focus:dark:text-psl-active-link;
+} */

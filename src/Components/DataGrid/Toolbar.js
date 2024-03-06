@@ -1,5 +1,5 @@
 import { Box } from "@mui/material";
-import { GridToolbarContainer, GridToolbarDensitySelector, GridToolbarExport, GridToolbarFilterButton } from "@mui/x-data-grid";
+import { GridToolbarColumnsButton, GridToolbarContainer, GridToolbarDensitySelector, GridToolbarExport, GridToolbarFilterButton } from "@mui/x-data-grid";
 import { memo } from "react";
 import { useSelector } from "react-redux";
 
@@ -10,12 +10,18 @@ const Toolbar = ({ children, type, csvOptions, clearSelect, setFilterButtonEl })
   const user = useSelector(selectUser);
 
   return (
-    <GridToolbarContainer className="flex justify-between w-full bg-gradient-to-b from-psl-active-text dark:from-psl-primary to-transparent">
+    <GridToolbarContainer
+      className="flex justify-between w-full bg-gradient-to-b from-psl-active-text dark:from-psl-primary to-transparent"
+      onClick={(e) => {
+        setFilterButtonEl(e.target);
+      }}
+    >
       <Box className={`flex flex-wrap justify-start`}>
-        {/* <GridToolbarColumnsButton/> */}
+        <GridToolbarColumnsButton
+          className={`text-psl-active-link`}
+        />
         <GridToolbarFilterButton
           className={`text-psl-active-link`}
-          ref={setFilterButtonEl}
         />
         <GridToolbarDensitySelector className={`text-psl-active-link`} />
         <Box >

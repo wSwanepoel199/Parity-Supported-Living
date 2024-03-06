@@ -265,7 +265,6 @@ const Notes = () => {
     };
   }, [match, openDialog, navigate]);
 
-
   const [selectedRow, setSelectedRow] = useState();
 
   const [contextMenu, setContextMenu] = useState(null);
@@ -317,6 +316,23 @@ const Notes = () => {
     handleClose();
   };
 
+  const hiddenFields = [!["Admin", "Coordinator"].includes(user.user.role) && 'private', 'carerId', 'clientId', "clientName", "carerName", "details", "options"];
+
+  const columnVisibility = () => {
+    const userSettings = JSON.parse(localStorage.getItem('columnVisibility'));
+    const defaultSettings = {
+      // Hides listed coloumns
+      carerId: false,
+      clientId: false,
+      clientName: false,
+      carerName: false,
+      details: false,
+      // options: !fullScreen,
+      private: ["Admin", "Coordinator"].includes(user.user.role)
+    };
+    console.log(userSettings, defaultSettings);
+    return userSettings || defaultSettings;
+  };
 
   return (
     <div className="w-full max-w-screen-lg mx-auto flex flex-col ">
@@ -355,16 +371,7 @@ const Notes = () => {
           permissions,
           initialState: {
             columns: {
-              columnVisibilityModel: {
-                // Hides listed coloumns
-                carerId: false,
-                clientId: false,
-                clientName: false,
-                carerName: false,
-                details: false,
-                // options: !fullScreen,
-                private: ["Admin", "Coordinator"].includes(user.user.role)
-              },
+              columnVisibilityModel: columnVisibility(),
             },
             sorting: {
               sortModel: [
@@ -378,7 +385,8 @@ const Notes = () => {
           settings: {
             type: 'post',
             button: 'New Note'
-          }
+          },
+          hiddenFields,
         }}
       />
       <DataGridMenu

@@ -20,7 +20,7 @@ const CustomLinearProgression = () => {
 
 const GeneralDataGrid = ({ functions, variables }) => {
   const { setSelectedRow, handleContextMenu, setOpenDialog } = functions;
-  const { table, selectedRow, permissions, initialState, settings } = variables;
+  const { table, selectedRow, permissions, initialState, settings, hiddenFields } = variables;
   const admin = useSelector(selectUsers);
   const posts = useSelector(selectPosts);
   const clients = useSelector(selectClients);
@@ -59,6 +59,12 @@ const GeneralDataGrid = ({ functions, variables }) => {
 
   }), [table.columns]);
 
+  const getTogglableColumns = (columns) => {
+    return columns
+      .filter((column) => !hiddenFields?.includes(column.field))
+      .map((column) => column.field);
+  };
+  console.log(DataGrid.type.render);
   return (
     <DataGrid
       {...table}
@@ -74,6 +80,10 @@ const GeneralDataGrid = ({ functions, variables }) => {
       hideFooterSelectedRowCount
       disableColumnMenu
       selectionModel={selectedRow}
+      onColumnVisibilityModelChange={(e) => {
+        // console.log(e);
+        localStorage.setItem("columnVisibility", JSON.stringify(e));
+      }}
       slots={{
         toolbar: Toolbar,
         loadingOverlay: CustomLinearProgression,
@@ -83,6 +93,12 @@ const GeneralDataGrid = ({ functions, variables }) => {
         panel: {
           disablePortal: true,
           anchorEl: filterButtonEl,
+        },
+        columnsPanel: {
+          getTogglableColumns,
+          disableHideAllButton: true,
+          disableShowAllButton: true,
+          className: `txt-secondary rounded-sm`,
         },
         filterPanel: {
           filterFormProps: {
@@ -105,6 +121,18 @@ const GeneralDataGrid = ({ functions, variables }) => {
                 }
               }
             }
+          }
+        },
+        baseTextField: {
+          className: 'hidden'
+        },
+        baseSwitch: {
+          className: 'bg-psl-main',
+          classes: {
+            colorPrimary: "txt-main",
+            colorSecondary: 'txt-secondary',
+            checked: 'text-psl-active-link',
+            track: 'bg-psl-primary/40 dark:bg-psl-secondary-text/40'
           }
         },
         baseInputLabel: {
