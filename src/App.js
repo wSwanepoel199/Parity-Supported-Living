@@ -1,3 +1,9 @@
+/**
+ * A functional component representing the main application.
+ *
+ * @return {JSX.Element} The main application component
+ */
+
 import React, { useEffect, useState, Suspense, memo, useRef } from "react";
 import { Outlet, useMatch, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
