@@ -251,7 +251,7 @@ const Notes = () => {
                   };
                 });
               }}
-              className={`text-psl-primary dark:text-psl-active-text hover:text-psl-active-link hover:dark:text-psl-active-link`}
+              className={`interact-main`}
             >
               <VisibilityIcon />
             </IconButton>
@@ -269,7 +269,7 @@ const Notes = () => {
                     };
                   });
                 }}
-                className={`text-psl-primary dark:text-psl-active-text hover:text-psl-active-link hover:dark:text-psl-active-link`}
+                className={`interact-main`}
               >
                 <EditIcon />
               </IconButton>
@@ -288,7 +288,7 @@ const Notes = () => {
                     };
                   });
                 }}
-                className={`text-psl-primary dark:text-psl-active-text hover:text-psl-active-link hover:dark:text-psl-active-link`}
+                className={`interact-main`}
               >
                 <DeleteIcon />
               </IconButton>
