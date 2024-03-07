@@ -424,7 +424,7 @@ const Clients = () => {
       <Typography
         variant="h3"
         component="div"
-        className={`py-5 text-psl-primary dark:text-psl-active-text`}
+        className={`py-4 text-psl-primary dark:text-psl-active-text`}
       >
         Clients
       </Typography>

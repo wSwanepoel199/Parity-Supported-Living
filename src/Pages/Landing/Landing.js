@@ -1,7 +1,12 @@
-import { Suspense, useEffect, } from "react";
+import { Suspense, useEffect } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
-import { Backdrop, CircularProgress, Dialog, useMediaQuery } from "@mui/material";
-import { useTheme } from '@mui/material/styles';
+import {
+  Backdrop,
+  CircularProgress,
+  Dialog,
+  useMediaQuery,
+} from "@mui/material";
+import { useTheme } from "@mui/material/styles";
 import { useSelector } from "react-redux";
 import { useGetAllClientsQuery } from "../../Redux/client/clientApiSlice";
 import { useGetAllUsersQuery } from "../../Redux/admin/adminApiSlice";
@@ -19,12 +24,21 @@ const Landing = () => {
   const navigate = useNavigate();
   const skipUsers = user.user?.role !== ("Admin" || "Coordinator");
   const skipFetch = user.status !== "loggedIn";
-  useGetAllClientsQuery(undefined, { skip: skipFetch, refetchOnMountOrArgChange: true });
-  useGetAllUsersQuery(undefined, { skip: skipUsers, refetchOnMountOrArgChange: true });
-  useGetPostsQuery(undefined, { skip: skipFetch, refetchOnMountOrArgChange: true });
+  useGetAllClientsQuery(undefined, {
+    skip: skipFetch,
+    refetchOnMountOrArgChange: true,
+  });
+  useGetAllUsersQuery(undefined, {
+    skip: skipUsers,
+    refetchOnMountOrArgChange: true,
+  });
+  useGetPostsQuery(undefined, {
+    skip: skipFetch,
+    refetchOnMountOrArgChange: true,
+  });
 
   const theme = useTheme();
-  const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
+  const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
   // useEffect(() => {
   //   console.log(skipQuery, skipUsers);
@@ -32,13 +46,12 @@ const Landing = () => {
 
   useEffect(() => {
     if (user.status !== "loggedIn") {
-      navigate('/signin', { replace: true });
+      navigate("/signin", { replace: true });
     }
-
   }, [user.status, navigate]);
 
   return (
-    <div className="w-full pb-6">
+    <div className="w-full pb-5">
       {/* <Appbar /> */}
       <Dialog
         fullScreen={fullScreen}
@@ -46,22 +59,19 @@ const Landing = () => {
         disablePortal
         className={`z-30 max-w-full`}
         classes={{
-          paper: 'bg-transparent'
+          paper: "bg-transparent",
         }}
       >
         <PasswordReset />
       </Dialog>
-      <Suspense fallback={
-        <Backdrop
-          open={true}
-          className={`z-40`}
-        >
-          <CircularProgress />
-        </Backdrop>
-      }>
-        {!user.user?.resetPassword ?
-          <Outlet />
-          : null}
+      <Suspense
+        fallback={
+          <Backdrop open={true} className={`z-40`}>
+            <CircularProgress />
+          </Backdrop>
+        }
+      >
+        {!user.user?.resetPassword ? <Outlet /> : null}
       </Suspense>
     </div>
   );
