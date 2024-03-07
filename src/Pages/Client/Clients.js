@@ -389,7 +389,7 @@ const Clients = () => {
       lastName: false,
       carers: false,
     };
-    console.log(userSettings, defaultSettings);
+    // console.log(userSettings, defaultSettings);
     return userSettings || defaultSettings;
   };
 

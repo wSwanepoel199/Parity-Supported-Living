@@ -334,7 +334,7 @@ const Users = () => {
       lastName: false,
       clients: false,
     };
-    console.log(userSettings, defaultSettings);
+    // console.log(userSettings, defaultSettings);
     return userSettings || defaultSettings;
   };
 
